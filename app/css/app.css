@@ -99,8 +99,9 @@ h1 { font: 700 24px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
 header.top { display: flex; align-items: center; gap: 12px; padding: 12px max(20px, env(safe-area-inset-right)) 12px max(20px, env(safe-area-inset-left));
   background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 10px; }
-.logo { width: 36px; height: 36px; border-radius: 11px; background: var(--accent); color: var(--accent-fg); display: flex; align-items: center; justify-content: center; }
-.brandname { font: 700 21px var(--display); }
+.brandname { font: 700 24px var(--display); letter-spacing: -.02em; white-space: nowrap; }
+/* the red "black key" between jazz and lab — same mark as the favicon */
+.brandname .key { display: inline-block; width: .27em; height: .64em; margin: 0 .12em; border-radius: .06em; background: #e5383b; vertical-align: .27em; }
 .titles { display: flex; flex-direction: column; min-width: 0; }
 .kicker { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--muted); }
 .titles .title { font: 700 18px/1.25 var(--display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
