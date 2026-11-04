@@ -6,6 +6,7 @@ import { autoConnect } from './music/midi.js';
 import { loadExercise } from './music/exercise.js';
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
+import { renderImprov } from './screens/improv.js';
 
 applyTheme(currentTheme());
 autoConnect();
@@ -20,7 +21,8 @@ async function content() {
   const get = async (p) => { const r = await fetch(new URL(p, base)); if (!r.ok) throw new Error(`${p}: HTTP ${r.status}`); return r.json(); };
   const index = await get('index.json');
   const course = await get('courses/jazz-rhythms.json');
-  cache = { index, course };
+  const improv = await get('improv.json');
+  cache = { index, course, improv };
   return cache;
 }
 
@@ -35,8 +37,17 @@ async function route() {
   const hash = location.hash.replace(/^#/, '') || '/';
   const rerender = () => route();
   try {
+    const mi = /^\/imp\/(s\d+)$/.exec(hash);
     const m = /^\/ex\/([a-z0-9-]+)$/.exec(hash);
-    if (m) {
+    if (mi) {
+      const { course, improv } = await content();
+      const step = course.steps.find((s) => s.id === mi[1]);
+      const imp = improv.steps[mi[1]];
+      if (!step || !imp) { message(t('notFound')); return; }
+      const exs = await Promise.all(step.items.filter((x) => !x.endsWith('-imp')).map(loadExercise));
+      document.title = `${t('improv')} · ${t('step')} ${step.n} · Jazzlab`;
+      cleanup = renderImprov(root, { step, imp, rhythms: exs.map((e) => ({ id: e.id, number: e.number, rhythm: e.rhythm })) });
+    } else if (m) {
       const { course } = await content();
       if (!course.available.includes(m[1])) { message(t('notFound')); return; }
       const ex = await loadExercise(m[1]);

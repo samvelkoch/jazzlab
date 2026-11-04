@@ -31,3 +31,21 @@ export function barRhythm(ex, b, lang = 'ru') {
   }
   return { per, onsets, rests, kinds };
 }
+
+/** Parse a rhythm line like "8 8 4 r8 8 4." into one bar of events: [{ t, d, rest }]. */
+export function parsePattern(str) {
+  const out = []; let t = 0;
+  str.trim().split(/\s+/).forEach((tok) => {
+    const m = /^(r?)(4|8)(\.?)$/.exec(tok);
+    if (!m) throw new Error('Bad rhythm token: ' + tok);
+    const d = (m[2] === '4' ? 2 : 1) * (m[3] ? 1.5 : 1);
+    out.push({ t, d, rest: !!m[1] }); t += d;
+  });
+  return out;
+}
+
+/** Same as barRhythm, for a rhythm line instead of an exercise bar. */
+export function patternRhythm(str, per = 8, lang = 'ru') {
+  const ev = parsePattern(str).filter((e) => !e.rest).map((e) => ({ t: e.t, d: e.d, acc: false }));
+  return barRhythm({ per, bars: [{ rh: ev, lh: [] }] }, 0, lang);
+}

@@ -12,6 +12,7 @@ export async function renderCourse(root, { course, index, rerender }) {
   const prog = progress();
   const avail = new Set(course.available);
   const exDone = (id) => isDone(prog[id]);
+  const href = (id) => (id.endsWith('-imp') ? `#/imp/${id.slice(0, -4)}` : `#/ex/${id}`);
 
   // first available, not finished exercise = "today"
   const ordered = course.steps.flatMap((s) => s.items.map((id) => ({ id, step: s })));
@@ -41,19 +42,23 @@ export async function renderCourse(root, { course, index, rerender }) {
     const kicker = s.kind === 'theory' ? t('theory').toUpperCase() : `${t('stepUpper')} ${s.n}`;
     const badge = { done: t('done'), now: t('now'), open: t('next'), lock: t('soon') }[kind];
     const target = s.items.find((id) => avail.has(id) && !exDone(id)) || s.items.find((id) => avail.has(id));
-    const el = h(target ? 'a.stepcard' : 'div.stepcard', { href: target ? `#/ex/${target}` : null, 'data-kind': kind, 'aria-disabled': target ? null : 'true' },
+    const imp = s.items.find((id) => id.endsWith('-imp') && avail.has(id));
+    const el = h('div.stepcard', { 'data-kind': kind, 'aria-disabled': target ? null : 'true' },
+      target ? h('a.stretch', { href: href(target), 'aria-label': `${kicker}: ${L(s.title)}` }) : null,
       h('div.row', null, h('span.kicker', null, kicker), h('span.badge.' + kind, null, badge)),
       h('span.steptitle', null, L(s.title)),
       h('div.grow'),
       h('div.bars', { 'aria-hidden': 'true' }, ...items.map((c) => h('span.' + c))),
-      h('span.meta', null, s.kind === 'theory' ? `${s.items.length} × ${t('lesson')}` : `${s.items.filter((x) => !x.endsWith('imp')).length} × ${t('exercise')} + ${t('improv').toLowerCase()}`));
+      h('div.row', null,
+        h('span.meta', null, s.kind === 'theory' ? `${s.items.length} × ${t('lesson')}` : `${s.items.filter((x) => !x.endsWith('imp')).length} × ${t('exercise')} + ${t('improv').toLowerCase()}`),
+        imp ? h('a.impchip' + (exDone(imp) ? '.done' : ''), { href: href(imp) }, (exDone(imp) ? '✓ ' : '♪ ') + t('improv')) : null));
     return el;
   };
 
   const todayCard = h('section.hero', null,
     h('span.kicker', null, t('today')),
-    today ? h('span.herotitle', null, today.step.kind === 'theory' ? L(today.step.title) : `${t('step')} ${today.step.n}, ${t('exercise')} ${today.id.split('-e')[1] || ''}`) : null,
-    today ? h('a.btn.accent.xl', { href: `#/ex/${today.id}`, html: ICON.play + `<span>${prog[today.id] ? t('continue') : t('start')}</span>` }) : null);
+    today ? h('span.herotitle', null, today.step.kind === 'theory' ? L(today.step.title) : (today.id.endsWith('-imp') ? `${t('step')} ${today.step.n}, ${t('improv').toLowerCase()}` : `${t('step')} ${today.step.n}, ${t('exercise')} ${today.id.split('-e')[1] || ''}`)) : null,
+    today ? h('a.btn.accent.xl', { href: href(today.id), html: ICON.play + `<span>${prog[today.id] ? t('continue') : t('start')}</span>` }) : null);
 
   const stats = h('section.panel.stats', null,
     h('div', null, h('b', null, String(doneCount), h('small', null, '/' + ordered.filter((x) => !x.id.startsWith('th')).length)), h('span', null, t('exercisesDone'))),
