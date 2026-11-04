@@ -120,6 +120,41 @@ export function click(t, strong) {
   o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.05);
 }
 
+// ---------- drums (synthesised, no samples): ride, hi-hat foot "chick", soft kick, rim ----------
+let noiseBuf = null;
+function noise() {
+  if (noiseBuf) return noiseBuf;
+  noiseBuf = ac.createBuffer(1, ac.sampleRate * 1.5, ac.sampleRate);
+  const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return noiseBuf;
+}
+function noiseHit(t, { type, freq, q = 1, gain, decay, len }) {
+  const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+  src.buffer = noise(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+  g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+  src.connect(f); f.connect(g); g.connect(bus); src.start(t, Math.random()); src.stop(t + len);
+}
+/** kind: 'ride' | 'hat' | 'kick' | 'rim'; vel 0..1 */
+export function drum(kind, t, vel = 0.7) {
+  if (!ac) return;
+  if (kind === 'ride') {
+    noiseHit(t, { type: 'highpass', freq: 6500, gain: 0.11 * vel, decay: 0.9, len: 1 });
+    const o = ac.createOscillator(), g = ac.createGain(); // bell "ping"
+    o.type = 'sine'; o.frequency.value = 3350;
+    g.gain.setValueAtTime(0.025 * vel, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+    o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.55);
+  } else if (kind === 'hat') {
+    noiseHit(t, { type: 'bandpass', freq: 8000, q: 0.8, gain: 0.16 * vel, decay: 0.06, len: 0.1 });
+  } else if (kind === 'kick') {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+    g.gain.setValueAtTime(0.5 * vel, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.32);
+  } else if (kind === 'rim') {
+    noiseHit(t, { type: 'bandpass', freq: 1800, q: 4, gain: 0.25 * vel, decay: 0.05, len: 0.08 });
+  }
+}
+
 /** Convert a DOM/MIDI event timestamp (performance.now() ms) to the audio clock. */
 export function toAudioTime(ts) {
   const nowMs = performance.now();
