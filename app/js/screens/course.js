@@ -23,7 +23,8 @@ export async function renderCourse(root, { course, index, rerender }) {
   const best = Math.max(0, ...Object.values(prog).map((p) => p.bestTempo || 0));
 
   const header = h('header.top', null,
-    h('div.brand', null, h('span.logo', { html: ICON.note }), h('span.brandname', null, 'Jazzlab')),
+    h('div.brand', { role: 'img', 'aria-label': 'Jazzlab' },
+      h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
     h('div.grow'),
     midiChip(), langSwitch(rerender), themeButton());
 
