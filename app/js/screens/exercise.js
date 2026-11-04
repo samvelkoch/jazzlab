@@ -220,6 +220,7 @@ export function renderExercise(root, { ex, rerender }) {
       // rhythm stage: one pitch per hand, so only the rhythm is heard
       const notes = rhythm ? [one] : e.notes.map(toMidi);
       const v = 0.55 * lvl * bal * (e.acc ? 1.4 : 1) / Math.sqrt(notes.length);
+      if (e.grace && !rhythm) play1(toMidi(e.grace), time - 0.04, 0.06, v * 0.6);
       notes.forEach((m) => play1(m, time, dur, v));
     });
   }
@@ -291,7 +292,9 @@ export function renderExercise(root, { ex, rerender }) {
   // ---------- MIDI scoring ----------
   const waitGot = new Set();
   let waitSt = { ok: 0, bad: 0, done: false, stepBad: false, clean: true };
-  let exp = [], tSt = null;
+  let exp = [], tSt = null, graceExp = [];
+  /** Grace notes are optional: pressing them is never a mistake. */
+  const graceAt = (i) => { const s = steps[i], set = new Set(); ['rh', 'lh'].forEach((hd) => { const e = s[hd]; if (e && e.grace && handOn(hd)) set.add(toMidi(e.grace)); }); return set; };
   const expectedAt = (i) => { if (st.stage === 'rhythm') return new Set(['n', 'acc'].includes(rKind(i)) ? [ANY] : []); const s = steps[i], set = new Set(); ['rh', 'lh'].forEach((hd) => { const e = s[hd]; if (e && handOn(hd)) e.notes.forEach((n) => set.add(toMidi(n))); }); return set; };
   function resetScores() { waitSt = { ok: 0, bad: 0, done: false, stepBad: false, clean: true }; waitGot.clear(); clearMarks(); exp = []; tSt = null; }
   function toPlayable() { for (let k = 0; k < N; k++) { const j = (st.step + k) % N; if (expectedAt(j).size) { if (j !== st.step) render(j); return true; } } return false; }
@@ -310,6 +313,7 @@ export function renderExercise(root, { ex, rerender }) {
     if (waitSt.done) resetScores();
     if (!expectedAt(st.step).size && !toPlayable()) return;
     const need = expectedAt(st.step);
+    if (!need.has(m) && graceAt(st.step).has(m)) { kb.flash(m, 'ok'); return; }
     if (!need.has(m)) { waitSt.bad++; waitSt.stepBad = true; waitSt.clean = false; kb.flash(m, 'bad'); showWaitFb(`${t('wrongNote')}: ${noteName(midiToName(m), settings.names === 'ru' ? 'ru' : 'en')}`); return; }
     waitGot.add(m); kb.flash(m, 'ok');
     if (![...need].every((x) => waitGot.has(x))) { showWaitFb(); return; }
@@ -333,7 +337,7 @@ export function renderExercise(root, { ex, rerender }) {
   const eighthSec = () => 60 / st.bpm / 2;
   const tols = () => { const e8 = eighthSec(); return { win: Math.min(Math.max(e8 * 0.45, 0.09), 0.25), tight: Math.min(Math.max(e8 * 0.16, 0.035), 0.075) }; };
   function tempoReset() { exp = []; tSt = { ok: 0, meh: 0, miss: 0, bad: 0, sum: 0, abs: 0, n: 0 }; clearMarks(); }
-  function expectStep(i, time) { if (!tSt) return; const need = expectedAt(i); if (!need.size) return; const occ = { i, left: need.size, cls: 'ok' }; need.forEach((m) => exp.push({ t: time, m, occ, hit: false })); }
+  function expectStep(i, time) { if (!tSt) return; graceAt(i).forEach((m) => graceExp.push({ t: time, m })); if (graceExp.length > 16) graceExp.shift(); const need = expectedAt(i); if (!need.size) return; const occ = { i, left: need.size, cls: 'ok' }; need.forEach((m) => exp.push({ t: time, m, occ, hit: false })); }
   const RANK = { ok: 0, meh: 1, bad: 2 };
   const worse = (a, b) => (RANK[b] > RANK[a] ? b : a);
   function tempoNote(m, ts) {
@@ -341,6 +345,7 @@ export function renderExercise(root, { ex, rerender }) {
     const T = audio.toAudioTime(ts), { win, tight } = tols();
     let best = null;
     for (const x of exp) { if (x.hit || x.m !== m) continue; const dt = T - x.t; if (Math.abs(dt) <= win && (!best || Math.abs(dt) < Math.abs(T - best.t))) best = x; }
+    if (!best && m !== ANY && graceExp.some((g) => g.m === m && Math.abs(T - g.t) <= win)) return;
     if (!best) { tSt.bad++; if (m !== ANY) kb.flash(m, 'bad'); mark(st.step, 'bad'); showTempoFb(false, false, t('wrongNote')); return; }
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';

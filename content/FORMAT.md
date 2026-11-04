@@ -31,7 +31,10 @@ Time unit = one eighth note. A 4/4 bar has slots `0..7` (`1 + 2 + 3 + 4 +`).
 ```
 
 Event fields: `t` slot, `d` length in eighths (default 1), `n` pitches (`C4` = middle C, `F#3`, `Bb4`),
-`f` fingers per pitch, `acc` accent, `stac` staccato, `sug` = fingering is our suggestion (not printed in the source).
+`f` fingers per pitch, `acc` accent, `stac` staccato, `sug` = fingering is our suggestion (not printed in the source),
+`grace` = one grace note pitch played just before the event (`"grace": "D#4"`; optional when scoring, exported as a slashed grace note).
+
+`scripts/mkex.py` is the compact helper used to transcribe the book exercises.
 
 Add an exercise: create the file, then add its id to `available` in `content/courses/<course>.json`.
 Check: `node tests/export.test.mjs`.
