@@ -1,0 +1,30 @@
+{
+  "$format": "jazzlab-course/1",
+  "id": "jazz-rhythms",
+  "title": { "ru": "Джаз-ритмы", "en": "Jazz rhythms" },
+  "about": {
+    "ru": "Короткие джазовые фразы: сначала ритм, потом ноты. Двигайся в своём темпе.",
+    "en": "Short jazz riffs: rhythm first, notes second. Move at your own pace."
+  },
+  "steps": [
+    { "id": "s1", "kind": "step", "n": 1,
+      "title": { "ru": "Четверти и восьмые", "en": "Quarters and eighths" },
+      "items": ["s1-e1", "s1-e2", "s1-e3", "s1-imp"] },
+    { "id": "s2", "kind": "step", "n": 2,
+      "title": { "ru": "Синкопы и паузы", "en": "Syncopation and rests" },
+      "items": ["s2-e4", "s2-e5", "s2-e6", "s2-imp"] },
+    { "id": "th1", "kind": "theory",
+      "title": { "ru": "Свинговые восьмые и форшлаг", "en": "Swing eighths and grace notes" },
+      "items": ["th1-swing", "th1-grace"] },
+    { "id": "s3", "kind": "step", "n": 3,
+      "title": { "ru": "Свинг и хроматика", "en": "Swing and chromatics" },
+      "items": ["s3-e7", "s3-e8", "s3-e9", "s3-imp"] },
+    { "id": "s4", "kind": "step", "n": 4,
+      "title": { "ru": "Форшлаги и акценты", "en": "Grace notes and accents" },
+      "items": ["s4-e10", "s4-e11", "s4-e12", "s4-imp"] },
+    { "id": "s5", "kind": "step", "n": 5,
+      "title": { "ru": "Минор, импро левой", "en": "Minor, left-hand improv" },
+      "items": ["s5-e13", "s5-e14", "s5-e15", "s5-imp"] }
+  ],
+  "available": ["s1-e2"]
+}

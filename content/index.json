@@ -1,0 +1,7 @@
+{
+  "courses": [
+    { "id": "jazz-rhythms", "ready": true },
+    { "id": "blues", "ready": false, "title": { "ru": "Блюз", "en": "Blues" } },
+    { "id": "bossa", "ready": false, "title": { "ru": "Босса-нова", "en": "Bossa nova" } }
+  ]
+}
