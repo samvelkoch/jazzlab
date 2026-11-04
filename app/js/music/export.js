@@ -33,10 +33,17 @@ function beams(seq) {
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+function graceXml(g, staff, voice) {
+  const p = parse(g);
+  const pitch = `<pitch><step>${p.step}</step>` + (p.alt ? `<alter>${p.alt}</alter>` : '') + `<octave>${p.oct}</octave></pitch>`;
+  const acc = p.alt === 1 ? '<accidental>sharp</accidental>' : p.alt === -1 ? '<accidental>flat</accidental>' : '';
+  return `<note><grace slash="yes"/>${pitch}<voice>${voice}</voice><type>eighth</type>${acc}<stem>up</stem><staff>${staff}</staff></note>`;
+}
+
 function noteXml(e, staff, voice, beam) {
   const dot = DOTTED[e.d] ? '<dot/>' : '';
   if (e.rest) return `<note><rest/><duration>${e.d}</duration><voice>${voice}</voice><type>${TYPE[e.d]}</type>${dot}<staff>${staff}</staff></note>`;
-  return e.notes.map((n, i) => {
+  return (e.grace ? graceXml(e.grace, staff, voice) : '') + e.notes.map((n, i) => {
     const p = parse(n);
     const pitch = `<step>${p.step}</step>` + (p.alt ? `<alter>${p.alt}</alter>` : '') + `<octave>${p.oct}</octave>`;
     const acc = p.alt === 1 ? '<accidental>sharp</accidental>' : p.alt === -1 ? '<accidental>flat</accidental>' : '';
@@ -144,6 +151,10 @@ export function toMidiFile(ex, title) {
         let v = Math.round(v0 + (v1 - v0) * e.t / ex.per) + (e.acc ? 14 : 0);
         v = Math.max(1, Math.min(127, v));
         const on = bi * barTicks + e.t * eighth, off = on + e.d * eighth;
+        if (e.grace) { // grace note: a short note just before the beat
+          const g = parse(e.grace).midi, gOn = Math.max(0, on - 40);
+          evs.push([gOn, 1, [0x90, g, Math.max(1, v - 20)]]); evs.push([on === gOn ? on + 30 : on, 0, [0x80, g, 0]]);
+        }
         e.notes.forEach((n) => { const p = parse(n).midi; evs.push([on, 1, [0x90, p, v]]); evs.push([off, 0, [0x80, p, 0]]); });
       });
     });

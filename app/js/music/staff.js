@@ -1,7 +1,7 @@
 // Grand-staff SVG renderer for one exercise (eighth-note grid).
 import { dia, noteName, midiToName } from './notes.js';
 
-const SV = { L: 84, BW: 229, SLOT: 25, PAD: 24, hs: 6, tTop: 60, bTop: 210, H: 318 };
+const SV = { L: 84, BW: 229, SLOT: 25, PAD: 24, hs: 6, tTop: 60, bTop: 210, H: 330 };
 const STF = { t: { top: SV.tTop, bot: 30, mid: 34 }, b: { top: SV.bTop, bot: 18, mid: 22 } };
 const yOf = (d, st) => STF[st].top + 48 - (d - STF[st].bot) * SV.hs;
 const xOf = (bar, slot) => SV.L + bar * SV.BW + SV.PAD + slot * SV.SLOT;
@@ -85,6 +85,14 @@ export function createStaff(svg, ex, opts = {}) {
           const sxx = up ? x + 5.6 : x - 5.6; sx.push(sxx);
           let s = `<g class="nt ${hc}" data-i="${i}">`;
           e.notes.forEach((n) => { s += ledgers(x, dia(n), st); });
+          if (e.grace) { // small slashed eighth just before the main note
+            const gx = x - 15, gd = dia(e.grace), gy = yOf(gd, st);
+            s += `<g class="grace">${ledgers(gx, gd, st)}`;
+            if (e.grace.includes('#')) s += `<text class="accd" font-size="11" x="${gx - 14}" y="${gy + 4}">♯</text>`; else if (/^[A-G]b/.test(e.grace)) s += `<text class="accd" font-size="11" x="${gx - 13}" y="${gy + 4}">♭</text>`;
+            s += `<ellipse cx="${gx}" cy="${gy}" rx="4.2" ry="3.1" transform="rotate(-20 ${gx} ${gy})" fill="currentColor"/>`;
+            s += `<line stroke="currentColor" stroke-width="1" x1="${gx + 3.8}" x2="${gx + 3.8}" y1="${gy}" y2="${gy - 20}"/><path fill="none" stroke="currentColor" stroke-width="1" d="M${gx + 3.8} ${gy - 20} q2 6 6 8"/>`;
+            s += `<line stroke="currentColor" stroke-width="1" x1="${gx - 1}" x2="${gx + 9}" y1="${gy - 6}" y2="${gy - 15}"/></g>`;
+          }
           e.notes.forEach((n, k) => {
             const y = ys[k];
             if (n.includes('#')) s += sharp(x, y); else if (/^[A-G]b/.test(n)) s += flat(x, y);
@@ -99,8 +107,8 @@ export function createStaff(svg, ex, opts = {}) {
           if (e.stac) s += `<circle cx="${x}" cy="${ay}" r="1.9" fill="currentColor"/>`;
           if (e.acc) { const y2 = up ? ay + 10 : ay - 10; s += `<path fill="none" stroke="currentColor" stroke-width="1.5" d="M${x - 6} ${y2 - 3.5} L${x + 6} ${y2} L${x - 6} ${y2 + 3.5}"/>`; }
           s += `<rect x="${x - 12}" y="${STF[st].top - 20}" width="24" height="90" fill="transparent"/></g>`;
-          e.f.forEach((f, k) => { const y = h === 'rh' ? 32 - k * 12 : 285; s += `<text class="fg${e.sug ? ' sug' : ''}" x="${x - 3}" y="${y}">${f}</text>`; });
-          if (names !== 'off') e.notes.forEach((n, k) => { const y = h === 'rh' ? 166 - k * 12 : 302; s += `<text class="nm ${hc}" data-i="${i}" x="${x}" y="${y}">${noteName(n, names)}</text>`; });
+          e.f.forEach((f, k) => { const y = h === 'rh' ? 32 - k * 12 : 286 - k * 11; s += `<text class="fg${e.sug ? ' sug' : ''}" x="${x - 3}" y="${y}">${f}</text>`; });
+          if (names !== 'off') e.notes.forEach((n, k) => { const y = h === 'rh' ? 166 - k * 12 : 314 - k * 11; s += `<text class="nm ${hc}" data-i="${i}" x="${x}" y="${y}">${noteName(n, names)}</text>`; });
           o += s;
         });
         if (g.length === 2) { const y = up ? end : end - 5; o += `<rect class="ink" x="${sx[0]}" y="${y}" width="${sx[1] - sx[0]}" height="5"/>`; }

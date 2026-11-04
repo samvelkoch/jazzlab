@@ -16,6 +16,7 @@ export function normalize(raw) {
     if (!Array.isArray(e.n) || !e.n.length) throw new Error(where + ': empty notes');
     if (e.t < 0 || e.t + d > per) throw new Error(where + ': event outside the bar');
     e.n.forEach(toMidi); // throws on a bad pitch
+    if (e.grace) toMidi(e.grace);
     return {
       t: e.t, d, notes: e.n.slice(), f: (e.f || []).slice(),
       acc: !!e.acc, sug: !!e.sug,
