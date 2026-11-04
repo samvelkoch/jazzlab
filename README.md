@@ -20,3 +20,7 @@ Live: https://samvelkoch.github.io/jazzlab/ (on iPad open it in **MIDIWeb** to c
 python3 -m http.server 8000   # then open http://localhost:8000
 node tests/export.test.mjs
 ```
+
+## Credits
+
+Piano sound: Salamander Grand Piano V2 by Alexander Holm (CC-BY 3.0), see `app/samples/piano/CREDITS.md`.

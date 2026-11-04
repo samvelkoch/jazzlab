@@ -7,7 +7,7 @@ import { toMidi, midiToName, noteName } from '../music/notes.js';
 import { createStaff } from '../music/staff.js';
 import { createKeyboard } from '../music/keyboard.js';
 import * as audio from '../music/audio.js';
-import { onNote, midiState, onMidiState } from '../music/midi.js';
+import { onNote, midiState, onMidiState, sendNote, silence } from '../music/midi.js';
 import { toMusicXML, toMidiFile } from '../music/export.js';
 
 const PASS = 0.85; // share of on-time notes needed to pass a tempo run
@@ -16,7 +16,7 @@ export function renderExercise(root, { ex, rerender }) {
   const steps = buildSteps(ex);
   const N = steps.length, per = ex.per;
   const saved = exProgress(ex.id);
-  const settings = { met: true, count: true, names: 'en', guideSnd: false, ...store.get('settings', {}) };
+  const settings = { met: true, count: true, names: 'en', guideSnd: false, pianoSnd: true, ...store.get('settings', {}) };
   const st = {
     stage: saved.stages.notes ? 'tempo' : 'notes',
     step: 0, hands: 'both',
@@ -40,6 +40,7 @@ export function renderExercise(root, { ex, rerender }) {
       check(t('metronome'), 'met'), check(t('countIn'), 'count'),
       h('div.poprow', null, h('span', null, t('noteNames')),
         seg([['en', 'C D E'], ['ru', 'До Ре'], ['off', t('namesOff')]], settings.names, (v) => { settings.names = v; saveSettings(); kb.setNames(v); buildStaff(); render(st.step); })),
+      check(t('pianoSound'), 'pianoSnd'),
       check(t('guideSound'), 'guideSnd'),
       h('button.btn', { type: 'button', title: t('exportPMTitle'), html: ICON.download + `<span>${t('exportPMTitle')}</span>`, onclick: () => doExport() })));
   function check(label, key) {
@@ -90,9 +91,10 @@ export function renderExercise(root, { ex, rerender }) {
   let staff;
   function buildStaff() { staff = createStaff(svgEl, ex, { names: settings.names, onPick: (i) => goto(i) }); }
   buildStaff();
+  audio.preloadPiano(...midiRange(ex));
   const kb = createKeyboard(kbEl, midiRange(ex), {
     names: settings.names,
-    onPress: (m) => { audio.ensureAudio(); audio.pianoNote(m, audio.now() + 0.01, 0.6, 0.7); staff.ghost(m); if (!midiOn()) handleNote(m, performance.now()); }
+    onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.6, 0.55); staff.ghost(m); if (!midiOn()) handleNote(m, performance.now()); }
   });
 
   function seg(items, value, cb, label) {
@@ -154,8 +156,16 @@ export function renderExercise(root, { ex, rerender }) {
       const e = s[hd]; if (!e || !handOn(hd)) return;
       const dur = e.stac ? Math.min(eighth * 0.55, 0.22) : eighth * 1.8 * e.d / 2;
       const v = 0.55 * lvl * bal * (e.acc ? 1.4 : 1) / Math.sqrt(e.notes.length);
-      e.notes.forEach((n) => audio.pianoNote(toMidi(n), time, dur, v));
+      e.notes.forEach((n) => play1(toMidi(n), time, dur, v));
     });
+  }
+  /** One note: through the piano when connected (real piano sound), else the built-in synth. */
+  function play1(m, time, dur, v) {
+    if (settings.pianoSnd && midiState().canPlay) {
+      const onMs = performance.now() + (time - audio.now()) * 1000;
+      if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) return;
+    }
+    audio.pianoNote(m, time, dur, v);
   }
   function goto(i) {
     if (st.playing) stop();
@@ -208,7 +218,7 @@ export function renderExercise(root, { ex, rerender }) {
   function stop(natural) {
     clearInterval(timer); cancelAnimationFrame(raf); queue = [];
     const was = st.playing; st.playing = false; screen.classList.remove('playing');
-    if (was && !natural) audio.hush();
+    if (was && !natural) { audio.hush(); silence(); }
     if (st.scored && was) { exp = exp.filter((x) => x.t <= audio.now()); expireExp(Infinity); showTempoFb(true, natural); }
     st.listenOnly = false; st.scored = false;
     idle(); paintPrimary();
