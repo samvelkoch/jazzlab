@@ -193,6 +193,42 @@ footer.actions { flex: none; display: flex; align-items: center; gap: 10px; flex
 .msg { margin: auto; padding: 40px 24px; text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center; }
 
 /* ---------- responsive ---------- */
+/* ---- Rhythm stage ---- */
+.rhythmpanel, .tappad, .runs { display: none; }
+.exscreen[data-stage="rhythm"] .staffpanel, .exscreen[data-stage="rhythm"] .kbpanel, .exscreen[data-stage="rhythm"] .pair { display: none; }
+.exscreen[data-stage="rhythm"] .rhythmpanel { display: flex; flex-direction: column; gap: 14px; padding: 18px 22px; flex: none; }
+.exscreen[data-stage="rhythm"] .tappad, .exscreen[data-stage="rhythm"] .runs { display: flex; }
+.rhead { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.rhead h2 { margin: 0; font: 700 22px/1.2 var(--display); letter-spacing: -.01em; }
+.rhead .sub { color: var(--muted); font-size: 15px; }
+.rgrid { --hc: var(--rh); --hc-soft: var(--rh-soft); display: grid; grid-template-columns: repeat(var(--per, 8), minmax(0, 1fr)); gap: 8px; }
+.rgrid[data-hand="lh"] { --hc: var(--lh); --hc-soft: var(--lh-soft); }
+.rgrid[data-hand="both"] { --hc: var(--accent); --hc-soft: var(--sub); }
+.rcell { display: flex; flex-direction: column; gap: 8px; }
+.rbox { height: 64px; border-radius: 14px; border: 2px solid var(--hc); background: var(--hc); box-sizing: border-box; display: flex; align-items: center; justify-content: center; color: var(--panel); font: 700 22px var(--display); }
+.rcell.hold .rbox { background: var(--hc-soft); }
+.rcell.r .rbox { background: transparent; border: 2px dashed var(--muted); opacity: .55; }
+.rcell.acc .rbox::after { content: ">"; }
+.rcell.cur .rbox { outline: 3px solid var(--fg); outline-offset: 2px; }
+.rcount { text-align: center; font: 500 26px/1 var(--display); color: var(--muted); }
+.rcell:nth-child(odd) .rcount { color: var(--fg); }
+.rcell.cur .rcount { color: var(--accent); }
+.rhit { height: 26px; display: flex; justify-content: center; }
+.rhit span { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+.rhit .ok { background: var(--ok-soft); color: var(--ok); } .rhit .meh { background: var(--meh-soft); color: var(--meh); } .rhit .bad { background: var(--bad-soft); color: var(--bad); }
+.sw { display: inline-block; width: 24px; height: 14px; border-radius: 4px; box-sizing: border-box; vertical-align: -2px; }
+.sw.n { background: var(--accent); } .sw.hold { background: var(--sub); border: 2px solid var(--accent); } .sw.r { border: 2px dashed var(--muted); }
+.tappad { flex: 1 1 0; min-height: 120px; font: inherit; border: 2px dashed var(--rh); background: var(--rh-soft); border-radius: 24px; color: var(--fg); align-items: center; justify-content: center; gap: 22px; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; padding: 16px; }
+.tappad.hit { animation: padhit .18s ease-out; }
+@keyframes padhit { from { transform: scale(.985); filter: brightness(.94); } to { transform: none; filter: none; } }
+.padicon { flex: none; width: 84px; height: 84px; border-radius: 50%; background: var(--rh); color: var(--panel); display: flex; align-items: center; justify-content: center; }
+.padtext { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.padtext b { font: 700 26px/1.2 var(--display); }
+.padtext span { color: var(--muted); font-size: 16px; }
+.runs { gap: 8px; align-items: center; }
+.runs i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--none); box-sizing: border-box; }
+.runs i.on { background: var(--ok); border-color: var(--ok); }
+
 @media (max-width: 1100px) {
   .stepgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   header.top .chip { max-width: 160px; }
@@ -205,6 +241,9 @@ footer.actions { flex: none; display: flex; align-items: center; gap: 10px; flex
   .exscreen header.top > .grow:nth-of-type(2) { display: none; }
 }
 @media (max-width: 640px) {
+  .rbox { height: 44px; border-radius: 10px; } .rcount { font-size: 18px; } .rgrid { gap: 4px; }
+  .padicon { width: 56px; height: 56px; } .padtext b { font-size: 19px; } .padtext span { font-size: 14px; }
+  .exscreen[data-stage="rhythm"] .tappad { min-height: 200px; flex: none; }
   .stepgrid { grid-template-columns: 1fr; }
   .counts { grid-template-columns: repeat(8, 26px); }
   .counts span { font-size: 14px; }
@@ -220,4 +259,4 @@ footer.actions { flex: none; display: flex; align-items: center; gap: 10px; flex
   .btn.xl span { display: inline; }
   .stages .num { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { .key.press, .key.down { transform: none; } .staff .ghost { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .tappad.hit { animation: none; } .key.press, .key.down { transform: none; } .staff .ghost { transition: none; } }

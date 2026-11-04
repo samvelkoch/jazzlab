@@ -15,7 +15,7 @@ Time unit = one eighth note. A 4/4 bar has slots `0..7` (`1 + 2 + 3 + 4 +`).
   "time": [4, 4],                     // only x/4 for now
   "tempo": { "start": 60, "target": 90 }, // start = first practice tempo, target = pass tempo
   "swing": false,                     // default eighths feel (user can switch)
-  "rhythm": "8 8 4 8 8 r8 8",         // rhythm pattern for the Rhythm stage (next update)
+  "rhythm": "8 8 4 8 8 r8 8",         // informational; the Rhythm stage derives the rhythm from the bars
   "defaults": { "stac": true },       // defaults for every event
   "dyn": [                            // dynamics; level 0..1 drives playback loudness
     { "bar": 0, "mark": "mp", "level": 0.55 },
