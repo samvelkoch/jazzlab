@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-improv/1",
+  "about": "Improvisation per step, after the book: one rhythm at a time (the step's 3 rhythms), 3–4 given notes, a 2-bar accompaniment loop. comp: bass on 1 and 3, chord on 2 and 4; stabs: chord on every beat (bass on 1 if given).",
+  "steps": {
+    "s1": { "hand": "rh", "notes": ["F4", "A4", "B4", "Eb5"], "f": [1, 2, 3, 4], "swing": false, "tempo": 72, "style": "comp",
+      "chords": [ { "name": "C7", "bass": ["C3", "G2"], "chord": ["E3", "Bb3"] }, { "name": "F7", "bass": ["F2", "C3"], "chord": ["A2", "Eb3"] } ] },
+    "s2": { "hand": "rh", "notes": ["B4", "D5", "E5", "F5"], "f": [1, 2, 3, 4], "swing": false, "tempo": 72, "style": "comp",
+      "chords": [ { "name": "G7", "bass": ["G2", "D3"], "chord": ["F3", "B3"] }, { "name": "G7", "bass": ["G2", "B2"], "chord": ["F3", "B3"] } ] },
+    "s3": { "hand": "rh", "notes": ["C5", "D5", "Eb5", "F5"], "f": [1, 2, 3, 4], "swing": true, "tempo": 80, "style": "stabs",
+      "chords": [ { "name": "Cm7", "bass": ["C3"], "chord": ["Eb3", "G3", "Bb3"] }, { "name": "F9", "bass": ["F2"], "chord": ["Eb3", "A3", "G4"] } ] },
+    "s4": { "hand": "rh", "notes": ["D5", "F5", "G5"], "f": [], "swing": true, "tempo": 80, "style": "comp",
+      "chords": [ { "name": "G7", "bass": ["G2", "D3"], "chord": ["F3", "B3"] }, { "name": "F7", "bass": ["F2", "C3"], "chord": ["A3", "Eb4"] } ] },
+    "s5": { "hand": "lh", "notes": ["G3", "A3", "C4", "D4"], "f": [5, 4, 2, 1], "swing": true, "tempo": 80, "style": "stabs",
+      "chords": [ { "name": "Am", "bass": [], "chord": ["A4", "C5", "E5"] }, { "name": "Dm", "bass": [], "chord": ["A4", "D5", "F5"] } ] }
+  }
+}

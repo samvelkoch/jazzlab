@@ -48,6 +48,18 @@ const DICT = {
     ladderTitle: 'Лесенка темпа', nowW: 'сейчас', goalW: 'цель',
     toNotes: 'До нот', notesOpen: 'Ноты открыты. Можно продолжать тренировать ритм.', oneMoreRun: 'Ещё один чистый проход, и откроются ноты.', runsLeft: 'Чистых проходов до нот: {n}.',
     barClean: 'Такт {n} чисто ✓',
+    imp_rhythm: 'Ритм', imp_echo: 'Эхо', imp_own: 'Своё', impNotes: 'Ноты', oneRhythm: 'Один ритм за раз',
+    impT_rhythm: 'Сначала ритм', impS_rhythm: 'Отстучи выбранный ритм под аккомпанемент одной клавишей. Говори слоги вслух.',
+    impT_echo: 'Повтори за мной', impS_echo: 'Пианино играет фразу из этих нот в этом ритме, ты повторяешь её в следующем такте.',
+    impT_own: 'Своя фраза', impS_own: 'Играй свою мелодию из этих нот, но строго в этом ритме. Потом такт отдыха.',
+    impF_rhythm: 'Стучи любой клавишей. Когда ритм сидит уверенно, переходи к «Эхо».', impF_echo: 'Не угадал ноту? Ничего страшного: главное, чтобы ритм совпал.',
+    impF_own: '«Не те» ноты тоже можно: слушай, как они звучат на фоне аккомпанемента.',
+    role_you: 'ТЫ', role_rest: 'ОТДЫХ', role_piano: 'ПИАНИНО', impPhrase: 'фраза', impRepeat: 'повтори', impTapRhythm: 'стучи ритм', impOwnPhrase: 'своя фраза', impListen: 'слушай аккомпанемент',
+    impHowSounds: 'Как это звучит', rhythmWords: 'Ритм = слова', impAccomp: 'Аккомпанемент', impLoop: '2 такта по кругу',
+    impEchoShapes: 'Какие бывают фразы', impIdeas: 'Идеи',
+    shape_up: 'Снизу вверх', shape_down: 'Сверху вниз', shape_same: 'Одна нота', shape_same_note: 'повторяй, звучит ритм', shape_arch: 'Горка', shape_arch_note: 'вверх и обратно',
+    impStart: 'Нажми «Старт»: 1 такт отсчёта, потом аккомпанемент по кругу', impListenPhrase: 'Слушай фразу…', impYourTurn: 'Твоя очередь',
+    rhythmW: 'Ритм', impSameNotes: 'те же ноты', shapeW: 'форма', impRhythmOk: 'ритм сидит', impDone: 'Импровизация шага пройдена!',
     planned: 'В плане', min: 'мин', h: 'ч'
   },
   en: {
@@ -96,6 +108,18 @@ const DICT = {
     ladderTitle: 'Tempo ladder', nowW: 'now', goalW: 'goal',
     toNotes: 'To the notes', notesOpen: 'Notes are open. You can keep practicing the rhythm.', oneMoreRun: 'One more clean run and the notes open.', runsLeft: 'Clean runs left before the notes: {n}.',
     barClean: 'Bar {n} clean ✓',
+    imp_rhythm: 'Rhythm', imp_echo: 'Echo', imp_own: 'Your own', impNotes: 'Notes', oneRhythm: 'One rhythm at a time',
+    impT_rhythm: 'Rhythm first', impS_rhythm: 'Tap the chosen rhythm on one key over the accompaniment. Say the syllables aloud.',
+    impT_echo: 'Repeat after me', impS_echo: 'The piano plays a phrase with these notes in this rhythm; you repeat it in the next bar.',
+    impT_own: 'Your own phrase', impS_own: 'Play your own melody with these notes, strictly in this rhythm. Then a bar of rest.',
+    impF_rhythm: 'Tap any key. When the rhythm feels solid, move on to “Echo”.', impF_echo: 'Missed a note? No problem: the rhythm is what counts.',
+    impF_own: '“Wrong” notes are fine too: listen to how they sound over the accompaniment.',
+    role_you: 'YOU', role_rest: 'REST', role_piano: 'PIANO', impPhrase: 'phrase', impRepeat: 'repeat', impTapRhythm: 'tap the rhythm', impOwnPhrase: 'your phrase', impListen: 'listen to the band',
+    impHowSounds: 'How it sounds', rhythmWords: 'Rhythm = words', impAccomp: 'Accompaniment', impLoop: '2 bars on a loop',
+    impEchoShapes: 'Phrase shapes', impIdeas: 'Ideas',
+    shape_up: 'Going up', shape_down: 'Going down', shape_same: 'One note', shape_same_note: 'repeat it, the rhythm sings', shape_arch: 'Arch', shape_arch_note: 'up and back',
+    impStart: 'Press “Play”: 1 bar count-in, then the accompaniment loops', impListenPhrase: 'Listen to the phrase…', impYourTurn: 'Your turn',
+    rhythmW: 'Rhythm', impSameNotes: 'same notes', shapeW: 'shape', impRhythmOk: 'rhythm is solid', impDone: 'Step improvisation done!',
     planned: 'Planned', min: 'min', h: 'h'
   }
 };
