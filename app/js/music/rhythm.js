@@ -1,16 +1,22 @@
 // Rhythm of an exercise, both hands merged (in the Rhythm stage hands don't matter: you clap one rhythm).
 
-const SYL = {
-  ru: { long: 'ко', short: 'фе', quarter: 'чай', off: 'ка', rest: 'тс' },
-  en: { long: 'cof', short: 'fee', quarter: 'tea', off: 'ka', rest: 'ts' }
+// Syllable systems. Per beat: two eighths = long + short, a quarter (or longer) = quarter,
+// rest then an eighth = rest + off.
+export const SYL_SYSTEMS = {
+  food: { ru: { long: 'ко', short: 'фе', quarter: 'чай', off: 'ка', rest: 'тс' }, en: { long: 'cof', short: 'fee', quarter: 'tea', off: 'ka', rest: 'ts' } },
+  kodaly: { ru: { long: 'ти', short: 'ти', quarter: 'та', off: 'ти', rest: 'тс' }, en: { long: 'ti', short: 'ti', quarter: 'ta', off: 'ti', rest: 'sh' } },
+  takadimi: { ru: { long: 'та', short: 'ди', quarter: 'та', off: 'ди', rest: '(та)' }, en: { long: 'ta', short: 'di', quarter: 'ta', off: 'di', rest: '(ta)' } },
+  scat: { ru: { long: 'ду', short: 'БА', quarter: 'ду', off: 'БАТ', rest: '–' }, en: { long: 'doo', short: 'BAH', quarter: 'doo', off: 'DAHT', rest: '–' } }
 };
+export const SYL_KEYS = Object.keys(SYL_SYSTEMS);
 
 /**
  * One bar → { per, onsets: [{ slot, len, acc, syl }], rests: [{ slot, syl }], kinds: ['n'|'h'|'r'] }.
  * Syllables go per beat: two eighths = «ко-фе», a quarter (or longer) = «чай», a rest then an eighth = «тс-ка».
  */
-export function barRhythm(ex, b, lang = 'ru') {
-  const per = ex.per, bar = ex.bars[b], s = SYL[lang] || SYL.ru;
+export function barRhythm(ex, b, lang = 'ru', system = 'food') {
+  const sys = SYL_SYSTEMS[system] || SYL_SYSTEMS.food;
+  const per = ex.per, bar = ex.bars[b], s = sys[lang] || sys.ru;
   const evs = [...bar.rh, ...bar.lh];
   const at = (slot) => evs.filter((e) => e.t === slot);
   const kinds = Array.from({ length: per }, (_, k) => (at(k).length ? 'n' : evs.some((e) => e.t < k && e.t + e.d > k) ? 'h' : 'r'));
@@ -45,7 +51,7 @@ export function parsePattern(str) {
 }
 
 /** Same as barRhythm, for a rhythm line instead of an exercise bar. */
-export function patternRhythm(str, per = 8, lang = 'ru') {
+export function patternRhythm(str, per = 8, lang = 'ru', system = 'food') {
   const ev = parsePattern(str).filter((e) => !e.rest).map((e) => ({ t: e.t, d: e.d, acc: false }));
-  return barRhythm({ per, bars: [{ rh: ev, lh: [] }] }, 0, lang);
+  return barRhythm({ per, bars: [{ rh: ev, lh: [] }] }, 0, lang, system);
 }

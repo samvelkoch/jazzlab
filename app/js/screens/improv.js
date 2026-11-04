@@ -15,7 +15,7 @@ const SHAPES = ['up', 'down', 'same', 'arch'];
 
 export function renderImprov(root, { step, imp, rhythms }) {
   const id = step.id + '-imp';
-  const settings = { met: true, names: 'en', pianoSnd: true, ...store.get('settings', {}) };
+  const settings = { met: true, names: 'en', pianoSnd: true, syl: 'food', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const pitches = imp.notes.map(toMidi);
   const sorted = pitches.map((m, k) => ({ m, k })).sort((a, b) => a.m - b.m); // low → high
@@ -29,7 +29,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
   };
   const nn = (k) => noteName(imp.notes[k], names);
   const lang = getLang();
-  const pats = rhythms.map((r) => ({ ...r, rh: patternRhythm(r.rhythm, PER, lang) }));
+  const pats = rhythms.map((r) => ({ ...r, rh: patternRhythm(r.rhythm, PER, lang, settings.syl) }));
 
   // ---------- layout ----------
   const stageBtn = (sid, n) => h('button', { type: 'button', 'data-stage': sid, onclick: () => setStage(sid) }, h('span.num', null, String(n)), t('imp_' + sid));
