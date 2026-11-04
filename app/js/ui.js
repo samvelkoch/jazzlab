@@ -1,6 +1,6 @@
 // Small DOM helpers + shared header pieces.
 import { t, getLang, setLang } from './i18n.js';
-import { toggleTheme, currentTheme } from './theme.js';
+import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './theme.js';
 import { midiState, onMidiState, connect } from './music/midi.js';
 
 /** h('button.btn.primary', {onclick, 'aria-label': ...}, ...children) */
@@ -39,12 +39,27 @@ export const ICON = {
   note: svg('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>', 18, 'stroke-width="2.2"')
 };
 
+/** Appearance popover: light / dark + colour scheme. */
 export function themeButton(onChange) {
-  const b = h('button.iconbtn', { type: 'button', 'aria-label': t('theme'), title: t('theme') });
-  const paint = () => { b.innerHTML = currentTheme() === 'dark' ? ICON.sun : ICON.moon; };
-  b.addEventListener('click', () => { toggleTheme(); paint(); if (onChange) onChange(); });
+  const sum = h('summary.iconbtn', { 'aria-label': t('theme'), title: t('theme') });
+  const mode = h('div.seg', { role: 'group', 'aria-label': t('theme') });
+  const schemes = h('div.schemes', { role: 'group', 'aria-label': t('colors') });
+  const paint = () => {
+    const th = currentTheme(), sc = currentScheme();
+    sum.innerHTML = th === 'dark' ? ICON.moon : ICON.sun;
+    mode.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === th)));
+    schemes.querySelectorAll('button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.v === sc));
+      b.querySelectorAll('i').forEach((i, k) => { i.style.background = SCHEMES[b.dataset.v][th][k]; });
+    });
+  };
+  [['light', t('light')], ['dark', t('dark')]].forEach(([v, label]) => mode.append(h('button', { type: 'button', 'data-v': v,
+    onclick: () => { if (currentTheme() !== v) toggleTheme(); paint(); if (onChange) onChange(); } }, label)));
+  Object.keys(SCHEMES).forEach((v) => schemes.append(h('button', { type: 'button', 'data-v': v,
+    onclick: () => { setScheme(v); paint(); if (onChange) onChange(); } }, h('span.sw3', null, h('i'), h('i'), h('i')), t('scheme_' + v))));
+  const d = h('details.settings', null, sum, h('div.pop', null, h('div.poprow', null, h('span', null, t('theme')), mode), h('div.poprow', null, h('span', null, t('colors')), schemes)));
   paint();
-  return b;
+  return d;
 }
 
 export function langSwitch(onChange) {
@@ -77,3 +92,11 @@ export function midiChip() {
   paint(midiState());
   return b;
 }
+
+// Close an open popover (details.settings) on outside tap or Escape.
+document.addEventListener('pointerdown', (e) => {
+  document.querySelectorAll('details.settings[open]').forEach((d) => { if (!d.contains(e.target)) d.removeAttribute('open'); });
+}, { capture: true });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('details.settings[open]').forEach((d) => d.removeAttribute('open'));
+});
