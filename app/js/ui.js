@@ -35,6 +35,7 @@ export const ICON = {
   next: svg('<path d="M9 5l7 7-7 7"/>', 18),
   check: svg('<path d="M5 12l5 5 9-10"/>', 16, 'stroke-width="3"'),
   lock: svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>', 14),
+  hand: svg('<path d="M8 13V5.5a1.5 1.5 0 013 0V12m0-1.5v-6a1.5 1.5 0 013 0V12m0-5.5a1.5 1.5 0 013 0V12m0-3.5a1.5 1.5 0 013 0V15a7 7 0 01-7 7h-1.5a7 7 0 01-5.7-3L4 15a1.5 1.5 0 012.3-1.9L8 15"/>', 40),
   note: svg('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>', 18, 'stroke-width="2.2"')
 };
 

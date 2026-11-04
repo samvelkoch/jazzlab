@@ -1,4 +1,4 @@
-// Exercise screen: staff + keyboard, stages Notes (wait mode) → In tempo → By heart.
+// Exercise screen: stages Rhythm (tap the rhythm on one key) → Notes (wait mode) → In tempo → By heart.
 import { h, ICON, themeButton, midiChip } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle } from '../store.js';
@@ -11,6 +11,8 @@ import { onNote, midiState, onMidiState, sendNote, silence } from '../music/midi
 import { toMusicXML, toMidiFile } from '../music/export.js';
 
 const PASS = 0.85; // share of on-time notes needed to pass a tempo run
+const RUNS = 3; // clean rhythm runs needed to pass the Rhythm stage
+const ANY = -1; // rhythm stage: any key counts
 
 export function renderExercise(root, { ex, rerender }) {
   const steps = buildSteps(ex);
@@ -18,7 +20,8 @@ export function renderExercise(root, { ex, rerender }) {
   const saved = exProgress(ex.id);
   const settings = { met: true, count: true, names: 'en', guideSnd: false, pianoSnd: true, ...store.get('settings', {}) };
   const st = {
-    stage: saved.stages.notes ? 'tempo' : 'notes',
+    stage: !saved.stages.rhythm ? 'rhythm' : !saved.stages.notes ? 'notes' : 'tempo',
+    cleanRuns: 0,
     step: 0, hands: 'both',
     bpm: store.get('tempo:' + ex.id, ex.tempo.start),
     swing: ex.swing,
@@ -29,10 +32,10 @@ export function renderExercise(root, { ex, rerender }) {
   const midiOn = () => midiState().connected;
 
   // ---------- layout ----------
-  const stageBtn = (id, label, disabled) => h('button', { type: 'button', 'data-stage': id, disabled, title: disabled ? t('rhythmSoon') : null, onclick: () => setStage(id) },
+  const stageBtn = (id, label) => h('button', { type: 'button', 'data-stage': id, onclick: () => setStage(id) },
     h('span.num'), label);
   const stages = h('nav.seg.stages', { 'aria-label': 'stages' },
-    stageBtn('rhythm', t('stRhythm'), true), stageBtn('notes', t('stNotes')), stageBtn('tempo', t('stTempo')), stageBtn('memory', t('stMemory')));
+    stageBtn('rhythm', t('stRhythm')), stageBtn('notes', t('stNotes')), stageBtn('tempo', t('stTempo')), stageBtn('memory', t('stMemory')));
 
   const settingsPanel = h('details.settings', null,
     h('summary.iconbtn', { 'aria-label': t('settings'), title: t('settings'), html: ICON.gear }),
@@ -72,6 +75,24 @@ export function renderExercise(root, { ex, rerender }) {
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
 
+  // Rhythm stage: one bar of eighth cells + a big tap pad (any piano key, screen tap or computer key)
+  const fbR = h('span.fb', { 'aria-live': 'polite' });
+  const barR = h('span.barno');
+  const rCells = Array.from({ length: per }, (_, k) => h('div.rcell', null,
+    h('div.rbox'), h('div.rcount', null, k % 2 ? '+' : String(k / 2 + 1)), h('div.rhit', null, h('span'))));
+  const rGrid = h('div.rgrid', { style: `--per:${per}` }, ...rCells);
+  const rhythmPanel = h('section.panel.rhythmpanel', null,
+    h('div.rhead', null, h('h2', null, t('rhythmTitle')), h('span.sub', null, t('rhythmSub')), h('div.grow'), barR, fbR),
+    rGrid,
+    h('div.legend', null,
+      h('span', null, h('i.sw.n'), t('legendSound')), h('span', null, h('i.sw.hold'), t('legendHold')), h('span', null, h('i.sw.r'), t('rest')),
+      h('span', null, h('i.dot.ok'), t('legendOk')), h('span', null, h('i.dot.meh'), t('legendMeh')), h('span', null, h('i.dot.bad'), t('legendMiss'))));
+  const pad = h('button.tappad', { type: 'button' },
+    h('span.padicon', { html: ICON.hand }),
+    h('span.padtext', null, h('b', null, t('tapHere')), h('span', null, t('countAloud'))));
+  pad.addEventListener('pointerdown', (e) => { e.preventDefault(); tap(e.timeStamp); });
+  const runDots = h('div.runs', { role: 'img' }, ...Array.from({ length: RUNS }, () => h('i')));
+
   const handsSeg = seg([['rh', t('right')], ['lh', t('left')], ['both', t('both')]], st.hands, (v) => { st.hands = v; resetScores(); render(st.step); }, 'hands');
   const prevB = h('button.iconbtn', { type: 'button', 'aria-label': t('prevStep'), title: t('prevStep'), html: ICON.prev, onclick: () => goto(st.step - 1) });
   const nextB = h('button.iconbtn', { type: 'button', 'aria-label': t('nextStep'), title: t('nextStep'), html: ICON.next, onclick: () => goto(st.step + 1) });
@@ -82,9 +103,9 @@ export function renderExercise(root, { ex, rerender }) {
     h('button', { type: 'button', 'aria-label': t('faster'), onclick: () => setBpm(st.bpm + 4) }, '+'));
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: onPrimary });
-  const footer = h('footer.actions', null, handsSeg, h('div.pair', null, prevB, nextB), listenB, h('div.grow'), tempoBox, swingSeg, primary);
+  const footer = h('footer.actions', null, handsSeg, h('div.pair', null, prevB, nextB), listenB, h('div.grow'), tempoBox, swingSeg, runDots, primary);
 
-  const screen = h('div.exscreen', null, header, h('main.ex', null, staffPanel, kbPanel), footer);
+  const screen = h('div.exscreen', null, header, h('main.ex', null, staffPanel, kbPanel, rhythmPanel, pad), footer);
   root.replaceChildren(screen);
 
   // ---------- engines ----------
@@ -114,15 +135,53 @@ export function renderExercise(root, { ex, rerender }) {
     [...counts.children].forEach((c, k) => c.classList.toggle('cur', k === s.slot));
     kb.show({ rh: s.rh, lh: s.lh }, { rh: nextOnset(i, 'rh'), lh: nextOnset(i, 'lh') }, st.hands);
     staff.setCursor(i);
+    renderRhythm(i);
   }
-  function fb(html) { fbEl.innerHTML = html; }
+  function fb(html) { fbEl.innerHTML = html; fbR.innerHTML = html; }
+
+  // ---------- rhythm view ----------
+  const rMarks = new Array(N).fill(null);
+  /** 'n' = a note starts here, 'hold' = a longer note still sounds, 'r' = rest (for the selected hands). */
+  function rKind(i) {
+    const s = steps[i], b = ex.bars[s.bar];
+    let acc = false, on = false;
+    ['rh', 'lh'].forEach((hd) => { const e = s[hd]; if (e && handOn(hd)) { on = true; acc = acc || e.acc; } });
+    if (on) return acc ? 'acc' : 'n';
+    return ['rh', 'lh'].some((hd) => handOn(hd) && b[hd].some((e) => e.t < s.slot && e.t + e.d > s.slot)) ? 'hold' : 'r';
+  }
+  const HIT = { ok: '✓', meh: '~', bad: '✗' };
+  function renderRhythm(i) {
+    if (st.stage !== 'rhythm') return;
+    const s = steps[i], base = s.bar * per;
+    barR.textContent = `${t('bar')} ${s.bar + 1} ${t('of')} ${ex.bars.length}`;
+    rGrid.dataset.hand = st.hands;
+    rCells.forEach((c, k) => {
+      const kind = rKind(base + k), m = rMarks[base + k];
+      c.className = 'rcell ' + (kind === 'acc' ? 'n acc' : kind) + (k === s.slot ? ' cur' : '');
+      const hit = c.lastChild.firstChild;
+      hit.className = m || ''; hit.textContent = m ? HIT[m] : '';
+    });
+  }
+  function paintRuns() {
+    [...runDots.children].forEach((d, k) => d.classList.toggle('on', k < st.cleanRuns));
+    runDots.setAttribute('aria-label', `${t('cleanRuns')}: ${st.cleanRuns} ${t('of')} ${RUNS}`);
+  }
+  function mark(i, cls) { if (st.stage === 'rhythm') { rMarks[i] = cls; renderRhythm(st.step); } else staff.mark(i, cls); }
+  function clearMarks() { rMarks.fill(null); staff.clearMarks(); renderRhythm(st.step); }
+  let lastTap = -1e9;
+  function tap(ts) {
+    if (st.stage !== 'rhythm') return;
+    audio.ensureAudio();
+    pad.classList.remove('hit'); void pad.offsetWidth; pad.classList.add('hit');
+    play1(st.hands === 'lh' ? 48 : 72, audio.now() + 0.005, 0.12, 0.5);
+    handleNote(ANY, ts);
+  }
   function setBpm(v) {
     st.bpm = Math.max(30, Math.min(200, Math.round(v)));
     bpmOut.innerHTML = `♩ ${st.bpm} <small>/ ${ex.tempo.target}</small>`;
     store.set('tempo:' + ex.id, st.bpm);
   }
   function setStage(id) {
-    if (id === 'rhythm') return;
     if (st.playing) stop();
     st.stage = id;
     screen.dataset.stage = id;
@@ -134,9 +193,11 @@ export function renderExercise(root, { ex, rerender }) {
       b.querySelector('.num').innerHTML = prog.stages[sid] ? ICON.check : String(['rhythm', 'notes', 'tempo', 'memory'].indexOf(sid) + 1);
     });
     resetScores();
-    paintPrimary();
-    fb(id === 'notes' ? (midiOn() ? t('waitHint') : t('noMidiHint')) : t('tempoHint'));
+    paintPrimary(); paintRuns();
+    const tip = id !== 'rhythm' && !prog.stages.rhythm ? `<b>${t('rhythmFirst')}</b> · ` : '';
+    fb(tip + (id === 'rhythm' ? t('tapStart') : id === 'notes' ? (midiOn() ? t('waitHint') : t('noMidiHint')) : t('tempoHint')));
     if (id === 'notes') toPlayable();
+    render(st.step);
   }
   function paintPrimary() {
     if (st.stage === 'notes') primary.innerHTML = ICON.play + `<span>${t('playInTempo')}</span>`;
@@ -150,13 +211,16 @@ export function renderExercise(root, { ex, rerender }) {
 
   // ---------- sound ----------
   function sounds(i, time) {
-    if (midiOn() && !settings.guideSnd && !st.listenOnly) return;
+    if ((midiOn() || st.stage === 'rhythm') && !settings.guideSnd && !st.listenOnly) return;
     const s = steps[i], eighth = 60 / st.bpm / 2, lvl = dynAt(ex, s).level;
-    [['rh', 1], ['lh', 0.85]].forEach(([hd, bal]) => {
+    const rhythm = st.stage === 'rhythm';
+    [['rh', 1, 72], ['lh', 0.85, 48]].forEach(([hd, bal, one]) => {
       const e = s[hd]; if (!e || !handOn(hd)) return;
       const dur = e.stac ? Math.min(eighth * 0.55, 0.22) : eighth * 1.8 * e.d / 2;
-      const v = 0.55 * lvl * bal * (e.acc ? 1.4 : 1) / Math.sqrt(e.notes.length);
-      e.notes.forEach((n) => play1(toMidi(n), time, dur, v));
+      // rhythm stage: one pitch per hand, so only the rhythm is heard
+      const notes = rhythm ? [one] : e.notes.map(toMidi);
+      const v = 0.55 * lvl * bal * (e.acc ? 1.4 : 1) / Math.sqrt(notes.length);
+      notes.forEach((m) => play1(m, time, dur, v));
     });
   }
   /** One note: through the piano when connected (real piano sound), else the built-in synth. */
@@ -179,7 +243,7 @@ export function renderExercise(root, { ex, rerender }) {
   function play(scored) {
     if (!audio.ensureAudio()) return;
     if (st.playing) return;
-    st.playing = true; st.listenOnly = !scored; st.scored = scored && midiOn();
+    st.playing = true; st.listenOnly = !scored; st.scored = scored && (midiOn() || st.stage === 'rhythm');
     screen.classList.add('playing');
     paintPrimary();
     nextIdx = 0; const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
@@ -228,13 +292,18 @@ export function renderExercise(root, { ex, rerender }) {
   const waitGot = new Set();
   let waitSt = { ok: 0, bad: 0, done: false, stepBad: false, clean: true };
   let exp = [], tSt = null;
-  const expectedAt = (i) => { const s = steps[i], set = new Set(); ['rh', 'lh'].forEach((hd) => { const e = s[hd]; if (e && handOn(hd)) e.notes.forEach((n) => set.add(toMidi(n))); }); return set; };
-  function resetScores() { waitSt = { ok: 0, bad: 0, done: false, stepBad: false, clean: true }; waitGot.clear(); staff.clearMarks(); exp = []; tSt = null; }
+  const expectedAt = (i) => { if (st.stage === 'rhythm') return new Set(['n', 'acc'].includes(rKind(i)) ? [ANY] : []); const s = steps[i], set = new Set(); ['rh', 'lh'].forEach((hd) => { const e = s[hd]; if (e && handOn(hd)) e.notes.forEach((n) => set.add(toMidi(n))); }); return set; };
+  function resetScores() { waitSt = { ok: 0, bad: 0, done: false, stepBad: false, clean: true }; waitGot.clear(); clearMarks(); exp = []; tSt = null; }
   function toPlayable() { for (let k = 0; k < N; k++) { const j = (st.step + k) % N; if (expectedAt(j).size) { if (j !== st.step) render(j); return true; } } return false; }
 
   function handleNote(m, ts) {
     markActive();
-    if (st.playing === true && st.scored) tempoNote(m, ts);
+    if (st.stage === 'rhythm') {
+      if (ts - lastTap < 70) return; // a chord or a double trigger = one tap
+      lastTap = ts; m = ANY;
+      if (!st.playing) { fb(t('tapStart')); return; }
+    }
+    if (st.playing && st.scored) tempoNote(m, ts); // 'ending' = last notes still due
     else if (!st.playing && st.stage === 'notes') waitNote(m);
   }
   function waitNote(m) {
@@ -263,7 +332,7 @@ export function renderExercise(root, { ex, rerender }) {
 
   const eighthSec = () => 60 / st.bpm / 2;
   const tols = () => { const e8 = eighthSec(); return { win: Math.min(Math.max(e8 * 0.45, 0.09), 0.25), tight: Math.min(Math.max(e8 * 0.16, 0.035), 0.075) }; };
-  function tempoReset() { exp = []; tSt = { ok: 0, meh: 0, miss: 0, bad: 0, sum: 0, abs: 0, n: 0 }; staff.clearMarks(); }
+  function tempoReset() { exp = []; tSt = { ok: 0, meh: 0, miss: 0, bad: 0, sum: 0, abs: 0, n: 0 }; clearMarks(); }
   function expectStep(i, time) { if (!tSt) return; const need = expectedAt(i); if (!need.size) return; const occ = { i, left: need.size, cls: 'ok' }; need.forEach((m) => exp.push({ t: time, m, occ, hit: false })); }
   const RANK = { ok: 0, meh: 1, bad: 2 };
   const worse = (a, b) => (RANK[b] > RANK[a] ? b : a);
@@ -272,11 +341,11 @@ export function renderExercise(root, { ex, rerender }) {
     const T = audio.toAudioTime(ts), { win, tight } = tols();
     let best = null;
     for (const x of exp) { if (x.hit || x.m !== m) continue; const dt = T - x.t; if (Math.abs(dt) <= win && (!best || Math.abs(dt) < Math.abs(T - best.t))) best = x; }
-    if (!best) { tSt.bad++; kb.flash(m, 'bad'); staff.mark(st.step, 'bad'); showTempoFb(false, false, t('wrongNote')); return; }
+    if (!best) { tSt.bad++; if (m !== ANY) kb.flash(m, 'bad'); mark(st.step, 'bad'); showTempoFb(false, false, t('wrongNote')); return; }
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';
     tSt[cls]++; tSt.sum += dt; tSt.abs += Math.abs(dt); tSt.n++; best.occ.cls = worse(best.occ.cls, cls);
-    kb.flash(m, cls);
+    if (m !== ANY) kb.flash(m, cls);
     showTempoFb(false, false, cls === 'ok' ? t('even') : `${dt < 0 ? t('early') : t('late')} ${Math.round(Math.abs(dt) * 1000)} ${t('ms')}`);
   }
   function expireExp(now) {
@@ -285,7 +354,7 @@ export function renderExercise(root, { ex, rerender }) {
     while (exp.length && (exp[0].hit || exp[0].t + win < now)) {
       const x = exp.shift();
       if (!x.hit) { tSt.miss++; x.occ.cls = 'bad'; }
-      if (--x.occ.left === 0) staff.mark(x.occ.i, x.occ.cls);
+      if (--x.occ.left === 0) mark(x.occ.i, x.occ.cls);
     }
   }
   function showTempoFb(final, fullRun, msg) {
@@ -296,7 +365,11 @@ export function renderExercise(root, { ex, rerender }) {
       const tot = s.ok + s.meh + s.miss + s.bad;
       const pct = tot ? s.ok / tot : 0;
       html = `${t('result')}: <b>${Math.round(pct * 100)}%</b> ${t('evenPct')} · ` + html;
-      if (fullRun && pct >= PASS && st.hands === 'both') {
+      if (fullRun && pct >= PASS && st.stage === 'rhythm') {
+        st.cleanRuns = Math.min(RUNS, st.cleanRuns + 1); paintRuns();
+        if (st.cleanRuns >= RUNS && !exProgress(ex.id).stages.rhythm) { fb(html); complete('rhythm'); return; }
+        if (st.bpm < ex.tempo.target) { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
+      } else if (fullRun && pct >= PASS && st.hands === 'both') {
         updateEx(ex.id, (p) => ({ ...p, bestTempo: Math.max(p.bestTempo || 0, st.bpm) }));
         if (st.bpm >= ex.tempo.target) { fb(html); complete(st.stage); return; }
         setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`;
@@ -308,7 +381,7 @@ export function renderExercise(root, { ex, rerender }) {
     const summary = fbEl.innerHTML;
     updateEx(ex.id, (p) => ({ ...p, stages: { ...p.stages, [stage]: true } }));
     setStage(st.stage); // repaint stage marks
-    fb(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · ${summary}`);
+    fb(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · ${summary}` + (stage === 'rhythm' ? ` · <b>${t('nowNotes')} →</b>` : ''));
   }
 
   // ---------- export ----------
@@ -335,6 +408,7 @@ export function renderExercise(root, { ex, rerender }) {
   const onKey = (e) => {
     if (e.target.closest('input,select,textarea,summary')) return;
     if (e.code === 'Space') { e.preventDefault(); onPrimary(); }
+    else if (st.stage === 'rhythm') { if (!e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey && e.key.length === 1) { e.preventDefault(); tap(e.timeStamp); } }
     else if (e.key === 'ArrowRight') { e.preventDefault(); goto(st.step + 1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); goto(st.step - 1); }
   };
