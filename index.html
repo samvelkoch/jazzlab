@@ -16,6 +16,7 @@
   --ivory:#fbfaf6; --ivory-edge:#c9c6bd; --ebony:#1d1e22; --ebony-top:#3a3c43;
   --hi:#191c25; --hi-fg:#ffffff;
   --paper:#fdfdfb; --staff:#6f7482; --band:rgba(37,99,201,.10);
+  --ok:#15803d; --meh:#c27c0e; --bad:#d4262c;
   --display:"Unbounded", "Arial Black", system-ui, sans-serif;
   --body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -23,12 +24,12 @@
   --bg:#13151b; --panel:#1c1f27; --fg:#e7e9ef; --muted:#9aa1b2; --line:#2e3340;
   --rh:#5b93f0; --rh-soft:#2a4170; --lh:#f0953c; --lh-soft:#6a4320;
   --ivory:#e8e6df; --ivory-edge:#8f8c84; --ebony:#0b0b0d; --ebony-top:#2a2c32;
-  --hi:#e7e9ef; --hi-fg:#13151b; --paper:#191c23; --staff:#8b91a0; --band:rgba(91,147,240,.16); color-scheme:dark } }
+  --hi:#e7e9ef; --hi-fg:#13151b; --paper:#191c23; --staff:#8b91a0; --band:rgba(91,147,240,.16); --ok:#3fbf6a; --meh:#e7a93a; --bad:#f0585c; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#13151b; --panel:#1c1f27; --fg:#e7e9ef; --muted:#9aa1b2; --line:#2e3340;
   --rh:#5b93f0; --rh-soft:#2a4170; --lh:#f0953c; --lh-soft:#6a4320;
   --ivory:#e8e6df; --ivory-edge:#8f8c84; --ebony:#0b0b0d; --ebony-top:#2a2c32;
-  --hi:#e7e9ef; --hi-fg:#13151b; --paper:#191c23; --staff:#8b91a0; --band:rgba(91,147,240,.16); color-scheme:dark }
+  --hi:#e7e9ef; --hi-fg:#13151b; --paper:#191c23; --staff:#8b91a0; --band:rgba(91,147,240,.16); --ok:#3fbf6a; --meh:#e7a93a; --bad:#f0585c; color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;
@@ -190,6 +191,17 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-bottom-width:2px
   .stage .opts{gap:6px 12px}
 }
 
+/* MIDI feedback */
+.fb{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 100%;min-height:1.5em;line-height:1.5em;order:9}
+.fb .ok{color:var(--ok)} .fb .meh{color:var(--meh)} .fb .bad{color:var(--bad)}
+.midist{font-size:12px;color:var(--muted)} .midist.on{color:var(--ok);font-weight:700} .midist.bad{color:var(--bad)}
+.key::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;z-index:3}
+.key.ok::before{background:var(--ok);opacity:.55;transition:none}
+.key.meh::before{background:var(--meh);opacity:.55;transition:none}
+.key.bad::before{background:var(--bad);opacity:.6;transition:none}
+.key.down{transform:translateY(2px)}
+#staff .nt.ok{color:var(--ok)} #staff .nt.meh{color:var(--meh)} #staff .nt.bad{color:var(--bad)}
+
 /* fixed-height hand boxes: content never changes layout height */
 .hand{display:grid!important;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;column-gap:10px;row-gap:0;height:58px;overflow:hidden;align-content:center}
 .hand .h{grid-row:1;grid-column:1;align-self:baseline}
@@ -205,6 +217,7 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-bottom-width:2px
       <div class="measure">Такт <b id="mNum">1</b> из <span id="mTot">4</span></div>
       <div class="dyn" id="dyn"></div>
       <div class="countin" id="countin" aria-live="polite"></div>
+      <div class="fb" id="fb" aria-live="polite"></div>
     </div>
     <div class="counts" id="counts"></div>
 
@@ -235,6 +248,8 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-bottom-width:2px
       <label class="chk"><input type="checkbox" id="cCount" checked>отсчёт 4 удара</label>
       <label class="chk"><input type="checkbox" id="cSwing">свинг</label>
       <label class="chk"><input type="checkbox" id="cStepSnd" checked>звук при шаге</label>
+      <span class="grp"><button class="btn" id="bMidi" title="Подключить цифровое пианино по MIDI">🎹 MIDI</button><span class="midist" id="midiSt"></span></span>
+      <label class="chk" id="lGuideSnd" hidden><input type="checkbox" id="cGuideSnd">звук нот сайта</label>
       <span class="sndhint" id="sndHint">Нет звука на iPad/iPhone? Нажми «▶ Играть» ещё раз и проверь громкость.</span>
     </div>
   </section>
@@ -249,6 +264,7 @@ kbd{font-family:var(--body);border:1px solid var(--line);border-bottom-width:2px
       <span>Цифра в кружке на клавише = палец (1 большой … 5 мизинец); пунктирный кружок = моя подсказка</span>
       <span>Цветная полоска внизу клавиши = что будет следующим</span>
       <span>● под клавишей = средняя «До»</span>
+      <span>🎹 MIDI: подключи пианино, и сайт слушает, что ты играешь. Без «▶» сайт ждёт правильный аккорд и сам идёт дальше; с «▶» оценивает попадание в ритм. Зелёный = верно, жёлтый = верно, но не в ритм, красный = не та нота</span>
       <span>Клавиатура компьютера: <kbd>Пробел</kbd> играть/стоп, <kbd>←</kbd> <kbd>→</kbd> шаг</span>
     </div>
   </section>
@@ -561,6 +577,7 @@ function click(t,strong){ const o=ac.createOscillator(), g=ac.createGain(); o.ty
   g.gain.setValueAtTime(strong?.18:.1,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.035); o.connect(g); g.connect(bus); o.start(t); o.stop(t+0.05); }
 
 function sounds(i,t){
+  if(midiOn && !$('cGuideSnd').checked) return;
   const st=STEPS[i], eighth=60/bpm()/2, dy=dynAt(i).level;
   [['rh',1],['lh',.85]].forEach(([h,bal])=>{ const e=st[h]; if(!e||!handOn(h)) return;
     const dur=e.stac? Math.min(eighth*0.55,0.22) : eighth*1.8; const v=0.55*dy*bal*(e.acc?1.4:1)/Math.sqrt(e.notes.length);
@@ -578,6 +595,7 @@ function play(){
   rng=range(); if(step<rng[0]||step>=rng[1]) step=rng[0];
   if(step===N-1 && loop==='off') step=0;
   nextIdx=step; const beat=60/bpm(); let t0=ac.currentTime+0.12;
+  if(midiOn) tempoReset();
   if($('cCount').checked){ for(let k=0;k<4;k++){ click(t0+k*beat,k===0); queue.push({t:t0+k*beat, ci:k+1}); } t0+=4*beat; }
   beatTime = t0 - (nextIdx%2? swingOff():0);
   queue.push({t:t0-0.001, ci:0});
@@ -589,7 +607,7 @@ function schedule(){
     const t=beatTime+(nextIdx%2? swingOff():0); if(t>ahead) break;
     const st=STEPS[nextIdx];
     if($('cMet').checked && st.slot%2===0) click(t, st.slot===0);
-    sounds(nextIdx,t); queue.push({t, i:nextIdx});
+    sounds(nextIdx,t); queue.push({t, i:nextIdx}); if(midiOn) expectStep(nextIdx,t);
     if(nextIdx%2) beatTime+=60/bpm();
     nextIdx++;
     if(nextIdx>=rng[1]){ if(loop==='off'){ queue.push({t:beatTime+0.05, end:true}); playing='ending'; break; } nextIdx=rng[0]; }
@@ -597,6 +615,7 @@ function schedule(){
 }
 function tick(){
   const now=ac.currentTime;
+  if(midiOn) expireExp(now);
   while(queue.length && queue[0].t<=now){ const q=queue.shift();
     if(q.end){ stop(true); return; }
     if(q.ci!==undefined){ $('countin').textContent=q.ci? 'отсчёт: '+q.ci : ''; continue; }
@@ -606,8 +625,111 @@ function tick(){
 function stop(natural){
   clearInterval(timer); cancelAnimationFrame(raf); queue=[]; const wasPlaying=playing; playing=false; $('bPlay').textContent='▶ Играть'; $('countin').textContent='';
   if(ac && wasPlaying && !natural){ bus.gain.setTargetAtTime(0,ac.currentTime,0.02); newBus(); }
+  if(midiOn && wasPlaying && tSt){ exp=exp.filter(x=>x.t<=ac.currentTime); expireExp(Infinity); showTempoFb(true); }
 }
-function goto(i, snd){ if(playing) stop(); i=((i%N)+N)%N; render(i); if(snd!==false && $('cStepSnd').checked){ ensureAudio(); sounds(i, ac.currentTime+0.01); } }
+function goto(i, snd){ if(playing) stop(); i=((i%N)+N)%N; render(i); waitGot.clear(); if(snd!==false && $('cStepSnd').checked){ ensureAudio(); sounds(i, ac.currentTime+0.01); } }
+
+/* ============ MIDI input (digital piano) ============
+ Standard Web MIDI (navigator.requestMIDIAccess). iPad: Safari has none, open the site in the MIDIWeb app.
+ Not playing ("wait" mode): the current step waits for the right notes, then moves on by itself.
+ Playing (▶, "tempo" mode): each note is matched to the nearest expected onset of the same key; we score timing. */
+let midiOn=false, midiAccess=null;
+const waitGot=new Set(); let waitSt={ok:0,bad:0,steps:0,done:false};
+let exp=[], tSt=null;
+function setMidiSt(txt,cls){ const el=$('midiSt'); el.textContent=txt; el.className='midist'+(cls?' '+cls:''); }
+function fb(html){ $('fb').innerHTML=html; }
+function flashKey(m,cls){ const el=KEYS[m]; if(!el) return; el.classList.remove('ok','meh','bad'); void el.offsetWidth; el.classList.add(cls);
+  clearTimeout(el._ft); el._ft=setTimeout(()=>el.classList.remove(cls),cls==='bad'?450:300); }
+function markStaff(i,cls){ $('staff').querySelectorAll('.nt[data-i="'+i+'"]').forEach(g=>{ g.classList.remove('ok','meh','bad'); if(cls) g.classList.add(cls); }); }
+function clearStaffMarks(){ $('staff').querySelectorAll('.nt.ok,.nt.meh,.nt.bad').forEach(g=>g.classList.remove('ok','meh','bad')); }
+function expectedAt(i){ const st=STEPS[i], s=new Set(); ['rh','lh'].forEach(h=>{ const e=st[h]; if(e&&handOn(h)) e.notes.forEach(n=>s.add(toMidi(n))); }); return s; }
+
+async function midiConnect(fromTap){
+  if(midiAccess){ // already connected: offer MIDIWeb's Bluetooth dialog if there is no input
+    if(!midiOn && window.midiweb && typeof window.midiweb.openBluetoothMIDI==='function') window.midiweb.openBluetoothMIDI();
+    return; }
+  if(!navigator.requestMIDIAccess){ if(fromTap) setMidiSt('нет MIDI в этом браузере. На iPad открой сайт в приложении MIDIWeb','bad'); return; }
+  try{ midiAccess=await navigator.requestMIDIAccess({sysex:false}); }
+  catch(err){ setMidiSt('доступ к MIDI не разрешён','bad'); return; }
+  midiAccess.onstatechange=bindInputs; bindInputs();
+  if(!midiOn && fromTap && window.midiweb && typeof window.midiweb.openBluetoothMIDI==='function') window.midiweb.openBluetoothMIDI();
+}
+function bindInputs(){
+  const ins=typeof midiAccess.inputs==='function'? midiAccess.inputs() : midiAccess.inputs; const names=[];
+  for(const inp of (ins.values? ins.values() : ins)){ if(inp.state==='disconnected') continue; inp.onmidimessage=onMidi; names.push(inp.name||'MIDI'); }
+  const was=midiOn; midiOn=names.length>0;
+  $('lGuideSnd').hidden=!midiOn;
+  $('sndHint').hidden=midiOn;
+  if(midiOn){ setMidiSt('✓ '+names.join(', '),'on');
+    if(!was){ $('cGuideSnd').checked=false; waitReset(); if(!playing) toPlayable(); fb('Играй! Сайт ждёт ноты, которые подсвечены'); } }
+  else { setMidiSt('пианино не найдено: включи Bluetooth на пианино и нажми 🎹 ещё раз','bad'); if(was) fb(''); }
+}
+function onMidi(e){
+  const d=e.data; if(!d||d.length<3) return; const cmd=d[0]&0xf0;
+  if(cmd===0x90 && d[2]>0) noteOn(d[1], e.timeStamp);
+  else if(cmd===0x80 || (cmd===0x90 && d[2]===0)){ const el=KEYS[d[1]]; if(el) el.classList.remove('down'); }
+}
+function noteOn(m, ts){
+  const el=KEYS[m]; if(el) el.classList.add('down');
+  if(playing===true) tempoNote(m, ts); else if(!playing) waitNote(m);
+}
+
+/* --- wait mode --- */
+function waitReset(){ waitSt={ok:0,bad:0,steps:0,done:false}; waitGot.clear(); clearStaffMarks(); }
+function waitRange(){ const per=EX.beats*2; return loop==='bar'? [STEPS[step].bar*per, STEPS[step].bar*per+per] : [0,N]; }
+function toPlayable(){ // jump forward to the next step that has notes for the selected hands
+  const [a,b]=waitRange(); for(let k=0;k<b-a;k++){ const j=a+((step-a+k)%(b-a)); if(expectedAt(j).size){ if(j!==step) render(j); return true; } } return false; }
+function waitNote(m){
+  if(waitSt.done) waitReset();
+  if(!expectedAt(step).size && !toPlayable()) return;
+  const need=expectedAt(step);
+  if(!need.has(m)){ waitSt.bad++; waitSt.stepBad=true; flashKey(m,'bad'); showGhost(m); showWaitFb('не та нота: '+noteName(SHARP_NAMES[m%12]+(Math.floor(m/12)-1))); return; }
+  waitGot.add(m); flashKey(m,'ok');
+  if([...need].every(x=>waitGot.has(x))){
+    waitSt.ok++; waitSt.steps++; markStaff(step, waitSt.stepBad?'bad':'ok'); waitSt.stepBad=false; waitGot.clear();
+    const [a,b]=waitRange(); let j=step+1;
+    for(; j<b; j++) if(expectedAt(j).size) break;
+    if(j>=b){ if(loop==='off'){ waitSt.done=true; showWaitFb(null,true); render(a); toPlayable(); return; }
+      render(a); toPlayable(); showWaitFb('круг пройден'); return; }
+    render(j); showWaitFb();
+  } else showWaitFb();
+}
+function showWaitFb(msg,done){
+  const s=waitSt, base='<span class="ok">✓ '+s.ok+'</span> · <span class="bad">✗ '+s.bad+'</span>';
+  fb(done? 'Готово! '+base+(s.bad?'':' · без ошибок 🎉') : base+(msg?' · '+msg:''));
+}
+
+/* --- tempo mode --- */
+function eighthSec(){ return 60/bpm()/2; }
+function tols(){ const e8=eighthSec(); return {win:Math.min(Math.max(e8*0.45,0.09),0.25), tight:Math.min(Math.max(e8*0.16,0.035),0.075)}; }
+function tempoReset(){ exp=[]; tSt={ok:0,meh:0,miss:0,bad:0,sum:0,abs:0,n:0}; clearStaffMarks(); fb('играй вместе с подсветкой'); }
+function expectStep(i,t){ if(!tSt) return; const need=expectedAt(i); if(!need.size) return;
+  const occ={i, left:need.size, cls:'ok'}; need.forEach(m=>exp.push({t,m,occ,hit:false})); }
+function toAcTime(ts){ const now=performance.now(); if(!(ts>0) || ts>now+50 || ts<now-2000) ts=now;
+  return ac.currentTime-(now-ts)/1000-(ac.outputLatency||0); }
+const worse=(a,b)=>({ok:0,meh:1,bad:2})[b]>({ok:0,meh:1,bad:2})[a]? b : a;
+function tempoNote(m,ts){
+  if(!ac||!tSt) return; const T=toAcTime(ts), {win,tight}=tols();
+  let best=null; for(const x of exp){ if(x.hit||x.m!==m) continue; const dt=T-x.t; if(Math.abs(dt)<=win && (!best||Math.abs(dt)<Math.abs(T-best.t))) best=x; }
+  if(!best){ tSt.bad++; flashKey(m,'bad'); markStaff(step,'bad'); showTempoFb(false,'не та нота'); return; }
+  best.hit=true; const dt=T-best.t, cls=Math.abs(dt)<=tight?'ok':'meh';
+  tSt[cls]++; tSt.sum+=dt; tSt.abs+=Math.abs(dt); tSt.n++; best.occ.cls=worse(best.occ.cls,cls);
+  flashKey(m,cls); showTempoFb(false, cls==='ok'? 'ровно' : (dt<0?'рано ':'поздно ')+Math.round(Math.abs(dt)*1000)+' мс');
+}
+function expireExp(now){ if(!tSt) return; const {win}=tols();
+  while(exp.length && (exp[0].hit || exp[0].t+win<now)){ const x=exp.shift();
+    if(!x.hit){ tSt.miss++; x.occ.cls='bad'; }
+    if(--x.occ.left===0) markStaff(x.occ.i, x.occ.cls); } }
+function showTempoFb(final,msg){ if(!tSt) return; const s=tSt;
+  let h='<span class="ok">✓ '+s.ok+'</span> · <span class="meh">≈ '+s.meh+'</span> · <span class="bad">✗ '+(s.bad+s.miss)+'</span>';
+  if(s.n){ const avg=s.sum/s.n*1000, abs=s.abs/s.n*1000; h+=' · ритм ±'+Math.round(abs)+' мс'+(Math.abs(avg)>25?(avg>0?' (тянешь)':' (спешишь)'):''); }
+  if(final){ const tot=s.ok+s.meh+s.miss; if(tot) h='Итог: '+Math.round(s.ok/tot*100)+'% ровно · '+h; }
+  else if(msg) h+=' · '+msg;
+  fb(h); }
+$('bMidi').addEventListener('click',()=>midiConnect(true));
+if(navigator.requestMIDIAccess){ // auto-connect when no prompt will appear (MIDIWeb, or permission already granted)
+  const q=navigator.permissions&&navigator.permissions.query? navigator.permissions.query({name:'midi'}) : Promise.reject();
+  q.then(p=>{ if(p.state==='granted') midiConnect(false); }, ()=>midiConnect(false)); }
 
 /* ============ Wiring ============ */
 function seg(id, cb){ const s=$(id); s.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
