@@ -15,7 +15,7 @@ const SHAPES = ['up', 'down', 'same', 'arch'];
 
 export function renderImprov(root, { step, imp, rhythms }) {
   const id = step.id + '-imp';
-  const settings = { met: true, names: 'en', pianoSnd: true, syl: 'food', ...store.get('settings', {}) };
+  const settings = { met: true, names: 'en', pianoSnd: true, syl: 'food', impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const pitches = imp.notes.map(toMidi);
   const sorted = pitches.map((m, k) => ({ m, k })).sort((a, b) => a.m - b.m); // low → high
@@ -65,9 +65,12 @@ export function renderImprov(root, { step, imp, rhythms }) {
     h('button', { type: 'button', 'aria-label': t('slower'), onclick: () => setBpm(st.bpm - 4) }, '−'), bpmOut,
     h('button', { type: 'button', 'aria-label': t('faster'), onclick: () => setBpm(st.bpm + 4) }, '+'));
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
+  const beatSeg = seg([['drums', t('drums')], ['click', t('metronome')]], settings.impBeat, (v) => {
+    settings.impBeat = v; store.set('settings', { ...store.get('settings', {}), impBeat: v });
+  }, 'backing');
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => (st.playing ? stop() : play()) });
-  const footer = h('footer.actions', null, swingSeg, tempoBox, footHint, h('div.grow'), primary);
+  const footer = h('footer.actions', null, swingSeg, beatSeg, tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.impscreen', null, header, h('main.ex.imp', null, h('div.improw', null, panel, aside), kbPanel), footer);
   root.replaceChildren(screen);
 
@@ -256,12 +259,26 @@ export function renderImprov(root, { step, imp, rhythms }) {
         if (k === youBar() + 0 && bar > 0 || (k !== youBar() && bar > 0)) { /* nothing */ }
       }
       accomp(k, slot, time, beat);
-      if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      if (settings.impBeat === 'drums') groove(slot, time); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
       if (k === 0 && st.stage === 'echo' && phrase) { const pn = phrase.notes.find((x) => x.slot === slot); if (pn) play1(pn.m, time, swingOff() * pn.len * 0.95, 0.55); }
       if (k === youBar()) { const o = pats[st.ri].rh.onsets.find((x) => x.slot === slot); if (o) exp.push({ t: time, slot, hit: false, m: phrase && st.stage === 'echo' ? (phrase.notes.find((x) => x.slot === slot) || {}).m : null }); }
       if (k === youBar() && slot === PER - 1) queue.push({ t: time + beat + 0.25, youEnd: bar });
       if (slot % 2) beatTime += beat;
       g++;
+    }
+  }
+  // Drummer: swing = ride "ding ding-a ding ding-a" + hi-hat foot on 2 and 4 + feathered kick;
+  // straight = ride eighths, hat on 2 and 4, kick on 1 and 3.
+  function groove(slot, time) {
+    const beatN = slot >> 1, off = slot % 2 === 1;
+    if (st.swing) {
+      if (!off || beatN % 2 === 1) audio.drum('ride', time, off ? 0.55 : beatN % 2 ? 0.9 : 0.75);
+      if (!off && beatN % 2 === 1) audio.drum('hat', time, 0.9);
+      if (!off) audio.drum('kick', time, 0.25);
+    } else {
+      audio.drum('ride', time, off ? 0.5 : 0.8);
+      if (!off && beatN % 2 === 1) audio.drum('hat', time, 0.9);
+      if (!off && beatN % 2 === 0) audio.drum('kick', time, beatN === 0 ? 0.6 : 0.45);
     }
   }
   function posAt(T) {
