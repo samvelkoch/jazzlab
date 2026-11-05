@@ -18,7 +18,7 @@ export function renderExercise(root, { ex, rerender }) {
   const steps = buildSteps(ex);
   const N = steps.length, per = ex.per;
   const saved = exProgress(ex.id);
-  const settings = { met: true, count: true, names: 'en', guideSnd: false, pianoSnd: true, syl: 'food', ...store.get('settings', {}) };
+  const settings = { met: true, count: true, loop: true, gap: true, names: 'en', guideSnd: false, pianoSnd: true, syl: 'food', ...store.get('settings', {}) };
   const st = {
     stage: !saved.stages.rhythm ? 'rhythm' : !saved.stages.notes ? 'notes' : 'tempo',
     step: 0, hands: 'both',
@@ -39,7 +39,7 @@ export function renderExercise(root, { ex, rerender }) {
   const settingsPanel = h('details.settings', null,
     h('summary.iconbtn', { 'aria-label': t('settings'), title: t('settings'), html: ICON.gear }),
     h('div.pop', null,
-      h('div.popsec', null, check(t('metronome'), 'met'), check(t('countIn'), 'count'), check(t('pianoSound'), 'pianoSnd'), check(t('guideSound'), 'guideSnd')),
+      h('div.popsec', null, check(t('metronome'), 'met'), check(t('countIn'), 'count'), check(t('loopOn'), 'loop'), check(t('gapBar'), 'gap'), check(t('pianoSound'), 'pianoSnd'), check(t('guideSound'), 'guideSnd')),
       h('div.popsec', null, h('span.pophead', null, t('noteNames')),
         seg([['en', 'C D E'], ['ru', 'До Ре'], ['off', t('namesOff')]], settings.names, (v) => { settings.names = v; saveSettings(); kb.setNames(v); buildStaff(); render(st.step); })),
       h('div.popsec', null, h('span.pophead', null, t('sylSystem')),
@@ -140,18 +140,22 @@ export function renderExercise(root, { ex, rerender }) {
     store.set('tempo:' + ex.id, st.bpm);
     if (st.stage === 'rhythm') rs.refresh();
   }
+  function paintStages() {
+    const prog = exProgress(ex.id);
+    stages.querySelectorAll('button').forEach((b) => {
+      const sid = b.dataset.stage;
+      b.setAttribute('aria-pressed', String(sid === st.stage));
+      b.classList.toggle('done', !!prog.stages[sid]);
+      b.querySelector('.num').innerHTML = prog.stages[sid] ? ICON.check : String(['rhythm', 'notes', 'tempo', 'memory'].indexOf(sid) + 1);
+    });
+    return prog;
+  }
   function setStage(id) {
     if (st.playing) stop();
     rs.stop();
     st.stage = id;
     screen.dataset.stage = id;
-    const prog = exProgress(ex.id);
-    stages.querySelectorAll('button').forEach((b) => {
-      const sid = b.dataset.stage;
-      b.setAttribute('aria-pressed', String(sid === id));
-      b.classList.toggle('done', !!prog.stages[sid]);
-      b.querySelector('.num').innerHTML = prog.stages[sid] ? ICON.check : String(['rhythm', 'notes', 'tempo', 'memory'].indexOf(sid) + 1);
-    });
+    const prog = paintStages();
     resetScores();
     paintPrimary();
     if (id === 'rhythm') { rs.refresh(); return; }
@@ -203,17 +207,20 @@ export function renderExercise(root, { ex, rerender }) {
   // ---------- transport ----------
   let timer = 0, raf = 0, nextIdx = 0, beatTime = 0, queue = [];
   const swingOff = () => { const beat = 60 / st.bpm; return st.swing ? beat * 2 / 3 : beat / 2; };
-  let range = [0, N], loopsLeft = 1;
-  /** opts: { a, b } = step range, loops = repeats of it */
+  let range = [0, N], loopsLeft = 1, looping = false, schedPass = null, passes = { n: 0, clean: 0, last: '' };
+  const newPass = () => ({ ok: 0, meh: 0, miss: 0, bad: 0, sum: 0, abs: 0, n: 0 });
+  /** opts: { a, b } = step range, loops = repeats of it. "Start" (not "Listen") loops until Stop when settings.loop is on. */
   function play(scored, opts = {}) {
     if (!audio.ensureAudio()) return;
     if (st.playing) return;
     st.playing = true; st.listenOnly = !scored; st.scored = scored && midiOn();
     range = [opts.a ?? 0, opts.b ?? N]; loopsLeft = opts.loops || 1;
+    looping = scored && settings.loop && !opts.loops; passes = { n: 0, clean: 0, last: '' };
     screen.classList.add('playing');
     paintPrimary();
     nextIdx = range[0]; const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     if (st.scored) tempoReset();
+    schedPass = tSt;
     if (settings.count) { for (let k = 0; k < ex.beats; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); } t0 += ex.beats * beat; }
     beatTime = t0;
     queue.push({ t: t0 - 0.001, ci: 0 });
@@ -231,10 +238,37 @@ export function renderExercise(root, { ex, rerender }) {
       if (nextIdx % 2) beatTime += 60 / st.bpm;
       nextIdx++;
       if (nextIdx >= range[1]) {
+        if (looping) { wrap(); continue; }
         if (--loopsLeft > 0) { nextIdx = range[0]; queue.push({ t: beatTime - 0.15, loop: true }); continue; }
         queue.push({ t: beatTime + 0.05, end: true }); st.playing = 'ending'; break;
       }
     }
+  }
+  /** End of one pass in loop mode: judge it a moment later, then (optionally) one empty bar with clicks, then again. */
+  function wrap() {
+    const end = beatTime, beat = 60 / st.bpm;
+    queue.push({ t: end + tols().win + 0.02, passEnd: schedPass });
+    if (settings.gap) {
+      for (let k = 0; k < ex.beats; k++) { audio.click(end + k * beat, k === 0); queue.push({ t: end + k * beat, gi: k + 1 }); }
+      beatTime += ex.beats * beat;
+    }
+    nextIdx = range[0];
+    if (st.scored) { schedPass = newPass(); queue.push({ t: beatTime - 0.002, passStart: schedPass }); }
+  }
+  /** One pass of the loop is over: show its result, +4 bpm after a clean one (applies from the next pass). */
+  function endPass(p) {
+    passes.n++;
+    if (!p) return; // no MIDI: nothing to judge
+    const tot = p.ok + p.meh + p.miss + p.bad, pct = tot ? p.ok / tot : 0;
+    let html = `${t('loopW')} ${passes.n}: <b>${Math.round(pct * 100)}%</b> ${t('evenPct')} · ` + statsHtml(p);
+    if (pct >= PASS && st.hands === 'both') {
+      passes.clean++;
+      updateEx(ex.id, (q) => ({ ...q, bestTempo: Math.max(q.bestTempo || 0, st.bpm) }));
+      if (st.bpm >= ex.tempo.target) {
+        if (!exProgress(ex.id).stages[st.stage]) { updateEx(ex.id, (q) => ({ ...q, stages: { ...q.stages, [st.stage]: true } })); paintStages(); html = `<span class="ok">${ICON.check} ${t('stageDone')}</span> · ` + html; }
+      } else { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
+    }
+    passes.last = html; fb(html);
   }
   function tick() {
     const now = audio.now();
@@ -243,6 +277,9 @@ export function renderExercise(root, { ex, rerender }) {
       const q = queue.shift();
       if (q.end) { stop(true); return; }
       if (q.loop) continue;
+      if (q.passEnd !== undefined) { endPass(q.passEnd); continue; }
+      if (q.passStart) { tSt = q.passStart; clearMarks(); continue; }
+      if (q.gi) { fb(`${t('again')}: <b>${q.gi}</b>` + (passes.last ? ' · ' + passes.last : '')); continue; }
       if (q.ci !== undefined) { if (q.ci) fb(`${t('countInLabel')}: <b>${q.ci}</b>`); else fb(st.scored ? t('tempoHint') : ''); continue; }
       render(q.i);
       markActive();
@@ -253,7 +290,9 @@ export function renderExercise(root, { ex, rerender }) {
     clearInterval(timer); cancelAnimationFrame(raf); queue = [];
     const was = st.playing; st.playing = false; screen.classList.remove('playing');
     if (was && !natural) { audio.hush(); silence(); }
-    if (st.scored && was) { exp = exp.filter((x) => x.t <= audio.now()); expireExp(Infinity); showTempoFb(true, natural); }
+    if (looping && was) { exp = []; if (passes.n) fb(`${t('loopsW')}: <b>${passes.n}</b>` + (st.scored ? ` · ${t('cleanW')}: <b>${passes.clean}</b>` + (passes.last ? ' · ' + passes.last : '') : '')); }
+    else if (st.scored && was) { exp = exp.filter((x) => x.t <= audio.now()); expireExp(Infinity); showTempoFb(true, natural); }
+    looping = false; schedPass = null;
     st.listenOnly = false; st.scored = false;
     idle(); paintPrimary();
   }
@@ -302,7 +341,7 @@ export function renderExercise(root, { ex, rerender }) {
   const eighthSec = () => 60 / st.bpm / 2;
   const tols = () => { const e8 = eighthSec(); return { win: Math.min(Math.max(e8 * 0.45, 0.09), 0.25), tight: Math.min(Math.max(e8 * 0.16, 0.035), 0.075) }; };
   function tempoReset() { exp = []; tSt = { ok: 0, meh: 0, miss: 0, bad: 0, sum: 0, abs: 0, n: 0 }; clearMarks(); }
-  function expectStep(i, time) { if (!tSt) return; graceAt(i).forEach((m) => graceExp.push({ t: time, m })); if (graceExp.length > 16) graceExp.shift(); const need = expectedAt(i); if (!need.size) return; const occ = { i, left: need.size, cls: 'ok' }; need.forEach((m) => exp.push({ t: time, m, occ, hit: false })); }
+  function expectStep(i, time) { if (!tSt) return; graceAt(i).forEach((m) => graceExp.push({ t: time, m })); if (graceExp.length > 16) graceExp.shift(); const need = expectedAt(i); if (!need.size) return; const occ = { i, left: need.size, cls: 'ok', p: schedPass || tSt }; need.forEach((m) => exp.push({ t: time, m, occ, hit: false })); }
   const RANK = { ok: 0, meh: 1, bad: 2 };
   const worse = (a, b) => (RANK[b] > RANK[a] ? b : a);
   function tempoNote(m, ts) {
@@ -318,7 +357,7 @@ export function renderExercise(root, { ex, rerender }) {
     }
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';
-    tSt[cls]++; tSt.sum += dt; tSt.abs += Math.abs(dt); tSt.n++; best.occ.cls = worse(best.occ.cls, cls);
+    const P = best.occ.p; P[cls]++; P.sum += dt; P.abs += Math.abs(dt); P.n++; best.occ.cls = worse(best.occ.cls, cls);
     kb.flash(m, cls);
     showTempoFb(false, false, cls === 'ok' ? t('even') : `${dt < 0 ? t('early') : t('late')} ${Math.round(Math.abs(dt) * 1000)} ${t('ms')}`);
   }
@@ -327,14 +366,15 @@ export function renderExercise(root, { ex, rerender }) {
     const { win } = tols();
     while (exp.length && (exp[0].hit || exp[0].t + win < now)) {
       const x = exp.shift();
-      if (!x.hit) { tSt.miss++; x.occ.cls = 'bad'; }
+      if (!x.hit) { x.occ.p.miss++; x.occ.cls = 'bad'; }
       if (--x.occ.left === 0) mark(x.occ.i, x.occ.cls);
     }
   }
+  const statsHtml = (s) => `<span class="ok">✓ ${s.ok}</span> · <span class="meh">~ ${s.meh}</span> · <span class="bad">✗ ${s.bad + s.miss}</span>`;
   function showTempoFb(final, fullRun, msg) {
     if (!tSt) return;
     const s = tSt;
-    let html = `<span class="ok">✓ ${s.ok}</span> · <span class="meh">~ ${s.meh}</span> · <span class="bad">✗ ${s.bad + s.miss}</span>`;
+    let html = statsHtml(s);
     if (final) {
       const tot = s.ok + s.meh + s.miss + s.bad;
       const pct = tot ? s.ok / tot : 0;
