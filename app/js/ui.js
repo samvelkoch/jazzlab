@@ -73,6 +73,12 @@ export function langSwitch(onChange) {
   return wrap;
 }
 
+/** Top-level sections: course / chords. */
+export function navTabs(active) {
+  const a = (id, href, label) => h('a', { href, 'aria-current': id === active ? 'page' : null }, label);
+  return h('nav.seg.big.navtabs', { 'aria-label': t('sections') }, a('course', '#/', t('navCourse')), a('chords', '#/chords', t('navChords')));
+}
+
 const VIRTUAL = /midiweb|session|сеть|network|iac|virtual/i;
 
 /** MIDI status chip; tapping it connects (and opens MIDIWeb's Bluetooth dialog on iPad). */

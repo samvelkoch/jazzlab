@@ -64,7 +64,7 @@ const DICT = {
     sayIt: 'Говори слоги вслух!', nowSoloLoop: 'Чисто! Дальше сам, я замолкаю', learnedPattern: 'Ритм выучен. Теперь по кругу без слогов', streakTo: 'подряд',
     cleanW: 'чисто', roundClean: 'Чистый подход!', loopPlay: 'По кругу',
     sylSystem: 'Слоги ритма', syl_food: 'ко-фе', syl_kodaly: 'Kodály', syl_takadimi: 'Takadimi', syl_scat: 'Скэт',
-    planned: 'В плане', min: 'мин', h: 'ч'
+    planned: 'В плане', min: 'мин', h: 'ч', navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -128,7 +128,7 @@ const DICT = {
     sayIt: 'Say the syllables aloud!', nowSoloLoop: 'Clean! Now on your own, I go quiet', learnedPattern: 'Rhythm learned. Now loop it without syllables', streakTo: 'in a row',
     cleanW: 'clean', roundClean: 'Clean round!', loopPlay: 'Loop',
     sylSystem: 'Rhythm syllables', syl_food: 'cof-fee', syl_kodaly: 'Kodály', syl_takadimi: 'Takadimi', syl_scat: 'Scat',
-    planned: 'Planned', min: 'min', h: 'h'
+    planned: 'Planned', min: 'min', h: 'h', navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
   }
 };
 

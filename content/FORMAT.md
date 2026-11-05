@@ -38,3 +38,14 @@ Event fields: `t` slot, `d` length in eighths (default 1), `n` pitches (`C4` = m
 
 Add an exercise: create the file, then add its id to `available` in `content/courses/<course>.json`.
 Check: `node tests/export.test.mjs`.
+
+## Chords mode (`content/chords/lessons.json`, `jazzlab-chords/1`)
+
+The path of the «Аккорды» section. Each lesson: `id`, `n`, `sym` (the example chord, in C), optional `compare`
+(a chord to hear it against), `title` / `sub` / `rule` / `sound` (`{ru, en}`), `practice` (symbols for «Найди»),
+and `comp` — the «В ритме» exercise: `bars` (one chord symbol per bar), `rhythm` (one bar, same tokens as above),
+`swing`, `tempo`. `kind: "keys"` = the key-names trainer, `kind: "progression"` = `sym` holds several chords.
+
+`app/js/music/chord-ex.js` turns `comp` into a normal exercise (right hand: the chord, left hand: the root or the
+slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord symbols are parsed by
+`app/js/music/chords.js`. Check: `node tests/chords.test.mjs`.

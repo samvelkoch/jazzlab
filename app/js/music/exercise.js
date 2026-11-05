@@ -35,7 +35,8 @@ export function normalize(raw) {
     beats, per, bars, dyn,
     tempo: { start: (raw.tempo && raw.tempo.start) || 60, target: (raw.tempo && raw.tempo.target) || 90 },
     swing: !!raw.swing, rhythm: raw.rhythm || null,
-    export: raw.export || {}
+    export: raw.export || {},
+    kicker: raw.kicker || null, back: raw.back || null
   };
 }
 

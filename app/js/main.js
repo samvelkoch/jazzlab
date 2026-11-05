@@ -7,6 +7,9 @@ import { loadExercise } from './music/exercise.js';
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
+import { renderChordsHub, renderDecoder, renderKeys, renderLesson, renderPractice } from './screens/chords.js';
+import { normalize } from './music/exercise.js';
+import { compExercise } from './music/chord-ex.js';
 
 applyTheme(currentTheme());
 autoConnect();
@@ -25,6 +28,14 @@ async function content() {
   cache = { index, course, improv };
   return cache;
 }
+let chordsCache = null;
+async function chordsData() {
+  if (chordsCache) return chordsCache;
+  const r = await fetch(new URL('chords/lessons.json', base));
+  if (!r.ok) throw new Error(`chords/lessons.json: HTTP ${r.status}`);
+  chordsCache = await r.json();
+  return chordsCache;
+}
 
 function message(text, err) {
   if (err) console.error(err);
@@ -37,6 +48,8 @@ async function route() {
   const hash = location.hash.replace(/^#/, '') || '/';
   const rerender = () => route();
   try {
+    const mc = /^\/chords(?:\/(what|keys|l|play|rhythm)(?:\/(.*))?)?$/.exec(hash);
+    if (mc) { await routeChords(mc[1], mc[2] ? decodeURIComponent(mc[2]) : '', rerender); window.scrollTo(0, 0); return; }
     const mi = /^\/imp\/(s\d+)$/.exec(hash);
     const m = /^\/ex\/([a-z0-9-]+)$/.exec(hash);
     if (mi) {
@@ -62,6 +75,25 @@ async function route() {
   } catch (err) {
     message(t('loadError'), err);
   }
+}
+
+async function routeChords(kind, arg, rerender) {
+  const data = await chordsData();
+  const lesson = (id) => data.lessons.find((l) => l.id === id && l.kind !== 'keys');
+  document.title = `${t('navChords')} · Jazzlab`;
+  let c = null;
+  if (!kind) c = renderChordsHub(root, { data, rerender });
+  else if (kind === 'what') c = renderDecoder(root, { sym: arg || 'B7sus', data });
+  else if (kind === 'keys') c = renderKeys(root);
+  else if (kind === 'l' && lesson(arg)) c = renderLesson(root, { lesson: lesson(arg) });
+  else if (kind === 'play') c = renderPractice(root, { setId: arg || 'mix', data });
+  else if (kind === 'rhythm' && lesson(arg)) {
+    const ex = normalize(compExercise(lesson(arg)));
+    document.title = `${L(ex.title)} · Jazzlab`;
+    c = renderExercise(root, { ex, rerender });
+  }
+  if (c === null || c === undefined) { if (kind) message(t('notFound')); return; }
+  cleanup = c;
 }
 
 window.addEventListener('hashchange', route);
