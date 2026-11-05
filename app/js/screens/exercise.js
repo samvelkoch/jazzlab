@@ -53,9 +53,9 @@ export function renderExercise(root, { ex, rerender }) {
   }
 
   const header = h('header.top', null,
-    h('a.iconbtn', { href: '#/', 'aria-label': t('back'), title: t('back'), html: ICON.back }),
+    h('a.iconbtn', { href: ex.back || '#/', 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null,
-      h('span.kicker', null, `${t('stepUpper')} ${ex.step} · ${t('exerciseUpper')} ${ex.number}`),
+      h('span.kicker', null, ex.kicker ? L(ex.kicker) : `${t('stepUpper')} ${ex.step} · ${t('exerciseUpper')} ${ex.number}`),
       h('span.title', null, L(ex.title))),
     h('div.grow'), stages, h('div.grow'),
     midiChip(), settingsPanel, themeButton());
