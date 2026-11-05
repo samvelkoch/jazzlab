@@ -57,7 +57,7 @@ export function themeButton(onChange) {
     onclick: () => { if (currentTheme() !== v) toggleTheme(); paint(); if (onChange) onChange(); } }, label)));
   Object.keys(SCHEMES).forEach((v) => schemes.append(h('button', { type: 'button', 'data-v': v,
     onclick: () => { setScheme(v); paint(); if (onChange) onChange(); } }, h('span.sw3', null, h('i'), h('i'), h('i')), t('scheme_' + v))));
-  const d = h('details.settings', null, sum, h('div.pop', null, h('div.poprow', null, h('span', null, t('theme')), mode), h('div.poprow', null, h('span', null, t('colors')), schemes)));
+  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), h('div.popsec', null, h('span.pophead', null, t('colors')), schemes)));
   paint();
   return d;
 }
@@ -73,18 +73,21 @@ export function langSwitch(onChange) {
   return wrap;
 }
 
+const VIRTUAL = /midiweb|session|сеть|network|iac|virtual/i;
+
 /** MIDI status chip; tapping it connects (and opens MIDIWeb's Bluetooth dialog on iPad). */
 export function midiChip() {
   const b = h('button.chip', { type: 'button' });
   const paint = (s) => {
     b.className = 'chip' + (s.connected ? ' ok' : s.error ? ' bad' : '');
-    const label = s.connected ? s.names.join(', ')
+    // MIDIWeb also lists its own virtual/network ports ("MIDIWeb Out", "Session 1"): show the real instrument
+    const label = s.connected ? (s.names.find((n) => !VIRTUAL.test(n)) || s.names[0])
       : s.error === 'unsupported' ? t('midiUnsupported')
       : s.error === 'denied' ? t('midiDenied')
       : s.supported ? t('midiConnect') : t('midiNone');
     b.innerHTML = ICON.piano + '<span></span>';
     b.querySelector('span').textContent = label;
-    b.title = label;
+    b.title = s.connected ? s.names.join(', ') : label;
   };
   b.addEventListener('click', () => connect(true));
   const off = onMidiState(paint);
