@@ -39,18 +39,17 @@ export function renderExercise(root, { ex, rerender }) {
   const settingsPanel = h('details.settings', null,
     h('summary.iconbtn', { 'aria-label': t('settings'), title: t('settings'), html: ICON.gear }),
     h('div.pop', null,
-      check(t('metronome'), 'met'), check(t('countIn'), 'count'),
-      h('div.poprow', null, h('span', null, t('noteNames')),
+      h('div.popsec', null, check(t('metronome'), 'met'), check(t('countIn'), 'count'), check(t('pianoSound'), 'pianoSnd'), check(t('guideSound'), 'guideSnd')),
+      h('div.popsec', null, h('span.pophead', null, t('noteNames')),
         seg([['en', 'C D E'], ['ru', 'До Ре'], ['off', t('namesOff')]], settings.names, (v) => { settings.names = v; saveSettings(); kb.setNames(v); buildStaff(); render(st.step); })),
-      h('div.poprow', null, h('span', null, t('sylSystem')),
+      h('div.popsec', null, h('span.pophead', null, t('sylSystem')),
         seg(SYL_KEYS.map((k) => [k, t('syl_' + k)]), settings.syl, (v) => { settings.syl = v; saveSettings(); rs.resyl(); })),
-      check(t('pianoSound'), 'pianoSnd'),
-      check(t('guideSound'), 'guideSnd'),
-      h('button.btn', { type: 'button', title: t('exportPMTitle'), html: ICON.download + `<span>${t('exportPMTitle')}</span>`, onclick: () => doExport() })));
+      h('div.popsec', null,
+        h('button.btn.popbtn', { type: 'button', title: t('exportPMTitle'), html: ICON.download + `<span>${t('exportPMTitle')}</span>`, onclick: () => doExport() }))));
   function check(label, key) {
     const inp = h('input', { type: 'checkbox' }); inp.checked = !!settings[key];
     inp.addEventListener('change', () => { settings[key] = inp.checked; saveSettings(); });
-    return h('label.chk', null, inp, label);
+    return h('label.chk', null, inp, h('span', null, label));
   }
 
   const header = h('header.top', null,
