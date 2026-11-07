@@ -13,7 +13,9 @@ Time unit = one eighth note. A 4/4 bar has slots `0..7` (`1 + 2 + 3 + 4 +`).
   "title": { "ru": "…", "en": "…" },
   "about": { "ru": "…", "en": "…" },  // optional one-line explanation
   "time": [4, 4],                     // only x/4 for now
-  "tempo": { "start": 60, "target": 90 }, // start = first practice tempo, target = pass tempo
+  "tempo": { "start": 60, "target": 90 }, // start = first practice tempo, target = a goal shown in the UI (♩ 60 · goal 90), not a requirement
+  "passAnyTempo": true,               // default true: a clean run passes the «In tempo» / «By heart» stages at any tempo;
+                                      // false = the stage passes only at tempo.target (old behaviour)
   "swing": false,                     // default eighths feel (user can switch)
   "rhythm": "8 8 4 8 8 r8 8",         // informational; the Rhythm stage derives the rhythm from the bars
   "defaults": { "stac": true },       // defaults for every event
