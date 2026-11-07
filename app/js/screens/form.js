@@ -10,7 +10,7 @@ import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar, lickBars, rhRoot, parseChord, patSpell } from '../music/forms.js';
+import { patternBar, lickBars, rhRoot, parseChord, patSpell, barChords } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -49,7 +49,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const cells = bars.map((c, k) => {
     const lh = barNotes[k];
     const uniq = [...new Map(lh.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
-    const label = rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(c))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(c)), names)).join(' · ');
+    const label = rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(barChords(c)[0]))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c)), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));

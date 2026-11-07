@@ -9,7 +9,7 @@ import { t, L, plural, getLang } from '../i18n.js';
 import { store, updateEx, markActive, idle } from '../store.js';
 import { noteName, midiToName, toMidi } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar, lickBars, patSpell, parseChord } from '../music/forms.js';
+import { patternBar, lickBars, patSpell, parseChord, barChords } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import { recordingToMidi } from '../music/export.js';
 import { rhythmAccuracy } from '../music/recording.js';
@@ -25,7 +25,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const settings = { names: 'en', pianoSnd: true, perfBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
-  const chords = [...new Set(bars)];
+  const chords = [...new Set(bars.flatMap(barChords))]; // distinct chords (a bar may hold two: "C7 A7")
   const lhByChord = Object.fromEntries(chords.map((c) => [c, patternBar(pattern, c)]));
   const rhMidi = licks.flatMap((l) => chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m)));
   const lhMidi = Object.values(lhByChord).flat().map((e) => e.m);

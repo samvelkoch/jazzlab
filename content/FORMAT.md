@@ -76,7 +76,9 @@ Item screens are `#/t/<track>/<item>`. Passing an item (drill thresholds, the ex
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
 
-`content/forms/<id>.json`: `bars` = one chord per bar (`C7`, `Fm7`, `Bbmaj7`, `Dm7b5`…), `practice` = a short chord
+`content/forms/<id>.json`: `bars` = one chord per bar (`C7`, `Fm7`, `Bbmaj7`, `Dm7b5`…) or two chords separated by a
+space (`"C7 A7"`, the turnaround in `blues-c-ta`): the first covers slots 0..3, the second slots 4..7 (`barChords()` /
+`chordAt()` in `forms.js`); licks and the right-hand form mode use the first chord of the bar. `practice` = a short chord
 sequence to learn a pattern on, `tempo`, `swing`, optional `ending` = an exercise id (`"blues-end"`): the bars played
 after the last chorus in a performance; its bar count sets the ending length.
 
@@ -84,6 +86,9 @@ after the last chorus in a performance; its bar count sets the ending length.
 `patternExercise()` in `app/js/music/forms.js` unfolds a pattern over a chord list into a normal exercise; the root sits
 between F2 and E3 (C → C3, F → F2, G → G2) so the hand stays in place. Spelling: the chord's own (flats for F and flat
 roots), but `deg` 3 and 10 are always flats (Bb3 over C7). Any number of events per bar works (p2 «Буги» has 8 eighths).
+`deg` may be an array (several notes at once) with `f` an array of the same length:
+`{ "t": 2, "d": 2, "deg": [4, 10], "f": [2, 1] }` (p3 «Корень и шелл»: the third and seventh on 2 and 4). The exercise gets
+one event with all the notes; `patternBar()` returns one entry per note, so the form screen scores each of them.
 The form screen allows max(1, round(notes per chorus / 40)) slips in a clean chorus: 1 for p1 / p1q, 2 for p2.
 
 # Licks (`jazzlab-lick/1`)

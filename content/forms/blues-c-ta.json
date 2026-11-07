@@ -1,0 +1,12 @@
+{
+  "$format": "jazzlab-form/1",
+  "id": "blues-c-ta",
+  "title": { "ru": "Блюз в C с оборотом", "en": "Blues in C with a turnaround" },
+  "about": { "ru": "Последние два такта идут C7 A7 | Dm7 G7 и возвращают в начало. Это «оборот», по нему узнают блюз.", "en": "The last two bars go C7 A7 | Dm7 G7 and lead back to the top. That is the turnaround; you know a blues by it." },
+  "tempo": 66,
+  "swing": true,
+  "bars": ["C7", "C7", "C7", "C7", "F7", "F7", "C7", "C7", "G7", "F7", "C7 A7", "Dm7 G7"],
+  "practice": ["C7", "A7", "Dm7", "G7"],
+  "patterns": ["p1", "p2", "p3"],
+  "ending": "blues-end"
+}

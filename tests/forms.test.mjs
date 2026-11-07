@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
-import { parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickExercise } from '../app/js/music/forms.js';
+import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -63,7 +63,7 @@ assert.deepEqual(end.bars[1].lh.map((e) => [e.t, e.d, e.notes.join(' '), e.f.joi
 assert.ok(end.bars.every((b) => [...b.rh, ...b.lh].every((e) => !e.stac)));
 const blues = read('content/tracks/blues.json');
 assert.deepEqual(blues.items['end-blues'], { kind: 'exercise', ex: 'blues-end' });
-assert.ok(blues.sections.find((s) => s.id === 'form').items.join(' ').includes('form-p1q form-p2 end-blues'));
+assert.ok(blues.sections.find((s) => s.id === 'form').items.join(' ').includes('form-p1q form-p2 form-ta form-p3 end-blues'));
 assert.ok(blues.sections.find((s) => s.id === 'lh').items.join(' ').includes('pat-p1q pat-p2'));
 Object.values(blues.items).forEach((it) => { if (it.pattern) read(`content/patterns/${it.pattern}.json`); });
 
@@ -127,4 +127,73 @@ assert.equal(read('content/licks/l5.json').role, 'question');
 assert.equal(read('content/licks/l4.json').role, 'answer');
 assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa']);
 Object.values(blues.items).forEach((it) => { if (it.lick) read(`content/licks/${it.lick}.json`); (it.licks || []).forEach((l) => read(`content/licks/${l}.json`)); });
+
+// p3 «Корень и шелл»: root on 1 and 3, third + seventh together on 2 and 4
+
+assert.ok(form.patterns.includes('p3'));
+const p3 = read('content/patterns/p3.json');
+const sx = normalize(patternExercise(p3, ['C7', 'F7'], { id: 's' }));
+assert.deepEqual(sx.bars[0].lh.map((e) => e.t), [0, 2, 4, 6]);
+assert.deepEqual(sx.bars[0].lh[1].notes, ['E3', 'Bb3']);
+assert.deepEqual(sx.bars[0].lh[1].f, [2, 1]);
+assert.deepEqual(sx.bars[0].lh.map((e) => e.notes.join(' ')), ['C3', 'E3 Bb3', 'C3', 'E3 Bb3']);
+assert.deepEqual(sx.bars[1].lh[1].notes, ['A2', 'Eb3']);
+const p3c = patternBar(p3, 'C7');
+assert.equal(p3c.length, 6);
+assert.deepEqual(p3c.filter((e) => e.t === 2).map((e) => [e.m, e.f, e.d]), [[52, 2, 2], [58, 1, 2]]);
+assert.deepEqual([...expectedAtSlot(p3, 'C7', 2)], [52, 58]);
+assert.deepEqual(patternBar(p3, 'F7').filter((e) => e.t === 6).map((e) => e.m), [45, 51]);
+assert.equal(buildSteps(sx).filter((s) => s.lh).length, 8);
+// a pattern under a lick keeps the two-note event as one event
+assert.deepEqual(normalize(lickExercise(l1, 'C7', p3)).bars[0].lh.map((e) => e.notes.join(' ')), ['C3', 'E3 Bb3', 'C3', 'E3 Bb3']);
+
+// two chords in a bar: the first covers slots 0..3, the second slots 4..7
+assert.deepEqual(barChords('C7 A7'), ['C7', 'A7']);
+assert.deepEqual(barChords('C7'), ['C7']);
+assert.throws(() => barChords('C7 H7'));
+assert.deepEqual(parseChord('Dm7').offsets, [0, 3, 7, 10]);
+assert.deepEqual(chordPcs('A7'), [9, 1, 4, 7]);
+assert.deepEqual(chordPcs('Dm7'), [2, 5, 9, 0]);
+assert.deepEqual(chordNames('Dm7'), ['D', 'F', 'A', 'C']);
+assert.deepEqual(chordNames('A7'), ['A', 'C#', 'E', 'G']);
+assert.deepEqual(chordNames('C7'), ['C', 'E', 'G', 'Bb']);
+assert.deepEqual(patternBar(p1, 'C7 A7').map((e) => [e.t, e.m, e.chord]), [[0, 48, 'C7'], [4, 52, 'A7']]);
+const tx = normalize(patternExercise(p1, ['C7 A7', 'Dm7 G7'], { id: 't' }));
+assert.deepEqual(tx.bars[0].lh.map((e) => [e.t, e.notes[0]]), [[0, 'C3'], [4, 'E3']]);
+assert.deepEqual(tx.bars[1].lh.map((e) => [e.t, e.notes[0]]), [[0, 'D3'], [4, 'D3']]);
+assert.equal(patternExercise(p1, ['C7 A7', 'Dm7 G7']).bars[1].chord, 'Dm7 G7');
+assert.deepEqual([...expectedAtSlot(p1, 'Dm7 G7', 4)], [50]);
+assert.deepEqual([...expectedAtSlot(p1, 'Dm7 G7', 0)], [50]);
+// A7's third is a sharp under the shell
+assert.deepEqual(normalize(patternExercise(p3, ['C7 A7'], { id: 'u' })).bars[0].lh.map((e) => e.notes.join(' ')), ['C3', 'E3 Bb3', 'A2', 'C#3 G3']);
+// licks over a two-chord bar use its first chord
+assert.deepEqual(lickBars(l1, 'C7 A7'), lickBars(l1, 'C7'));
+
+// the turnaround form
+const ta = read('content/forms/blues-c-ta.json');
+assert.equal(ta.bars.length, 12);
+assert.deepEqual(ta.bars.slice(10), ['C7 A7', 'Dm7 G7']);
+assert.deepEqual(ta.bars.slice(0, 10), form.bars.slice(0, 10));
+ta.bars.forEach((b) => assert.ok(barChords(b).length >= 1));
+assert.deepEqual(ta.practice, ['C7', 'A7', 'Dm7', 'G7']);
+assert.deepEqual(ta.patterns, ['p1', 'p2', 'p3']);
+assert.equal(ta.ending, 'blues-end');
+[p1, p2, p3].forEach((p) => { assert.equal(normalize(patternExercise(p, ta.bars, { id: 'z' })).bars.length, 12); normalize(patternExercise(p, ta.practice, { id: 'z' })); });
+assert.deepEqual([...new Set(ta.bars.flatMap(barChords))], ['C7', 'F7', 'G7', 'A7', 'Dm7']);
+// track items for the shell and the turnaround
+const secItems = (id) => blues.sections.find((s) => s.id === id).items;
+assert.ok(secItems('lh').join(' ').endsWith('pat-p2 pat-p3 pat-ta'));
+assert.equal(secItems('form').at(-1), 'end-blues');
+assert.ok(secItems('keys').join(' ').includes('d-chords d-chords-ta'));
+assert.deepEqual(blues.items['d-chords-ta'].tasks, [{ type: 'chord', chords: ['A7', 'Dm7'], n: 6 }]);
+assert.equal(blues.items['perf-blues'].form, 'blues-c-ta');
+Object.values(blues.items).forEach((it) => { if (it.form) read(`content/forms/${it.form}.json`); });
+Object.values(blues.items).filter((it) => it.kind === 'drill').forEach((it) => it.tasks.filter((k) => k.type === 'chord').forEach((k) => k.chords.forEach((c) => chordPcs(c))));
 console.log('ok: forms');
+
+// pattern degrees follow the chord quality: the shell over Dm7 is F + C, not F# + C
+assert.equal(fitDeg(4, parseChord('Dm7')), 3); assert.equal(fitDeg(10, parseChord('Cmaj7')), 11); assert.equal(fitDeg(4, parseChord('C7')), 4);
+
+assert.deepEqual(patternBar(p3, 'Dm7 G7').map((e) => e.m), [50, 53, 60, 43, 47, 53], 'Dm7: D3 F3 C4, G7: G2 B2 F3');
+assert.deepEqual(normalize(patternExercise(p3, ['Dm7'], { id: 'z' })).bars[0].lh[1].notes, ['F3', 'C4']);
+console.log('ok: fitDeg');

@@ -35,17 +35,54 @@ export const patSpell = (m, deg, chord) => spell(m, flatsFor(chord) || [3, 10].i
 export const lhRoot = (chord) => (chord.pc >= 5 ? 36 + chord.pc : 48 + chord.pc);
 
 /**
+ * The chords of one form bar: "C7" -> ["C7"], "C7 A7" -> ["C7", "A7"] (two chords: the first covers
+ * slots 0..3, the second slots 4..7). Throws on an unknown chord.
+ */
+export function barChords(name) {
+  const out = String(name).trim().split(/\s+/);
+  if (out.length > 2) throw new Error('Too many chords in a bar: ' + name);
+  out.forEach(parseChord);
+  return out;
+}
+/** The chord name that sounds at eighth slot t of a bar. */
+export const chordAt = (barName, t) => { const c = barChords(barName); return c[c.length > 1 && t >= 4 ? 1 : 0]; };
+
+/** Chord tones as names, spelled like the left-hand pattern: A7 = A C# E G, C7 = C E G Bb, Dm7 = D F A C. */
+export const chordNames = (name) => { const c = parseChord(name); return c.offsets.map((o) => patSpell(60 + c.pc + o, o, c).replace(/-?\d+$/, '')); };
+
+// a pattern event's notes: deg may be a number or an array (several notes at once), f the same shape
+const evDegs = (e) => (Array.isArray(e.deg) ? e.deg : [e.deg]);
+/**
+ * Fit a pattern degree to the chord quality: patterns are written over a dominant 7th (3rd = 4, 7th = 10);
+ * over a minor chord the 3rd becomes 3 (Dm7: F, not F#), over a maj7 the 7th becomes 11, over m7b5/dim the 5th becomes 6.
+ */
+export function fitDeg(deg, chord) {
+  const o = chord.offsets, pc = ((deg % 12) + 12) % 12, oct = deg - pc;
+  if (pc === 4 && o.includes(3) && !o.includes(4)) return oct + 3;
+  if (pc === 10 && o.includes(11)) return oct + 11;
+  if (pc === 10 && o.includes(9) && !o.includes(10) && chord.qual === 'dim7') return oct + 9;
+  if (pc === 7 && o.includes(6) && !o.includes(7)) return oct + 6;
+  return deg;
+}
+const evFingers = (e) => (Array.isArray(e.f) ? e.f : e.f ? [e.f] : []);
+
+/**
  * Unfold a pattern over a chord sequence.
- * pattern: { id, title, bars: 1, events: [{ t, d, deg, f, stac? }] } — deg = semitones above the root.
- * bars: ['C7', 'F7', ...] one chord per bar.
+ * pattern: { id, title, bars: 1, events: [{ t, d, deg, f, stac? }] } — deg = semitones above the root
+ * (or an array of them, played together, with f an array of the same length).
+ * bars: ['C7', 'F7', 'C7 A7', ...] one or two chords per bar (an event at t < 4 uses the first, t >= 4 the second).
  * Returns a raw jazzlab-exercise/1 object (call normalize() on it).
  */
 export function patternExercise(pattern, bars, opts = {}) {
   const ev = pattern.events;
-  const out = bars.map((name) => {
-    const chord = parseChord(name), root = lhRoot(chord);
-    return { rh: [], lh: ev.map((e) => ({ t: e.t, d: e.d || 1, n: [patSpell(root + e.deg, e.deg, chord)], f: e.f ? [e.f] : [], stac: !!e.stac, sug: false })), chord: name };
-  });
+  const out = bars.map((name) => ({
+    rh: [],
+    lh: ev.map((e) => {
+      const chord = parseChord(chordAt(name, e.t)), root = lhRoot(chord);
+      return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord); }), f: evFingers(e), stac: !!e.stac, sug: false };
+    }),
+    chord: name
+  }));
   return {
     $format: 'jazzlab-exercise/1',
     id: opts.id || `pat-${pattern.id}`,
@@ -62,15 +99,21 @@ export function patternExercise(pattern, bars, opts = {}) {
   };
 }
 
-/** Left-hand notes (MIDI) of a pattern in one bar of a chord: [{ t, d, m, f }]. */
-export function patternBar(pattern, chordName) {
-  const chord = parseChord(chordName), root = lhRoot(chord);
-  return pattern.events.map((e) => ({ t: e.t, d: e.d || 1, m: root + e.deg, f: e.f || 0, stac: !!e.stac, deg: e.deg }));
+/**
+ * Left-hand notes (MIDI) of a pattern in one form bar: [{ t, d, m, f, stac, deg, chord }], one entry per note
+ * (a two-note event gives two entries with the same t, d). chord = the chord name at that slot.
+ */
+export function patternBar(pattern, barName) {
+  return pattern.events.flatMap((e) => {
+    const name = chordAt(barName, e.t), root = lhRoot(parseChord(name)), fs = evFingers(e);
+    const chord = parseChord(name);
+    return evDegs(e).map((g0, i) => { const g = fitDeg(g0, chord); return { t: e.t, d: e.d || 1, m: root + g, f: fs[i] || 0, stac: !!e.stac, deg: g, chord: name }; });
+  });
 }
 
 /** Expected MIDI set at a slot of a form bar. */
-export function expectedAtSlot(pattern, chordName, slot) {
-  return new Set(patternBar(pattern, chordName).filter((e) => e.t === slot).map((e) => e.m));
+export function expectedAtSlot(pattern, barName, slot) {
+  return new Set(patternBar(pattern, barName).filter((e) => e.t === slot).map((e) => e.m));
 }
 
 export const noteNameOf = (m) => midiToName(m);
@@ -89,9 +132,9 @@ export function lickSpell(m, deg) {
   return spell(m, ((deg % 12) + 12) % 12 !== 6);
 }
 
-/** Lick notes over a chord (MIDI): [{ t: 0..15, d, m, f, stac, deg }]. */
+/** Lick notes over a chord (MIDI): [{ t: 0..15, d, m, f, stac, deg }]. A two-chord bar uses its first chord. */
 export function lickNotes(lick, chordName) {
-  const root = rhRoot(parseChord(chordName));
+  const root = rhRoot(parseChord(barChords(chordName)[0]));
   return lick.events.map((e) => ({ t: e.t, d: e.d || 1, m: root + e.deg, f: e.f || 0, stac: !!e.stac, deg: e.deg }))
     .sort((a, b) => a.t - b.t);
 }
@@ -111,8 +154,7 @@ export function lickBars(lick, chordName) {
  * Returns a raw jazzlab-exercise/1 object (call normalize() on it).
  */
 export function lickExercise(lick, chordName, pattern, opts = {}) {
-  const chord = parseChord(chordName);
-  const lh = pattern ? patternBar(pattern, chordName).map((e) => ({ t: e.t, d: e.d, n: [patSpell(e.m, e.deg, chord)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })) : [];
+  const lh = pattern ? patternExercise(pattern, [chordName]).bars[0].lh : []; // multi-note events stay one event
   const bars = lickBars(lick, chordName).map((evs) => ({
     rh: evs.map((e) => ({ t: e.t, d: e.d, n: [lickSpell(e.m, e.deg)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
     lh: lh.map((e) => ({ ...e, n: e.n.slice(), f: e.f.slice() })),
