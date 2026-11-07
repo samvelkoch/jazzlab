@@ -817,3 +817,76 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   .diagsum .dstat { flex-basis: 40%; }
 }
 .skrow span::first-letter { text-transform: uppercase; }
+/* ---------- phone (<=640px): compact header, tidy footer grid, big sticky tap pad ---------- */
+/* footer rows: .footsegs holds the segmented controls; it is transparent to layout on wider screens */
+.footsegs { display: contents; }
+.exfoot .hands-seg { order: 0; } .exfoot .pair { order: 1; } .exfoot .listen-b { order: 2; } .exfoot > .grow { order: 3; }
+.exfoot .stepper { order: 4; } .exfoot .swing-seg { order: 5; } .exfoot .btn.xl { order: 6; }
+.padtoggle { display: none; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px 0 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; touch-action: manipulation; }
+.padtoggle i { width: 26px; height: 16px; border-radius: 999px; background: var(--none); position: relative; flex: none; transition: background .15s; }
+.padtoggle i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--panel); transition: transform .15s; }
+.padtoggle[aria-pressed="true"] { color: var(--fg); border-color: var(--accent); }
+.padtoggle[aria-pressed="true"] i { background: var(--accent); }
+.padtoggle[aria-pressed="true"] i::after { transform: translateX(10px); }
+.tappad > * { pointer-events: none; }
+
+@media (max-width: 640px) {
+  /* header: back, titles, icon group on one row; the stages nav on its own full-width row */
+  .exscreen header.top { gap: 6px; row-gap: 8px; padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)); }
+  .exscreen header.top .iconbtn { width: 40px; height: 40px; }
+  .exscreen header.top .chip:not(.session) { width: 40px; max-width: 40px; min-height: 40px; padding: 0; justify-content: center; }
+  .exscreen header.top .chip:not(.session) span { display: none; }
+  .exscreen header.top .chip.session { min-height: 40px; max-width: 96px; padding: 0 12px; gap: 4px; } /* session: "2/5 →" (the title is in its tooltip) */
+  .exscreen header.top .chip.session .sn, .exscreen header.top .chip.session .st { display: none; }
+  .exscreen header.top > .titles { flex: 1 1 0; min-width: 0; }
+  .exscreen header.top .kicker { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .exscreen header.top .titles .title { font-size: 15px; }
+  .exscreen header.top .settings .pop { top: 46px; }
+  .exscreen .stages { order: 9; width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .exscreen .stages::-webkit-scrollbar { display: none; }
+  .exscreen .stages button { flex: 1 0 auto; min-width: 0; min-height: 38px; padding: 0 8px; font-size: 13.5px; }
+
+  /* footer: row 1 = segmented controls (scrollable) [+ prev/next/listen on the notes stage]; row 2 = tempo stepper + primary button */
+  footer.actions { gap: 8px; padding: 8px max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+  footer.actions { margin-top: auto; }
+  footer.actions > * { order: 3; }
+  footer.actions > .footsegs, footer.actions > .pair, footer.actions > .listen-b { order: 1; }
+  footer.actions::after { content: ""; order: 2; flex: 0 0 100%; height: 0; margin-top: -8px; } /* forced line break */
+  footer.actions > .grow { display: none; }
+  .lickscreen[data-lstage="fingers"] .footsegs, .lickscreen[data-lstage="memory"] .footsegs { display: none; } /* all its controls are hidden there */
+  .footsegs { display: flex; align-items: center; gap: 8px; flex: 1 1 0; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .footsegs::-webkit-scrollbar { display: none; }
+  footer.actions .seg button { min-height: 36px; min-width: 0; padding: 0 11px; font-size: 14px; }
+  footer.actions .iconbtn { width: 40px; height: 40px; }
+  footer.actions .pair { gap: 4px; }
+  footer.actions .btn:not(.xl) { min-height: 44px; padding: 0 12px; }
+  footer.actions .stepper { flex: none; }
+  footer.actions .stepper button { width: 40px; height: 40px; }
+  footer.actions .bpm { min-width: 74px; font-size: 15px; }
+  footer.actions .btn.xl { flex: 1 1 0; min-width: 0; min-height: 50px; padding: 0 12px; font-size: 16px; }
+
+  /* rhythm stage: big tap pad pinned above the footer, so the learner can tap without scrolling */
+  .padtoggle { display: inline-flex; order: 1; margin-left: auto; }
+  .rbar { gap: 8px; }
+  .rbar > * { order: 3; }
+  .rbar > .seg { order: 0; } .rbar > .padtoggle { order: 1; }
+  .rbar > .lsteps { order: 2; flex: 1 1 100%; gap: 6px; }
+  .lsteps button { flex: 1 1 auto; min-width: 0; justify-content: center; height: 40px; padding: 0 6px; gap: 6px; font-size: 13px; white-space: nowrap; }
+  .lsteps button .n { flex: none; }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] .rhead .sub, .exscreen[data-stage="rhythm"][data-padbig="1"] .phint,.exscreen[data-stage="rhythm"][data-padbig="1"] .rhythmpanel .legend, .exscreen[data-stage="rhythm"][data-padbig="1"] .patlabel { display: none; }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] .rhythmpanel { padding: 12px 14px; }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] main.ex { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] main.ex .tappad { position: sticky; bottom: var(--foot-h, 128px); z-index: 4; flex: none; min-height: 30dvh; flex-direction: column; gap: 8px; padding: 12px; box-shadow: 0 0 0 12px var(--bg); }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] main.ex .tappad .padicon { width: 68px; height: 68px; }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] main.ex .tappad .padtext { align-items: center; text-align: center; }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] main.ex .tappad .padtext b { font-size: 22px; }
+  .exscreen[data-stage="rhythm"][data-padbig="1"] footer.actions { position: sticky; bottom: 0; z-index: 5; background: var(--bg); box-shadow: 0 -1px 0 var(--line); }
+}
+
+/* home at phone width: the course tabs scroll inside their row instead of widening the page */
+@media (max-width: 640px) {
+  .coursemain > .row { flex-wrap: nowrap; }
+  .coursemain > .row .seg.big { flex: 1 1 0; min-width: 0; max-width: none; }
+  .coursemain > .row h1 { flex: none; }
+  .cycle { flex-wrap: wrap; } .cyc { min-width: 0; flex: 1 1 140px; }
+}
