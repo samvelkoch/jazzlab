@@ -167,7 +167,8 @@ export function renderExercise(root, { ex, rerender }) {
   const clearMarks = () => staff.clearMarks();
   function setBpm(v) {
     st.bpm = Math.max(30, Math.min(200, Math.round(v)));
-    bpmOut.innerHTML = ex.passAnyTempo ? `♩ ${st.bpm}` : `♩ ${st.bpm} <small>/ ${ex.tempo.target}</small>`;
+    // the target is a goal when any tempo passes, a requirement otherwise
+    bpmOut.innerHTML = ex.passAnyTempo ? `♩ ${st.bpm} <small>· ${t('tempoGoal')} ${ex.tempo.target}</small>` : `♩ ${st.bpm} <small>/ ${ex.tempo.target}</small>`;
     store.set('tempo:' + ex.id, st.bpm);
     if (st.stage === 'rhythm') rs.refresh();
   }
@@ -295,9 +296,12 @@ export function renderExercise(root, { ex, rerender }) {
     if (pct >= PASS && st.hands === 'both') {
       passes.clean++;
       updateEx(ex.id, (q) => ({ ...q, bestTempo: Math.max(q.bestTempo || 0, st.bpm) }));
-      if (st.bpm >= ex.tempo.target) {
-        if (!exProgress(ex.id).stages[st.stage]) { updateEx(ex.id, (q) => ({ ...q, stages: { ...q.stages, [st.stage]: true } })); paintStages(); html = `<span class="ok">${ICON.check} ${t('stageDone')}</span> · ` + html; }
-      } else { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
+      // a clean pass completes the stage once (at any tempo, or at the target when passAnyTempo is off)...
+      if ((ex.passAnyTempo || st.bpm >= ex.tempo.target) && !exProgress(ex.id).stages[st.stage]) {
+        markStage(st.stage); paintStages(); html = `<span class="ok">${ICON.check} ${t('stageDone')}</span> · ` + html;
+      }
+      // ...and below the target the +4 bpm nudge is still offered (a suggestion when passAnyTempo is on)
+      if (st.bpm < ex.tempo.target) { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
     }
     passes.last = html; fb(html);
   }
@@ -412,20 +416,26 @@ export function renderExercise(root, { ex, rerender }) {
       html = `${t('result')}: <b>${Math.round(pct * 100)}%</b> ${t('evenPct')} · ` + html;
       if (fullRun && pct >= PASS && st.hands === 'both') {
         updateEx(ex.id, (p) => ({ ...p, bestTempo: Math.max(p.bestTempo || 0, st.bpm) }));
-        if (ex.passAnyTempo || st.bpm >= ex.tempo.target) { fb(html); complete(st.stage); return; }
-        setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`;
+        const passed = ex.passAnyTempo || st.bpm >= ex.tempo.target;
+        // below the target the +4 bpm nudge is still offered (a suggestion when it passes anyway)
+        if (st.bpm < ex.tempo.target) { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
+        if (passed) { fb(html); complete(st.stage); return; }
       }
     } else if (msg) html += ' · ' + msg;
     fb(html);
   }
-  function complete(stage) {
-    const summary = fbEl.innerHTML;
+  /** Store the stage as passed (plus the review side effects of "by heart"); no UI, so it is safe mid-loop. */
+  function markStage(stage) {
     updateEx(ex.id, (p) => ({ ...p, stages: { ...p.stages, [stage]: true } }));
     if (stage === 'memory' && ex.doneId) {
       // a generated lick exercise: "by heart" passes the lick item itself (and only it goes on review)
       updateEx(ex.doneId, (p) => ({ ...p, stages: { ...p.stages, done: true } }));
       scheduleReview(ex.doneId, true);
     } else if (stage === 'memory') scheduleReview(ex.id, true); // "by heart" is the gate for spaced review
+  }
+  function complete(stage) {
+    const summary = fbEl.innerHTML;
+    markStage(stage);
     setStage(st.stage); // repaint stage marks
     fb(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · ${summary}` + (stage === 'rhythm' ? ` · <b>${t('nowNotes')} →</b>` : ''));
     if (stage === 'rhythm') rs.say(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · <b>${t('nowNotes')} →</b>`);
