@@ -72,3 +72,63 @@ export function expectedAtSlot(pattern, chordName, slot) {
 }
 
 export const noteNameOf = (m) => midiToName(m);
+
+// ---------- right-hand licks (jazzlab-lick/1) ----------
+// A lick is a 2-bar phrase written relative to the chord root: events { t: 0..15 (eighths over 2 bars), d, deg, f, stac? }.
+
+/** Root for the right hand: C -> C4 (60), F -> F4 (65), G -> G4 (67), A -> A3 (57). */
+export const rhRoot = (chord) => (chord.pc <= 7 ? 60 + chord.pc : 48 + chord.pc);
+
+/**
+ * Blues spelling for a lick note: flats for the blue notes (b3, b7: Eb, Bb over C), except the
+ * passing #4 (deg 6), which leads up to the fifth and is written as a sharp (F# over C, C# over G).
+ */
+export function lickSpell(m, deg) {
+  return spell(m, ((deg % 12) + 12) % 12 !== 6);
+}
+
+/** Lick notes over a chord (MIDI): [{ t: 0..15, d, m, f, stac, deg }]. */
+export function lickNotes(lick, chordName) {
+  const root = rhRoot(parseChord(chordName));
+  return lick.events.map((e) => ({ t: e.t, d: e.d || 1, m: root + e.deg, f: e.f || 0, stac: !!e.stac, deg: e.deg }))
+    .sort((a, b) => a.t - b.t);
+}
+
+/** Split lick notes into its two bars: [[bar 1 events, t 0..7], [bar 2 events, t 0..7]]. */
+export function lickBars(lick, chordName) {
+  const out = [[], []];
+  lickNotes(lick, chordName).forEach((e) => {
+    const b = Math.min(1, Math.floor(e.t / 8)), t = e.t - b * 8;
+    out[b].push({ ...e, t, d: Math.max(1, Math.min(e.d, 8 - t)) });
+  });
+  return out;
+}
+
+/**
+ * A lick over one chord as a 2-bar exercise: right hand = the lick, left hand = the pattern in both bars.
+ * Returns a raw jazzlab-exercise/1 object (call normalize() on it).
+ */
+export function lickExercise(lick, chordName, pattern, opts = {}) {
+  const chord = parseChord(chordName), flats = flatsFor(chord);
+  const lh = pattern ? patternBar(pattern, chordName).map((e) => ({ t: e.t, d: e.d, n: [spell(e.m, flats)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })) : [];
+  const bars = lickBars(lick, chordName).map((evs) => ({
+    rh: evs.map((e) => ({ t: e.t, d: e.d, n: [lickSpell(e.m, e.deg)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
+    lh: lh.map((e) => ({ ...e, n: e.n.slice(), f: e.f.slice() })),
+    chord: chordName
+  }));
+  const tempo = opts.tempo || lick.tempo || 66;
+  return {
+    $format: 'jazzlab-exercise/1',
+    id: opts.id || `lick-${lick.id}-${chordName.toLowerCase()}`,
+    course: opts.course || 'blues', step: 0, number: 0,
+    title: opts.title || lick.title,
+    about: opts.about || lick.about || null,
+    time: [4, 4],
+    tempo: { start: tempo, target: tempo },
+    swing: opts.swing !== undefined ? !!opts.swing : !!lick.swing,
+    rhythm: null,
+    dyn: [{ bar: 0, mark: 'mf', level: 0.75 }],
+    bars,
+    passAnyTempo: true, kicker: opts.kicker || null, back: opts.back || '#/', doneId: opts.doneId || null
+  };
+}

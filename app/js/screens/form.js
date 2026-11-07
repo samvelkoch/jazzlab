@@ -1,11 +1,13 @@
 // Form screen: the whole 12-bar blues on a loop with drums. You play the left-hand pattern through the form,
 // the app scores every note and counts clean choruses. Three clean choruses in a row pass the item.
+// Right-hand mode (item.hand === 'rh' + a lick): the app always plays the left-hand pattern; you play the lick,
+// started on every odd bar (1, 3, 5, …) and transposed to the chord of its first bar.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar } from '../music/forms.js';
+import { patternBar, lickBars, rhRoot, parseChord } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -14,11 +16,16 @@ const PER = 8;
 const CLEAN_TO_PASS = 3; // clean choruses in a row
 const MAX_SLIPS = 1; // misses + wrong notes allowed in a clean chorus
 
-export function renderForm(root, { track, itemId, item, form, pattern, back }) {
+export function renderForm(root, { track, itemId, item, form, pattern, lick, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
-  const barNotes = bars.map((c) => patternBar(pattern, c)); // [{t, d, m, f}] per bar
+  const lhNotes = bars.map((c) => patternBar(pattern, c)); // [{t, d, m, f}] per bar
+  const rh = item.hand === 'rh' && !!lick;
+  // right hand: the lick over each pair of bars, in the key of the pair's first chord
+  const rhNotes = rh ? bars.map(() => []) : null;
+  if (rh) for (let k = 0; k < NB; k += 2) { const [b1, b2] = lickBars(lick, bars[k]); rhNotes[k] = b1; if (k + 1 < NB) rhNotes[k + 1] = b2; }
+  const barNotes = rh ? rhNotes : lhNotes; // what you play (expected + keyboard)
   const st = { mode: 'play', bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing, playing: false, streak: 0, choruses: 0 };
   const wasDue = reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date();
   const midiOn = () => midiState().connected;
@@ -27,14 +34,15 @@ export function renderForm(root, { track, itemId, item, form, pattern, back }) {
   const header = h('header.top', null,
     h('a.iconbtn', { href: back, 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null, h('span.kicker', null, `${L(track.title).toUpperCase()} · ${t('formUpper')}`), h('span.title', null, L(item.title || form.title))),
-    h('div.grow'), sessionChip(itemId), h('span.chordchip', null, L(pattern.title)), midiChip(), themeButton());
+    h('div.grow'), sessionChip(itemId), h('span.chordchip', null, L(rh ? lick.title : pattern.title)), midiChip(), themeButton());
   const fbEl = h('span.fb', { 'aria-live': 'polite' });
   const chorusEl = h('span.barno'), streakEl = h('div.loops', { 'aria-label': t('cleanChoruses') });
   const cells = bars.map((c, k) => {
     const lh = barNotes[k];
     const uniq = [...new Set(lh.map((e) => e.m))].sort((a, b) => a - b);
+    const label = rh ? (k % 2 === 0 ? `${t('lickW')} · ${noteName(midiToName(rhRoot(parseChord(c))), names)}` : '') : uniq.map((m) => noteName(midiToName(m), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
-      h('small.fnotes', null, uniq.map((m) => noteName(midiToName(m), names)).join(' · ')),
+      h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
   });
   const grid = h('div.fgrid', null, ...cells);
@@ -68,11 +76,13 @@ export function renderForm(root, { track, itemId, item, form, pattern, back }) {
   // ---------- keyboard ----------
   const all = barNotes.flat().map((e) => e.m);
   const lo = Math.min(...all), hi = Math.max(...all);
-  audio.preloadPiano(lo - 3, hi + 7);
+  const lhLo = rh ? Math.min(...lhNotes.flat().map((e) => e.m)) : lo;
+  audio.preloadPiano(Math.min(lo, lhLo) - 3, hi + 7);
   const kb = createKeyboard(kbEl, [lo, hi + 5], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const handKey = rh ? 'rh' : 'lh';
   const evAt = (bar, slot) => { const e = barNotes[bar].filter((x) => x.t === slot); return e.length ? { notes: e.map((x) => midiToName(x.m)), f: e.map((x) => x.f), sug: false, acc: false } : null; };
   const nextEv = (bar, slot) => { for (let k = 1; k <= PER * NB; k++) { const g = bar * PER + slot + k, b = Math.floor(g / PER) % NB, s = g % PER; const e = evAt(b, s); if (e) return e; } return null; };
-  function showKeys(bar, slot) { kb.show({ rh: null, lh: evAt(bar, slot) }, { rh: null, lh: nextEv(bar, slot) }, 'both'); }
+  function showKeys(bar, slot) { kb.show({ rh: null, lh: null, [handKey]: evAt(bar, slot) }, { rh: null, lh: null, [handKey]: nextEv(bar, slot) }, 'both'); }
 
   function play1(m, time, dur, v) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) return; }
@@ -81,7 +91,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, back }) {
   const fb = (html) => { fbEl.innerHTML = html; };
   function setBpm(v) { st.bpm = Math.max(40, Math.min(160, Math.round(v))); bpmOut.innerHTML = `♩ ${st.bpm}`; store.set('tempo:' + itemId, st.bpm); }
   function paintPrimary() { primary.innerHTML = st.playing ? ICON.stop + `<span>${t('stop')}</span>` : ICON.play + `<span>${t('play')}</span>`; }
-  function paintHint() { footHint.textContent = st.mode === 'listen' ? t('fListenHint') : midiOn() ? t('fPlayHint') : t('fPlayHintScreen'); }
+  function paintHint() { const r = rh ? 'Rh' : ''; footHint.textContent = st.mode === 'listen' ? t('fListenHint' + r) : midiOn() ? t('fPlayHint' + r) : t('fPlayHintScreen' + r); }
   function paintStreak() {
     streakEl.replaceChildren(...Array.from({ length: CLEAN_TO_PASS }, (_, k) => h('i' + (k < st.streak ? '' : '.off'))));
     chorusEl.textContent = `${t('chorusW')} ${st.choruses + 1}`;
@@ -111,6 +121,8 @@ export function renderForm(root, { track, itemId, item, form, pattern, back }) {
       const time = beatTime + (slot % 2 ? swingOff() : 0);
       if (time > ahead) break;
       if (settings.impBeat === 'drums') groove(slot, time, st.swing); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      // right-hand mode: the left hand is the band, always audible
+      if (rh) lhNotes[bar].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.35));
       const evs = barNotes[bar].filter((e) => e.t === slot);
       evs.forEach((e) => {
         const dur = e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9;

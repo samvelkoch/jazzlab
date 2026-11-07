@@ -8,7 +8,7 @@ Live: https://samvelkoch.github.io/jazzlab/ (on iPad open it in **MIDIWeb** to c
 ## Structure
 
 - `index.html` + `app/` — the app (vanilla JS modules, no build step)
-  - `app/js/screens/` — track (home, one-tap session), drill, form, exercise, improvisation, the book course
+  - `app/js/screens/` — track (home, one-tap session), drill, lick (echo), ear game, form, exercise, improvisation, the book course
   - `app/js/music/` — exercise model, forms/patterns generator, staff (SVG), keyboard, synth, drums, MIDI input, MusicXML/MIDI export
   - `app/js/store.js` — progress, spaced review (1/3/7/14/30 days), session queue
   - `app/css/app.css` — palette «Босса», light + dark

@@ -530,3 +530,46 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
   .fgrid { grid-auto-rows: 62px; }
   .dcard { min-height: 200px; }
 }
+
+/* ---------- licks ---------- */
+.lickpanel { overflow: auto; gap: 8px; }
+.lickpanel .rhead { flex-wrap: wrap; gap: 8px; align-items: center; }
+.lickinfo { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.lickinfo .sub { flex: 1 1 280px; color: var(--muted); font-size: 14px; }
+.lickinfo .fb { flex: 1 1 280px; white-space: normal; }
+.lickcounts { display: flex; gap: 6px; flex-wrap: wrap; }
+.lcount { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border-radius: 999px; background: var(--sub); color: var(--muted); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.lcount b { color: var(--fg); }
+.lcount.cur { box-shadow: inset 0 0 0 2px var(--accent); }
+.lcount.ok { background: var(--ok-soft); color: var(--ok); } .lcount.ok b { color: var(--ok); }
+.lickecho { display: flex; flex-direction: column; gap: 8px; }
+.lickroll { --top-n: 34px; --row-top: 74px; height: calc(var(--row-top) + var(--rows) * var(--row-h) + 10px); flex: none; }
+.lickroll .lnote { height: 32px; font-size: 14px; }
+.lickroll .contour { height: calc(var(--rows) * var(--row-h)); }
+.lickroll .prow b { height: 22px; min-width: 28px; }
+.licklink { display: none; flex-direction: column; align-items: flex-start; gap: 10px; padding: 4px 0; }
+.licklink .btn { text-decoration: none; }
+.lickscreen[data-lstage="fingers"] .lickecho, .lickscreen[data-lstage="memory"] .lickecho { display: none; }
+.lickscreen[data-lstage="fingers"] .licklink, .lickscreen[data-lstage="memory"] .licklink { display: flex; }
+.lickscreen[data-lstage="fingers"] .lickcounts, .lickscreen[data-lstage="memory"] .lickcounts,
+.lickscreen[data-lstage="fingers"] footer .seg, .lickscreen[data-lstage="memory"] footer .seg,
+.lickscreen[data-lstage="fingers"] footer .stepper, .lickscreen[data-lstage="memory"] footer .stepper { display: none; }
+.lickscreen .kb { height: clamp(90px, 16dvh, 150px); }
+.fnotes.rh { color: var(--rh); }
+@media (max-width: 640px) {
+  .lickpanel { flex: none; overflow: visible; padding: 12px; }
+  .lickpanel .btn span { display: inline; }
+  .lickroll .lnote span { display: none; }
+  .lickroll .rinner { left: 11%; }
+  .lickroll .prow { left: -12.4%; }
+  .lickroll .prow b { min-width: 26px; height: 22px; padding: 0 4px; font-size: 11px; }
+  .lickpanel .rhead h2 { font-size: 18px; }
+  .lickscreen .cyc { min-width: 0; gap: 6px; padding: 6px 10px; }
+  .lickscreen .cyc span { display: none; }
+  .lickscreen .cbeats { width: auto; flex: 1 1 0; min-width: 0; gap: 2px; }
+  .lickinfo .sub { font-size: 13px; }
+  .lickopen span { white-space: normal; text-align: left; }
+}
+
+/* ---------- ear ---------- */
+.earscreen:not(.playing) .earreplay { display: none; }

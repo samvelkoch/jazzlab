@@ -18,6 +18,16 @@
       "id": "form", "title": { "ru": "Форма", "en": "The form" },
       "about": { "ru": "Весь блюз по кругу под барабаны. Три чистых круга подряд, и ты играешь блюз.", "en": "The whole blues on a loop with drums. Three clean choruses in a row and you are playing the blues." },
       "items": ["form-p1", "form-p1q"]
+    },
+    {
+      "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
+      "about": { "ru": "Фразы на слух. Сначала повтори за пианино, потом пальцы, потом над всей формой.", "en": "Phrases by ear. Repeat after the piano, then fingers, then over the whole form." },
+      "items": ["lick-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3"]
+    },
+    {
+      "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
+      "about": { "ru": "Две-три минуты в день. Слух это навык, он растёт от повторов.", "en": "Two or three minutes a day. The ear is a skill; it grows with repetition." },
+      "items": ["ear-find"]
     }
   ],
   "items": {
@@ -54,6 +64,16 @@
     "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" },
     "pat-p1q": { "kind": "pattern", "pattern": "p1q", "form": "blues-c" },
     "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": { "ru": "Блюз на половинных", "en": "Blues in half notes" } },
-    "form-p1q": { "kind": "form", "form": "blues-c", "pattern": "p1q", "title": { "ru": "Блюз на четвертях", "en": "Blues in quarter notes" } }
+    "form-p1q": { "kind": "form", "form": "blues-c", "pattern": "p1q", "title": { "ru": "Блюз на четвертях", "en": "Blues in quarter notes" } },
+    "ear-find": {
+      "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
+      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала в пределах квинты от C4, потом октавы, потом двух.", "en": "I play a note, you find it on the keys. Within a fifth of C4 first, then an octave, then two." },
+      "rounds": 12, "ranges": [[60, 67], [60, 72], [55, 79]], "pass": { "acc": 0.8 }
+    },
+    "lick-l1": { "kind": "lick", "lick": "l1", "form": "blues-c", "pattern": "p1" },
+    "lick-l2": { "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1" },
+    "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1" },
+    "form-rh-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1", "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" } },
+    "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } }
   }
 }

@@ -37,7 +37,9 @@ export function normalize(raw) {
     swing: !!raw.swing, rhythm: raw.rhythm || null,
     export: raw.export || {},
     // generated exercises (left-hand patterns over a form): pass at any tempo, custom header + back link
-    passAnyTempo: !!raw.passAnyTempo, kicker: raw.kicker || null, back: raw.back || '#/'
+    passAnyTempo: !!raw.passAnyTempo, kicker: raw.kicker || null, back: raw.back || '#/',
+    // generated lick exercises: passing "by heart" marks this track item (the lick) as done
+    doneId: raw.doneId || null
   };
 }
 
