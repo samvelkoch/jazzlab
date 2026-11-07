@@ -54,10 +54,15 @@ Check: `node tests/export.test.mjs`.
       "tasks": [ { "type": "note", "notes": ["C", "D"], "n": 16 } ],   // note | all | interval (+ "semis") | chord (+ "chords")
       "pass": { "acc": 0.9, "avgMs": 2500 } },
     "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" }, // unfolded over form.practice as an exercise
-    "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": {…} }
+    "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": {…} },
+    "end-blues": { "kind": "exercise", "ex": "blues-end" }               // a written exercise from content/exercises
   }
 }
 ```
+
+An `exercise` item opens `content/exercises/<ex>.json` as a normal exercise (Notes → In tempo → By heart, no rhythm
+stage). Title and about default to the exercise's. Its stages are stored under the exercise id; passing «by heart»
+sets `stages.done` on the item and schedules the item's review (as with a lick's fingers exercise).
 
 An `ear` item is the «Find the note» game: `"kind": "ear", "rounds": 12, "ranges": [[60, 67], [60, 72], [55, 79]], "pass": { "acc": 0.8 }`.
 `ranges` are `[lowMidi, highMidi]` pairs; the range index grows evenly over the rounds. A round is ok (first try, no replay),
@@ -70,11 +75,14 @@ Item screens are `#/t/<track>/<item>`. Passing an item (drill thresholds, the ex
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
 
 `content/forms/<id>.json`: `bars` = one chord per bar (`C7`, `Fm7`, `Bbmaj7`, `Dm7b5`…), `practice` = a short chord
-sequence to learn a pattern on, `tempo`, `swing`.
+sequence to learn a pattern on, `tempo`, `swing`, optional `ending` = an exercise id (`"blues-end"`): the bars played
+after the last chorus in a performance; its bar count sets the ending length.
 
 `content/patterns/<id>.json`: `events` relative to the chord root, `deg` = semitones above it, `d` in eighths, `f` finger.
 `patternExercise()` in `app/js/music/forms.js` unfolds a pattern over a chord list into a normal exercise; the root sits
-between F2 and E3 (C → C3, F → F2, G → G2) so the hand stays in place.
+between F2 and E3 (C → C3, F → F2, G → G2) so the hand stays in place. Spelling: the chord's own (flats for F and flat
+roots), but `deg` 3 and 10 are always flats (Bb3 over C7). Any number of events per bar works (p2 «Буги» has 8 eighths).
+The form screen allows max(1, round(notes per chorus / 40)) slips in a clean chorus: 1 for p1 / p1q, 2 for p2.
 
 # Licks (`jazzlab-lick/1`)
 
@@ -124,11 +132,12 @@ slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord
 ## Performance (`kind: "perform"`)
 
 `"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3"], "choruses": 3, "title", "about" }`
-opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), one ending bar (beat 1
-only). `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
+opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
+`ending`: the drums keep the groove through every ending bar but the last, which gets beat 1 only (blues-end: 2 bars).
+A form without `ending` gets one ending bar, beat 1 only. The reminders link to the track's `exercise` item for the ending. `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
 Every note played is recorded as `{ t, d, m, v }` (`t`, `d` in seconds from the first beat of chorus 1, `v` 0..1).
-Store: `recordings` = the last 10, newest first, `{ id, itemId, date, bpm, swing, choruses, notes, acc: { ok, meh, off,
-pct, avgMs } }` (`acc`: onsets against the swing-aware eighth grid, `app/js/music/recording.js`); progress keeps
+Recording runs to the end of the ending. Store: `recordings` = the last 10, newest first, `{ id, itemId, date, bpm, swing,
+choruses, ending (bars recorded after the choruses; 0 when stopped early), notes, acc: { ok, meh, off, pct, avgMs } }` (`acc`: onsets against the swing-aware eighth grid, `app/js/music/recording.js`); progress keeps
 `runs` and `bestPct`. `recordingToMidi()` in `export.js` writes a recording as a `.mid`. Check: `node tests/recording.test.mjs`.
 
 ## Check-up (`kind: "diag"`)

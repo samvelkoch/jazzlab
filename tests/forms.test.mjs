@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
-import { parseChord, chordPcs, patternExercise, patternBar, lhRoot, spell, rhRoot, lickNotes, lickExercise } from '../app/js/music/forms.js';
+import { parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickExercise } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -29,6 +29,43 @@ assert.equal(ex.passAnyTempo, true);
 
 const bar = patternBar(read('content/patterns/p1q.json'), 'F7');
 assert.deepEqual(bar.map((e) => [e.t, e.m]), [[0, 41], [2, 48], [4, 41], [6, 48]]);
+
+// p2 "boogie": eight eighths per bar, b7 spelled as a flat over every chord
+const p2 = read('content/patterns/p2.json');
+assert.ok(form.patterns.includes('p2'));
+const bx = normalize(patternExercise(p2, form.practice, { id: 'b', swing: form.swing }));
+assert.deepEqual(form.practice, ['C7', 'F7', 'G7', 'C7']);
+assert.deepEqual(bx.bars[0].lh.map((e) => e.notes[0]), ['C3', 'E3', 'G3', 'A3', 'Bb3', 'A3', 'G3', 'E3']);
+assert.deepEqual(bx.bars[0].lh.map((e) => e.f[0]), [5, 3, 2, 1, 1, 1, 2, 3]);
+assert.deepEqual(bx.bars[0].lh.map((e) => [e.t, e.d, e.stac]), [0, 1, 2, 3, 4, 5, 6, 7].map((t) => [t, 1, false]));
+assert.deepEqual(bx.bars[1].lh.slice(0, 5).map((e) => e.notes[0]), ['F2', 'A2', 'C3', 'D3', 'Eb3']);
+assert.deepEqual(bx.bars[2].lh.slice(0, 5).map((e) => e.notes[0]), ['G2', 'B2', 'D3', 'E3', 'F3']);
+assert.deepEqual(bx.bars[3].lh.map((e) => e.notes[0]), bx.bars[0].lh.map((e) => e.notes[0]));
+assert.equal(bx.tempo.start, 56); assert.equal(bx.swing, true);
+assert.equal(buildSteps(bx).filter((s) => s.lh).length, 32, 'every eighth has a left-hand note');
+assert.deepEqual(patternBar(p2, 'C7').map((e) => e.m), [48, 52, 55, 57, 58, 57, 55, 52]);
+assert.deepEqual([0, 4].map((s) => [...expectedAtSlot(p2, 'F7', s)]), [[41], [51]]);
+// the boogie under a lick keeps the flat too
+assert.equal(normalize(lickExercise(read('content/licks/l1.json'), 'C7', p2)).bars[0].lh[4].notes[0], 'Bb3');
+// clean-chorus allowance in the form screen: max(1, round(notes per chorus / 40))
+const slips = (pat) => Math.max(1, Math.round(form.bars.flatMap((c) => patternBar(pat, c)).length / 40));
+assert.deepEqual([p1, read('content/patterns/p1q.json'), p2].map(slips), [1, 1, 2]);
+
+// the blues ending: a normal 2-bar exercise, linked from the form
+const end = normalize(read('content/exercises/blues-end.json'));
+assert.equal(form.ending, 'blues-end');
+assert.equal(end.bars.length, 2); assert.equal(end.passAnyTempo, true); assert.equal(end.swing, true);
+assert.deepEqual([end.tempo.start, end.tempo.target], [56, 66]);
+assert.deepEqual(end.bars[0].rh.map((e) => [e.t, e.d, e.notes.join(' '), e.acc]), [[0, 2, 'E4 G4 Bb4', true], [7, 1, 'F4 Ab4 B4', false]]);
+assert.deepEqual(end.bars[0].lh.map((e) => [e.t, e.d, e.notes.join(' ')]), [[0, 2, 'C3 G3'], [7, 1, 'Db3 Ab3']]);
+assert.deepEqual(end.bars[1].rh.map((e) => [e.t, e.d, e.notes.join(' '), e.f.join('')]), [[0, 8, 'E4 G4 Bb4 C5', '1235']]);
+assert.deepEqual(end.bars[1].lh.map((e) => [e.t, e.d, e.notes.join(' '), e.f.join('')]), [[0, 8, 'C2 C3', '51']]);
+assert.ok(end.bars.every((b) => [...b.rh, ...b.lh].every((e) => !e.stac)));
+const blues = read('content/tracks/blues.json');
+assert.deepEqual(blues.items['end-blues'], { kind: 'exercise', ex: 'blues-end' });
+assert.ok(blues.sections.find((s) => s.id === 'form').items.join(' ').includes('form-p1q form-p2 end-blues'));
+assert.ok(blues.sections.find((s) => s.id === 'lh').items.join(' ').includes('pat-p1q pat-p2'));
+Object.values(blues.items).forEach((it) => { if (it.pattern) read(`content/patterns/${it.pattern}.json`); });
 
 // the whole 12-bar form unfolds too
 const full = normalize(patternExercise(p1, form.bars, { id: 'y' }));

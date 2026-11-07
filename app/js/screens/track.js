@@ -58,7 +58,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (q.diag.includes(id)) return 'now';
     if (isDone(p)) return 'done';
     if (q.fresh[0] === id) return 'now';
-    return p ? 'meh' : 'none';
+    return p || (items[id].kind === 'exercise' && prog[items[id].ex]) ? 'meh' : 'none';
   };
   const meta = (id) => {
     const p = prog[id] || {}, it = items[id];
@@ -69,6 +69,8 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'perform' && p.runs) return `${p.runs} ${plural(p.runs, 'perfRecs')} · ${t('perfBest')} ${p.bestPct || 0}%`;
     if (it.kind === 'diag' && lastDiag) return `${t('dgLastW')}: ${new Date(lastDiag.date).toLocaleDateString()}`;
     if (it.kind === 'pattern' && p.stages) { const n = ['rhythm', 'notes', 'tempo', 'memory'].filter((s) => p.stages[s]).length; return n ? `${t('stagesW')} ${n}/4` : ''; }
+    // an exercise item keeps its stages under the exercise id (the item only gets `done`); no rhythm stage here
+    if (it.kind === 'exercise' && !isDone(p)) { const e = prog[it.ex]; const n = e && e.stages ? ['notes', 'tempo', 'memory'].filter((s) => e.stages[s]).length : 0; return n ? `${t('stagesW')} ${n}/3` : ''; }
     return '';
   };
   const itemCard = (id) => {

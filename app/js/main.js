@@ -1,6 +1,6 @@
 // Boot + hash router.
 //   #/              blues track (home)      #/track/<id>   another track
-//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | form | lick | perform | diag
+//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
 //   #/riffs         the book course         #/ex/<id>, #/imp/<step>  its exercises and improvisation
 import { applyTheme, currentTheme } from './theme.js';
@@ -47,7 +47,8 @@ async function chordsData() {
   return chordsCache;
 }
 
-/** Load a track with its forms, patterns and licks; resolve every item to { kind, title, about, href, ... }. */
+/** Load a track with its forms, patterns, licks and exercises (items of kind `exercise`, form endings);
+ *  resolve every item to { kind, title, about, href, ... }. */
 async function trackModel(id) {
   if (models[id]) return models[id];
   const track = await get(`tracks/${id}.json`);
@@ -59,14 +60,19 @@ async function trackModel(id) {
     ...[...patIds].map(async (p) => { patterns[p] = await get(`patterns/${p}.json`); }),
     ...[...lickIds].map(async (l) => { licks[l] = await get(`licks/${l}.json`); })
   ]);
+  const exIds = new Set();
+  Object.values(track.items).forEach((it) => { if (it.kind === 'exercise' && it.ex) exIds.add(it.ex); });
+  Object.values(forms).forEach((f) => { if (f.ending) exIds.add(f.ending); });
+  const exercises = {};
+  await Promise.all([...exIds].map(async (e) => { exercises[e] = await loadExercise(e); }));
   const items = {};
   Object.entries(track.items).forEach(([iid, it]) => {
-    const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'form' ? forms[it.form] : null;
+    const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
     const title = it.title ? L(it.title) : src ? L(src.title) : iid;
     const about = it.about ? L(it.about) : it.kind === 'form' && it.lick ? L(licks[it.lick].about) : src ? L(src.about) : '';
     items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}` };
   });
-  models[id] = { track, forms, patterns, licks, items };
+  models[id] = { track, forms, patterns, licks, exercises, items };
   return models[id];
 }
 
@@ -131,9 +137,21 @@ async function route() {
       else if (item.kind === 'ear') cleanup = renderEar(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, back });
       else if (item.kind === 'lick') cleanup = renderLick(root, { track: model.track, itemId: item.id, item, lick: model.licks[item.lick], pattern: model.patterns[item.pattern], form: model.forms[item.form], back });
-      else if (item.kind === 'perform') cleanup = renderPerform(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], licks: (item.licks || []).map((l) => model.licks[l]).filter(Boolean), back });
+      else if (item.kind === 'perform') {
+        // the form's ending (an exercise): its bar count sets the ending length, its item is linked from the reminders
+        const form = model.forms[item.form];
+        const ending = form.ending ? model.exercises[form.ending] || null : null;
+        const endItem = ending ? Object.values(model.items).find((i) => i.kind === 'exercise' && i.ex === form.ending) || null : null;
+        cleanup = renderPerform(root, { track: model.track, itemId: item.id, item, form, pattern: model.patterns[item.pattern], licks: (item.licks || []).map((l) => model.licks[l]).filter(Boolean), ending, endItem, back });
+      }
       else if (item.kind === 'diag') cleanup = renderDiag(root, { track: model.track, itemId: item.id, item, back });
-      else if (item.kind === 'pattern') {
+      else if (item.kind === 'exercise') {
+        // a written exercise as a track item: "by heart" marks the item done and schedules its review
+        const src = model.exercises[item.ex];
+        if (!src) { message(t('notFound')); return; }
+        const ex = { ...src, back, doneId: item.id, kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_exercise').toUpperCase()}` };
+        cleanup = renderExercise(root, { ex, rerender });
+      } else if (item.kind === 'pattern') {
         const form = model.forms[item.form], pattern = model.patterns[item.pattern];
         const ex = normalize(patternExercise(pattern, form.practice || form.bars, {
           id: item.id, course: mti[1], swing: form.swing, back,

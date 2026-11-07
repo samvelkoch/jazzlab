@@ -1,0 +1,28 @@
+{
+  "$format": "jazzlab-exercise/1",
+  "id": "blues-end",
+  "course": "blues", "step": 0, "number": 0,
+  "title": { "ru": "Концовка", "en": "Ending" },
+  "about": { "ru": "Db7 на «и» четвёртой доли, и на «1» дом: C7. Так заканчивают блюз все.", "en": "Db7 on the 'and' of four, then home on 1: C7. That's how everyone ends a blues." },
+  "time": [4, 4],
+  "tempo": { "start": 56, "target": 66 },
+  "swing": true,
+  "defaults": { "stac": false },
+  "passAnyTempo": true,
+  "bars": [
+    {
+      "rh": [
+        { "t": 0, "d": 2, "n": ["E4", "G4", "Bb4"], "f": [1, 2, 4], "acc": true },
+        { "t": 7, "d": 1, "n": ["F4", "Ab4", "B4"], "f": [1, 2, 4] }
+      ],
+      "lh": [
+        { "t": 0, "d": 2, "n": ["C3", "G3"], "f": [5, 1], "acc": true },
+        { "t": 7, "d": 1, "n": ["Db3", "Ab3"], "f": [5, 1] }
+      ]
+    },
+    {
+      "rh": [ { "t": 0, "d": 8, "n": ["E4", "G4", "Bb4", "C5"], "f": [1, 2, 3, 5], "acc": true } ],
+      "lh": [ { "t": 0, "d": 8, "n": ["C2", "C3"], "f": [5, 1] } ]
+    }
+  ]
+}

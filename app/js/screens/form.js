@@ -2,19 +2,21 @@
 // the app scores every note and counts clean choruses. Three clean choruses in a row pass the item.
 // Right-hand mode (item.hand === 'rh' + a lick): the app always plays the left-hand pattern; you play the lick,
 // started on every odd bar (1, 3, 5, …) and transposed to the chord of its first bar.
+// A clean chorus allows max(1, round(notes per chorus / 40)) slips (misses + wrong notes): 1 for root-and-fifth
+// (24 or 48 notes) and the licks, 2 for the boogie (96 eighths per chorus), so denser patterns are not stricter.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar, lickBars, rhRoot, parseChord } from '../music/forms.js';
+import { patternBar, lickBars, rhRoot, parseChord, patSpell } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
 
 const PER = 8;
 const CLEAN_TO_PASS = 3; // clean choruses in a row
-const MAX_SLIPS = 1; // misses + wrong notes allowed in a clean chorus
+const SLIP_PER = 40; // one allowed slip per this many notes in a chorus (at least 1)
 
 export function renderForm(root, { track, itemId, item, form, pattern, lick, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
@@ -26,6 +28,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, bac
   const rhNotes = rh ? bars.map(() => []) : null;
   if (rh) for (let k = 0; k < NB; k += 2) { const [b1, b2] = lickBars(lick, bars[k]); rhNotes[k] = b1; if (k + 1 < NB) rhNotes[k + 1] = b2; }
   const barNotes = rh ? rhNotes : lhNotes; // what you play (expected + keyboard)
+  const maxSlips = Math.max(1, Math.round(barNotes.flat().length / SLIP_PER)); // misses + wrong notes allowed in a clean chorus
   const st = { mode: 'play', bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing, playing: false, streak: 0, choruses: 0 };
   const wasDue = reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date();
   const midiOn = () => midiState().connected;
@@ -39,8 +42,8 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, bac
   const chorusEl = h('span.barno'), streakEl = h('div.loops', { 'aria-label': t('cleanChoruses') });
   const cells = bars.map((c, k) => {
     const lh = barNotes[k];
-    const uniq = [...new Set(lh.map((e) => e.m))].sort((a, b) => a - b);
-    const label = rh ? (k % 2 === 0 ? `${t('lickW')} · ${noteName(midiToName(rhRoot(parseChord(c))), names)}` : '') : uniq.map((m) => noteName(midiToName(m), names)).join(' · ');
+    const uniq = [...new Map(lh.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
+    const label = rh ? (k % 2 === 0 ? `${t('lickW')} · ${noteName(midiToName(rhRoot(parseChord(c))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(c)), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
@@ -196,7 +199,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, bac
     st.choruses = chorus + 1;
     const s = chSt; chSt = { miss: 0, bad: 0, ok: 0, meh: 0 };
     if (st.mode !== 'play') { paintStreak(); return; }
-    const total = s.ok + s.meh + s.miss, slips = s.miss + s.bad, clean = slips <= MAX_SLIPS && total > 0;
+    const total = s.ok + s.meh + s.miss, slips = s.miss + s.bad, clean = slips <= maxSlips && total > 0;
     st.streak = clean ? st.streak + 1 : 0;
     paintStreak();
     const pct = total ? Math.round((s.ok / total) * 100) : 0;

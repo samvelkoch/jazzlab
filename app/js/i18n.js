@@ -68,7 +68,7 @@ const DICT = {
     // tracks, session, reviews
     riffs: 'Риффы', nextW: 'Дальше', startSession: 'Начать', continueSession: 'Продолжить занятие', endSession: 'Закончить занятие',
     nothingToday: 'На сегодня всё. Сыграй блюз для души.', reviewW: 'повтор', nextReview: 'повтор', inProgress: 'начато',
-    kind_drill: 'Дрил', kind_pattern: 'Левая рука', kind_form: 'Форма', itemsDone: 'элементов', longTermW: 'в долгой памяти', trackGoal: 'Цель дорожки',
+    kind_drill: 'Дрил', kind_pattern: 'Левая рука', kind_exercise: 'Упражнение', kind_form: 'Форма', itemsDone: 'элементов', longTermW: 'в долгой памяти', trackGoal: 'Цель дорожки',
     stagesW: 'этапов', bestStreak: 'подряд', sec: 'с', again: 'Ещё раз',
     // drill
     drillUpper: 'ДРИЛ', dPlay: 'СЫГРАЙ', dAnyOctave: 'в любой октаве', dAll: 'ВСЕ', dAllSub: 'все {n} клавиши с этим именем', dChord: 'СОБЕРИ АККОРД', dChordSub: 'ноты: {notes}',
@@ -98,7 +98,8 @@ const DICT = {
     // perform
     kind_perform: 'Выступление', perfUpper: 'ВЫСТУПЛЕНИЕ', perfEnding: 'Концовка', perfLeft: 'Левая', perfRight: 'Правая', perfOwn: 'или что хочешь',
     perfChoruses: 'Круги', perfPlayback: 'Прослушать', perfDownload: 'Скачать MIDI', perfDelete: 'Удалить', perfRecords: 'Записи', perfNoRecords: 'Пока нет записей. Сыграй, и запись появится здесь.',
-    perfStart: 'Нажми «Старт»: отсчёт 1 такт, кругов: {n}, и такт концовки. Всё, что сыграешь, записывается.',
+    perfStart: 'Нажми «Старт»: отсчёт 1 такт, кругов: {n}, и концовка на два такта. Всё, что сыграешь, записывается.',
+    perfStart1: 'Нажми «Старт»: отсчёт 1 такт, кругов: {n}, и такт концовки. Всё, что сыграешь, записывается.',
     perfHint: 'Играй обеими руками: запись идёт с пианино', perfHintScreen: 'Без пианино: нажимай клавиши на экране, они тоже записываются',
     perfTooShort: 'Меньше одного круга: запись не сохранена', perfEmpty: 'Ни одной ноты: запись не сохранена', perfSaved: 'Запись сохранена', perfPlaying: 'Играет запись',
     perfNotesW: 'нота|ноты|нот', perfChorusesW: 'круг|круга|кругов', perfPctW: 'в точку', perfSplitW: 'в точку · рядом · мимо', perfAvgW: 'мс отклонение в среднем',
@@ -185,7 +186,7 @@ const DICT = {
     planned: 'Planned', min: 'min', h: 'h',
     riffs: 'Riffs', nextW: 'Next', startSession: 'Start', continueSession: 'Continue session', endSession: 'End session',
     nothingToday: 'Nothing due today. Play a blues for fun.', reviewW: 'review', nextReview: 'review', inProgress: 'started',
-    kind_drill: 'Drill', kind_pattern: 'Left hand', kind_form: 'Form', itemsDone: 'items', longTermW: 'in long-term memory', trackGoal: 'Track goal',
+    kind_drill: 'Drill', kind_pattern: 'Left hand', kind_exercise: 'Exercise', kind_form: 'Form', itemsDone: 'items', longTermW: 'in long-term memory', trackGoal: 'Track goal',
     stagesW: 'stages', bestStreak: 'in a row', sec: 's', again: 'Again',
     drillUpper: 'DRILL', dPlay: 'PLAY', dAnyOctave: 'any octave', dAll: 'ALL', dAllSub: 'all {n} keys with this name', dChord: 'BUILD THE CHORD', dChordSub: 'notes: {notes}',
     int_m3: 'MINOR THIRD UP FROM', int_M3: 'MAJOR THIRD UP FROM', int_p4: 'FOURTH UP FROM', int_p5: 'FIFTH UP FROM', int_m7: 'MINOR SEVENTH UP FROM', int_p8: 'OCTAVE UP FROM', int_up: 'UP FROM', dIntervalSub: '{n} keys up, black keys included',
@@ -212,7 +213,8 @@ const DICT = {
     // perform
     kind_perform: 'Performance', perfUpper: 'PERFORMANCE', perfEnding: 'Ending', perfLeft: 'Left', perfRight: 'Right', perfOwn: 'or whatever you like',
     perfChoruses: 'Choruses', perfPlayback: 'Listen back', perfDownload: 'Download MIDI', perfDelete: 'Delete', perfRecords: 'Recordings', perfNoRecords: 'No recordings yet. Play, and the recording shows up here.',
-    perfStart: 'Press Start: a 1-bar count-in, {n} choruses and one ending bar. Everything you play is recorded.',
+    perfStart: 'Press Start: a 1-bar count-in, {n} choruses and a two-bar ending. Everything you play is recorded.',
+    perfStart1: 'Press Start: a 1-bar count-in, {n} choruses and one ending bar. Everything you play is recorded.',
     perfHint: 'Play with both hands: recording from the piano', perfHintScreen: 'No piano: tap the on-screen keys, they are recorded too',
     perfTooShort: 'Less than one chorus: not saved', perfEmpty: 'Not a single note: not saved', perfSaved: 'Recording saved', perfPlaying: 'Playing the recording',
     perfNotesW: 'note|notes', perfChorusesW: 'chorus|choruses', perfPctW: 'on the grid', perfSplitW: 'on · near · off', perfAvgW: 'ms average deviation',
