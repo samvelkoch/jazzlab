@@ -1,0 +1,20 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "l1",
+  "title": { "ru": "Ответ: синяя терция и домой", "en": "Answer: blue third and home" },
+  "about": { "ru": "Eb скользит в E (синяя нота в терцию), вверх до Bb и вниз домой на корень. Фраза-ответ: заканчивается на корне.", "en": "Eb slides into E (the blue note into the third), up to Bb and back home to the root. An answer: it ends on the root." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "events": [
+    { "t": 0, "d": 1, "deg": 3, "f": 2 },
+    { "t": 1, "d": 1, "deg": 4, "f": 3 },
+    { "t": 2, "d": 2, "deg": 7, "f": 4 },
+    { "t": 4, "d": 1, "deg": 10, "f": 5 },
+    { "t": 5, "d": 1, "deg": 7, "f": 4 },
+    { "t": 6, "d": 1, "deg": 5, "f": 3 },
+    { "t": 7, "d": 1, "deg": 3, "f": 2 },
+    { "t": 8, "d": 4, "deg": 0, "f": 1 }
+  ]
+}

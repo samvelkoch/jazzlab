@@ -30,10 +30,11 @@ export async function renderCourse(root, { course, index, rerender }) {
     midiChip(), langSwitch(rerender), themeButton());
 
   const tabs = h('div.seg.big', { role: 'tablist', 'aria-label': t('courses') },
-    ...index.courses.map((c) => h('button', {
-      type: 'button', role: 'tab', 'aria-selected': String(c.id === course.id), disabled: !c.ready,
+    ...index.courses.map((c) => h(c.ready ? 'a' : 'button', {
+      href: c.ready ? (c.id === course.id ? '#/riffs' : c.kind === 'course' ? '#/riffs' : c.id === 'blues' ? '#/' : `#/track/${c.id}`) : null,
+      type: c.ready ? null : 'button', role: 'tab', 'aria-selected': String(c.id === course.id), disabled: !c.ready,
       title: c.ready ? null : t('soon')
-    }, c.id === course.id ? L(course.title) : L(c.title), c.ready ? null : h('small', null, ' · ' + t('soon')))));
+    }, L(c.title), c.ready ? null : h('small', null, ' · ' + t('soon')))));
 
   const card = (s) => {
     const items = s.items.map((id) => (exDone(id) ? 'ok' : prog[id] ? 'meh' : 'none'));

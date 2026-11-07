@@ -33,7 +33,7 @@ export function renderRhythmNotation(svg, events, per = 8) {
       }
       return;
     }
-    el('ellipse', { cx: x, cy: LINE, rx: 10.5, ry: 7.5, transform: `rotate(-20 ${x} ${LINE})`, class: 'fill' }, g);
+    el('ellipse', { cx: x, cy: LINE, rx: 10.5, ry: 7.5, transform: `rotate(-20 ${x} ${LINE})`, class: e.d >= 4 ? 'hollow' : 'fill' }, g); // half note = hollow head
     el('line', { x1: x + 9.5, x2: x + 9.5, y1: LINE - 3, y2: LINE - STEM - 30, class: 'stem' }, g);
     if (e.d === 1.5 || e.d === 3) el('circle', { cx: x + 20, cy: LINE - 4, r: 3, class: 'fill' }, g);
     const beam = isBeamed(e, k);

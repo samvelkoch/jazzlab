@@ -1,0 +1,22 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "l3",
+  "title": { "ru": "Ответ: три удара на одной ноте", "en": "Answer: three hits on one note" },
+  "about": { "ru": "Одна нота три раза подряд, это уже ритм и уже джаз. Потом вниз через Bb, F, Eb домой на корень.", "en": "One note three times is already rhythm and already jazz. Then down through Bb, F, Eb and home to the root." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "events": [
+    { "t": 0, "d": 1, "deg": 7, "f": 3, "stac": true },
+    { "t": 1, "d": 1, "deg": 7, "f": 3, "stac": true },
+    { "t": 2, "d": 1, "deg": 7, "f": 3, "stac": true },
+    { "t": 3, "d": 1, "deg": 10, "f": 4 },
+    { "t": 4, "d": 2, "deg": 7, "f": 3 },
+    { "t": 6, "d": 1, "deg": 5, "f": 2 },
+    { "t": 7, "d": 1, "deg": 3, "f": 1 },
+    { "t": 8, "d": 1, "deg": 5, "f": 2 },
+    { "t": 9, "d": 1, "deg": 3, "f": 1 },
+    { "t": 10, "d": 4, "deg": 0, "f": 1 }
+  ]
+}

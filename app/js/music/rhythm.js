@@ -38,13 +38,13 @@ export function barRhythm(ex, b, lang = 'ru', system = 'food') {
   return { per, onsets, rests, kinds };
 }
 
-/** Parse a rhythm line like "8 8 4 r8 8 4." into one bar of events: [{ t, d, rest }]. */
+/** Parse a rhythm line like "8 8 4 r8 8 4." or "2 2" (half notes) into one bar of events: [{ t, d, rest }]. */
 export function parsePattern(str) {
   const out = []; let t = 0;
   str.trim().split(/\s+/).forEach((tok) => {
-    const m = /^(r?)(4|8)(\.?)$/.exec(tok);
+    const m = /^(r?)(2|4|8)(\.?)$/.exec(tok);
     if (!m) throw new Error('Bad rhythm token: ' + tok);
-    const d = (m[2] === '4' ? 2 : 1) * (m[3] ? 1.5 : 1);
+    const d = (m[2] === '2' ? 4 : m[2] === '4' ? 2 : 1) * (m[3] ? 1.5 : 1);
     out.push({ t, d, rest: !!m[1] }); t += d;
   });
   return out;

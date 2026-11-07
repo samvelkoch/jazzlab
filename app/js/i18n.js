@@ -64,7 +64,38 @@ const DICT = {
     sayIt: 'Говори слоги вслух!', nowSoloLoop: 'Чисто! Дальше сам, я замолкаю', learnedPattern: 'Ритм выучен. Теперь по кругу без слогов', streakTo: 'подряд',
     cleanW: 'чисто', roundClean: 'Чистый подход!', loopPlay: 'По кругу',
     sylSystem: 'Слоги ритма', syl_food: 'ко-фе', syl_kodaly: 'Kodály', syl_takadimi: 'Takadimi', syl_scat: 'Скэт',
-    planned: 'В плане', min: 'мин', h: 'ч', navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
+    planned: 'В плане', min: 'мин', h: 'ч',
+    // tracks, session, reviews
+    riffs: 'Риффы', nextW: 'Дальше', startSession: 'Начать', continueSession: 'Продолжить занятие', endSession: 'Закончить занятие',
+    nothingToday: 'На сегодня всё. Сыграй блюз для души.', reviewW: 'повтор', nextReview: 'повтор', inProgress: 'начато',
+    kind_drill: 'Дрил', kind_pattern: 'Левая рука', kind_form: 'Форма', itemsDone: 'элементов', longTermW: 'в долгой памяти', trackGoal: 'Цель дорожки',
+    stagesW: 'этапов', bestStreak: 'подряд', sec: 'с', again: 'Ещё раз',
+    // drill
+    drillUpper: 'ДРИЛ', dPlay: 'СЫГРАЙ', dAnyOctave: 'в любой октаве', dAll: 'ВСЕ', dAllSub: 'все {n} клавиши с этим именем', dChord: 'СОБЕРИ АККОРД', dChordSub: 'ноты: {notes}',
+    int_m3: 'МАЛАЯ ТЕРЦИЯ ВВЕРХ ОТ', int_M3: 'БОЛЬШАЯ ТЕРЦИЯ ВВЕРХ ОТ', int_p4: 'КВАРТА ВВЕРХ ОТ', int_p5: 'КВИНТА ВВЕРХ ОТ', int_m7: 'МАЛАЯ СЕПТИМА ВВЕРХ ОТ', int_p8: 'ОКТАВА ВВЕРХ ОТ', int_up: 'ВВЕРХ ОТ', dIntervalSub: '{n} клавиш вверх, считая чёрные',
+    dWithErrors: 'с ошибками: {n}', dPassed: 'Зачёт', dNotYet: 'Пока нет', dPassedSub: 'Этот дрил вернётся на повтор через несколько дней.', dMoreAccurate: 'Точнее: меньше ошибочных нажатий.', dFaster: 'Точно, но медленно: ещё раз, не считая от до.',
+    dAccuracy: 'точность', dAvgTime: 'на задание', dClean: 'чисто', dBest: 'ЛУЧШИЙ РЕЗУЛЬТАТ', dReady: 'ДРИЛ', dGoal: 'Цель: точность {acc}% и не дольше {s} с на задание',
+    // ear
+    earUpper: 'СЛУХ', earQ: 'КАКАЯ НОТА?', earRange: 'диапазон: {a} – {b}', earReplay: 'Ещё раз', earReveal: 'это была', earHigher: 'выше ↑', earLower: 'ниже ↓',
+    earFirstTry: 'с первого раза', earMisses: 'промахи', earGoal: '{n} нот, зачёт от {acc}%. Нота звучит, ты находишь её на клавишах.',
+    earPassedSub: 'Слух вернётся на повтор через несколько дней.', earMoreAccurate: 'Слушай внимательнее: сначала спой ноту про себя, потом нажимай.',
+    earHintMidi: 'Слушай ноту и найди её на пианино', earHintScreen: 'Слушай ноту и найди её на клавишах на экране',
+    drillHintMidi: 'Играй на пианино. Нотный стан не нужен.', drillHintScreen: 'Нажимай клавиши на экране или подключи пианино',
+    // form
+    formUpper: 'ФОРМА', fPlay: 'Играю', fListen: 'Слушаю', fListenHint: 'Левая звучит сама: слушай и смотри на клавиши', fPlayHint: 'Играй левую по кругу под барабаны', fPlayHintScreen: 'Без пианино: левая звучит как подсказка, нажимай на экране',
+    chorusW: 'Круг', cleanChoruses: 'чистые круги подряд', slipsW: 'промахов', fPassed: 'Три чистых круга. Ты играешь блюз!', fPassedAgain: 'Повтор зачтён',
+    fSoFar: 'Пока', fCleanOf: 'чистых из', fStart: 'Нажми «Старт»: отсчёт 1 такт, потом 12 тактов по кругу',
+    fPlayHintRh: 'Играй лик правой, левая звучит сама', fPlayHintScreenRh: 'Без пианино: лик звучит как подсказка, нажимай на экране', fListenHintRh: 'Лик и левая звучат сами: слушай и смотри на клавиши',
+    // licks
+    kind_ear: 'Слух', kind_lick: 'Лик', lickUpper: 'ЛИК', lickW: 'лик', lkChord: 'Аккорд',
+    lk_echo: 'Эхо', lk_fingers: 'Пальцы', lk_memory: 'По памяти',
+    lkT_echo: 'Повтори за пианино', lkS_echo: 'Пианино играет фразу два такта, ты повторяешь её в следующих двух. Те же ноты, тот же ритм.',
+    lkT_fingers: 'Теперь пальцами', lkS_fingers: 'Та же фраза в нотах, с аппликатурой, а левая играет корень и квинту. В упражнении пройди «Ноты», потом «В темпе».',
+    lkT_memory: 'По памяти', lkS_memory: 'В упражнении выбери «По памяти»: стан скрыт, играешь обеими руками без подсказки. Зачёт засчитывает лик и ставит его на повтор.',
+    lkF_echo: 'Нота должна совпасть точно, в той же октаве. Ритм важнее: сначала поймай его.', lkF_link: 'Упражнение откроется на выбранном аккорде.',
+    lkOpen: 'Открыть упражнение на {c}', lkCleanReps: 'чистые повторы', lkEchoGoal: '3 чистых повтора на каждом аккорде', lkEchoDone: 'Эхо пройдено на всех аккордах. Теперь «Пальцы» →',
+    lkAllChords: 'Ещё на других аккордах: {c}', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты',
+   navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -128,7 +159,34 @@ const DICT = {
     sayIt: 'Say the syllables aloud!', nowSoloLoop: 'Clean! Now on your own, I go quiet', learnedPattern: 'Rhythm learned. Now loop it without syllables', streakTo: 'in a row',
     cleanW: 'clean', roundClean: 'Clean round!', loopPlay: 'Loop',
     sylSystem: 'Rhythm syllables', syl_food: 'cof-fee', syl_kodaly: 'Kodály', syl_takadimi: 'Takadimi', syl_scat: 'Scat',
-    planned: 'Planned', min: 'min', h: 'h', navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
+    planned: 'Planned', min: 'min', h: 'h',
+    riffs: 'Riffs', nextW: 'Next', startSession: 'Start', continueSession: 'Continue session', endSession: 'End session',
+    nothingToday: 'Nothing due today. Play a blues for fun.', reviewW: 'review', nextReview: 'review', inProgress: 'started',
+    kind_drill: 'Drill', kind_pattern: 'Left hand', kind_form: 'Form', itemsDone: 'items', longTermW: 'in long-term memory', trackGoal: 'Track goal',
+    stagesW: 'stages', bestStreak: 'in a row', sec: 's', again: 'Again',
+    drillUpper: 'DRILL', dPlay: 'PLAY', dAnyOctave: 'any octave', dAll: 'ALL', dAllSub: 'all {n} keys with this name', dChord: 'BUILD THE CHORD', dChordSub: 'notes: {notes}',
+    int_m3: 'MINOR THIRD UP FROM', int_M3: 'MAJOR THIRD UP FROM', int_p4: 'FOURTH UP FROM', int_p5: 'FIFTH UP FROM', int_m7: 'MINOR SEVENTH UP FROM', int_p8: 'OCTAVE UP FROM', int_up: 'UP FROM', dIntervalSub: '{n} keys up, black keys included',
+    dWithErrors: 'with mistakes: {n}', dPassed: 'Passed', dNotYet: 'Not yet', dPassedSub: 'This drill comes back for review in a few days.', dMoreAccurate: 'More accuracy: fewer wrong keys.', dFaster: 'Accurate but slow: again, without counting up from C.',
+    dAccuracy: 'accuracy', dAvgTime: 'per task', dClean: 'clean', dBest: 'BEST RESULT', dReady: 'DRILL', dGoal: 'Goal: {acc}% accuracy and at most {s} s per task',
+    // ear
+    earUpper: 'EAR', earQ: 'WHICH NOTE?', earRange: 'range: {a} – {b}', earReplay: 'Again', earReveal: 'it was', earHigher: 'higher ↑', earLower: 'lower ↓',
+    earFirstTry: 'first try', earMisses: 'misses', earGoal: '{n} notes, pass at {acc}%. A note sounds, you find it on the keys.',
+    earPassedSub: 'This comes back for review in a few days.', earMoreAccurate: 'Listen closer: hum the note to yourself first, then press.',
+    earHintMidi: 'Listen to the note and find it on your piano', earHintScreen: 'Listen to the note and find it on the on-screen keys',
+    drillHintMidi: 'Play on the piano. No staff needed.', drillHintScreen: 'Tap the keys on screen or connect your piano',
+    formUpper: 'FORM', fPlay: 'I play', fListen: 'Listen', fListenHint: 'The left hand plays itself: listen and watch the keys', fPlayHint: 'Play the left hand around the form with the drums', fPlayHintScreen: 'No piano: the left hand sounds as a guide, tap on screen',
+    chorusW: 'Chorus', cleanChoruses: 'clean choruses in a row', slipsW: 'slips', fPassed: 'Three clean choruses. You are playing the blues!', fPassedAgain: 'Review passed',
+    fSoFar: 'So far', fCleanOf: 'clean of', fStart: 'Press Start: a 1-bar count-in, then 12 bars on a loop',
+    fPlayHintRh: 'Play the lick with your right hand; the left hand plays itself', fPlayHintScreenRh: 'No piano: the lick sounds as a guide, tap on screen', fListenHintRh: 'The lick and the left hand play themselves: listen and watch the keys',
+    kind_ear: 'Ear', kind_lick: 'Lick', lickUpper: 'LICK', lickW: 'lick', lkChord: 'Chord',
+    lk_echo: 'Echo', lk_fingers: 'Fingers', lk_memory: 'By heart',
+    lkT_echo: 'Repeat after the piano', lkS_echo: 'The piano plays a two-bar phrase; you repeat it in the next two. Same notes, same rhythm.',
+    lkT_fingers: 'Now with your fingers', lkS_fingers: 'The same phrase in notation with fingering, the left hand on root and fifth. In the exercise do “Notes”, then “In tempo”.',
+    lkT_memory: 'By heart', lkS_memory: 'In the exercise pick “By heart”: the staff is hidden, both hands with no help. Passing it passes the lick and puts it on review.',
+    lkF_echo: 'The note has to match exactly, same octave. Rhythm first: catch it before the notes.', lkF_link: 'The exercise opens on the chosen chord.',
+    lkOpen: 'Open the exercise on {c}', lkCleanReps: 'clean repeats', lkEchoGoal: '3 clean repeats on every chord', lkEchoDone: 'Echo done on every chord. Now “Fingers” →',
+    lkAllChords: 'Now on the other chords: {c}', lkPassed: 'Lick learned', lkStartHint: 'Press Start: a 1-bar count-in, then 2 bars piano, 2 bars you',
+   navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
   }
 };
 
