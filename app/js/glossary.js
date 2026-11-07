@@ -51,6 +51,7 @@ function wikiHas(id) {
     wikiIds = fetch(new URL('wiki/index.json', baseUrl))
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => {
+        if (j && Array.isArray(j.groups)) return new Set(j.groups.flatMap((g) => g.ids || [])); // jazzlab-wiki-index/1
         const list = Array.isArray(j) ? j : j && (j.pages || j.entries || j.items || j.articles) ? (j.pages || j.entries || j.items || j.articles) : j ? Object.keys(j) : [];
         return new Set((Array.isArray(list) ? list : Object.keys(list)).map((x) => (x && typeof x === 'object' ? x.id : x)));
       })
