@@ -1,0 +1,13 @@
+{
+  "$format": "jazzlab-pattern/1",
+  "id": "s1",
+  "title": { "ru": "Бас стандарта", "en": "Standard bass" },
+  "about": { "ru": "Корень на «1» и на «3»; когда в такте два аккорда, на «3» звучит второй. Мизинец на корне.", "en": "The root on 1 and on 3; when a bar has two chords, the second one sounds on 3. Pinky on the root." },
+  "tempo": 66,
+  "swing": true,
+  "rhythm": "2 2",
+  "events": [
+    { "t": 0, "d": 4, "deg": 0, "f": 5 },
+    { "t": 4, "d": 4, "deg": 0, "f": 5 }
+  ]
+}

@@ -9,7 +9,7 @@ import { t, L, plural, getLang } from '../i18n.js';
 import { store, updateEx, markActive, idle } from '../store.js';
 import { noteName, midiToName, toMidi } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar, lickBars, patSpell, parseChord, barChords } from '../music/forms.js';
+import { patternBars, lickBars, patSpell, parseChord, barChords } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import { recordingToMidi } from '../music/export.js';
 import { rhythmAccuracy } from '../music/recording.js';
@@ -26,7 +26,9 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
   const chords = [...new Set(bars.flatMap(barChords))]; // distinct chords (a bar may hold two: "C7 A7")
-  const lhByChord = Object.fromEntries(chords.map((c) => [c, patternBar(pattern, c)]));
+  const lhBars = patternBars(pattern, bars); // in form order: a voice-led pattern follows the previous bar
+  const lhByChord = {}; // each chord's notes as first played in the form
+  bars.forEach((b, k) => barChords(b).forEach((c) => { if (!lhByChord[c]) lhByChord[c] = lhBars[k].filter((e) => e.chord === c); }));
   const rhMidi = licks.flatMap((l) => chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m)))
     .concat(melody ? melody.bars.flatMap((b) => (b.rh || []).map((e) => toMidi(e.n))) : []); // the keyboard covers the tune too
   const lhMidi = Object.values(lhByChord).flat().map((e) => e.m);
@@ -46,7 +48,9 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const chorusEl = h('span.barno');
   const cells = bars.map((c, k) => h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
     h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i')))));
-  const grid = h('div.fgrid', null, ...cells);
+  const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
+  // a long form scrolls inside its grid: keep the current bar visible
+  const keepInView = (k) => { const c = cells[k]; if (NB <= 16 || !c) return; if (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, c.offsetTop - 8); };
   const nn = (m) => noteName(midiToName(m), names);
   const strip = h('div.perfstrip', null,
     h('span', null, h('b', null, `${t('perfLeft')}:`), ...chords.map((c) => h('span.pchord', null, `${c} `, h('span.fnotes', null, [...new Map(lhByChord[c].map((e) => [e.m, e])).values()].map((e) => noteName(patSpell(e.m, e.deg, parseChord(c), !!form.flats), names)).join(' · '))))),
@@ -179,6 +183,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
     if (!run) return;
     if (q.ci !== undefined) fb(`${t('countInLabel')}: <b>${q.ci}</b>`);
     else if (q.barStart !== undefined) {
+      keepInView(q.barStart);
       cells.forEach((c, k) => { c.classList.toggle('cur', k === q.barStart); if (k !== q.barStart) c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); });
       if (q.barStart < 0) chorusEl.textContent = t('perfEnding');
       else paintChorus(q.chorus);

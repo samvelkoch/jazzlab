@@ -61,6 +61,7 @@ Check: `node tests/export.test.mjs`.
       "tasks": [ { "type": "note", "notes": ["C", "D"], "n": 16 } ],   // note | all | interval (+ "semis") | chord (+ "chords")
       "pass": { "acc": 0.9, "avgMs": 2500 } },
     "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" }, // unfolded over form.practice as an exercise
+    "pat-s2-form": { "kind": "pattern", "pattern": "s2", "form": "std-f", "over": "bars" }, // over: "bars" = over the whole form.bars
     "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": {…} },
     "end-blues": { "kind": "exercise", "ex": "blues-end" }               // a written exercise from content/exercises
   }
@@ -88,6 +89,14 @@ tune `bossa-cm` by echo, and `form-mel`, the tune over the b1 bass on the form s
 «Навыки» card hides the lick row for a track without licks and shows «Фразы мелодии» (phrases with 3 clean echoes) for a
 track with a melody item. Passing an item (drill thresholds, the exercise's «by heart» stage,
 3 clean choruses of a form) schedules a review in 1, 3, 7, 14 then 30 days.
+
+The standard track (`content/tracks/std.json`, id `std`): a 32-bar AABA tune in F with the bridge in Bb (`std-f`). Chord
+drills `d-chords-f` (Fmaj7 Gm7 C7 Bbmaj7) and `d-chords-f2` (Cm7 F7 Am7 D7), the patterns `pat-s1` / `pat-s2` over the
+practice `Gm7 C7 | Fmaj7 | Cm7 F7 | Bbmaj7` and `pat-s2-form` (the voice-led shell over all 32 bars, `"over": "bars"`), the form
+with each (`form-s1`, `form-s2`), the melody (`mel-std`, the tune `std-f` in 16 two-bar phrases, and `form-mel-std` over the s1
+bass), `ear-find-std`, and `perf-std` (2 choruses, s2 shell, the tune as a reminder, no licks yet: phase 1 of
+`docs/specs/2026-11-07-standard-design.md`). A form of more than 16 bars gets a compact grid (`.fgrid.long`) that scrolls
+inside the panel and keeps the current bar in view. The melody echo swings when the melody has `"swing": true` (not on a bossa form).
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
 
@@ -118,6 +127,19 @@ one event with all the notes; `patternBar()` returns one entry per note, so the 
 `b1` «Бас боссы» (`t 0 d 3` root, `t 3 d 5` fifth, `"rhythm": "4. 4.~4"`) and `b2` «Бас боссы с ходом» (root, fifth,
 root on 4: `"4. 4. 4"`) are the bossa cells; over a two-chord bar each event takes the chord at its slot, so b1 (no event
 after slot 3) plays only the first chord of `"Dm7b5 G7"`, b2 plays the G on 4.
+`s1` «Бас стандарта» = the root on 1 and on 3 (`t 0 d 4 deg 0`, `t 4 d 4 deg 0`): over a two-chord bar it plays both roots.
+
+`"voicing": "lead"` (optional; `s2` «Шелл с голосоведением», the events of p3): voice leading. The root stays at `lhRoot`;
+every two-note event (the shell: third + seventh, after `fitDeg`) is placed in the window C3..B3 (48..59), each note's
+octave chosen so the pair is closest to the previous pair (sum of semitone moves, low to low and high to high; a tie goes
+to the pair nearer the window centre). The first pair of a sequence is measured against root + the fitted degrees (as p3
+plays them), each moved by octaves into the window. The window is one octave, so in practice each pitch class has one
+place: Gm7 → F3 Bb3, C7 → E3 Bb3, Fmaj7 → E3 A3, one note moving at a time. Fingers by pitch: the event's larger finger on
+the lower note (2), the smaller on the upper (1). The second chord of a two-chord bar follows the first.
+`leadPair(degs, chord, prev)`; `patternBar(pattern, bar, { prev })` returns an array with `.pair` (the last pair used, to
+pass as `prev` to the next bar); `patternBars(pattern, bars)` threads it over a sequence, and `patternExercise()` threads it
+over its bars. The form, performance and melody screens build the left hand with `patternBars()` in form order. (The lick
+screen plays one chord at a time and uses the first-pair rule.) Known overlap: D7's root D3 sits above the C3 of its shell.
 The form screen allows max(1, round(notes per chorus / 40)) slips in a clean chorus: 1 for p1 / p1q, 2 for p2.
 
 # Licks (`jazzlab-lick/1`)

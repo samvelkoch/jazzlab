@@ -11,7 +11,7 @@ import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords } from '../music/forms.js';
+import { patternBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -24,7 +24,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
-  const lhNotes = bars.map((c) => patternBar(pattern, c)); // [{t, d, m, f}] per bar
+  const lhNotes = patternBars(pattern, bars); // [{t, d, m, f}] per bar, built in order (a voice-led pattern follows the previous bar)
   // right hand: one lick, or a question-and-answer pair taking turns (pair k/2 even = question, odd = answer)
   const pair = Array.isArray(licks) && licks.length === 2 && licks.every(Boolean) ? licks : null;
   const rhLicks = pair || (lick ? [lick] : null);
@@ -57,7 +57,9 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
   });
-  const grid = h('div.fgrid', null, ...cells);
+  const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
+  // a long form scrolls inside its grid: keep the current bar visible
+  const keepInView = (k) => { const c = cells[k]; if (NB <= 16 || !c) return; if (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, c.offsetTop - 8); };
   const panel = h('section.panel.formpanel', null,
     h('div.staffhead', null, chorusEl, streakEl, h('div.grow'), fbEl),
     grid,
@@ -159,7 +161,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     while (queue.length && queue[0].t <= now) {
       const q = queue.shift();
       if (q.ci !== undefined) { fb(`${t('countInLabel')}: <b>${q.ci}</b>`); continue; }
-      if (q.barStart !== undefined) { cells.forEach((c, k) => c.classList.toggle('cur', k === q.barStart)); if (q.barStart === 0) { cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad')); } continue; }
+      if (q.barStart !== undefined) { cells.forEach((c, k) => c.classList.toggle('cur', k === q.barStart)); keepInView(q.barStart); if (q.barStart === 0) { cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad')); } continue; }
       if (q.barEnd !== undefined) { finishBar(q.barEnd, q.chorus); continue; }
       if (q.g !== undefined) { const slot = q.g % PER, bar = Math.floor(q.g / PER) % NB; showKeys(bar, slot); const beats = cells[bar].querySelectorAll('.fbeats i'); beats.forEach((i, b) => i.classList.toggle('on', b <= slot >> 1)); if (slot === 0) cells.forEach((c, k) => { if (k !== bar) c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); }); markActive(); }
     }

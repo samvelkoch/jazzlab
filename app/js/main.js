@@ -185,9 +185,11 @@ async function route() {
         cleanup = renderExercise(root, { ex, rerender });
       } else if (item.kind === 'pattern') {
         const form = model.forms[item.form], pattern = model.patterns[item.pattern];
-        const ex = normalize(patternExercise(pattern, form.practice || form.bars, {
+        // over: "bars" = the pattern over the whole form; default = over the form's short practice sequence
+        const seq = item.over === 'bars' ? form.bars : form.practice || form.bars;
+        const ex = normalize(patternExercise(pattern, seq, {
           id: item.id, course: mti[1], swing: form.style === 'bossa' ? false : form.swing, flats: !!form.flats, back, title: item.title, about: item.about || null,
-          kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_pattern').toUpperCase()} · ${(form.practice || form.bars).join(' ')}`
+          kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_pattern').toUpperCase()} · ${item.over === 'bars' ? L(form.title) : seq.join(' ')}`
         }));
         cleanup = renderExercise(root, { ex, rerender });
       } else message(t('notFound'));
