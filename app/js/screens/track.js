@@ -27,6 +27,9 @@ export function todayQueue(model) {
 
 export async function renderTrack(root, { model, index, rerender }) {
   const { track, items } = model;
+  const melodies = model.melodies || {};
+  // a melody item's phrases with 3+ clean echo repeats: [learned, total]
+  const melPhrases = (id) => { const m = melodies[items[id].melody], echo = (prog[id] && prog[id].echo) || {}; const n = m ? m.phrases.length : 0; return [m ? m.phrases.filter((_, i) => (echo[i] || 0) >= 3).length : 0, n]; };
   const prog = progress(), rev = reviews();
   const q = todayQueue(model);
   const order = track.sections.flatMap((s) => s.items);
@@ -66,6 +69,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'ear' && typeof p.best === 'number') return `${Math.round(p.best * 100)}%`;
     if (it.kind === 'form' && p.choruses) return `${p.cleanChoruses || 0} ${t('fCleanOf')} ${p.choruses} · ${t('bestStreak')} ${p.bestStreak || 0}`;
     if (it.kind === 'lick' && p.echo && !isDone(p)) { const v = Object.entries(p.echo).map(([c, n]) => `${c} ${Math.min(n, 3)}/3`).join(' · '); return v ? `${t('lk_echo')}: ${v}` : ''; }
+    if (it.kind === 'melody' && !isDone(p)) { const [n, total] = melPhrases(id); return p.echo ? t('melEchoMeta').replace('{n}', n).replace('{m}', total) : ''; }
     if (it.kind === 'perform' && p.runs) return `${p.runs} ${plural(p.runs, 'perfRecs')} · ${t('perfBest')} ${p.bestPct || 0}%`;
     if (it.kind === 'diag' && lastDiag) return `${t('dgLastW')}: ${new Date(lastDiag.date).toLocaleDateString()}`;
     if (it.kind === 'pattern' && p.stages) { const n = ['rhythm', 'notes', 'tempo', 'memory'].filter((s) => p.stages[s]).length; return n ? `${t('stagesW')} ${n}/4` : ''; }
@@ -109,6 +113,8 @@ export async function renderTrack(root, { model, index, rerender }) {
   // ---- skills: the latest check-up plus what the track already counts ----
   const lickIds = order.filter((id) => items[id].kind === 'lick');
   const lickDone = lickIds.filter((id) => isDone(prog[id])).length;
+  const melIds = order.filter((id) => items[id].kind === 'melody');
+  const melSum = melIds.map(melPhrases).reduce((a, [n, m]) => [a[0] + n, a[1] + m], [0, 0]);
   const cleanRounds = order.filter((id) => items[id].kind === 'form').reduce((a, id) => a + ((prog[id] && prog[id].cleanChoruses) || 0), 0);
   const num = (v) => typeof v === 'number';
   const rhythmTxt = lastDiag && num(lastDiag.rhythmMs) ? [diagFmt.rhythm(lastDiag.rhythmMs), num(lastDiag.rhythmBias) ? diagFmt.bias(lastDiag.rhythmBias) : ''].filter(Boolean).join(' · ') : '—';
@@ -121,6 +127,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     row(t('skChords'), lastDiag && num(lastDiag.chordAcc) ? diagFmt.pct(lastDiag.chordAcc) : '—'),
     !lastDiag && diagId ? h('a.sklink', { href: items[diagId].href }, t('skDoCheck') + ' →') : null,
     lickIds.length ? row(t('skLicks'), `${lickDone}/${lickIds.length}`) : null,
+    melIds.length ? row(t('skMelody'), `${melSum[0]}/${melSum[1]}`) : null,
     row(t('skChoruses'), String(cleanRounds)),
     row(t('skRecs'), String(store.get('recordings', []).length)),
     row(t('longTermW'), String(longCount)));

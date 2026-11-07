@@ -20,8 +20,8 @@ export function renderExercise(root, { ex, rerender }) {
   const saved = exProgress(ex.id);
   const settings = { met: true, count: true, loop: true, gap: true, names: 'en', guideSnd: false, pianoSnd: true, syl: 'food', ...store.get('settings', {}) };
   const st = {
-    // lick exercises are learned by ear first (the lick screen's Echo), so they open on the notes
-    stage: !saved.stages.rhythm && !ex.doneId ? 'rhythm' : !saved.stages.notes ? 'notes' : 'tempo',
+    // lick and melody exercises are learned by ear first (the Echo stage), so they open on the notes
+    stage: !saved.stages.rhythm && !ex.doneId && !ex.byEar ? 'rhythm' : !saved.stages.notes ? 'notes' : 'tempo',
     step: 0, hands: 'both',
     bpm: store.get('tempo:' + ex.id, ex.tempo.start),
     swing: ex.swing,
@@ -191,7 +191,7 @@ export function renderExercise(root, { ex, rerender }) {
     resetScores();
     paintPrimary();
     if (id === 'rhythm') { rs.refresh(); return; }
-    const tip = id !== 'rhythm' && !prog.stages.rhythm && !ex.doneId ? `<b>${t('rhythmFirst')}</b> · ` : '';
+    const tip = id !== 'rhythm' && !prog.stages.rhythm && !ex.doneId && !ex.byEar ? `<b>${t('rhythmFirst')}</b> · ` : '';
     fb(tip + (id === 'rhythm' ? t('tapStart') : id === 'notes' ? (midiOn() ? t('waitHint') : t('noMidiHint')) : t('tempoHint')));
     if (id === 'notes') toPlayable();
     render(st.step);

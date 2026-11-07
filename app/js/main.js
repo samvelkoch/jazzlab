@@ -1,14 +1,15 @@
 // Boot + hash router.
 //   #/              blues track (home)      #/track/<id>   another track
-//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | perform | diag
+//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | melody | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
+//   #/t/<track>/<item>/fingers/<n|all>  a melody phrase (or the whole melody) as an exercise (RH melody + LH pattern)
 //   #/riffs         the book course         #/ex/<id>, #/imp/<step>  its exercises and improvisation
 import { applyTheme, currentTheme } from './theme.js';
 import { t, L } from './i18n.js';
 import { h, ICON, setItemLinks } from './ui.js';
 import { autoConnect } from './music/midi.js';
 import { loadExercise, normalize } from './music/exercise.js';
-import { patternExercise, lickExercise, barChords } from './music/forms.js';
+import { patternExercise, lickExercise, melodyExercise, barChords } from './music/forms.js';
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
@@ -17,6 +18,7 @@ import { renderDrill } from './screens/drill.js';
 import { renderEar } from './screens/ear.js';
 import { renderForm } from './screens/form.js';
 import { renderLick } from './screens/lick.js';
+import { renderMelody } from './screens/melody.js';
 import { renderPerform } from './screens/perform.js';
 import { renderDiag } from './screens/diag.js';
 import { renderChordsHub, renderDecoder, renderKeys, renderLesson, renderPractice } from './screens/chords.js';
@@ -47,12 +49,16 @@ async function chordsData() {
   return chordsCache;
 }
 
-/** Load a track with its forms, patterns, licks and exercises (items of kind `exercise`, form endings);
+/** Load a track with its melodies, forms, patterns, licks and exercises (items of kind `exercise`, form endings);
  *  resolve every item to { kind, title, about, href, ... }. */
 async function trackModel(id) {
   if (models[id]) return models[id];
   const track = await get(`tracks/${id}.json`);
-  const formIds = new Set(), patIds = new Set(), lickIds = new Set();
+  const formIds = new Set(), patIds = new Set(), lickIds = new Set(), melIds = new Set();
+  Object.values(track.items).forEach((it) => { if (it.melody) melIds.add(it.melody); });
+  const melodies = {};
+  await Promise.all([...melIds].map(async (m) => { melodies[m] = await get(`melodies/${m}.json`); }));
+  Object.values(melodies).forEach((m) => { if (m.form) formIds.add(m.form); }); // a melody item has no form of its own
   Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); if (it.lick) lickIds.add(it.lick); if (Array.isArray(it.licks)) it.licks.forEach((l) => lickIds.add(l)); });
   const forms = {}, patterns = {}, licks = {};
   await Promise.all([
@@ -67,12 +73,12 @@ async function trackModel(id) {
   await Promise.all([...exIds].map(async (e) => { exercises[e] = await loadExercise(e); }));
   const items = {};
   Object.entries(track.items).forEach(([iid, it]) => {
-    const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
+    const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'melody' ? melodies[it.melody] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
     const title = it.title ? L(it.title) : src ? L(src.title) : iid;
     const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : src ? L(src.about) : '';
     items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}` };
   });
-  models[id] = { track, forms, patterns, licks, exercises, items };
+  models[id] = { track, forms, patterns, licks, melodies, exercises, items };
   return models[id];
 }
 
@@ -93,7 +99,7 @@ async function route() {
     const m = /^\/ex\/([a-z0-9-]+)$/.exec(hash);
     const mt = /^\/track\/([a-z0-9-]+)$/.exec(hash);
     const mti = /^\/t\/([a-z0-9-]+)\/([a-z0-9-]+)$/.exec(hash);
-    const mtf = /^\/t\/([a-z0-9-]+)\/([a-z0-9-]+)\/fingers\/([A-G]b?[a-z0-9]*)$/.exec(hash);
+    const mtf = /^\/t\/([a-z0-9-]+)\/([a-z0-9-]+)\/fingers\/([A-G]b?[a-z0-9]*|\d+|all)$/.exec(hash);
     if (mi) {
       const { course, improv } = await content();
       const step = course.steps.find((s) => s.id === mi[1]);
@@ -113,6 +119,24 @@ async function route() {
       const { index, course } = await content();
       document.title = `${t('riffs')} · Jazzlab`;
       await renderCourse(root, { index, course, rerender });
+    } else if (mtf && /^(\d+|all)$/.test(mtf[3])) {
+      // a melody phrase (or the whole melody) as a normal exercise; only the whole one passes the melody item
+      const model = await trackModel(mtf[1]);
+      const item = model.items[mtf[2]];
+      const melody = item && item.kind === 'melody' ? model.melodies[item.melody] : null;
+      const form = melody && model.forms[melody.form];
+      const all = mtf[3] === 'all', pi = all ? -1 : +mtf[3];
+      if (!melody || !form || (!all && !melody.phrases[pi])) { message(t('notFound')); return; }
+      setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mtf[1]);
+      const range = all ? [0, melody.bars.length - 1] : melody.phrases[pi];
+      const label = all ? t('mlAll') : `${t('mlBars')} ${range[0] + 1}–${range[1] + 1}`;
+      const ex = normalize(melodyExercise(melody, range, model.patterns[item.pattern], {
+        id: all ? `${item.id}-all` : `${item.id}-p${pi}`, course: mtf[1], doneId: all ? item.id : null, back: item.href, flats: true,
+        title: `${item.title} · ${label}`,
+        kicker: `${L(model.track.title).toUpperCase()} · ${t('melUpper')} · ${label}`
+      }));
+      document.title = `${item.title} · ${label} · Jazzlab`;
+      cleanup = renderExercise(root, { ex, rerender });
     } else if (mtf) {
       // a lick over one chord as a normal exercise: Notes → In tempo → By heart; "by heart" passes the lick item
       const model = await trackModel(mtf[1]);
@@ -135,14 +159,22 @@ async function route() {
       document.title = `${item.title} · Jazzlab`;
       if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'ear') cleanup = renderEar(root, { track: model.track, itemId: item.id, item, back });
-      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, licks: Array.isArray(item.licks) ? item.licks.map((l) => model.licks[l]).filter(Boolean) : null, back });
+      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, licks: Array.isArray(item.licks) ? item.licks.map((l) => model.licks[l]).filter(Boolean) : null, melody: item.melody ? model.melodies[item.melody] || null : null, back });
+      else if (item.kind === 'melody') {
+        const melody = model.melodies[item.melody];
+        if (!melody || !model.forms[melody.form]) { message(t('notFound')); return; }
+        cleanup = renderMelody(root, { track: model.track, itemId: item.id, item, melody, pattern: model.patterns[item.pattern], form: model.forms[melody.form], back });
+      }
       else if (item.kind === 'lick') cleanup = renderLick(root, { track: model.track, itemId: item.id, item, lick: model.licks[item.lick], pattern: model.patterns[item.pattern], form: model.forms[item.form], back });
       else if (item.kind === 'perform') {
         // the form's ending (an exercise): its bar count sets the ending length, its item is linked from the reminders
         const form = model.forms[item.form];
         const ending = form.ending ? model.exercises[form.ending] || null : null;
         const endItem = ending ? Object.values(model.items).find((i) => i.kind === 'exercise' && i.ex === form.ending) || null : null;
-        cleanup = renderPerform(root, { track: model.track, itemId: item.id, item, form, pattern: model.patterns[item.pattern], licks: (item.licks || []).map((l) => model.licks[l]).filter(Boolean), ending, endItem, back });
+        // the tune to play: a reminder line linking to the track's melody item
+        const melody = item.melody ? model.melodies[item.melody] || null : null;
+        const melItem = melody ? Object.values(model.items).find((i) => i.kind === 'melody' && i.melody === item.melody) || null : null;
+        cleanup = renderPerform(root, { track: model.track, itemId: item.id, item, form, pattern: model.patterns[item.pattern], licks: (item.licks || []).map((l) => model.licks[l]).filter(Boolean), ending, endItem, melody, melItem, back });
       }
       else if (item.kind === 'diag') cleanup = renderDiag(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'exercise') {

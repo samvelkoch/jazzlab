@@ -20,6 +20,11 @@
       "items": ["form-b1", "form-b2"]
     },
     {
+      "id": "melody", "title": { "ru": "Мелодия", "en": "The tune" },
+      "about": { "ru": "Мелодия учится эхом по два такта: пианино играет, ты повторяешь. Потом пальцы, потом целиком над басом.", "en": "The tune is learned by echo, two bars at a time: the piano plays, you repeat. Then the fingers, then the whole thing over the bass." },
+      "items": ["mel-bossa", "form-mel"]
+    },
+    {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
       "about": { "ru": "Две-три минуты в день. Слух растёт от повторов.", "en": "Two or three minutes a day. The ear grows with repetition." },
       "items": ["ear-find-bossa"]
@@ -47,15 +52,21 @@
     "pat-b2": { "kind": "pattern", "pattern": "b2", "form": "blue-bossa" },
     "form-b1": { "kind": "form", "form": "blue-bossa", "pattern": "b1", "title": { "ru": "Blue Bossa на басу", "en": "Blue Bossa, bass only" } },
     "form-b2": { "kind": "form", "form": "blue-bossa", "pattern": "b2", "title": { "ru": "Blue Bossa с ходом", "en": "Blue Bossa with the move" } },
+    "mel-bossa": { "kind": "melody", "melody": "bossa-cm", "pattern": "b1" },
+    "form-mel": {
+      "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "melody": "bossa-cm",
+      "title": { "ru": "Blue Bossa: мелодия над басом", "en": "Blue Bossa: the tune over the bass" },
+      "about": { "ru": "Левая играет бас, ты ведёшь мелодию целиком. Три чистых круга подряд.", "en": "The left hand plays the bass, you carry the whole tune. Three clean choruses in a row." }
+    },
     "ear-find-bossa": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала рядом с C4, потом шире, потом через три октавы.", "en": "I play a note, you find it on the keys. Close to C4 first, then wider, then across three octaves." },
       "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 }
     },
     "perf-bossa": {
-      "kind": "perform", "form": "blue-bossa", "pattern": "b1", "licks": [], "choruses": 2,
+      "kind": "perform", "form": "blue-bossa", "pattern": "b1", "licks": [], "melody": "bossa-cm", "choruses": 2,
       "title": { "ru": "Blue Bossa, два круга", "en": "Blue Bossa, two choruses" },
-      "about": { "ru": "Левая держит ячейку, правая пока что хочешь: аккордовые ноты или просто слушай гармонию. Запись остаётся.", "en": "The left hand holds the cell; the right hand, for now, whatever you like: chord tones, or just listen to the harmony. The recording stays." }
+      "about": { "ru": "Левая держит ячейку, правая играет мелодию: первый круг как написано, второй можно чуть по-своему. Запись остаётся.", "en": "The left hand holds the cell, the right hand plays the tune: the first chorus as written, the second a little your own way. The recording stays." }
     }
   }
 }

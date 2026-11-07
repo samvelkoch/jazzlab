@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
 import { parsePattern } from '../app/js/music/rhythm.js';
-import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames } from '../app/js/music/forms.js';
+import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -244,3 +244,39 @@ Object.values(bt.items).forEach((it) => {
 assert.ok(!Object.values(bt.items).some((it) => it.kind === 'diag'));
 assert.equal(read('content/index.json').courses.find((c) => c.id === 'bossa').ready, true);
 console.log('ok: bossa');
+
+// the bossa melody (jazzlab-melody/1): bars match the form, fit the bar, unfold into exercises
+const mel = read('content/melodies/bossa-cm.json'); // bb (blue-bossa) and b1 are read above
+assert.equal(mel.$format, 'jazzlab-melody/1');
+assert.equal(mel.form, 'blue-bossa');
+assert.equal(mel.bars.length, bb.bars.length);
+mel.bars.forEach((b, k) => {
+  assert.equal(b.chord, bb.bars[k], `melody bar ${k + 1} chord`);
+  b.rh.forEach((e) => assert.ok(e.t >= 0 && e.t + (e.d || 1) <= 8, `melody bar ${k + 1}: t ${e.t} + d ${e.d} > 8`));
+});
+mel.phrases.forEach(([a, z]) => assert.ok(a >= 0 && a <= z && z < mel.bars.length));
+const m01 = melodyExercise(mel, [0, 1], b1, { id: 'm' });
+assert.equal(m01.bars.length, 2);
+assert.deepEqual(m01.bars[0].rh.map((e) => e.n[0]), ['G4', 'C5', 'D5', 'Eb5']);
+assert.deepEqual(m01.bars[0].rh.map((e) => e.t), [0, 2, 3, 6]);
+assert.deepEqual(m01.bars[0].rh.map((e) => e.d), [2, 1, 3, 2]);
+assert.deepEqual(m01.bars[0].lh.map((e) => [e.n, e.t, e.d]), [[['C3'], 0, 3], [['G3'], 3, 5]]);
+assert.equal(m01.swing, false); assert.equal(m01.passAnyTempo, true); assert.equal(m01.tempo.start, mel.tempo - 10);
+assert.equal(normalize(m01).bars.length, 2);
+assert.equal(normalize(m01).byEar, true, 'a phrase was learned by echo: it opens on the notes');
+const m45 = melodyExercise(mel, [4, 5], b1, { id: 'm45' });
+assert.equal(m45.bars[0].lh[1].n[0], 'Ab3', 'Dm7b5: the b5 as a flat');
+const mAll = normalize(melodyExercise(mel, [0, mel.bars.length - 1], b1, { id: 'mel-bossa-all', doneId: 'mel-bossa' }));
+assert.equal(mAll.bars.length, 16);
+assert.equal(mAll.doneId, 'mel-bossa');
+assert.equal(buildSteps(mAll).length, 16 * 8);
+assert.deepEqual(melodyNotes(mel, [6, 7]).map((e) => e.t), [0, 12, 13, 14, 15], 'phrase slots count from its first bar');
+assert.equal(melodyBarNotes(mel, 0)[3].m, 75, 'Eb5 = 75');
+// the melody items on the bossa track
+assert.equal(bt.items['mel-bossa'].melody, 'bossa-cm');
+assert.equal(bt.items['form-mel'].melody, 'bossa-cm');
+assert.equal(bt.items['perf-bossa'].melody, 'bossa-cm');
+const secIds = bt.sections.map((x) => x.id);
+assert.equal(secIds.indexOf('melody'), secIds.indexOf('form') + 1);
+assert.equal(secIds.indexOf('ear'), secIds.indexOf('melody') + 1);
+console.log('ok: melody');

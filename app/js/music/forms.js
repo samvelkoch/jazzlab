@@ -1,7 +1,7 @@
 // Chords, left-hand patterns and forms. A pattern is written once, relative to the chord root
 // (semitone offsets + fingers); over a chord sequence it unfolds into a normal exercise
 // (jazzlab-exercise/1), so the exercise screen, MIDI scoring and export all work unchanged.
-import { SHARP_NAMES, midiToName } from './notes.js';
+import { SHARP_NAMES, midiToName, toMidi } from './notes.js';
 
 const PC = { C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11 };
 const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -181,5 +181,53 @@ export function lickExercise(lick, chordName, pattern, opts = {}) {
     dyn: [{ bar: 0, mark: 'mf', level: 0.75 }],
     bars,
     passAnyTempo: true, kicker: opts.kicker || null, back: opts.back || '#/', doneId: opts.doneId || null
+  };
+}
+
+// ---------- melodies (jazzlab-melody/1) ----------
+// A melody is written out in absolute pitches, one entry per form bar: bars[i] = { chord, rh: [{ t, d, n, f }] },
+// n = one pitch name in the form's key (flats). phrases = [[firstBar, lastBar], ...] = the echo chunks.
+
+/** Right-hand notes of melody bar k (MIDI): [{ t, d, m, f, name }], sorted by t. An empty or missing bar gives []. */
+export function melodyBarNotes(melody, k) {
+  const b = melody.bars[k];
+  return (b && b.rh ? b.rh : []).map((e) => ({ t: e.t, d: e.d || 1, m: toMidi(e.n), f: e.f || 0, name: e.n }))
+    .sort((a, b2) => a.t - b2.t);
+}
+
+/** Notes of a phrase [from, to] over its bars: [{ t: 0..(bars*8-1), d, m, f, name, bar }] (t counted from the phrase start). */
+export function melodyNotes(melody, [from, to]) {
+  const out = [];
+  for (let k = from; k <= to; k++) melodyBarNotes(melody, k).forEach((e) => out.push({ ...e, t: (k - from) * 8 + e.t, bar: k }));
+  return out;
+}
+
+/**
+ * Bars [from, to] of a melody as an exercise: right hand = the melody, left hand = the pattern over each bar's chord
+ * (spelled with flats unless opts.flats === false). Returns a raw jazzlab-exercise/1 object (call normalize() on it).
+ */
+export function melodyExercise(melody, [from, to], pattern, opts = {}) {
+  const src = melody.bars.slice(from, to + 1);
+  const chords = src.map((b) => b.chord);
+  const lhBars = pattern ? patternExercise(pattern, chords, { flats: opts.flats !== false }).bars : chords.map(() => ({ lh: [] }));
+  const bars = src.map((b, k) => ({
+    rh: (b.rh || []).map((e) => ({ t: e.t, d: e.d || 1, n: [e.n], f: e.f ? [e.f] : [], stac: false, sug: false })),
+    lh: lhBars[k].lh,
+    chord: b.chord
+  }));
+  const tempo = melody.tempo || 66;
+  return {
+    $format: 'jazzlab-exercise/1',
+    id: opts.id || `mel-${melody.id}-${from}-${to}`,
+    course: opts.course || 'blues', step: 0, number: 0,
+    title: opts.title || melody.title,
+    about: opts.about || melody.about || null,
+    time: [4, 4],
+    tempo: { start: opts.tempo || Math.max(40, tempo - 10), target: tempo },
+    swing: false,
+    rhythm: null,
+    dyn: [{ bar: 0, mark: 'mf', level: 0.75 }],
+    bars,
+    passAnyTempo: true, kicker: opts.kicker || null, back: opts.back || '#/', doneId: opts.doneId || null, byEar: true
   };
 }
