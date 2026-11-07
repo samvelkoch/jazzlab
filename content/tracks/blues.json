@@ -21,8 +21,8 @@
     },
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
-      "about": { "ru": "Фразы на слух. Сначала повтори за пианино, потом пальцы, потом над всей формой.", "en": "Phrases by ear. Repeat after the piano, then fingers, then over the whole form." },
-      "items": ["lick-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3"]
+      "about": { "ru": "Фразы на слух. Сначала повтори за пианино, потом пальцы, потом над всей формой. В конце вопрос и ответ.", "en": "Phrases by ear. Repeat after the piano, then fingers, then over the whole form. At the end, question and answer." },
+      "items": ["lick-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3", "lick-l4", "lick-l5", "lick-l6", "lick-l7", "form-rh-l4", "form-rh-l6", "form-rh-qa"]
     },
     {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
@@ -88,10 +88,21 @@
     "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1" },
     "form-rh-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1", "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" } },
     "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } },
+    "lick-l4": { "kind": "lick", "lick": "l4", "form": "blues-c", "pattern": "p1" },
+    "lick-l5": { "kind": "lick", "lick": "l5", "form": "blues-c", "pattern": "p1" },
+    "lick-l6": { "kind": "lick", "lick": "l6", "form": "blues-c", "pattern": "p1" },
+    "lick-l7": { "kind": "lick", "lick": "l7", "form": "blues-c", "pattern": "p1" },
+    "form-rh-l4": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l4", "title": { "ru": "Блюз: лесенка", "en": "Blues: the ladder" } },
+    "form-rh-l6": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l6", "title": { "ru": "Блюз: дрожащая терция", "en": "Blues: the trembling third" } },
+    "form-rh-qa": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"],
+      "title": { "ru": "Блюз: вопрос и ответ", "en": "Blues: question and answer" },
+      "about": { "ru": "Вопрос на нечётных парах тактов, ответ на чётных. Так разговаривает блюз.", "en": "A question on bars 1, 5, 9, an answer on 3, 7, 11. That is how the blues talks." }
+    },
     "perf-blues": {
-      "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3"], "choruses": 3,
+      "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "choruses": 3,
       "title": { "ru": "Блюз в C, три круга", "en": "Blues in C, three choruses" },
-      "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ» и «Три удара», или что хочешь. Отсчёт, три круга и концовка: Db7, потом C7.", "en": "Left: root and fifth. Right: the «Answer» and «Three hits» licks, or whatever you like. Count-in, three choruses and the ending: Db7, then C7." }
+      "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ», «Три удара», «Лесенку» или что хочешь. Отсчёт, три круга и концовка: Db7, потом C7.", "en": "Left: root and fifth. Right: the «Answer», «Three hits» and «The ladder» licks, or whatever you like. Count-in, three choruses and the ending: Db7, then C7." }
     },
     "diag": {
       "kind": "diag", "title": { "ru": "Замер навыков", "en": "Skills check-up" },

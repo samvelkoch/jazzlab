@@ -87,7 +87,7 @@ const DICT = {
     fSoFar: 'Пока', fCleanOf: 'чистых из', fStart: 'Нажми «Старт»: отсчёт 1 такт, потом 12 тактов по кругу',
     fPlayHintRh: 'Играй лик правой, левая звучит сама', fPlayHintScreenRh: 'Без пианино: лик звучит как подсказка, нажимай на экране', fListenHintRh: 'Лик и левая звучат сами: слушай и смотри на клавиши',
     // licks
-    kind_ear: 'Слух', kind_lick: 'Лик', lickUpper: 'ЛИК', lickW: 'лик', lkChord: 'Аккорд',
+    kind_ear: 'Слух', kind_lick: 'Лик', lickUpper: 'ЛИК', lickW: 'лик', questionW: 'вопрос', answerW: 'ответ', qaChip: 'Вопрос и ответ', lkChord: 'Аккорд',
     lk_echo: 'Эхо', lk_fingers: 'Пальцы', lk_memory: 'По памяти',
     lkT_echo: 'Повтори за пианино', lkS_echo: 'Пианино играет фразу два такта, ты повторяешь её в следующих двух. Те же ноты, тот же ритм.',
     lkT_fingers: 'Теперь пальцами', lkS_fingers: 'Та же фраза в нотах, с аппликатурой, а левая играет корень и квинту. В упражнении пройди «Ноты», потом «В темпе».',
@@ -202,7 +202,7 @@ const DICT = {
     chorusW: 'Chorus', cleanChoruses: 'clean choruses in a row', slipsW: 'slips', fPassed: 'Three clean choruses. You are playing the blues!', fPassedAgain: 'Review passed',
     fSoFar: 'So far', fCleanOf: 'clean of', fStart: 'Press Start: a 1-bar count-in, then 12 bars on a loop',
     fPlayHintRh: 'Play the lick with your right hand; the left hand plays itself', fPlayHintScreenRh: 'No piano: the lick sounds as a guide, tap on screen', fListenHintRh: 'The lick and the left hand play themselves: listen and watch the keys',
-    kind_ear: 'Ear', kind_lick: 'Lick', lickUpper: 'LICK', lickW: 'lick', lkChord: 'Chord',
+    kind_ear: 'Ear', kind_lick: 'Lick', lickUpper: 'LICK', lickW: 'lick', questionW: 'question', answerW: 'answer', qaChip: 'Question and answer', lkChord: 'Chord',
     lk_echo: 'Echo', lk_fingers: 'Fingers', lk_memory: 'By heart',
     lkT_echo: 'Repeat after the piano', lkS_echo: 'The piano plays a two-bar phrase; you repeat it in the next two. Same notes, same rhythm.',
     lkT_fingers: 'Now with your fingers', lkS_fingers: 'The same phrase in notation with fingering, the left hand on root and fifth. In the exercise do “Notes”, then “In tempo”.',

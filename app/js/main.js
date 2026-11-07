@@ -69,7 +69,7 @@ async function trackModel(id) {
   Object.entries(track.items).forEach(([iid, it]) => {
     const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
     const title = it.title ? L(it.title) : src ? L(src.title) : iid;
-    const about = it.about ? L(it.about) : it.kind === 'form' && it.lick ? L(licks[it.lick].about) : src ? L(src.about) : '';
+    const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : src ? L(src.about) : '';
     items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}` };
   });
   models[id] = { track, forms, patterns, licks, exercises, items };
@@ -135,7 +135,7 @@ async function route() {
       document.title = `${item.title} · Jazzlab`;
       if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'ear') cleanup = renderEar(root, { track: model.track, itemId: item.id, item, back });
-      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, back });
+      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, licks: Array.isArray(item.licks) ? item.licks.map((l) => model.licks[l]).filter(Boolean) : null, back });
       else if (item.kind === 'lick') cleanup = renderLick(root, { track: model.track, itemId: item.id, item, lick: model.licks[item.lick], pattern: model.patterns[item.pattern], form: model.forms[item.form], back });
       else if (item.kind === 'perform') {
         // the form's ending (an exercise): its bar count sets the ending length, its item is linked from the reminders

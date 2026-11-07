@@ -1,5 +1,5 @@
 // Pattern -> exercise generator and chord helpers. Run: node tests/forms.test.mjs
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
@@ -100,4 +100,31 @@ assert.ok(normalize(lickExercise(l2, 'C7', p1)).bars[0].rh.some((e) => e.notes[0
 assert.deepEqual(normalize(lickExercise(l1, 'G7', p1)).bars[0].rh.slice(0, 4).map((e) => e.notes[0]), ['Bb4', 'B4', 'D5', 'F5']);
 // a note longer than its bar is clipped (l2: t=5 d=3 ends exactly on the bar line)
 ['C7', 'F7', 'G7'].forEach((c) => [l1, l2, l3].forEach((l) => normalize(lickExercise(l, c, p1))));
+// licks l4..l7
+const l4 = read('content/licks/l4.json'), l6 = read('content/licks/l6.json');
+assert.deepEqual(lickNotes(l4, 'C7').map((e) => e.m), [60, 63, 65, 66, 67, 66, 65, 63, 60]);
+assert.equal(lickNotes(l4, 'F7').at(-1).m, 65, 'l4 over F7 ends on F4');
+assert.deepEqual(normalize(lickExercise(l6, 'C7', p1)).bars[0].rh.slice(0, 4).map((e) => e.notes[0]), ['Eb4', 'E4', 'Eb4', 'E4']);
+const l4rh = normalize(lickExercise(l4, 'C7', p1)).bars[0].rh.map((e) => e.notes[0]);
+assert.equal(l4rh[3], 'F#4', 'the passing #4 in l4 is F#4');
+assert.ok(!l4rh.includes('Gb4'));
+// every lick: slots 0..15, every note ends by slot 16, roles and the pair on the form
+const lickFiles = readdirSync(join(root, 'content/licks')).filter((f) => f.endsWith('.json'));
+assert.ok(lickFiles.length >= 7);
+lickFiles.forEach((f) => {
+  const l = read(`content/licks/${f}`);
+  assert.equal(l.$format, 'jazzlab-lick/1', f);
+  assert.ok(['question', 'answer'].includes(l.role), f);
+  l.events.forEach((e) => {
+    assert.ok(Number.isInteger(e.t) && e.t >= 0 && e.t <= 15, `${f}: t ${e.t}`);
+    assert.ok(e.t + (e.d || 1) <= 16, `${f}: event at ${e.t} ends after slot 16`);
+  });
+  ['C7', 'F7', 'G7'].forEach((c) => normalize(lickExercise(l, c, p1)));
+});
+const qa = blues.items['form-rh-qa'];
+assert.deepEqual(qa.licks, ['l5', 'l4']);
+assert.equal(read('content/licks/l5.json').role, 'question');
+assert.equal(read('content/licks/l4.json').role, 'answer');
+assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa']);
+Object.values(blues.items).forEach((it) => { if (it.lick) read(`content/licks/${it.lick}.json`); (it.licks || []).forEach((l) => read(`content/licks/${l}.json`)); });
 console.log('ok: forms');
