@@ -1,0 +1,19 @@
+{
+  "$format": "jazzlab-pattern/1",
+  "id": "p2",
+  "title": { "ru": "Буги", "en": "Boogie" },
+  "about": { "ru": "Мотор блюза и буги-вуги: восьмые идут вверх и обратно вниз. Рука стоит на месте, мизинец на корне.", "en": "The motor of blues and boogie-woogie: eighths walk up and back down. The hand stays put, pinky on the root." },
+  "tempo": 56,
+  "swing": true,
+  "rhythm": "8 8 8 8 8 8 8 8",
+  "events": [
+    { "t": 0, "d": 1, "deg": 0, "f": 5 },
+    { "t": 1, "d": 1, "deg": 4, "f": 3 },
+    { "t": 2, "d": 1, "deg": 7, "f": 2 },
+    { "t": 3, "d": 1, "deg": 9, "f": 1 },
+    { "t": 4, "d": 1, "deg": 10, "f": 1 },
+    { "t": 5, "d": 1, "deg": 9, "f": 1 },
+    { "t": 6, "d": 1, "deg": 7, "f": 2 },
+    { "t": 7, "d": 1, "deg": 4, "f": 3 }
+  ]
+}

@@ -1,13 +1,15 @@
-// Performance screen: the whole form with drums only, N choruses and one ending bar. Everything you play is
+// Performance screen: the whole form with drums only, N choruses and the ending. The ending length is the bar count
+// of the form's `ending` exercise (blues-end: 2 bars); the drums keep the groove through every ending bar but the last,
+// which gets beat 1 only, then silence. A form without an ending gets one ending bar (beat 1 only). Everything you play is
 // recorded as { t, d, m, v } (seconds from the first beat of chorus 1). After the run: a summary (notes, choruses,
 // rhythm accuracy against the eighth-note grid), playback over the drums, a MIDI download. No pass, no review:
 // a performance is a result, not an exercise. The last 10 recordings live in store 'recordings'.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
 import { store, updateEx, markActive, idle } from '../store.js';
-import { noteName, midiToName } from '../music/notes.js';
+import { noteName, midiToName, toMidi } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBar, lickBars } from '../music/forms.js';
+import { patternBar, lickBars, patSpell, parseChord } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import { recordingToMidi } from '../music/export.js';
 import { rhythmAccuracy } from '../music/recording.js';
@@ -19,7 +21,7 @@ const MAX_RECS = 10;
 const TAP_DUR = 0.3;
 const r3 = (x) => Math.round(x * 1000) / 1000;
 
-export function renderPerform(root, { track, itemId, item, form, pattern, licks, back }) {
+export function renderPerform(root, { track, itemId, item, form, pattern, licks, ending, endItem, back }) {
   const settings = { names: 'en', pianoSnd: true, perfBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
@@ -27,6 +29,8 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const lhByChord = Object.fromEntries(chords.map((c) => [c, patternBar(pattern, c)]));
   const rhMidi = licks.flatMap((l) => chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m)));
   const lhMidi = Object.values(lhByChord).flat().map((e) => e.m);
+  const END_BARS = ending ? ending.bars.length : 1; // bars after the last chorus
+  const endMidi = ending ? ending.bars.flatMap((b) => [...b.rh, ...b.lh].flatMap((e) => e.notes.map(toMidi))) : [];
   const st = { bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing, choruses: item.choruses || 3, mode: null }; // mode: null | 'run' | 'play'
   const myRecs = () => store.get('recordings', []).filter((r) => r.itemId === itemId);
   let current = myRecs()[0] || null; // the recording shown in the summary
@@ -44,8 +48,9 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const grid = h('div.fgrid', null, ...cells);
   const nn = (m) => noteName(midiToName(m), names);
   const strip = h('div.perfstrip', null,
-    h('span', null, h('b', null, `${t('perfLeft')}:`), ...chords.map((c) => h('span.pchord', null, `${c} `, h('span.fnotes', null, [...new Set(lhByChord[c].map((e) => e.m))].map(nn).join(' · '))))),
-    licks.length ? h('span', null, h('b', null, `${t('perfRight')}:`), ` ${licks.map((l) => `«${L(l.title)}»`).join(', ')} ${t('perfOwn')}`) : null);
+    h('span', null, h('b', null, `${t('perfLeft')}:`), ...chords.map((c) => h('span.pchord', null, `${c} `, h('span.fnotes', null, [...new Map(lhByChord[c].map((e) => [e.m, e])).values()].map((e) => noteName(patSpell(e.m, e.deg, parseChord(c)), names)).join(' · '))))),
+    licks.length ? h('span', null, h('b', null, `${t('perfRight')}:`), ` ${licks.map((l) => `«${L(l.title)}»`).join(', ')} ${t('perfOwn')}`) : null,
+    ending ? h('span', null, h('b', null, `${t('perfEnding')}:`), ' ', endItem ? h('a', { href: endItem.href }, `«${L(ending.title)}»`) : `«${L(ending.title)}»`) : null);
   const summary = h('div.dsummary.perfsum');
   const sumActs = h('div.perfacts');
   const list = h('div.perflist');
@@ -79,7 +84,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   }
 
   // ---------- keyboard: pressed keys only ----------
-  const lo = Math.min(...lhMidi, ...rhMidi), hi = Math.max(...lhMidi, ...rhMidi);
+  const lo = Math.min(...lhMidi, ...rhMidi, ...endMidi), hi = Math.max(...lhMidi, ...rhMidi, ...endMidi);
   audio.preloadPiano(lo - 3, hi + 7);
   const kb = createKeyboard(kbEl, [lo, hi + 5], { names: settings.names, onPress: (m) => {
     audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); markActive();
@@ -93,7 +98,8 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   }
   const fb = (html) => { fbEl.innerHTML = html; };
   function setBpm(v) { if (st.mode) return; st.bpm = Math.max(40, Math.min(160, Math.round(v))); bpmOut.innerHTML = `♩ ${st.bpm}`; store.set('tempo:' + itemId, st.bpm); }
-  function setChoruses(v) { if (st.mode) return; st.choruses = Math.max(1, Math.min(5, v)); chOut.textContent = `× ${st.choruses}`; if (!current) fb(t('perfStart').replace('{n}', st.choruses)); paintChorus(0); }
+  function setChoruses(v) { if (st.mode) return; st.choruses = Math.max(1, Math.min(5, v)); chOut.textContent = `× ${st.choruses}`; if (!current) fb(startText()); paintChorus(0); }
+  function startText() { return t(END_BARS === 2 ? 'perfStart' : 'perfStart1').replace('{n}', st.choruses); }
   function paintChorus(k) { chorusEl.textContent = `${t('chorusW')} ${k + 1} / ${st.mode === 'play' && run ? run.choruses : st.choruses}`; }
   function paintPrimary() { primary.innerHTML = st.mode ? ICON.stop + `<span>${t('stop')}</span>` : ICON.play + `<span>${t('play')}</span>`; }
   function paintHint() { footHint.textContent = midiOn() ? t('perfHint') : t('perfHintScreen'); }
@@ -108,9 +114,9 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
     if (window.matchMedia('(min-width: 641px)').matches) panel.scrollTop = 0; // keep the grid in view
     timer = setInterval(schedule, 25); schedule(); raf = requestAnimationFrame(tick);
   }
-  function newRun(kind, bpm, swing, choruses, t0) {
-    const beat = 60 / bpm, total = choruses * NB * PER, endT = (total / PER + 1) * 4 * beat; // end of the ending bar
-    return { kind, t0, beat, bpm, swing, choruses, total, endT, finishT: endT + 1, swingOff: swing ? beat * 2 / 3 : beat / 2 };
+  function newRun(kind, bpm, swing, choruses, t0, endBars = END_BARS) {
+    const beat = 60 / bpm, total = choruses * NB * PER, endT = (total / PER + endBars) * 4 * beat; // end of the ending
+    return { kind, t0, beat, bpm, swing, choruses, total, endBars, last: total + (endBars - 1) * PER, endT, finishT: endT + 1, swingOff: swing ? beat * 2 / 3 : beat / 2 };
   }
   function startRun() {
     if (st.mode || !audio.ensureAudio()) return;
@@ -126,7 +132,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
     if (st.mode === 'run') finish(false); else if (st.mode) halt();
     const notes = rec.notes.slice().sort((a, b) => a.t - b.t);
     if (notes.length) audio.preloadPiano(Math.min(...notes.map((n) => n.m)) - 1, Math.max(...notes.map((n) => n.m)) + 1);
-    const r = { ...newRun('play', rec.bpm, rec.swing, rec.choruses, audio.now() + 0.25), notes, pi: 0, rec };
+    const r = { ...newRun('play', rec.bpm, rec.swing, rec.choruses, audio.now() + 0.25, rec.ending || 1), notes, pi: 0, rec };
     r.finishT = Math.max(r.finishT, notes.reduce((x, n) => Math.max(x, n.t + n.d), 0) + 0.6);
     st.mode = 'play';
     begin(r); paintChorus(0);
@@ -135,18 +141,21 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   function schedule() {
     if (!run) return;
     const ahead = audio.now() + 0.15, drums = settings.perfBeat === 'drums';
-    while (g <= run.total) {
+    while (g <= run.last) {
       const slot = g % PER, barG = Math.floor(g / PER), bar = barG % NB, chorus = Math.floor(barG / NB);
       const time = beatTime + (slot % 2 ? run.swingOff : 0);
       if (time > ahead) break;
-      if (g === run.total) { // ending bar: beat 1 only, then silence
+      if (g === run.last) { // the last ending bar: beat 1 only, then silence
         if (drums) groove(0, time, run.swing); else audio.click(time, true);
-        queue.push({ t: time, barStart: -1 });
+        if (run.endBars === 1) queue.push({ t: time, barStart: -1 });
         g++; break;
       }
       if (drums) groove(slot, time, run.swing); else if (slot % 2 === 0) audio.click(time, slot === 0);
-      if (slot === 0) queue.push({ t: time, barStart: bar, chorus });
-      queue.push({ t: time, g });
+      if (g >= run.total) { if (g === run.total) queue.push({ t: time, barStart: -1 }); } // ending bars: groove on, no form cell
+      else {
+        if (slot === 0) queue.push({ t: time, barStart: bar, chorus });
+        queue.push({ t: time, g });
+      }
       if (slot % 2) beatTime += run.beat;
       g++;
     }
@@ -195,7 +204,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   function record(m, v, T, dur) {
     if (!run || run.kind !== 'run') return null;
     const tt = T - run.t0;
-    if (tt < 0 || tt > run.endT) return null; // count-in (and after the ending bar) is not recorded
+    if (tt < 0 || tt > run.endT) return null; // count-in (and after the ending) is not recorded
     const prev = run.held.get(m); if (prev) { prev.d = Math.max(0.01, tt - prev.t); run.held.delete(m); }
     const n = { t: tt, d: dur || 0, m, v: Math.round(v * 100) / 100 };
     run.notes.push(n);
@@ -221,7 +230,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
     const notes = r.notes.filter((n) => n.t < limit).map((n) => ({ t: r3(n.t), d: r3(n.d), m: n.m, v: n.v }));
     if (!notes.length) { fb(t('perfEmpty')); return; }
     const acc = rhythmAccuracy(notes, r);
-    const rec = { id: Date.now().toString(36), itemId, date: new Date().toISOString(), bpm: r.bpm, swing: r.swing, choruses: done, notes, acc };
+    const rec = { id: Date.now().toString(36), itemId, date: new Date().toISOString(), bpm: r.bpm, swing: r.swing, choruses: done, ending: natural ? r.endBars : 0, notes, acc };
     store.set('recordings', [rec, ...store.get('recordings', [])].slice(0, MAX_RECS));
     updateEx(itemId, (p) => ({ ...p, runs: (p.runs || 0) + 1, bestPct: Math.max(p.bestPct || 0, acc.pct) }));
     current = rec; paintSummary(); paintList(); fb(t('perfSaved'));
@@ -280,7 +289,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   document.addEventListener('keydown', onKey);
 
   setBpm(st.bpm); setChoruses(st.choruses); paintPrimary(); paintHint(); paintSummary(); paintList();
-  fb(current ? '' : t('perfStart').replace('{n}', st.choruses));
+  fb(current ? '' : startText());
 
   return () => { if (st.mode === 'run') finish(false); else if (st.mode) halt(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

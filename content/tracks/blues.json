@@ -12,12 +12,12 @@
     {
       "id": "lh", "title": { "ru": "Левая рука", "en": "Left hand" },
       "about": { "ru": "Мотор блюза. Учится на четырёх тактах C7 · F7 · G7 · C7, потом идёт в форму.", "en": "The blues motor. Learned over four bars C7 · F7 · G7 · C7, then taken into the form." },
-      "items": ["pat-p1", "pat-p1q"]
+      "items": ["pat-p1", "pat-p1q", "pat-p2"]
     },
     {
       "id": "form", "title": { "ru": "Форма", "en": "The form" },
       "about": { "ru": "Весь блюз по кругу под барабаны. Три чистых круга подряд, и ты играешь блюз.", "en": "The whole blues on a loop with drums. Three clean choruses in a row and you are playing the blues." },
-      "items": ["form-p1", "form-p1q"]
+      "items": ["form-p1", "form-p1q", "form-p2", "end-blues"]
     },
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
@@ -73,8 +73,11 @@
     },
     "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" },
     "pat-p1q": { "kind": "pattern", "pattern": "p1q", "form": "blues-c" },
+    "pat-p2": { "kind": "pattern", "pattern": "p2", "form": "blues-c" },
     "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": { "ru": "Блюз на половинных", "en": "Blues in half notes" } },
     "form-p1q": { "kind": "form", "form": "blues-c", "pattern": "p1q", "title": { "ru": "Блюз на четвертях", "en": "Blues in quarter notes" } },
+    "form-p2": { "kind": "form", "form": "blues-c", "pattern": "p2", "title": { "ru": "Блюз на буги", "en": "Boogie blues" } },
+    "end-blues": { "kind": "exercise", "ex": "blues-end" },
     "ear-find": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала в пределах квинты от C4, потом октавы, потом двух.", "en": "I play a note, you find it on the keys. Within a fifth of C4 first, then an octave, then two." },
@@ -88,7 +91,7 @@
     "perf-blues": {
       "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3"], "choruses": 3,
       "title": { "ru": "Блюз в C, три круга", "en": "Blues in C, three choruses" },
-      "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ» и «Три удара», или что хочешь. Отсчёт, три круга, такт концовки.", "en": "Left: root and fifth. Right: the «Answer» and «Three hits» licks, or whatever you like. Count-in, three choruses, one ending bar." }
+      "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ» и «Три удара», или что хочешь. Отсчёт, три круга и концовка: Db7, потом C7.", "en": "Left: root and fifth. Right: the «Answer» and «Three hits» licks, or whatever you like. Count-in, three choruses and the ending: Db7, then C7." }
     },
     "diag": {
       "kind": "diag", "title": { "ru": "Замер навыков", "en": "Skills check-up" },

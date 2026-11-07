@@ -25,6 +25,8 @@ export function spell(m, flats) {
   return (flats ? FLAT_NAMES[pc] : SHARP_NAMES[pc]) + oct;
 }
 export const flatsFor = (chord) => /b/.test(chord.root) || chord.root === 'F';
+/** Left-hand pattern spelling: the chord's own spelling, but the b3 and b7 are always flats (Bb over C7, not A#). */
+export const patSpell = (m, deg, chord) => spell(m, flatsFor(chord) || [3, 10].includes(((deg % 12) + 12) % 12));
 
 /**
  * Root for the left hand: keep it between F2 (41) and E3 (52) so the hand stays in one place.
@@ -41,8 +43,8 @@ export const lhRoot = (chord) => (chord.pc >= 5 ? 36 + chord.pc : 48 + chord.pc)
 export function patternExercise(pattern, bars, opts = {}) {
   const ev = pattern.events;
   const out = bars.map((name) => {
-    const chord = parseChord(name), root = lhRoot(chord), flats = flatsFor(chord);
-    return { rh: [], lh: ev.map((e) => ({ t: e.t, d: e.d || 1, n: [spell(root + e.deg, flats)], f: e.f ? [e.f] : [], stac: !!e.stac, sug: false })), chord: name };
+    const chord = parseChord(name), root = lhRoot(chord);
+    return { rh: [], lh: ev.map((e) => ({ t: e.t, d: e.d || 1, n: [patSpell(root + e.deg, e.deg, chord)], f: e.f ? [e.f] : [], stac: !!e.stac, sug: false })), chord: name };
   });
   return {
     $format: 'jazzlab-exercise/1',
@@ -63,7 +65,7 @@ export function patternExercise(pattern, bars, opts = {}) {
 /** Left-hand notes (MIDI) of a pattern in one bar of a chord: [{ t, d, m, f }]. */
 export function patternBar(pattern, chordName) {
   const chord = parseChord(chordName), root = lhRoot(chord);
-  return pattern.events.map((e) => ({ t: e.t, d: e.d || 1, m: root + e.deg, f: e.f || 0, stac: !!e.stac }));
+  return pattern.events.map((e) => ({ t: e.t, d: e.d || 1, m: root + e.deg, f: e.f || 0, stac: !!e.stac, deg: e.deg }));
 }
 
 /** Expected MIDI set at a slot of a form bar. */
@@ -109,8 +111,8 @@ export function lickBars(lick, chordName) {
  * Returns a raw jazzlab-exercise/1 object (call normalize() on it).
  */
 export function lickExercise(lick, chordName, pattern, opts = {}) {
-  const chord = parseChord(chordName), flats = flatsFor(chord);
-  const lh = pattern ? patternBar(pattern, chordName).map((e) => ({ t: e.t, d: e.d, n: [spell(e.m, flats)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })) : [];
+  const chord = parseChord(chordName);
+  const lh = pattern ? patternBar(pattern, chordName).map((e) => ({ t: e.t, d: e.d, n: [patSpell(e.m, e.deg, chord)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })) : [];
   const bars = lickBars(lick, chordName).map((evs) => ({
     rh: evs.map((e) => ({ t: e.t, d: e.d, n: [lickSpell(e.m, e.deg)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
     lh: lh.map((e) => ({ ...e, n: e.n.slice(), f: e.f.slice() })),
