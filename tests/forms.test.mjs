@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
 import { parsePattern } from '../app/js/music/rhythm.js';
-import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, patternBars, leadPair, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes } from '../app/js/music/forms.js';
+import { patSpell, fitDeg, parseChord, chordPcs, patternExercise, patternBar, patternBars, leadPair, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -353,3 +353,19 @@ const idx = read('content/index.json').courses;
 assert.equal(idx.find((c) => c.id === 'std').ready, true);
 assert.ok(!idx.some((c) => c.id === 'standard'), 'the old placeholder is gone');
 console.log('ok: standard');
+
+// a voice-led root stays below its shell: D7's pair C3 F#3 pushes the root down to D2
+{
+  const s2 = read('content/patterns/s2.json');
+  const d7 = patternBar(s2, 'D7');
+  assert.deepEqual(d7.filter((e) => e.t === 0).map((e) => e.m), [38], 'D7 root D2 under C3 F#3');
+  assert.deepEqual(d7.filter((e) => e.t === 2).map((e) => e.m).sort((a, b) => a - b), [48, 54]);
+  assert.deepEqual(patternBar(s2, 'Gm7').filter((e) => e.t === 0).map((e) => e.m), [43], 'Gm7 root G2 stays');
+  console.log('ok: lead root');
+}
+
+// a forced-flats form still spells D7's third as F#
+assert.equal(patSpell(54, 4, parseChord('D7'), true), 'F#3');
+assert.equal(patSpell(53, 4, parseChord('Db7'), true), 'F3');
+assert.deepEqual(chordNames('D7', true), ['D', 'F#', 'A', 'C']);
+console.log('ok: sharp thirds');

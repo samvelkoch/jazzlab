@@ -31,6 +31,8 @@ export const flatsFor = (chord) => /b/.test(chord.root) || chord.root === 'F';
  */
 export const patSpell = (m, deg, chord, flats = false) => {
   const pc = ((deg % 12) + 12) % 12;
+  // the major third and major seventh of a chord with a natural root are sharps even in a flat key (D7: F#, not Gb)
+  if ([4, 11].includes(pc) && !/b/.test(chord.root)) return spell(m, false);
   return spell(m, flats || flatsFor(chord) || [3, 10].includes(pc) || (pc === 6 && chord.offsets.includes(6) && !chord.offsets.includes(7)));
 };
 
@@ -166,17 +168,21 @@ export function patternBar(pattern, barName, opts = {}) {
     const e = pattern.events[i];
     const name = chordAt(barName, e.t), chord = parseChord(name), root = lhRoot(chord), fs = evFingers(e);
     const degs = evDegs(e).map((g0) => fitDeg(g0, chord));
+    const key = barChords(barName).length > 1 && e.t >= 4 ? 1 : 0;
+    const shellEv = lead ? pattern.events.find((x) => evDegs(x).length === 2) : null;
+    const pairOf = () => { if (!pairs[key]) { pairs[key] = leadPair(evDegs(shellEv).map((g0) => fitDeg(g0, chord)), chord, prev); prev = pairs[key]; } return pairs[key]; };
     if (lead && degs.length === 2) {
-      const key = barChords(barName).length > 1 && e.t >= 4 ? 1 : 0;
-      if (!pairs[key]) { pairs[key] = leadPair(degs, chord, prev); prev = pairs[key]; }
-      const ms = pairs[key], hiF = [...fs].sort((a, b) => b - a); // lower note takes the larger finger (2), upper the smaller (1)
+      const ms = pairOf(), hiF = [...fs].sort((a, b) => b - a); // lower note takes the larger finger (2), upper the smaller (1)
       const lowFirst = ms[0] < ms[1];
       degs.forEach((g, k) => {
         const isLow = (k === 0) === lowFirst;
         res.push({ t: e.t, d: e.d || 1, m: ms[k], f: (isLow ? hiF[0] : hiF[1]) || 0, stac: !!e.stac, deg: g, chord: name, ev: i });
       });
     } else {
-      degs.forEach((g, k) => res.push({ t: e.t, d: e.d || 1, m: root + g, f: fs[k] || 0, stac: !!e.stac, deg: g, chord: name, ev: i }));
+      // a voice-led root stays below its shell (D7: the pair C3 F#3 sits under D3, so the root drops to D2)
+      let r = root;
+      if (lead && shellEv && degs.length === 1 && degs[0] === 0) { const lo = Math.min(...pairOf()); while (r >= lo) r -= 12; }
+      degs.forEach((g, k) => res.push({ t: e.t, d: e.d || 1, m: r + g, f: fs[k] || 0, stac: !!e.stac, deg: g, chord: name, ev: i }));
     }
   });
   res.sort((a, b) => a.t - b.t || a.ev - b.ev);
