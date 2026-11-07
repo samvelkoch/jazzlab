@@ -278,7 +278,8 @@ assert.equal(bt.items['form-mel'].melody, 'bossa-cm');
 assert.equal(bt.items['perf-bossa'].melody, 'bossa-cm');
 const secIds = bt.sections.map((x) => x.id);
 assert.equal(secIds.indexOf('melody'), secIds.indexOf('form') + 1);
-assert.equal(secIds.indexOf('ear'), secIds.indexOf('melody') + 1);
+assert.equal(secIds.indexOf('rh'), secIds.indexOf('melody') + 1);
+assert.equal(secIds.indexOf('ear'), secIds.indexOf('rh') + 1);
 console.log('ok: melody');
 
 // ---------- the standard: voice-led shell, 32-bar AABA form, the 32-bar tune ----------
@@ -423,4 +424,76 @@ console.log('ok: sharp thirds');
   assert.deepEqual([se.tempo.start, se.tempo.target], [56, 66]);
   assert.deepEqual(se.bars[1].rh[0].notes, ['A4', 'C5', 'F5']);
   console.log('ok: standard licks');
+}
+
+// ---------- bossa licks: chord-relative licks follow the chord quality ----------
+{
+  const lk = (id) => read(`content/licks/${id}.json`);
+  const bl1 = lk('bl1'), bl2 = lk('bl2'), bl3 = lk('bl3'), l1b = lk('l1'), bp1 = read('content/patterns/p1.json'), bb1 = read('content/patterns/b1.json');
+  // fitDeg: the mirror case only on request; degrees above 12 keep their octave
+  assert.equal(fitDeg(3, parseChord('Dbmaj7')), 3, 'no option: the minor 3rd stays');
+  assert.equal(fitDeg(3, parseChord('Dbmaj7'), { minorToMajor: true }), 4);
+  assert.equal(fitDeg(15, parseChord('G7'), { minorToMajor: true }), 16);
+  assert.equal(fitDeg(3, parseChord('Cm7'), { minorToMajor: true }), 3);
+  assert.equal(fitDeg(3, parseChord('Dm7b5'), { minorToMajor: true }), 3);
+  assert.equal(fitDeg(10, parseChord('Dbmaj7'), { minorToMajor: true }), 11);
+  assert.equal(fitDeg(7, parseChord('Dm7b5')), 6);
+  // the blues lick keeps its blue third over C7
+  assert.deepEqual(lickNotes(l1b, 'C7').map((e) => e.m), [63, 64, 67, 70, 67, 65, 63, 60]);
+  assert.deepEqual(lickNotes(l1b, 'C7').map((e) => e.name), ['Eb4', 'E4', 'G4', 'Bb4', 'G4', 'F4', 'Eb4', 'C4']);
+  // bl1 over Cm7: C D Eb F G F Eb D C
+  assert.deepEqual(lickNotes(bl1, 'Cm7').map((e) => e.m), [60, 62, 63, 65, 67, 65, 63, 62, 60]);
+  // a dorian lick over Dbmaj7: the major third (F, deg 4) and, for bl2, the major seventh (C, deg 11)
+  assert.equal(rhRoot(parseChord('Dbmaj7')), 61);
+  const d1 = lickNotes(bl1, 'Dbmaj7');
+  assert.deepEqual(d1.map((e) => e.m), [61, 63, 65, 66, 68, 66, 65, 63, 61]);
+  assert.deepEqual(d1.map((e) => e.name), ['Db4', 'Eb4', 'F4', 'Gb4', 'Ab4', 'Gb4', 'F4', 'Eb4', 'Db4']);
+  assert.equal(d1[2].deg, 4, 'the fitted degree');
+  const d2 = lickNotes(bl2, 'Dbmaj7');
+  assert.deepEqual(d2.map((e) => e.m), [72, 70, 68, 66, 68]);
+  assert.deepEqual(d2.map((e) => e.name), ['C5', 'Bb4', 'Ab4', 'Gb4', 'Ab4']);
+  assert.deepEqual(normalize(lickExercise(bl2, 'Dbmaj7', bb1, { flats: true })).bars[0].rh.map((e) => e.notes[0]), ['C5', 'Bb4', 'Ab4', 'Gb4']);
+  // bl2 over Cm7 starts Bb4 A4; over G7 the dorian third turns major (bl3: B, not Bb)
+  assert.deepEqual(lickNotes(bl2, 'Cm7').map((e) => e.m).slice(0, 2), [70, 69]);
+  assert.deepEqual(lickNotes(bl2, 'Cm7').map((e) => e.name), ['Bb4', 'A4', 'G4', 'F4', 'G4']);
+  assert.ok(lickNotes(bl3, 'G7').some((e) => e.name === 'B4') && !lickNotes(bl3, 'G7').some((e) => e.name === 'Bb4'));
+  // over Dm7b5 the fifth is flat and spelled as a flat (Ab, not G#)
+  assert.deepEqual(lickNotes(bl2, 'Dm7b5').map((e) => e.name), ['C5', 'B4', 'Ab4', 'G4', 'Ab4']);
+  // shape: straight, dorian, 2 bars, last note legato, roles
+  [bl1, bl2, bl3].forEach((l) => {
+    assert.equal(l.swing, false); assert.equal(l.scale, 'dorian'); assert.equal(l.tempo, 66); assert.equal(l.bars, 2);
+    assert.equal(l.events.at(-1).stac, false);
+    assert.equal(lickExercise(l, 'Cm7', bb1).swing, false, 'a bossa lick plays straight');
+  });
+  assert.deepEqual([bl1.role, bl2.role, bl3.role], ['answer', 'question', 'answer']);
+  // every chord-relative lick still unfolds over C7, F7, G7, Cm7, Dbmaj7 (key-relative ones over F, Bb)
+  readdirSync(join(root, 'content/licks')).filter((f) => f.endsWith('.json')).forEach((f) => {
+    const l = lk(f.replace(/\.json$/, ''));
+    if (l.prog) { ['F', 'Bb'].forEach((k) => normalize(lickExerciseKey(l, k, null))); return; }
+    ['C7', 'F7', 'G7', 'Cm7', 'Dbmaj7'].forEach((c) => {
+      const x = normalize(lickExercise(l, c, bp1));
+      assert.equal(x.bars.length, 2, `${f} over ${c}`);
+      x.bars.forEach((b) => b.rh.forEach((e) => assert.match(e.notes[0], /^[A-G](#|b)?\d$/, `${f} over ${c}: ${e.notes[0]}`)));
+    });
+  });
+  // the bossa ending
+  const be = normalize(read('content/exercises/bossa-end.json'));
+  assert.equal(be.bars.length, 2); assert.equal(be.swing, false); assert.equal(be.passAnyTempo, true);
+  assert.deepEqual([be.tempo.start, be.tempo.target], [56, 66]);
+  assert.deepEqual(be.bars[0].rh.map((e) => [e.t, e.notes.join(' ')]), [[0, 'F4 Ab4 C5'], [3, 'F4 G4 B4']]);
+  assert.deepEqual(be.bars[1].lh[0].notes, ['C2', 'C3']);
+  assert.equal(bb.ending, 'bossa-end');
+  // the bossa track: the rh section, the lick items with their own chord set, the ending, the performance
+  const bt2 = read('content/tracks/bossa.json');
+  assert.deepEqual(bt2.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'rh', 'ear', 'perf']);
+  assert.deepEqual(bt2.sections.find((x) => x.id === 'rh').items, ['lick-bl1', 'lick-bl2', 'lick-bl3', 'form-rh-bl1', 'form-rh-qa-bossa']);
+  ['bl1', 'bl2', 'bl3'].forEach((l) => assert.deepEqual(bt2.items['lick-' + l], { kind: 'lick', lick: l, form: 'blue-bossa', pattern: 'b1', chords: ['Cm7', 'Fm7', 'G7'] }));
+  bt2.items['lick-bl1'].chords.forEach((c) => assert.ok(bb.bars.flatMap(barChords).includes(c), c + ' is a chord of the form'));
+  assert.equal(bt2.items['form-rh-bl1'].lick, 'bl1'); assert.equal(bt2.items['form-rh-bl1'].hand, 'rh');
+  assert.deepEqual(bt2.items['form-rh-qa-bossa'].licks, ['bl2', 'bl1']);
+  assert.deepEqual(bt2.items['perf-bossa'].licks, ['bl1', 'bl3']);
+  assert.deepEqual(bt2.items['end-bossa'], { kind: 'exercise', ex: 'bossa-end' });
+  assert.equal(bt2.sections.find((x) => x.id === 'form').items.at(-1), 'end-bossa');
+  Object.values(bt2.items).forEach((it) => [it.lick, ...(it.licks || [])].filter(Boolean).forEach((l) => assert.equal(lk(l).id, l)));
+  console.log('ok: bossa licks');
 }

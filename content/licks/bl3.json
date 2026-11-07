@@ -1,0 +1,20 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "bl3",
+  "title": { "ru": "Босса: синкопа", "en": "Bossa: the syncopation" },
+  "about": { "ru": "Нота на «и» первой доли и на «и» второй: та же синкопа, что в левой. Домой на корень.", "en": "A note on the 'and' of one and on the 'and' of two: the same syncopation as in the left hand. Home on the root." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": false,
+  "scale": "dorian",
+  "events": [
+    { "t": 0, "d": 1, "deg": 7, "f": 5 },
+    { "t": 1, "d": 2, "deg": 5, "f": 3 },
+    { "t": 3, "d": 1, "deg": 3, "f": 2 },
+    { "t": 4, "d": 2, "deg": 5, "f": 3 },
+    { "t": 6, "d": 2, "deg": 3, "f": 2 },
+    { "t": 8, "d": 2, "deg": 2, "f": 2 },
+    { "t": 10, "d": 6, "deg": 0, "f": 1, "stac": false }
+  ]
+}

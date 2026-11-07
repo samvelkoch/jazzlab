@@ -1,0 +1,22 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "bl1",
+  "title": { "ru": "Дорийская: вверх и назад", "en": "Dorian: up and back" },
+  "about": { "ru": "Пять нот вверх по дорийскому ладу и обратно домой. Та же рука, что в «лесенке» блюза, только лад минорный.", "en": "Five notes up the dorian scale and back home. The same hand as the blues 'ladder', only the scale is minor." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": false,
+  "scale": "dorian",
+  "events": [
+    { "t": 0, "d": 1, "deg": 0, "f": 1 },
+    { "t": 1, "d": 1, "deg": 2, "f": 2 },
+    { "t": 2, "d": 1, "deg": 3, "f": 3 },
+    { "t": 3, "d": 1, "deg": 5, "f": 4 },
+    { "t": 4, "d": 2, "deg": 7, "f": 5 },
+    { "t": 6, "d": 1, "deg": 5, "f": 4 },
+    { "t": 7, "d": 1, "deg": 3, "f": 3 },
+    { "t": 8, "d": 4, "deg": 2, "f": 2 },
+    { "t": 12, "d": 4, "deg": 0, "f": 1, "stac": false }
+  ]
+}

@@ -157,7 +157,9 @@ async function route() {
         return;
       }
       const form = item && model.forms[item.form];
-      if (!item || item.kind !== 'lick' || !form || !form.bars.flatMap(barChords).includes(chord)) { message(t('notFound')); return; }
+      // the chords a lick is practised over: the item's own set (item.chords) or every chord of the form
+      const lickChords = item && Array.isArray(item.chords) && item.chords.length ? item.chords : form ? form.bars.flatMap(barChords) : [];
+      if (!item || item.kind !== 'lick' || !form || !lickChords.includes(chord)) { message(t('notFound')); return; }
       setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mtf[1]);
       const ex = normalize(lickExercise(model.licks[item.lick], chord, model.patterns[item.pattern], {
         id: `${item.id}-${chord.toLowerCase()}`, course: mtf[1], doneId: item.id, back: item.href, flats: !!form.flats,

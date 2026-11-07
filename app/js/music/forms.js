@@ -63,9 +63,12 @@ const evDegs = (e) => (Array.isArray(e.deg) ? e.deg : [e.deg]);
 /**
  * Fit a pattern degree to the chord quality: patterns are written over a dominant 7th (3rd = 4, 7th = 10);
  * over a minor chord the 3rd becomes 3 (Dm7: F, not F#), over a maj7 the 7th becomes 11, over m7b5/dim the 5th becomes 6.
+ * opts.minorToMajor (a lick written over a minor / dorian sound): the mirror case, the minor 3rd becomes 4 over a chord
+ * with a major third and no minor one (Cm7 dorian over Dbmaj7: Fb → F, over G7: Bb → B). Degrees above 12 keep their octave.
  */
-export function fitDeg(deg, chord) {
+export function fitDeg(deg, chord, opts = {}) {
   const o = chord.offsets, pc = ((deg % 12) + 12) % 12, oct = deg - pc;
+  if (opts.minorToMajor && pc === 3 && o.includes(4) && !o.includes(3)) return oct + 4;
   if (pc === 4 && o.includes(3) && !o.includes(4)) return oct + 3;
   if (pc === 10 && o.includes(11)) return oct + 11;
   if (pc === 10 && o.includes(9) && !o.includes(10) && chord.qual === 'dim7') return oct + 9;
@@ -212,16 +215,25 @@ export const rhRoot = (chord) => (chord.pc <= 7 ? 60 + chord.pc : 48 + chord.pc)
 /**
  * Blues spelling for a lick note: flats for the blue notes (b3, b7: Eb, Bb over C), except the
  * passing #4 (deg 6), which leads up to the fifth and is written as a sharp (F# over C, C# over G).
+ * With a chord whose fifth is flat (m7b5, dim7) deg 6 is that b5 and stays a flat (Ab over Dm7b5).
  */
-export function lickSpell(m, deg) {
-  return spell(m, ((deg % 12) + 12) % 12 !== 6);
+export function lickSpell(m, deg, chord = null) {
+  const b5 = chord && chord.offsets.includes(6) && !chord.offsets.includes(7);
+  return spell(m, ((deg % 12) + 12) % 12 !== 6 || !!b5);
 }
 
-/** Lick notes over a chord (MIDI): [{ t: 0..15, d, m, f, stac, deg }]. A two-chord bar uses its first chord. */
+/**
+ * Lick notes over a chord (MIDI): [{ t: 0..15, d, m, f, stac, deg, name }]. A two-chord bar uses its first chord.
+ * Each degree is fitted to the chord quality (fitDeg); a dorian lick (lick.scale === 'dorian') also turns its minor 3rd
+ * major over a chord with a major third. deg = the fitted degree, name = the note spelled with lickSpell.
+ */
 export function lickNotes(lick, chordName) {
-  const root = rhRoot(parseChord(barChords(chordName)[0]));
-  return lick.events.map((e) => ({ t: e.t, d: e.d || 1, m: root + e.deg, f: e.f || 0, stac: !!e.stac, deg: e.deg }))
-    .sort((a, b) => a.t - b.t);
+  const chord = parseChord(barChords(chordName)[0]), root = rhRoot(chord);
+  const fit = { minorToMajor: lick.scale === 'dorian' };
+  return lick.events.map((e) => {
+    const deg = fitDeg(e.deg, chord, fit), m = root + deg;
+    return { t: e.t, d: e.d || 1, m, f: e.f || 0, stac: !!e.stac, deg, name: lickSpell(m, deg, chord) };
+  }).sort((a, b) => a.t - b.t);
 }
 
 /** Split lick notes into its two bars: [[bar 1 events, t 0..7], [bar 2 events, t 0..7]]. */
@@ -241,7 +253,7 @@ export function lickBars(lick, chordName) {
 export function lickExercise(lick, chordName, pattern, opts = {}) {
   const lh = pattern ? patternExercise(pattern, [chordName], { flats: opts.flats }).bars[0].lh : []; // multi-note events stay one event
   const bars = lickBars(lick, chordName).map((evs) => ({
-    rh: evs.map((e) => ({ t: e.t, d: e.d, n: [lickSpell(e.m, e.deg)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
+    rh: evs.map((e) => ({ t: e.t, d: e.d, n: [e.name], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
     lh: lh.map((e) => ({ ...e, n: e.n.slice(), f: e.f.slice() })),
     chord: chordName
   }));
