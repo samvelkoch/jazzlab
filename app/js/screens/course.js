@@ -1,6 +1,7 @@
 // Course screen: steps of the course, today's card, progress.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, progress, isDone, practiceSeconds } from '../store.js';
 
 const fmtTime = (sec) => {
@@ -49,7 +50,8 @@ export async function renderCourse(root, { course, index, rerender }) {
     const el = h('div.stepcard', { 'data-kind': kind, 'aria-disabled': target ? null : 'true' },
       target ? h('a.stretch', { href: href(target), 'aria-label': `${kicker}: ${L(s.title)}` }) : null,
       h('div.row', null, h('span.kicker', null, kicker), h('span.badge.' + kind, null, badge)),
-      h('span.steptitle', null, L(s.title)),
+      h('span.steptitle', null, markTerms(L(s.title))),
+      s.what ? h('span.stepwhat', null, h('b', null, `${t('whatHere')} `), markTerms(L(s.what))) : null,
       h('div.grow'),
       h('div.bars', { 'aria-hidden': 'true' }, ...items.map((c) => h('span.' + c))),
       h('div.row', null,
@@ -75,7 +77,7 @@ export async function renderCourse(root, { course, index, rerender }) {
     h('main.course', null,
       h('div.coursemain', null,
         h('div.row', null, h('h1', null, t('courses')), h('div.grow'), tabs),
-        h('p.muted', null, L(course.about)),
+        h('p.muted', null, markTerms(L(course.about))),
         h('div.stepgrid', null, ...course.steps.map(card))),
       h('aside.courseside', null, todayCard, stats, tip)));
 }

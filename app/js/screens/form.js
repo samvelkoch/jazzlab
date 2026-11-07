@@ -10,6 +10,7 @@
 // (24 or 48 notes) and the licks, 2 for the boogie (96 eighths per chorus), so denser patterns are not stricter.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -71,7 +72,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const panel = h('section.panel.formpanel', null,
     h('div.staffhead', null, chorusEl, streakEl, h('div.grow'), fbEl),
     grid,
-    h('p.muted.dabout', null, L(item.about || form.about)));
+    h('p.muted.dabout', null, markTerms(L(item.about || form.about))));
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
   const bpmOut = h('output.bpm');

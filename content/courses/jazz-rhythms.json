@@ -18,6 +18,10 @@
         "ru": "Четверти и восьмые",
         "en": "Quarters and eighths"
       },
+      "what": {
+        "ru": "Играем ровные доли и по две ноты на каждую («раз-и»), в том числе с подходом: нота на полтона ниже перед нужной.",
+        "en": "Even beats and two notes per beat (“one-and”), including an approach: a note a half-step below before the right one."
+      },
       "items": [
         "s1-e1",
         "s1-e2",
@@ -33,6 +37,10 @@
         "ru": "Синкопы и паузы",
         "en": "Syncopation and rests"
       },
+      "what": {
+        "ru": "Учимся ставить ноты между счётом, на «и» (синкопа), и молчать там, где нужна пауза, пока счёт идёт дальше.",
+        "en": "Placing notes between the counts, on the “and” (syncopation), and staying silent where a rest belongs while the count keeps going."
+      },
       "items": [
         "s2-e4",
         "s2-e5",
@@ -47,6 +55,10 @@
         "ru": "Свинговые восьмые и форшлаг",
         "en": "Swing eighths and grace notes"
       },
+      "what": {
+        "ru": "Короткий разбор двух приёмов: как качать восьмые (свинг) и как быстро задеть соседнюю клавишу перед нужной (форшлаг).",
+        "en": "A short look at two tricks: how to swing the eighths, and how to brush a neighbouring key just before the right one (grace note)."
+      },
       "items": [
         "th1-swing",
         "th1-grace"
@@ -59,6 +71,10 @@
       "title": {
         "ru": "Свинг и хроматика",
         "en": "Swing and chromatics"
+      },
+      "what": {
+        "ru": "Учимся играть восьмые с качем (свинг) и ходить по соседним клавишам подряд (хроматика).",
+        "en": "Learning to play eighths with a lilt (swing) and to walk over neighbouring keys one after another (chromatics)."
       },
       "items": [
         "s3-e7",
@@ -75,6 +91,10 @@
         "ru": "Форшлаги и акценты",
         "en": "Grace notes and accents"
       },
+      "what": {
+        "ru": "Тренируем быстрое касание соседней клавиши перед нужной (форшлаг) и ноты, которые звучат громче остальных (акценты).",
+        "en": "Practising the quick brush of a neighbouring key before the right one (grace notes) and notes played louder than the rest (accents)."
+      },
       "items": [
         "s4-e10",
         "s4-e11",
@@ -89,6 +109,10 @@
       "title": {
         "ru": "Минор, импро левой",
         "en": "Minor, left-hand improv"
+      },
+      "what": {
+        "ru": "Играем минорные фразы, а левая рука учится отвечать правой своей мелодией, а не только держать аккорды.",
+        "en": "Playing minor phrases while the left hand learns to answer the right with a melody of its own, not just hold chords."
       },
       "items": [
         "s5-e13",

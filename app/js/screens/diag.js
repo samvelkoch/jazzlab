@@ -7,6 +7,7 @@
 // No pass, no review: the item is "done" after the first check-up and comes back to "Today" after `every` days.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, updateEx, markActive, idle } from '../store.js';
 import { toMidi, noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -70,7 +71,7 @@ export function renderDiag(root, { track, itemId, item, back }) {
   const summary = h('div.dsummary.diagsum');
   const panel = h('section.panel.drillpanel', null,
     h('div.staffhead', null, prog, subprog, h('div.grow'), fbEl), strip, card, summary,
-    h('p.muted.dabout', null, L(item.about)));
+    h('p.muted.dabout', null, markTerms(L(item.about))));
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
   const pad = h('button.diagpad', { type: 'button' },
