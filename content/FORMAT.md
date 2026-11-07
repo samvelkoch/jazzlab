@@ -94,7 +94,9 @@ The standard track (`content/tracks/std.json`, id `std`): a 32-bar AABA tune in 
 drills `d-chords-f` (Fmaj7 Gm7 C7 Bbmaj7) and `d-chords-f2` (Cm7 F7 Am7 D7), the patterns `pat-s1` / `pat-s2` over the
 practice `Gm7 C7 | Fmaj7 | Cm7 F7 | Bbmaj7` and `pat-s2-form` (the voice-led shell over all 32 bars, `"over": "bars"`), the form
 with each (`form-s1`, `form-s2`), the melody (`mel-std`, the tune `std-f` in 16 two-bar phrases, and `form-mel-std` over the s1
-bass), `ear-find-std`, and `perf-std` (2 choruses, s2 shell, the tune as a reminder, no licks yet: phase 1 of
+bass), `ear-find-std`, the right hand (`rh`: the key-relative ii–V–I licks `lick-k1`..`lick-k3` in F and Bb, `form-rh-k1` = k1 on
+every ii–V–I of the form, `form-rh-qa-std` = k3 / k1 taking turns), the ending `end-std` (`std-end`, also the form's `ending`)
+and `perf-std` (2 choruses, s2 shell, the tune and the licks k1, k2 as reminders, the ending; phase 2 of
 `docs/specs/2026-11-07-standard-design.md`). A form of more than 16 bars gets a compact grid (`.fgrid.long`) that scrolls
 inside the panel and keeps the current bar in view. The melody echo swings when the melody has `"swing": true` (not on a bossa form).
 
@@ -176,11 +178,40 @@ Track items that use licks:
   `pattern`). Passing its «by heart» stage passes the lick item and schedules its review.
 - `kind: "form"` with `hand: "rh"` and `lick`: the app always plays the left-hand `pattern`, you play the lick, starting on
   bars 1, 3, 5, … and transposed to the chord of its first bar. Passing is the same: 3 clean choruses.
+- `kind: "form"` with `hand: "rh"` and `lickKey` (a key-relative lick, see below), or `licksKey: [question, answer]`: the
+  lick sits on every ii–V–I of the form and the other bars are rests. `iivPairs(bars)` in `forms.js` scans left to right,
+  non-overlapping: bar k has two chords, a m7 then a 7 a fourth above it (`"Gm7 C7"`), and bar k + 1 has one major chord
+  (maj7, 6 or a triad) a fourth above the 7 (`Fmaj7`); the key = that chord's root. In `std-f` (0-based) that is
+  (1,2) (3,4) (7,8) (9,10) (11,12) (25,26) (27,28) (30,31) in F and (16,17) (18,19) in Bb; `"Gm7 C7 | Gm7"` (21,22) is
+  not a resolution. With `licksKey` pair i plays `licksKey[i % 2]`. The first bar of a pair shows «фраза · F» (or «вопрос ·
+  F» / «ответ · Bb»). Scoring and passing as with `lick`.
+  `"form-rh-k1": { "kind": "form", "form": "std-f", "pattern": "s2", "hand": "rh", "lickKey": "k1", "title", "about" }`
 - `kind: "form"` with `hand: "rh"` and `licks: [question, answer]` (two lick ids, instead of `lick`): question and answer
   take turns. The first lick starts on bars 1, 5, 9, the second on bars 3, 7, 11, each transposed to the chord of its
   first bar. The bar labels say «вопрос» / «ответ» (from each lick's `role`). The about comes from the item's `about`.
   Scoring and passing are the same as with one lick.
   `"form-rh-qa": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"], "title", "about" }`
+
+## Key-relative licks (`prog` + `keys`)
+
+A lick written over a progression instead of one chord: `"prog": ["Gm7 C7", "Fmaj7"]` = one chord string per bar,
+written in F (the tonic), and `deg` = semitones from the tonic (negative = below it: k1's `deg: -1` is E4 under F4).
+The tonic of a key is `keyTonic(key) = 60 + pc` (C4..B4: F → F4, Bb → Bb4). This is deliberately not `rhRoot` (Bb3):
+the phrase keeps its hand position going up from F to Bb. Notes are spelled with flats (`spell(m, true)`: Bb, Eb; E, A,
+D, G stay natural). In `forms.js`: `transposeChord(name, semis)` (keeps the quality, black-key roots as flats:
+`transposeChord("Gm7 C7", 5)` = `"Cm7 F7"`), `lickKeyNotes(lick, key)` (t 0..15, with `name`), `lickOverKey(lick, key,
+pattern?)` → `{ bars: [{ rh, lh }], chords }` (chords = `prog` moved from F to the key, lh = the pattern over them, voice-led),
+`lickExerciseKey(lick, key, pattern, opts)` (2-bar exercise, LH spelled with flats). `lickBars` / `lickExercise` stay for
+chord-relative licks. The std licks k1 «II–V–I: вверх и домой», k2 «ступеньки вниз» (answers) and k3 «вопрос».
+
+```jsonc
+"lick-k1": { "kind": "lick", "lick": "k1", "keys": ["F", "Bb"], "pattern": "s2" }   // keys instead of form
+```
+
+- The lick screen with `keys`: the chips are the keys, the piano plays the lick over `prog` in that key (LH = the pattern
+  over the transposed chords, two bars), echo counts `echo: { F: n, Bb: n }`, Echo passes with 3 clean repeats in every key.
+- `#/t/<track>/<item>/fingers/<key>` = the lick in one key as an exercise (id `<item>-<key lowercased>`: `lick-k1-bb`).
+- A performance lists key-relative licks by title like any other (the keyboard covers them in the keys of the form's ii–V–Is).
 # Melodies (`jazzlab-melody/1`)
 
 `content/melodies/<id>.json`: a written right-hand tune over one form, in absolute pitches, in the form's key (flats).
@@ -230,7 +261,7 @@ slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord
 ## Performance (`kind: "perform"`)
 
 `"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "choruses": 3, "title", "about" }`
-(optional `melody`: a melody id, shown as a reminder linking to its `melody` item) opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
+(optional `melody`: a melody id, shown as a reminder linking to its `melody` item; `licks` may be key-relative) opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
 `ending`: the drums keep the groove through every ending bar but the last, which gets beat 1 only (blues-end: 2 bars).
 A form without `ending` gets one ending bar, beat 1 only. The reminders link to the track's `exercise` item for the ending. `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
 Every note played is recorded as `{ t, d, m, v }` (`t`, `d` in seconds from the first beat of chorus 1, `v` 0..1).

@@ -262,6 +262,98 @@ export function lickExercise(lick, chordName, pattern, opts = {}) {
   };
 }
 
+// ---------- licks over a progression (lick.prog + item.keys) ----------
+// A key-relative lick carries prog = one chord string per bar, written in F (the tonic); deg is counted from the tonic.
+// The tonic of a key sits in C4..B4 (keyTonic = 60 + pc: F -> F4 65, Bb -> Bb4 70). This deliberately differs from
+// rhRoot (which puts Bb at Bb3): the phrase stays in the same hand position when it moves from F up to Bb.
+
+/** Tonic of a key for the right hand: C4..B4. */
+export const keyTonic = (key) => 60 + parseChord(key).pc;
+
+/** Transpose a bar of chords by semis, keeping each quality; black-key roots are spelled with flats: transposeChord('Gm7 C7', 5) = 'Cm7 F7'. */
+export function transposeChord(name, semis) {
+  return barChords(name).map((c) => {
+    const p = parseChord(c), pc = (((p.pc + semis) % 12) + 12) % 12;
+    return ([1, 3, 6, 8, 10].includes(pc) ? FLAT_NAMES : SHARP_NAMES)[pc] + p.qual;
+  }).join(' ');
+}
+
+/** A key-relative lick's notes in a key, over its 2 bars: [{ t: 0..15, d, m, f, stac, deg, name }] (name spelled with flats: Bb, Eb; E, A stay natural). */
+export function lickKeyNotes(lick, key) {
+  const tonic = keyTonic(key);
+  return lick.events.map((e) => ({ t: e.t, d: e.d || 1, m: tonic + e.deg, f: e.f || 0, stac: !!e.stac, deg: e.deg, name: spell(tonic + e.deg, true) }))
+    .sort((a, b) => a.t - b.t);
+}
+
+/**
+ * A key-relative lick in a key: { bars: [{ rh: [...], lh: [...] }], chords: [...] }. rh = the notes of each bar (t 0..7, as
+ * lickKeyNotes), chords = lick.prog transposed from F to the key, lh = the pattern's notes over them (patternBars, voice-led
+ * from bar to bar; [] without a pattern).
+ */
+export function lickOverKey(lick, key, pattern = null) {
+  const semis = keyTonic(key) - keyTonic('F');
+  const chords = (lick.prog || []).map((c) => transposeChord(c, semis));
+  const nb = Math.max(lick.bars || 2, chords.length);
+  const rh = Array.from({ length: nb }, () => []);
+  lickKeyNotes(lick, key).forEach((e) => {
+    const b = Math.min(nb - 1, Math.floor(e.t / 8)), t = e.t - b * 8;
+    rh[b].push({ ...e, t, d: Math.max(1, Math.min(e.d, 8 - t)) });
+  });
+  const lh = pattern && chords.length ? patternBars(pattern, chords) : [];
+  return { bars: rh.map((r, k) => ({ rh: r, lh: lh[k] || [] })), chords };
+}
+
+/**
+ * A key-relative lick as a 2-bar exercise in a key: RH = the lick, LH = the pattern over lick.prog transposed to the key
+ * (spelled with flats). Returns a raw jazzlab-exercise/1 object (call normalize() on it).
+ */
+export function lickExerciseKey(lick, key, pattern, opts = {}) {
+  const { bars: kb, chords } = lickOverKey(lick, key);
+  const lhBars = pattern ? patternExercise(pattern, chords, { flats: true }).bars : chords.map(() => ({ lh: [] }));
+  const bars = kb.map((b, k) => ({
+    rh: b.rh.map((e) => ({ t: e.t, d: e.d, n: [e.name], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
+    lh: (lhBars[k] || { lh: [] }).lh,
+    chord: chords[k] || chords[chords.length - 1]
+  }));
+  const tempo = opts.tempo || lick.tempo || 66;
+  return {
+    $format: 'jazzlab-exercise/1',
+    id: opts.id || `lick-${lick.id}-${key.toLowerCase()}`,
+    course: opts.course || 'std', step: 0, number: 0,
+    title: opts.title || lick.title,
+    about: opts.about || lick.about || null,
+    time: [4, 4],
+    tempo: { start: tempo, target: tempo },
+    swing: opts.swing !== undefined ? !!opts.swing : !!lick.swing,
+    rhythm: null,
+    dyn: [{ bar: 0, mark: 'mf', level: 0.75 }],
+    bars,
+    passAnyTempo: true, kicker: opts.kicker || null, back: opts.back || '#/', doneId: opts.doneId || null
+  };
+}
+
+/**
+ * The ii–V–I places of a form for a key-relative lick: [[k, k + 1], ...], scanning left to right, non-overlapping.
+ * A pair is bar k with two chords (a minor 7th then a dominant 7th: "Gm7 C7") followed by bar k + 1 with one chord whose
+ * root is a fourth above the dominant (V -> I: C7 -> F; the ii is a fourth below the V: Gm7 -> C7) and which is major
+ * (maj7, 6 or a triad). key = that root.
+ * std-f: bars (1,2) (3,4) (7,8) (9,10) (11,12) (25,26) (27,28) (30,31) in F and (16,17) (18,19) in Bb (0-based);
+ * "Gm7 C7 | Gm7" (21,22) is not a resolution.
+ */
+export function iivPairs(bars) {
+  const out = [];
+  for (let k = 0; k + 1 < bars.length; k++) {
+    const a = barChords(bars[k]), b = barChords(bars[k + 1]);
+    if (a.length !== 2 || b.length !== 1) continue;
+    const [ii, v] = a.map(parseChord), one = parseChord(b[0]);
+    if (ii.qual !== 'm7' || v.qual !== '7' || !['maj7', '6', ''].includes(one.qual)) continue;
+    if ((v.pc + 5) % 12 !== one.pc || (ii.pc + 5) % 12 !== v.pc) continue;
+    out.push({ bars: [k, k + 1], key: one.root });
+    k++;
+  }
+  return out;
+}
+
 // ---------- melodies (jazzlab-melody/1) ----------
 // A melody is written out in absolute pitches, one entry per form bar: bars[i] = { chord, rh: [{ t, d, n, f }] },
 // n = one pitch name in the form's key (flats). phrases = [[firstBar, lastBar], ...] = the echo chunks.

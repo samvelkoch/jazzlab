@@ -1,0 +1,20 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "k1",
+  "title": { "ru": "II–V–I: вверх и домой", "en": "ii–V–I: up and home" },
+  "about": { "ru": "По аккорду Gm7 вверх, по C7 вниз до E, и дом на F. Так звучит каждая каденция.", "en": "Up the Gm7 chord, down C7 to E, and home on F. Every cadence sounds like this." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "prog": ["Gm7 C7", "Fmaj7"],
+  "events": [
+    { "t": 0, "d": 1, "deg": 2, "f": 1 },
+    { "t": 1, "d": 1, "deg": 5, "f": 2 },
+    { "t": 2, "d": 2, "deg": 9, "f": 5 },
+    { "t": 4, "d": 1, "deg": 7, "f": 4 },
+    { "t": 5, "d": 1, "deg": 4, "f": 3 },
+    { "t": 6, "d": 2, "deg": -1, "f": 1 },
+    { "t": 8, "d": 6, "deg": 0, "f": 2 }
+  ]
+}

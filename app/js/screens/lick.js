@@ -2,12 +2,14 @@
 // Stages: Echo (the piano plays the lick for 2 bars, you repeat it in the next 2, over drums + the left-hand pattern)
 // → Fingers / By heart (the generated exercise: RH lick + LH pattern over the chosen chord, #/t/<track>/<item>/fingers/<chord>).
 // Echo is passed with 3 clean repeats on every chord of the form; "by heart" in the exercise passes the lick item.
+// A key-relative lick (lick.prog, item.keys): the chips are the keys, the lick plays over its progression in each key
+// (LH = the pattern over lick.prog transposed), echo counts per key, fingers at #/t/<track>/<item>/fingers/<key>.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { lickNotes, lickSpell, patternBar, barChords } from '../music/forms.js';
+import { lickNotes, lickSpell, patternBar, barChords, lickKeyNotes, lickOverKey } from '../music/forms.js';
 import * as audio from '../music/audio.js';
 import { groove } from '../music/drums.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -17,10 +19,18 @@ const LEN = 16; // the lick: 2 bars
 const CYCLE = 4; // bars per cycle: 2 piano + 2 you
 const CLEAN_TO_PASS = 3; // clean repeats per chord
 
-export function renderLick(root, { track, itemId, item, lick, pattern, form, back }) {
+export function renderLick(root, { track, itemId, item, lick, pattern, form: form0, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
-  const chords = [...new Set(form.bars.flatMap(barChords))];
+  const keyed = Array.isArray(item.keys) && item.keys.length > 0 && Array.isArray(lick.prog); // over keys, not chords
+  const form = form0 || {};
+  // the chips: the keys of a key-relative lick, or the form's distinct chords
+  const chords = keyed ? item.keys.slice() : [...new Set(form.bars.flatMap(barChords))];
+  const tk = (k) => (keyed && { lkChord: 'lkKey', lkEchoGoal: 'lkEchoGoalKey', lkEchoDone: 'lkEchoDoneKey', lkAllChords: 'lkAllKeys', lkOpen: 'lkOpenKey' }[k]) || k;
+  const notesOf = (c) => (keyed ? lickKeyNotes(lick, c) : lickNotes(lick, c));
+  const spelled = (e) => e.name || lickSpell(e.m, e.deg);
+  // the left hand under the 2 bars of the lick: the pattern over the chord twice, or over the progression in the key
+  const lhOf = (c) => { if (!pattern) return [[], []]; if (keyed) return lickOverKey(lick, c, pattern).bars.map((b) => b.lh); const pb = patternBar(pattern, c); return [pb, pb]; };
   const saved = exProgress(itemId);
   const st = {
     stage: store.get('lickStage:' + itemId, 'echo'),
@@ -37,9 +47,9 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
   // notes of the lick over the current chord
   let notes = [], rows = []; // rows: distinct pitches, low → high: [{m, name}]
   function computeNotes() {
-    notes = lickNotes(lick, st.chord);
+    notes = notesOf(st.chord);
     const uniq = [...new Map(notes.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
-    rows = uniq.map((e) => ({ m: e.m, name: noteName(lickSpell(e.m, e.deg), names), f: e.f, spelled: lickSpell(e.m, e.deg) }));
+    rows = uniq.map((e) => ({ m: e.m, name: noteName(spelled(e), names), f: e.f, spelled: spelled(e) }));
   }
   computeNotes();
 
@@ -54,7 +64,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
     h('div.grow'), stages, h('div.grow'),
     sessionChip(itemId), midiChip(), themeButton());
 
-  const chordSeg = h('div.seg.lickchords', { role: 'group', 'aria-label': t('lkChord') });
+  const chordSeg = h('div.seg.lickchords', { role: 'group', 'aria-label': t(tk('lkChord')) });
   const counts = h('div.lickcounts', { 'aria-label': t('lkCleanReps') });
   const title = h('h2'), sub = h('span.sub');
   const fbEl = h('span.fb', { 'aria-live': 'polite' });
@@ -94,9 +104,9 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
   chords.forEach((c) => chordSeg.append(h('button', { type: 'button', 'data-v': c, onclick: () => setChord(c) }, c)));
 
   // ---------- keyboard: one range for every chord, the current chord's lick pitches lit ----------
-  const allM = chords.flatMap((c) => lickNotes(lick, c).map((e) => e.m));
+  const allM = chords.flatMap((c) => notesOf(c).map((e) => e.m));
   const lo = Math.min(...allM), hi = Math.max(...allM);
-  const lhM = chords.flatMap((c) => (pattern ? patternBar(pattern, c).map((e) => e.m) : []));
+  const lhM = chords.flatMap((c) => lhOf(c).flat().map((e) => e.m));
   audio.preloadPiano(Math.min(lo, ...lhM) - 2, hi + 4);
   const kb = createKeyboard(kbEl, [lo, hi], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   function paintKeys() { kb.show({ rh: { notes: rows.map((r) => r.spelled), f: rows.map((r) => r.f) }, lh: null }, { rh: null, lh: null }, 'both'); }
@@ -144,7 +154,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
   // ---------- painting ----------
   const echoDone = () => chords.every((c) => st.clean[c] >= CLEAN_TO_PASS);
   function paintCounts() {
-    counts.replaceChildren(...chords.map((c) => h('span.lcount' + (st.clean[c] >= CLEAN_TO_PASS ? '.ok' : '') + (c === st.chord ? '.cur' : ''), { title: t('lkEchoGoal') },
+    counts.replaceChildren(...chords.map((c) => h('span.lcount' + (st.clean[c] >= CLEAN_TO_PASS ? '.ok' : '') + (c === st.chord ? '.cur' : ''), { title: t(tk('lkEchoGoal')) },
       h('b', null, c), ` ${Math.min(st.clean[c], CLEAN_TO_PASS)}/${CLEAN_TO_PASS}`)));
   }
   function paintStages() {
@@ -161,7 +171,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
   function paintChord() {
     chordSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === st.chord)));
     openBtn.href = exHref(st.chord);
-    openBtn.innerHTML = ICON.note + `<span>${t('lkOpen').replace('{c}', st.chord)}</span>`;
+    openBtn.innerHTML = ICON.note + `<span>${t(tk('lkOpen')).replace('{c}', st.chord)}</span>`;
     paintCounts();
   }
   function setStage(sid) {
@@ -171,14 +181,14 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
     title.textContent = t('lkT_' + sid); sub.textContent = t('lkS_' + sid);
     footHint.textContent = sid === 'echo' ? t('lkF_echo') : t('lkF_link');
     paintStages(); paintCycle(-1, 0); paintPrimary();
-    if (sid === 'echo') fb(echoDone() ? `<span class="ok">${ICON.check} ${t('lkEchoDone')}</span>` : t('lkStartHint'));
+    if (sid === 'echo') fb(echoDone() ? `<span class="ok">${ICON.check} ${t(tk('lkEchoDone'))}</span>` : t('lkStartHint'));
     else fb(exProgress(itemId).stages.done ? `<span class="ok">${ICON.check} ${t('lkPassed')}</span>` : '');
   }
   function setChord(c) {
     if (st.playing) stop();
     st.chord = c; store.set('lickChord:' + itemId, c);
     computeNotes(); buildRoll(); paintKeys(); paintChord();
-    if (st.stage === 'echo') fb(echoDone() ? `<span class="ok">${ICON.check} ${t('lkEchoDone')}</span>` : t('lkStartHint'));
+    if (st.stage === 'echo') fb(echoDone() ? `<span class="ok">${ICON.check} ${t(tk('lkEchoDone'))}</span>` : t('lkStartHint'));
     else paintPrimary();
   }
   function paintCycle(half, beat) {
@@ -190,7 +200,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
     });
   }
   function paintPrimary() {
-    if (st.stage !== 'echo') { primary.innerHTML = ICON.note + `<span>${t('lkOpen').replace('{c}', st.chord)}</span>`; return; }
+    if (st.stage !== 'echo') { primary.innerHTML = ICON.note + `<span>${t(tk('lkOpen')).replace('{c}', st.chord)}</span>`; return; }
     primary.innerHTML = st.playing ? ICON.stop + `<span>${t('stop')}</span>` : ICON.play + `<span>${t('play')}</span>`;
   }
   function onPrimary() {
@@ -214,13 +224,13 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
   }
 
   // ---------- transport: 1-bar count-in, then an endless 4-bar cycle (2 piano + 2 you) ----------
-  let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], barSt = null, lhBar = [], lastResult = '';
+  let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], barSt = null, lhBars = [[], []], lastResult = '';
   const swingOff = () => { const beat = 60 / st.bpm; return st.swing ? beat * 2 / 3 : beat / 2; };
   const enqueue = (x) => { queue.push(x); queue.sort((a, b) => a.t - b.t); };
   function play() {
     if (!audio.ensureAudio() || st.playing) return;
     st.playing = true; screen.classList.add('playing'); paintPrimary();
-    lhBar = pattern ? patternBar(pattern, st.chord) : [];
+    lhBars = lhOf(st.chord);
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); }
     t0 += 4 * beat; beatTime = t0; g = 0;
@@ -238,7 +248,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
       if (k === 2 && slot === 0) { exp = []; enqueue({ t: time - 0.12, youStart: bar }); }
       // backing: drums or metronome + the left-hand pattern, quietly
       if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, style: form.style, bar }); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
-      lhBar.filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
+      lhBars[k % 2].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
       const evs = notes.filter((e) => e.t === ls);
       if (k < 2) evs.forEach((e) => play1(e.m, time, e.stac ? Math.min(swingOff() * 0.6, 0.2) : swingOff() * e.d * 0.95, 0.55));
       else evs.forEach((e) => exp.push({ t: time, slot: ls, len: e.d, hit: false, m: e.m }));
@@ -322,9 +332,9 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
       if (echoDone() && !exProgress(itemId).stages.echo) {
         updateEx(itemId, (p) => ({ ...p, stages: { ...p.stages, echo: true } }));
         paintStages();
-        html += ` · <b>${t('lkEchoDone')}</b>`;
+        html += ` · <b>${t(tk('lkEchoDone'))}</b>`;
       } else if (st.clean[c] === CLEAN_TO_PASS && !echoDone()) {
-        html += ` · ${t('lkAllChords').replace('{c}', chords.filter((x) => st.clean[x] < CLEAN_TO_PASS).join(', '))}`;
+        html += ` · ${t(tk('lkAllChords')).replace('{c}', chords.filter((x) => st.clean[x] < CLEAN_TO_PASS).join(', '))}`;
       }
       paintCounts();
     }

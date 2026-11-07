@@ -94,7 +94,7 @@ const DICT = {
     lkT_memory: 'По памяти', lkS_memory: 'В упражнении выбери «По памяти»: стан скрыт, играешь обеими руками без подсказки. Зачёт засчитывает лик и ставит его на повтор.',
     lkF_echo: 'Нота должна совпасть точно, в той же октаве. Ритм важнее: сначала поймай его.', lkF_link: 'Упражнение откроется на выбранном аккорде.',
     lkOpen: 'Открыть упражнение на {c}', lkCleanReps: 'чистые повторы', lkEchoGoal: '3 чистых повтора на каждом аккорде', lkEchoDone: 'Эхо пройдено на всех аккордах. Теперь «Пальцы» →',
-    lkAllChords: 'Ещё на других аккордах: {c}', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты',
+    lkAllChords: 'Ещё на других аккордах: {c}', lkKey: 'Тональность', lkEchoGoalKey: '3 чистых повтора в каждой тональности', lkEchoDoneKey: 'Эхо пройдено во всех тональностях. Теперь «Пальцы» →', lkAllKeys: 'Теперь в другой тональности: {c}', lkOpenKey: 'Открыть упражнение в {c}', phraseW: 'фраза', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты',
     // melody
     kind_melody: 'Мелодия', melUpper: 'МЕЛОДИЯ', mlPhrase: 'Фраза', mlBars: 'такты', mlBarsW: 'такт|такта|тактов', mlAll: 'Вся вещь',
     mlS_echo: 'Пианино играет два такта мелодии, ты повторяешь их следом. Левая всё время играет бас, барабаны не останавливаются.',
@@ -220,7 +220,7 @@ const DICT = {
     lkT_memory: 'By heart', lkS_memory: 'In the exercise pick “By heart”: the staff is hidden, both hands with no help. Passing it passes the lick and puts it on review.',
     lkF_echo: 'The note has to match exactly, same octave. Rhythm first: catch it before the notes.', lkF_link: 'The exercise opens on the chosen chord.',
     lkOpen: 'Open the exercise on {c}', lkCleanReps: 'clean repeats', lkEchoGoal: '3 clean repeats on every chord', lkEchoDone: 'Echo done on every chord. Now “Fingers” →',
-    lkAllChords: 'Now on the other chords: {c}', lkPassed: 'Lick learned', lkStartHint: 'Press Start: a 1-bar count-in, then 2 bars piano, 2 bars you',
+    lkAllChords: 'Now on the other chords: {c}', lkKey: 'Key', lkEchoGoalKey: '3 clean repeats in every key', lkEchoDoneKey: 'Echo done in every key. Now “Fingers” →', lkAllKeys: 'Now in the other key: {c}', lkOpenKey: 'Open the exercise in {c}', phraseW: 'phrase', lkPassed: 'Lick learned', lkStartHint: 'Press Start: a 1-bar count-in, then 2 bars piano, 2 bars you',
     // melody
     kind_melody: 'Melody', melUpper: 'MELODY', mlPhrase: 'Phrase', mlBars: 'bars', mlBarsW: 'bar|bars', mlAll: 'The whole tune',
     mlS_echo: 'The piano plays two bars of the tune, you repeat them right after. The left hand keeps the bass going, the drums never stop.',

@@ -3,6 +3,8 @@
 // Right-hand mode (item.hand === 'rh' + a lick): the app always plays the left-hand pattern; you play the lick,
 // started on every odd bar (1, 3, 5, …) and transposed to the chord of its first bar.
 // With item.licks = [question, answer] the two alternate: the question on bars 1, 5, 9, the answer on bars 3, 7, 11.
+// With key-relative licks (item.lickKey, or item.licksKey = [question, answer] taking turns) the lick sits on every ii–V–I
+// of the form (iivPairs: "Gm7 C7 | Fmaj7"), in the key of the I bar; the other bars are rests.
 // With a melody (item.melody, jazzlab-melody/1) you play the written tune, bar k of the melody over bar k of the form.
 // A clean chorus allows max(1, round(notes per chorus / 40)) slips (misses + wrong notes): 1 for root-and-fifth
 // (24 or 48 notes) and the licks, 2 for the boogie (96 eighths per chorus), so denser patterns are not stricter.
@@ -11,7 +13,7 @@ import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords } from '../music/forms.js';
+import { patternBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords, iivPairs, lickOverKey } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -20,7 +22,7 @@ const PER = 8;
 const CLEAN_TO_PASS = 3; // clean choruses in a row
 const SLIP_PER = 40; // one allowed slip per this many notes in a chorus (at least 1)
 
-export function renderForm(root, { track, itemId, item, form, pattern, lick, licks, melody, back }) {
+export function renderForm(root, { track, itemId, item, form, pattern, lick, licks, keyLicks, melody, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
@@ -29,12 +31,18 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const pair = Array.isArray(licks) && licks.length === 2 && licks.every(Boolean) ? licks : null;
   const rhLicks = pair || (lick ? [lick] : null);
   const mel = item.hand === 'rh' && melody ? melody : null; // the tune, written out bar by bar
-  const rh = item.hand === 'rh' && (!!rhLicks || !!mel);
+  // key-relative licks on the ii–V–I pairs of the form: pair i plays keyLicks[i % n] in the key of its I bar
+  const kl = item.hand === 'rh' && !mel && Array.isArray(keyLicks) && keyLicks.length && keyLicks.every((l) => l && l.prog) ? keyLicks : null;
+  const kPairs = kl ? iivPairs(bars).map((p, i) => ({ ...p, lick: kl[i % kl.length] })) : [];
+  const kAt = Object.fromEntries(kPairs.map((p) => [p.bars[0], p])); // first bar of a pair -> the pair
+  const rh = item.hand === 'rh' && (!!rhLicks || !!mel || !!kl);
   const lickAt = (k) => rhLicks[(k / 2) % rhLicks.length]; // the lick starting on bar k (k even)
   // each lick over its pair of bars, in the key of the pair's first chord
   const rhNotes = rh ? bars.map(() => []) : null;
   if (mel) bars.forEach((_, k) => { rhNotes[k] = melodyBarNotes(mel, k); });
+  else if (kl) kPairs.forEach((p) => { lickOverKey(p.lick, p.key).bars.forEach((b, j) => { if (p.bars[0] + j < NB) rhNotes[p.bars[0] + j] = b.rh; }); });
   else if (rh) for (let k = 0; k < NB; k += 2) { const [b1, b2] = lickBars(lickAt(k), bars[k]); rhNotes[k] = b1; if (k + 1 < NB) rhNotes[k + 1] = b2; }
+  const kWord = (p) => (kl.length < 2 ? t('phraseW') : p.lick.role === 'question' ? t('questionW') : p.lick.role === 'answer' ? t('answerW') : t('phraseW'));
   const lickWord = (k) => !pair ? t('lickW') : lickAt(k).role === 'question' ? t('questionW') : lickAt(k).role === 'answer' ? t('answerW') : (k / 2) % 2 === 0 ? t('questionW') : t('answerW');
   const barNotes = rh ? rhNotes : lhNotes; // what you play (expected + keyboard)
   const maxSlips = Math.max(1, Math.round(barNotes.flat().length / SLIP_PER)); // misses + wrong notes allowed in a clean chorus
@@ -46,13 +54,13 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const header = h('header.top', null,
     h('a.iconbtn', { href: back, 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null, h('span.kicker', null, `${L(track.title).toUpperCase()} · ${t('formUpper')}`), h('span.title', null, L(item.title || form.title))),
-    h('div.grow'), sessionChip(itemId), h('span.chordchip', null, mel ? L(mel.title) : rh ? (pair ? t('qaChip') : L(rhLicks[0].title)) : L(pattern.title)), midiChip(), themeButton());
+    h('div.grow'), sessionChip(itemId), h('span.chordchip', null, mel ? L(mel.title) : kl ? (kl.length > 1 ? t('qaChip') : L(kl[0].title)) : rh ? (pair ? t('qaChip') : L(rhLicks[0].title)) : L(pattern.title)), midiChip(), themeButton());
   const fbEl = h('span.fb', { 'aria-live': 'polite' });
   const chorusEl = h('span.barno'), streakEl = h('div.loops', { 'aria-label': t('cleanChoruses') });
   const cells = bars.map((c, k) => {
     const lh = barNotes[k];
     const uniq = [...new Map(lh.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
-    const label = mel ? (lh.length ? noteName(lh[0].name, names) : '—') : rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(barChords(c)[0]))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
+    const label = mel ? (lh.length ? noteName(lh[0].name, names) : '—') : kl ? (kAt[k] ? `${kWord(kAt[k])} · ${kAt[k].key}` : '') : rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(barChords(c)[0]))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
