@@ -1,0 +1,40 @@
+{
+ "$format": "jazzlab-form/1",
+ "id": "tinroof-c",
+ "title": {
+  "ru": "Tin Roof Blues",
+  "en": "Tin Roof Blues"
+ },
+ "about": {
+  "ru": "12 тактов, гармония из лид-шита.",
+  "en": "12 bars, the changes from the lead sheet."
+ },
+ "bars": [
+  "C",
+  "C",
+  "C",
+  "C7",
+  "F",
+  "F7",
+  "C",
+  "A7",
+  "D7",
+  "G7",
+  "C",
+  "C G7"
+ ],
+ "practice": [
+  "C7",
+  "F7",
+  "G7",
+  "C7"
+ ],
+ "patterns": [
+  "p1",
+  "p2",
+  "p3"
+ ],
+ "tempo": 66,
+ "swing": true,
+ "flats": true
+}

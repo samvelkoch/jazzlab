@@ -1,6 +1,7 @@
 // Track screen (the home screen): "Today" with the one-tap session, the track's sections and items, stats.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { diagFmt } from './diag.js';
+import { freshItems } from '../queue.js';
 import { t, L, plural } from '../i18n.js';
 import { store, progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
@@ -21,7 +22,8 @@ export function todayQueue(model) {
   const order = model.track.sections.flatMap((s) => s.items);
   const diag = order.filter((id) => model.items[id].kind === 'diag' && diagDue(model.items[id])).slice(0, 1);
   const due = dueReviews().filter((id) => model.items[id]).slice(0, MAX_REVIEWS);
-  const fresh = order.filter((id) => !isDone(prog[id]) && !due.includes(id) && !['perform', 'diag'].includes(model.items[id].kind)).slice(0, MAX_NEW);
+  // at most one melody and one form-with-melody (the earliest in order): a track of many tunes must not stack them in one session
+  const fresh = freshItems(order, model.items, (id) => isDone(prog[id]) || due.includes(id), MAX_NEW);
   return { diag, due, fresh, ids: [...diag, ...due, ...fresh] };
 }
 

@@ -118,8 +118,33 @@ def main():
                     tie = el.find("tie[@type='stop']") is not None
                     events.append({'t': pos, 'd': dur, 'n': nm, 'm': midi, 'tie': tie})
                 pos += dur
-        bars.append({'num': meas.get('number'), 'chords': chords, 'events': events, 'len': pos, 'implicit': meas.get('implicit') == 'yes'})
+        rep = {'fwd': False, 'back': False, 'ending': None, 'ending_stop': False}
+        for bl in meas.findall('barline'):
+            r = bl.find('repeat')
+            if r is not None:
+                if r.get('direction') == 'forward': rep['fwd'] = True
+                if r.get('direction') == 'backward': rep['back'] = True
+            en = bl.find('ending')
+            if en is not None:
+                if en.get('type') == 'start': rep['ending'] = [int(x) for x in re.findall(r'\d+', en.get('number') or '1')]
+                if en.get('type') in ('stop', 'discontinue'): rep['ending_stop'] = True
+        bars.append({'num': meas.get('number'), 'chords': chords, 'events': events, 'len': pos, 'implicit': meas.get('implicit') == 'yes', 'rep': rep})
 
+    # expand repeats: |: … :| with optional 1st/2nd endings, two passes (a plain repeat is played twice)
+    if any(b['rep']['back'] for b in bars):
+        out = []; start = 0; i = 0; pass_no = 1; cur = None
+        while i < len(bars):
+            b = bars[i]; r = b['rep']
+            if r['fwd']: start = i; pass_no = 1
+            if r['ending'] is not None: cur = r['ending']
+            if cur is None or pass_no in cur: out.append(b)
+            if r['back'] and pass_no == 1:
+                pass_no = 2; cur = None; i = start; continue
+            if r['ending_stop']: cur = None
+            if r['back']: start = i + 1  # pass 2 done; the 2nd ending (if any) follows and is played once
+            i += 1
+        notes.append(f'repeats expanded: {len(bars)} written measures -> {len(out)} bars')
+        bars = out
     # pickup: a short first measure is folded into the end of the last bar
     if bars and (bars[0]['implicit'] or bars[0]['len'] < 8):
         pick = bars.pop(0)
@@ -138,8 +163,20 @@ def main():
     out_bars = []; last_chord = None
     for i, b in enumerate(bars):
         evs = []
+        # onsets: round half down (a dotted-eighth + sixteenth pair, i.e. written swing, becomes two eighths),
+        # strictly increasing; a note lasts until the next onset (or its own rounded length, whichever is shorter)
+        import math
+        seq = []
+        prev = -1
         for e in b['events']:
-            t = int(round(e['t'])); d = max(1, int(round(e['d'])))
+            t = int(math.floor(float(e['t']) + 0.5 - 1e-9))
+            if t <= prev: t = prev + 1
+            prev = t
+            seq.append((t, e))
+        for j, (t, e) in enumerate(seq):
+            nxt = seq[j + 1][0] if j + 1 < len(seq) else 8
+            d = max(1, int(round(e['d'])))
+            d = min(d, max(1, nxt - t))
             if e['t'] != t or e['d'] != d:
                 notes.append(f'bar {i + 1}: {e["n"]} at {float(e["t"]):.2f} len {float(e["d"]):.2f} quantised to t{t} d{d}')
             if t >= 8:
