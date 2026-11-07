@@ -2,6 +2,7 @@
 //   #/              blues track (home)      #/track/<id>   another track
 //   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | melody | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
+//   #/t/<track>/<item>/fingers/<key>    a key-relative lick (item.keys) in one key (RH lick + LH pattern over lick.prog)
 //   #/t/<track>/<item>/fingers/<n|all>  a melody phrase (or the whole melody) as an exercise (RH melody + LH pattern)
 //   #/riffs         the book course         #/ex/<id>, #/imp/<step>  its exercises and improvisation
 import { applyTheme, currentTheme } from './theme.js';
@@ -9,7 +10,7 @@ import { t, L } from './i18n.js';
 import { h, ICON, setItemLinks } from './ui.js';
 import { autoConnect } from './music/midi.js';
 import { loadExercise, normalize } from './music/exercise.js';
-import { patternExercise, lickExercise, melodyExercise, barChords } from './music/forms.js';
+import { patternExercise, lickExercise, lickExerciseKey, melodyExercise, barChords } from './music/forms.js';
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
@@ -59,7 +60,7 @@ async function trackModel(id) {
   const melodies = {};
   await Promise.all([...melIds].map(async (m) => { melodies[m] = await get(`melodies/${m}.json`); }));
   Object.values(melodies).forEach((m) => { if (m.form) formIds.add(m.form); }); // a melody item has no form of its own
-  Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); if (it.lick) lickIds.add(it.lick); if (Array.isArray(it.licks)) it.licks.forEach((l) => lickIds.add(l)); });
+  Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); if (it.lick) lickIds.add(it.lick); if (it.lickKey) lickIds.add(it.lickKey); [it.licks, it.licksKey].forEach((ls) => { if (Array.isArray(ls)) ls.forEach((l) => lickIds.add(l)); }); });
   const forms = {}, patterns = {}, licks = {};
   await Promise.all([
     ...[...formIds].map(async (f) => { forms[f] = await get(`forms/${f}.json`); }),
@@ -75,7 +76,7 @@ async function trackModel(id) {
   Object.entries(track.items).forEach(([iid, it]) => {
     const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'melody' ? melodies[it.melody] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
     const title = it.title ? L(it.title) : src ? L(src.title) : iid;
-    const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : src ? L(src.about) : '';
+    const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : it.kind === 'form' && it.lickKey ? L(licks[it.lickKey].about) : src ? L(src.about) : '';
     items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}` };
   });
   models[id] = { track, forms, patterns, licks, melodies, exercises, items };
@@ -141,6 +142,20 @@ async function route() {
       // a lick over one chord as a normal exercise: Notes → In tempo → By heart; "by heart" passes the lick item
       const model = await trackModel(mtf[1]);
       const item = model.items[mtf[2]], chord = mtf[3];
+      const klick = item && item.kind === 'lick' && Array.isArray(item.keys) ? model.licks[item.lick] : null;
+      if (klick && klick.prog) {
+        // a key-relative lick in one key (chord = the key: F, Bb)
+        if (!item.keys.includes(chord)) { message(t('notFound')); return; }
+        setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mtf[1]);
+        const ex = normalize(lickExerciseKey(klick, chord, model.patterns[item.pattern], {
+          id: `${item.id}-${chord.toLowerCase()}`, course: mtf[1], doneId: item.id, back: item.href,
+          kicker: `${L(model.track.title).toUpperCase()} · ${t('lickUpper')} · ${chord}`
+        }));
+        document.title = `${item.title} · ${chord} · Jazzlab`;
+        cleanup = renderExercise(root, { ex, rerender });
+        window.scrollTo(0, 0);
+        return;
+      }
       const form = item && model.forms[item.form];
       if (!item || item.kind !== 'lick' || !form || !form.bars.flatMap(barChords).includes(chord)) { message(t('notFound')); return; }
       setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mtf[1]);
@@ -159,7 +174,7 @@ async function route() {
       document.title = `${item.title} · Jazzlab`;
       if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'ear') cleanup = renderEar(root, { track: model.track, itemId: item.id, item, back });
-      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, licks: Array.isArray(item.licks) ? item.licks.map((l) => model.licks[l]).filter(Boolean) : null, melody: item.melody ? model.melodies[item.melody] || null : null, back });
+      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, licks: Array.isArray(item.licks) ? item.licks.map((l) => model.licks[l]).filter(Boolean) : null, keyLicks: item.lickKey ? [model.licks[item.lickKey]].filter(Boolean) : Array.isArray(item.licksKey) ? item.licksKey.map((l) => model.licks[l]).filter(Boolean) : null, melody: item.melody ? model.melodies[item.melody] || null : null, back });
       else if (item.kind === 'melody') {
         const melody = model.melodies[item.melody];
         if (!melody || !model.forms[melody.form]) { message(t('notFound')); return; }

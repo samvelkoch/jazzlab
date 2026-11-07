@@ -9,7 +9,7 @@ import { t, L, plural, getLang } from '../i18n.js';
 import { store, updateEx, markActive, idle } from '../store.js';
 import { noteName, midiToName, toMidi } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBars, lickBars, patSpell, parseChord, barChords } from '../music/forms.js';
+import { patternBars, lickBars, patSpell, parseChord, barChords, iivPairs, lickKeyNotes } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import { recordingToMidi } from '../music/export.js';
 import { rhythmAccuracy } from '../music/recording.js';
@@ -29,7 +29,9 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const lhBars = patternBars(pattern, bars); // in form order: a voice-led pattern follows the previous bar
   const lhByChord = {}; // each chord's notes as first played in the form
   bars.forEach((b, k) => barChords(b).forEach((c) => { if (!lhByChord[c]) lhByChord[c] = lhBars[k].filter((e) => e.chord === c); }));
-  const rhMidi = licks.flatMap((l) => chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m)))
+  const formKeys = [...new Set(iivPairs(bars).map((p) => p.key))]; // the keys of the form's ii–V–I places (std-f: F, Bb)
+  // a key-relative lick (lick.prog) in every key of the form; a chord-relative one over every chord
+  const rhMidi = licks.flatMap((l) => (l.prog ? (formKeys.length ? formKeys : ['F']).flatMap((k) => lickKeyNotes(l, k).map((e) => e.m)) : chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m))))
     .concat(melody ? melody.bars.flatMap((b) => (b.rh || []).map((e) => toMidi(e.n))) : []); // the keyboard covers the tune too
   const lhMidi = Object.values(lhByChord).flat().map((e) => e.m);
   const END_BARS = ending ? ending.bars.length : 1; // bars after the last chorus

@@ -17,12 +17,17 @@
     {
       "id": "form", "title": { "ru": "Форма", "en": "The form" },
       "about": { "ru": "Все 32 такта по кругу под барабаны. Три чистых круга подряд, и левая готова.", "en": "All 32 bars on a loop over drums. Three clean choruses in a row and the left hand is ready." },
-      "items": ["form-s1", "form-s2"]
+      "items": ["form-s1", "form-s2", "end-std"]
     },
     {
       "id": "melody", "title": { "ru": "Мелодия", "en": "The tune" },
       "about": { "ru": "Мелодия учится эхом по два такта: пианино играет, ты повторяешь. Потом пальцы, потом целиком над басом.", "en": "The tune is learned by echo, two bars at a time: the piano plays, you repeat. Then the fingers, then the whole thing over the bass." },
       "items": ["mel-std", "form-mel-std"]
+    },
+    {
+      "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
+      "about": { "ru": "Фразы на II–V–I. Сначала в F, потом те же пальцы в Bb: это и есть вторая тональность.", "en": "Phrases over ii–V–I. First in F, then the same fingers in B-flat: that is the second key." },
+      "items": ["lick-k1", "lick-k2", "lick-k3", "form-rh-k1", "form-rh-qa-std"]
     },
     {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
@@ -63,13 +68,27 @@
       "title": { "ru": "Стандарт: мелодия над басом", "en": "The standard: the tune over the bass" },
       "about": { "ru": "Левая играет бас, ты ведёшь мелодию целиком. Три чистых круга подряд.", "en": "The left hand plays the bass, you carry the whole tune. Three clean choruses in a row." }
     },
+    "lick-k1": { "kind": "lick", "lick": "k1", "keys": ["F", "Bb"], "pattern": "s2" },
+    "lick-k2": { "kind": "lick", "lick": "k2", "keys": ["F", "Bb"], "pattern": "s2" },
+    "lick-k3": { "kind": "lick", "lick": "k3", "keys": ["F", "Bb"], "pattern": "s2" },
+    "form-rh-k1": {
+      "kind": "form", "form": "std-f", "pattern": "s2", "hand": "rh", "lickKey": "k1",
+      "title": { "ru": "Стандарт: фраза на каждом II–V–I", "en": "Standard: a phrase on every ii–V–I" },
+      "about": { "ru": "Левая играет шелл, ты играешь фразу на каждом II–V–I: в частях A в F, в бридже в Bb. В остальных тактах отдыхаешь.", "en": "The left hand plays the shell, you play the phrase on every ii–V–I: in F in the A sections, in B-flat in the bridge. Rest in the other bars." }
+    },
+    "form-rh-qa-std": {
+      "kind": "form", "form": "std-f", "pattern": "s2", "hand": "rh", "licksKey": ["k3", "k1"],
+      "title": { "ru": "Стандарт: вопрос и ответ", "en": "Standard: question and answer" },
+      "about": { "ru": "На первом II–V–I вопрос, на следующем ответ, и так по кругу. Левая играет шелл.", "en": "A question on one ii–V–I, the answer on the next, and so on around the form. The left hand plays the shell." }
+    },
+    "end-std": { "kind": "exercise", "ex": "std-end" },
     "ear-find-std": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала рядом с C4, потом шире, потом через три октавы.", "en": "I play a note, you find it on the keys. Close to C4 first, then wider, then across three octaves." },
       "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 }
     },
     "perf-std": {
-      "kind": "perform", "form": "std-f", "pattern": "s2", "licks": [], "melody": "std-f", "choruses": 2,
+      "kind": "perform", "form": "std-f", "pattern": "s2", "licks": ["k1", "k2"], "melody": "std-f", "choruses": 2,
       "title": { "ru": "Стандарт в F, два круга", "en": "A standard in F, two choruses" },
       "about": { "ru": "Левая играет шелл, правая мелодию: первый круг как написано, второй можно по-своему. Запись остаётся.", "en": "The left hand plays the shell, the right hand the tune: the first chorus as written, the second your own way. The recording stays." }
     }

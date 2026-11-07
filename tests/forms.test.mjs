@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
 import { parsePattern } from '../app/js/music/rhythm.js';
-import { patSpell, fitDeg, parseChord, chordPcs, patternExercise, patternBar, patternBars, leadPair, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes } from '../app/js/music/forms.js';
+import { patSpell, fitDeg, parseChord, chordPcs, patternExercise, patternBar, patternBars, leadPair, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes, transposeChord, keyTonic, lickKeyNotes, lickOverKey, lickExerciseKey, iivPairs } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -369,3 +369,58 @@ assert.equal(patSpell(54, 4, parseChord('D7'), true), 'F#3');
 assert.equal(patSpell(53, 4, parseChord('Db7'), true), 'F3');
 assert.deepEqual(chordNames('D7', true), ['D', 'F#', 'A', 'C']);
 console.log('ok: sharp thirds');
+
+// key-relative licks (lick.prog + item.keys): ii–V–I in F, moved to Bb
+{
+  assert.equal(transposeChord('Gm7 C7', 5), 'Cm7 F7');
+  assert.equal(transposeChord('Fmaj7', 5), 'Bbmaj7');
+  assert.equal(transposeChord('Gm7 C7', -2), 'Fm7 Bb7', 'black-key roots are flats');
+  assert.equal(transposeChord('Fmaj7', 1), 'Gbmaj7');
+  assert.equal(transposeChord('Fmaj7', 2), 'Gmaj7');
+  assert.deepEqual([keyTonic('F'), keyTonic('Bb')], [65, 70], 'the tonic sits in C4..B4 (not rhRoot: Bb4, not Bb3)');
+  const k1 = read('content/licks/k1.json'), k2 = read('content/licks/k2.json'), k3 = read('content/licks/k3.json');
+  const s2 = read('content/patterns/s2.json'), sf = read('content/forms/std-f.json');
+  [k1, k2, k3].forEach((l) => { assert.deepEqual(l.prog, ['Gm7 C7', 'Fmaj7']); assert.equal(l.tempo, 66); assert.equal(l.swing, true); });
+  assert.deepEqual([k1.role, k2.role, k3.role], ['answer', 'answer', 'question']);
+  const f = lickOverKey(k1, 'F');
+  assert.deepEqual(f.bars.map((b) => b.rh.map((e) => e.m)), [[67, 70, 74, 72, 69, 64], [65]], 'negative deg: E4 under F4');
+  assert.deepEqual(f.chords, ['Gm7 C7', 'Fmaj7']);
+  const bb = lickOverKey(k1, 'Bb');
+  assert.equal(bb.bars[1].rh.at(-1).m, 70, 'k1 in Bb lands on Bb4');
+  assert.deepEqual(bb.chords, ['Cm7 F7', 'Bbmaj7']);
+  assert.deepEqual(bb.bars.map((b) => b.rh.map((e) => e.name)), [['C5', 'Eb5', 'G5', 'F5', 'D5', 'A4'], ['Bb4']]);
+  assert.deepEqual(f.bars.map((b) => b.rh.map((e) => e.name)), [['G4', 'Bb4', 'D5', 'C5', 'A4', 'E4'], ['F4']]);
+  assert.deepEqual(lickKeyNotes(k2, 'F').map((e) => e.name), ['Bb4', 'A4', 'G4', 'F4', 'E4', 'G4', 'A4', 'F4']);
+  assert.equal(lickKeyNotes(k3, 'F').at(-1).name, 'C5', 'the question hangs on the fifth');
+  // the left hand under the lick: the voice-led shell over the progression in the key
+  assert.deepEqual(lickOverKey(k1, 'F', s2).bars.map((b) => b.lh.length), [6, 6]);
+  const kx = normalize(lickExerciseKey(k1, 'Bb', s2, { id: 'lick-k1-bb', doneId: 'lick-k1' }));
+  assert.equal(kx.bars.length, 2); assert.equal(kx.id, 'lick-k1-bb'); assert.equal(kx.doneId, 'lick-k1'); assert.equal(kx.swing, true);
+  assert.deepEqual(kx.bars[0].rh.map((e) => e.notes[0]), ['C5', 'Eb5', 'G5', 'F5', 'D5', 'A4']);
+  assert.deepEqual(kx.bars[0].lh.map((e) => e.notes.join(' ')), ['C3', 'Eb3 Bb3', 'F2', 'Eb3 A3'], 'Cm7 F7 shell in Bb, flats');
+  assert.equal(normalize(lickExerciseKey(k1, 'F', s2)).id, 'lick-k1-f');
+  [k1, k2, k3].forEach((l) => ['F', 'Bb'].forEach((k) => normalize(lickExerciseKey(l, k, s2))));
+  // ii–V–I places in the form: bar k = "m7 7" (ii a fourth below V), bar k+1 = one major chord a fourth above V; left to right, no overlap
+  assert.deepEqual(iivPairs(sf.bars).map((p) => [...p.bars, p.key]), [
+    [1, 2, 'F'], [3, 4, 'F'], [7, 8, 'F'], [9, 10, 'F'], [11, 12, 'F'], [16, 17, 'Bb'], [18, 19, 'Bb'], [25, 26, 'F'], [27, 28, 'F'], [30, 31, 'F']
+  ]);
+  assert.ok(!iivPairs(sf.bars).some((p) => p.bars[0] === 21), '"Gm7 C7 | Gm7" is not a resolution');
+  assert.deepEqual(iivPairs(['Gm7 C7', 'Gm7 C7', 'Fmaj7']).map((p) => p.bars), [[1, 2]]);
+  // the std track: the rh section, key-relative items, the ending
+  const stt = read('content/tracks/std.json');
+  assert.deepEqual(stt.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'rh', 'ear', 'perf']);
+  assert.deepEqual(stt.sections.find((x) => x.id === 'rh').items, ['lick-k1', 'lick-k2', 'lick-k3', 'form-rh-k1', 'form-rh-qa-std']);
+  ['k1', 'k2', 'k3'].forEach((k) => assert.deepEqual(stt.items['lick-' + k], { kind: 'lick', lick: k, keys: ['F', 'Bb'], pattern: 's2' }));
+  assert.equal(stt.items['form-rh-k1'].lickKey, 'k1'); assert.equal(stt.items['form-rh-k1'].hand, 'rh');
+  assert.deepEqual(stt.items['form-rh-qa-std'].licksKey, ['k3', 'k1']);
+  Object.values(stt.items).forEach((it) => [it.lick, it.lickKey, ...(it.licks || []), ...(it.licksKey || [])].filter(Boolean).forEach((l) => assert.equal(read(`content/licks/${l}.json`).id, l)));
+  assert.deepEqual(stt.items['perf-std'].licks, ['k1', 'k2']);
+  assert.equal(sf.ending, 'std-end');
+  assert.deepEqual(stt.items['end-std'], { kind: 'exercise', ex: 'std-end' });
+  assert.equal(stt.sections.find((x) => x.id === 'form').items.at(-1), 'end-std');
+  const se = normalize(read('content/exercises/std-end.json'));
+  assert.equal(se.bars.length, 2); assert.equal(se.passAnyTempo, true); assert.equal(se.swing, true);
+  assert.deepEqual([se.tempo.start, se.tempo.target], [56, 66]);
+  assert.deepEqual(se.bars[1].rh[0].notes, ['A4', 'C5', 'F5']);
+  console.log('ok: standard licks');
+}
