@@ -749,3 +749,19 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 .cscreen main.practice .bigkb .kb, .cscreen main.keys .bigkb .kb, .cscreen main.lesson .kb { height: clamp(170px, 30dvh, 300px); }
 .csym { max-width: 100%; overflow: hidden; }
 .drow > * { min-width: 0; max-width: 100%; }
+
+/* phone: the home / course header in two tight rows — brand · piano · theme, then sections · language */
+@media (max-width: 640px) {
+  header.top:has(.brand) { flex-wrap: wrap; gap: 8px; row-gap: 10px; }
+  header.top:has(.brand) > .brand { order: 1; }
+  header.top:has(.brand) > .grow { order: 2; }
+  header.top:has(.brand) > .chip { order: 3; }
+  header.top:has(.brand) > .settings { order: 4; }
+  header.top:has(.brand) > .navtabs { order: 5; flex: 1 1 60%; min-width: 0; }
+  header.top:has(.brand) > .navtabs a { flex: 1 1 0; justify-content: center; }
+  header.top:has(.brand) > .seg:not(.navtabs) { order: 6; }
+}
+@media (max-width: 640px) {
+  header.top:has(.brand) > .chip { padding: 0; width: 44px; justify-content: center; }
+  header.top:has(.brand) > .chip span { display: none; }
+}
