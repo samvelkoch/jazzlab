@@ -30,6 +30,11 @@
       "items": ["ear-find"]
     },
     {
+      "id": "tune", "title": { "ru": "Пьеса", "en": "The tune" },
+      "about": { "ru": "Настоящий блюз 1914 года: припев St. Louis Blues. Эхо по два такта, пальцы, потом над басом.", "en": "A real 1914 blues: the chorus of St. Louis Blues. Echo two bars at a time, fingers, then over the bass." },
+      "items": ["mel-stl", "form-mel-stl"]
+    },
+    {
       "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
       "about": { "ru": "Весь блюз обеими руками под барабаны. Это не упражнение, а результат: запись остаётся, её можно послушать и сохранить.", "en": "The whole blues with both hands over drums. Not an exercise but a result: the recording stays, you can listen to it and save it." },
       "items": ["perf-blues"]
@@ -109,8 +114,14 @@
       "title": { "ru": "Блюз: вопрос и ответ", "en": "Blues: question and answer" },
       "about": { "ru": "Вопрос на нечётных парах тактов, ответ на чётных. Так разговаривает блюз.", "en": "A question on bars 1, 5, 9, an answer on 3, 7, 11. That is how the blues talks." }
     },
+    "mel-stl": { "kind": "melody", "melody": "stl-c", "pattern": "p1" },
+    "form-mel-stl": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "melody": "stl-c",
+      "title": { "ru": "St. Louis Blues над басом", "en": "St. Louis Blues over the bass" },
+      "about": { "ru": "Левая играет корень и квинту, ты ведёшь припев целиком. Три чистых круга подряд.", "en": "The left hand plays root and fifth, you carry the whole chorus. Three clean choruses in a row." }
+    },
     "perf-blues": {
-      "kind": "perform", "form": "blues-c-ta", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "choruses": 3,
+      "kind": "perform", "form": "blues-c-ta", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "melody": "stl-c", "choruses": 3,
       "title": { "ru": "Блюз в C, три круга", "en": "Blues in C, three choruses" },
       "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ», «Три удара», «Лесенку» или что хочешь. Отсчёт, три круга и концовка: Db7, потом C7.", "en": "Left: root and fifth. Right: the «Answer», «Three hits» and «The ladder» licks, or whatever you like. Count-in, three choruses and the ending: Db7, then C7." }
     },

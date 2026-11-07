@@ -409,7 +409,7 @@ console.log('ok: sharp thirds');
   assert.deepEqual(iivPairs(['Gm7 C7', 'Gm7 C7', 'Fmaj7']).map((p) => p.bars), [[1, 2]]);
   // the std track: the rh section, key-relative items, the ending
   const stt = read('content/tracks/std.json');
-  assert.deepEqual(stt.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'rh', 'ear', 'perf']);
+  assert.deepEqual(stt.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'tunes', 'rh', 'ear', 'perf']);
   assert.deepEqual(stt.sections.find((x) => x.id === 'rh').items, ['lick-k1', 'lick-k2', 'lick-k3', 'form-rh-k1', 'form-rh-qa-std']);
   ['k1', 'k2', 'k3'].forEach((k) => assert.deepEqual(stt.items['lick-' + k], { kind: 'lick', lick: k, keys: ['F', 'Bb'], pattern: 's2' }));
   assert.equal(stt.items['form-rh-k1'].lickKey, 'k1'); assert.equal(stt.items['form-rh-k1'].hand, 'rh');
@@ -496,4 +496,77 @@ console.log('ok: sharp thirds');
   assert.equal(bt2.sections.find((x) => x.id === 'form').items.at(-1), 'end-bossa');
   Object.values(bt2.items).forEach((it) => [it.lick, ...(it.licks || [])].filter(Boolean).forEach((l) => assert.equal(lk(l).id, l)));
   console.log('ok: bossa licks');
+}
+
+// ties and the two public-domain tunes (Bye Bye Blackbird in G, Sweet Georgia Brown in F), the blues tune
+{
+  const bbb = read('content/melodies/bbb-g.json'), sgb = read('content/melodies/sgb-f.json'), stl = read('content/melodies/stl-c.json');
+  const s1 = read('content/patterns/s1.json'), s2 = read('content/patterns/s2.json');
+  // a tie event continues the previous bar's note: not expected, not played, not in the exercise
+  assert.equal(bbb.bars[7].rh[0].tie, true, 'the JSON keeps the field');
+  assert.deepEqual(melodyBarNotes(bbb, 7), [], 'bar 8 starts with a tie: no notes');
+  assert.equal(melodyBarNotes(bbb, 6).at(-1).name, 'F#4', 'bar 7 keeps its F#4'); assert.equal(melodyBarNotes(bbb, 6).at(-1).d, bbb.bars[6].rh.at(-1).d);
+  assert.deepEqual(melodyBarNotes(bbb, 15), [], 'bar 16 starts with a tie');
+  assert.deepEqual(melodyBarNotes(bbb, 29).map((e) => e.name), ['F#4'], 'bar 30 keeps only the struck note');
+  assert.equal(melodyNotes(bbb, [6, 7]).length, melodyBarNotes(bbb, 6).length, 'a phrase has no tied note');
+  assert.ok(melodyNotes(bbb, [6, 7]).every((e) => e.t < 8 && e.bar === 6));
+  const bx = melodyExercise(bbb, [6, 7], s1, { id: 'tie', flats: false });
+  assert.equal(bx.bars[1].rh.length, 0, 'exercise bar 2: rh empty');
+  assert.equal(bx.bars[0].rh.at(-1).n[0], 'F#4'); assert.equal(bx.bars[0].rh.length, melodyBarNotes(bbb, 6).length); assert.ok(bx.bars[1].lh.length > 0);
+  assert.equal(normalize(bx).bars[1].rh.length, 0);
+  assert.equal(normalize(melodyExercise(bbb, [0, 31], s2, { id: 'tie-all', flats: false })).bars.length, 32);
+  [bbb, sgb].forEach((m) => assert.ok(m.bars.some((b) => b.rh.some((e) => e.tie))));
+  // no tie event is ever struck: every melody bar's notes are exactly its non-tie events
+  [bbb, sgb, stl].forEach((m) => m.bars.forEach((b, k) => assert.equal(melodyBarNotes(m, k).length, b.rh.filter((e) => !e.tie).length)));
+  // the tunes: 32 bars matching their forms, notes inside the bar, every chord parses
+  [[bbb, 'bbb-g'], [sgb, 'sgb-f']].forEach(([m, id]) => {
+    const f = read(`content/forms/${id}.json`);
+    assert.equal(m.$format, 'jazzlab-melody/1'); assert.equal(m.id, id); assert.equal(m.form, id); assert.equal(f.id, id);
+    assert.equal(m.bars.length, 32, id + ' melody has 32 bars'); assert.equal(f.bars.length, 32, id + ' form has 32 bars');
+    assert.equal(typeof m.source, 'string');
+    m.bars.forEach((b, k) => {
+      assert.equal(b.chord, f.bars[k], `${id} bar ${k + 1} chord`);
+      barChords(b.chord); barChords(f.bars[k]);
+      b.rh.forEach((e) => { assert.ok(e.t >= 0 && e.t + (e.d || 1) <= 8, `${id} bar ${k + 1}: t ${e.t} + d ${e.d} > 8`); assert.match(e.n, /^[A-G](#|b)?\d$/); });
+      if (b.rh.some((e) => e.tie)) assert.ok(k > 0 && b.rh[0].tie && b.rh[0].t === 0, `${id} bar ${k + 1}: a tie opens the bar`);
+    });
+    m.phrases.forEach(([a, z]) => { assert.ok(a >= 0 && a <= z && z < 32); assert.ok(melodyNotes(m, [a, z]).length > 0, `${id} phrase ${a}-${z} has notes`); });
+    // the left hand (bass and voice-led shell) handles every chord, in order, for the form and for the exercise
+    [s1, s2].forEach((p) => {
+      assert.equal(patternBars(p, f.bars).length, 32);
+      assert.equal(normalize(patternExercise(p, f.bars, { id: 'x', flats: !!f.flats })).bars.length, 32);
+      assert.equal(normalize(melodyExercise(m, [0, 31], p, { id: 'x', flats: !!f.flats })).bars.length, 32);
+    });
+    f.patterns.forEach((pid) => assert.equal(read(`content/patterns/${pid}.json`).id, pid));
+  });
+  // a plain major triad takes the major 7th in the shell (F, not F7 over F), a dominant stays dominant
+  assert.equal(fitDeg(10, parseChord('F')), 11); assert.equal(fitDeg(10, parseChord('G')), 11);
+  assert.equal(fitDeg(10, parseChord('C7')), 10); assert.equal(fitDeg(10, parseChord('Cm')), 10);
+  assert.deepEqual(patternBar(s2, 'F').filter((e) => e.t === 2).map((e) => e.m).sort((a, b) => a - b), [52, 57], 'F triad shell: A3 E3');
+  assert.deepEqual(patternBar(s2, 'C#dim7').map((e) => e.m).length, 6);
+  // the std track: the tunes section, items, performances; ids unique across the three tracks
+  const stt3 = read('content/tracks/std.json');
+  const secs = stt3.sections.map((x) => x.id);
+  assert.equal(secs.indexOf('tunes'), secs.indexOf('melody') + 1); assert.equal(secs.indexOf('rh'), secs.indexOf('tunes') + 1);
+  assert.deepEqual(stt3.sections.find((x) => x.id === 'tunes').items, ['mel-bbb', 'form-mel-bbb', 'mel-sgb', 'form-mel-sgb']);
+  assert.deepEqual(stt3.items['mel-bbb'], { kind: 'melody', melody: 'bbb-g', pattern: 's1' });
+  assert.deepEqual(stt3.items['mel-sgb'], { kind: 'melody', melody: 'sgb-f', pattern: 's1' });
+  [['bbb', 'bbb-g'], ['sgb', 'sgb-f']].forEach(([k, id]) => {
+    const fm = stt3.items['form-mel-' + k], pf = stt3.items['perf-' + k];
+    assert.deepEqual([fm.kind, fm.form, fm.pattern, fm.hand, fm.melody], ['form', id, 's1', 'rh', id]);
+    assert.deepEqual([pf.kind, pf.form, pf.pattern, pf.melody, pf.licks, pf.choruses], ['perform', id, 's2', id, [], 2]);
+    assert.ok(stt3.sections.find((x) => x.id === 'perf').items.includes('perf-' + k));
+  });
+  const all3 = [...Object.keys(blt.items), ...Object.keys(bt.items), ...Object.keys(stt3.items)];
+  assert.equal(new Set(all3).size, all3.length, 'item ids are unique across blues, bossa and std');
+  ['mel-bbb', 'form-mel-bbb', 'mel-sgb', 'form-mel-sgb', 'perf-bbb', 'perf-sgb'].forEach((id) => assert.ok(!(id in blt.items) && !(id in bt.items), id));
+  // the blues track: the tune section and the performance reminder
+  assert.equal(blt.items['mel-stl'].melody, 'stl-c'); assert.equal(blt.items['form-mel-stl'].melody, 'stl-c');
+  assert.equal(blt.items['perf-blues'].melody, 'stl-c');
+  assert.equal(stl.form, 'blues-c'); assert.equal(read('content/forms/blues-c.json').bars.length, stl.bars.length);
+  stl.bars.forEach((b, k) => { assert.equal(b.chord, read('content/forms/blues-c.json').bars[k]); b.rh.forEach((e) => assert.ok(e.t + (e.d || 1) <= 8)); });
+  Object.values(blt.items).forEach((it) => { if (it.melody) assert.equal(read(`content/melodies/${it.melody}.json`).id, it.melody); });
+  blt.sections.flatMap((x) => x.items).forEach((id) => assert.ok(id in blt.items, 'blues section item exists: ' + id));
+  assert.deepEqual(blt.sections.flatMap((x) => x.items).slice().sort(), Object.keys(blt.items).sort(), 'every blues item is in a section');
+  console.log('ok: tunes, ties');
 }

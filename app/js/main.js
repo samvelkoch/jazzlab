@@ -132,7 +132,7 @@ async function route() {
       const range = all ? [0, melody.bars.length - 1] : melody.phrases[pi];
       const label = all ? t('mlAll') : `${t('mlBars')} ${range[0] + 1}–${range[1] + 1}`;
       const ex = normalize(melodyExercise(melody, range, model.patterns[item.pattern], {
-        id: all ? `${item.id}-all` : `${item.id}-p${pi}`, course: mtf[1], doneId: all ? item.id : null, back: item.href, flats: true,
+        id: all ? `${item.id}-all` : `${item.id}-p${pi}`, course: mtf[1], doneId: all ? item.id : null, back: item.href, flats: !!form.flats,
         title: `${item.title} · ${label}`,
         kicker: `${L(model.track.title).toUpperCase()} · ${t('melUpper')} · ${label}`
       }));

@@ -103,6 +103,12 @@ and `perf-std` (2 choruses, s2 shell, the tune and the licks k1, k2 as reminders
 `docs/specs/2026-11-07-standard-design.md`). A form of more than 16 bars gets a compact grid (`.fgrid.long`) that scrolls
 inside the panel and keeps the current bar in view. The melody echo swings when the melody has `"swing": true` (not on a bossa form).
 
+The `tunes` section («Пьесы», after `melody`) of the std track holds two real tunes of the twenties from their first editions:
+Bye Bye Blackbird in G (`bbb-g`, sharps, plain triads and `C#dim7`) and Sweet Georgia Brown in F (`sgb-f`), each with
+`mel-<tune>` (echo, fingers, by heart over s1) and `form-mel-<tune>` (the whole tune over the s1 bass); `perf-bbb` / `perf-sgb`
+in `perf` (2 choruses, the s2 shell, the tune as a reminder, `licks: []`). A plain major triad takes a major 7th in the
+voice-led shell (`fitDeg`: G gets F#, not F). The sharp-key form's exercises are spelled with sharps (`flats: !!form.flats`).
+
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
 
 `content/forms/<id>.json`: `bars` = one chord per bar (`C7`, `Fm7`, `Bbmaj7`, `Dm7b5`…) or two chords separated by a
@@ -235,16 +241,34 @@ chord-relative licks. The std licks k1 «II–V–I: вверх и домой»,
 {
   "$format": "jazzlab-melody/1", "id": "bossa-cm", "title": {…}, "about": {…},
   "form": "blue-bossa", "tempo": 66, "swing": false,
+  "source": "free text: the edition the notes were read from (publisher, year, IMSLP number); optional",
   "phrases": [[0, 1], [2, 3]],               // echo chunks: [firstBar, lastBar], 0-based, inclusive
   "bars": [                                   // one entry per form bar, chord = that form bar (checked by the tests)
     { "chord": "Cm7", "rh": [ { "t": 0, "d": 2, "n": "G4", "f": 1 } ] }  // t = eighth slot 0..7, d in eighths (t + d ≤ 8),
   ]                                                                       // n = ONE pitch name, f = finger
+// optional "notes": [ "…" ] — what the transcriber had to decide (read it before trusting a tune)
 }
 ```
 
 A pickup into the next phrase (notes at the end of the previous bar) belongs to the bar it is written in: a phrase is
 exactly its bars. `melodyBarNotes()` / `melodyNotes()` / `melodyExercise()` in `app/js/music/forms.js`. The track loader
 reads a melody when an item has `melody` (and its `form`, even when the item has none).
+
+**Ties.** An event with `"tie": true` (always `t: 0`, the first event of a bar) is the note of the previous bar held over
+the bar line: it is not struck again. `melodyBarNotes()`, `melodyNotes()` and `melodyExercise()` drop it, so it is never
+expected, scored or played as a new attack, and a bar holding only a tie has no notes (the form cell shows «—», the echo
+roll shows nothing in that bar). The previous bar's note simply ends at the bar line (its own `d`). The field stays in the
+JSON; it records the source. `source` is free text about the edition (publisher, year, IMSLP number), not read by the app.
+
+**Importing a lead sheet.** `python3 scripts/import_tune.py <file.mxl|.xml|.musicxml> --id <id> --title-ru … --title-en …
+--form-ru … [--tempo 66] [--swing] [--flats] [--patterns s1,s2] [--practice D7,G7,C7,F] [--source "…"] [--transpose n] [--bars a-b]
+[--dry]` reads MusicXML (compressed `.mxl` too) and writes `content/melodies/<id>.json` plus `content/forms/<id>.json`.
+Melody = the first part's top voice quantised to eighths (anything off the grid is noted); fingers are automatic (the
+rank of each note within its 2-bar phrase, lowest = 1, a suggestion: check them); a note tied over a bar line becomes a
+`"tie": true` event at the start of the next bar; chords come from the `<harmony>` elements, two per bar at most (the first
+covers beats 1–2, the second beats 3–4; a chord printed on beat 2 or 4 is placed on beat 3 and noted; a bar without a
+chord repeats the last one). Everything the script had to guess is written into the melody's `notes` array: read it, then
+fix the JSON by hand (chord qualities outside `QUAL` in `forms.js`, pickups, endings). `--dry` prints without writing. Then add the items to a track and run the tests.
 
 - `kind: "melody"`: `"mel-bossa": { "kind": "melody", "melody": "bossa-cm", "pattern": "b1" }` opens
   `app/js/screens/melody.js` (title and about default to the melody's). Echo: a phrase chip per `phrases` entry with its

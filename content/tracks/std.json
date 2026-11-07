@@ -25,6 +25,11 @@
       "items": ["mel-std", "form-mel-std"]
     },
     {
+      "id": "tunes", "title": { "ru": "Пьесы", "en": "Tunes" },
+      "about": { "ru": "Две настоящие вещи двадцатых по первым изданиям: Bye Bye Blackbird в G и Sweet Georgia Brown в F. Эхо, пальцы, вся вещь, потом над басом.", "en": "Two real tunes of the twenties from their first editions: Bye Bye Blackbird in G and Sweet Georgia Brown in F. Echo, fingers, the whole tune, then over the bass." },
+      "items": ["mel-bbb", "form-mel-bbb", "mel-sgb", "form-mel-sgb"]
+    },
+    {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
       "about": { "ru": "Фразы на II–V–I. Сначала в F, потом те же пальцы в Bb: это и есть вторая тональность.", "en": "Phrases over ii–V–I. First in F, then the same fingers in B-flat: that is the second key." },
       "items": ["lick-k1", "lick-k2", "lick-k3", "form-rh-k1", "form-rh-qa-std"]
@@ -37,7 +42,7 @@
     {
       "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
       "about": { "ru": "Вся пьеса под барабаны. Это не упражнение, а результат: запись остаётся, её можно послушать и сохранить.", "en": "The whole tune over drums. Not an exercise but a result: the recording stays, you can listen to it and save it." },
-      "items": ["perf-std"]
+      "items": ["perf-std", "perf-bbb", "perf-sgb"]
     }
   ],
   "items": {
@@ -68,6 +73,18 @@
       "title": { "ru": "Стандарт: мелодия над басом", "en": "The standard: the tune over the bass" },
       "about": { "ru": "Левая играет бас, ты ведёшь мелодию целиком. Три чистых круга подряд.", "en": "The left hand plays the bass, you carry the whole tune. Three clean choruses in a row." }
     },
+    "mel-bbb": { "kind": "melody", "melody": "bbb-g", "pattern": "s1" },
+    "form-mel-bbb": {
+      "kind": "form", "form": "bbb-g", "pattern": "s1", "hand": "rh", "melody": "bbb-g",
+      "title": { "ru": "Bye Bye Blackbird над басом", "en": "Bye Bye Blackbird over the bass" },
+      "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
+    },
+    "mel-sgb": { "kind": "melody", "melody": "sgb-f", "pattern": "s1" },
+    "form-mel-sgb": {
+      "kind": "form", "form": "sgb-f", "pattern": "s1", "hand": "rh", "melody": "sgb-f",
+      "title": { "ru": "Sweet Georgia Brown над басом", "en": "Sweet Georgia Brown over the bass" },
+      "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
+    },
     "lick-k1": { "kind": "lick", "lick": "k1", "keys": ["F", "Bb"], "pattern": "s2" },
     "lick-k2": { "kind": "lick", "lick": "k2", "keys": ["F", "Bb"], "pattern": "s2" },
     "lick-k3": { "kind": "lick", "lick": "k3", "keys": ["F", "Bb"], "pattern": "s2" },
@@ -91,6 +108,16 @@
       "kind": "perform", "form": "std-f", "pattern": "s2", "licks": ["k1", "k2"], "melody": "std-f", "choruses": 2,
       "title": { "ru": "Стандарт в F, два круга", "en": "A standard in F, two choruses" },
       "about": { "ru": "Левая играет шелл, правая мелодию: первый круг как написано, второй можно по-своему. Запись остаётся.", "en": "The left hand plays the shell, the right hand the tune: the first chorus as written, the second your own way. The recording stays." }
+    },
+    "perf-bbb": {
+      "kind": "perform", "form": "bbb-g", "pattern": "s2", "melody": "bbb-g", "licks": [], "choruses": 2,
+      "title": { "ru": "Bye Bye Blackbird, два круга", "en": "Bye Bye Blackbird, two choruses" },
+      "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
+    },
+    "perf-sgb": {
+      "kind": "perform", "form": "sgb-f", "pattern": "s2", "melody": "sgb-f", "licks": [], "choruses": 2,
+      "title": { "ru": "Sweet Georgia Brown, два круга", "en": "Sweet Georgia Brown, two choruses" },
+      "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     }
   }
 }
