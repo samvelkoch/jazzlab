@@ -61,7 +61,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, bac
   const beatSeg = seg([['drums', t('drums')], ['click', t('metronome')]], settings.impBeat, (v) => { settings.impBeat = v; store.set('settings', { ...store.get('settings', {}), impBeat: v }); }, 'backing');
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => (st.playing ? stop() : play()) });
-  const footer = h('footer.actions', null, modeSeg, swingSeg, beatSeg, tempoBox, footHint, h('div.grow'), primary);
+  const footer = h('footer.actions', null, h('div.footsegs', null, modeSeg, swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.formscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
 

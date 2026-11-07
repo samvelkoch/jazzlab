@@ -71,7 +71,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
   }, 'backing');
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => (st.playing ? stop() : play()) });
-  const footer = h('footer.actions', null, swingSeg, beatSeg, tempoBox, footHint, h('div.grow'), primary);
+  const footer = h('footer.actions', null, h('div.footsegs', null, swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.impscreen', null, header, h('main.ex.imp', null, h('div.improw', null, panel, aside), kbPanel), footer);
   root.replaceChildren(screen);
 
