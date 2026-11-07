@@ -6,6 +6,7 @@
 // the same MIDI notes in the same order. Pickups are ignored: a phrase is exactly its bars.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -178,7 +179,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     const memory = st.stage === 'memory';
     openBtn.style.display = memory ? 'none' : '';
     allBtn.className = 'btn lickopen ' + (memory ? 'accent xl' : 'ghost');
-    linkText.textContent = memory ? t('mlL_memory') : L(melody.about);
+    linkText.replaceChildren(markTerms(memory ? t('mlL_memory') : L(melody.about)));
     paintCounts();
   }
   function startHint() { return t('mlStartHint').replace(/\{n\}/g, `${nb} ${plural(nb, 'mlBarsW')}`); }

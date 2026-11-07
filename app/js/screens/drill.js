@@ -2,6 +2,7 @@
 // "Play C7"), the piano (or the on-screen keyboard) answers, we count accuracy and time per task.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { toMidi, noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -52,7 +53,7 @@ export function renderDrill(root, { track, itemId, item, back }) {
   const panel = h('section.panel.drillpanel', null,
     h('div.staffhead', null, prog, timer, h('div.grow'), fbEl),
     card, summary,
-    h('p.muted.dabout', null, L(item.about)));
+    h('p.muted.dabout', null, markTerms(L(item.about))));
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => (st.running ? stop() : start()) });
