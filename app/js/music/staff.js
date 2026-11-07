@@ -67,7 +67,7 @@ function extents(e) {
   const ac = accCols(e.notes).n;
   let left = ac ? HEAD + ACC_GAP + ac * ACC_COL - 1.5 : HEAD;
   if (e.grace) left = Math.max(left, graceOff(e) + (accOf(e.grace) ? GRACE_K * (HEAD + ACC_GAP + ACC_W) : 4.2));
-  const right = e.d === 3 || e.d === 6 ? 13 : HEAD;
+  const right = e.d === 3 || e.d === 5 || e.d === 6 ? 13 : HEAD;
   return { left, right };
 }
 /** Note name with a larger ♯/♭ (body fonts draw them tiny). */
@@ -92,7 +92,7 @@ function layout(ex, names, fam) {
   ex.bars.forEach((bar, bi) => {
     const onset = new Array(per).fill(false), at = { rh: [], lh: [] };
     ['rh', 'lh'].forEach((h) => {
-      bar[h].forEach((e) => { onset[e.t] = true; at[h][e.t] = e; });
+      bar[h].forEach((e) => { onset[e.t] = true; at[h][e.t] = e; if (e.d === 5 && e.t + 3 < per) onset[e.t + 3] = true; }); // 5 = dotted quarter tied to a quarter: room for the second head
       restsFor(bar[h], per).forEach((r) => { onset[r.t] = true; if (r.d === 1) at[h][r.t] = { rest: true }; });
     });
     const row = [];
@@ -181,12 +181,21 @@ export function createStaff(svg, ex, opts = {}) {
           e.notes.forEach((n, k) => {
             const y = ys[k];
             if (accOf(n)) s += accSVG(accOf(n), x, y, ac[k]);
-            s += d >= 4
+            s += d >= 4 && d !== 5
               ? `<ellipse cx="${x}" cy="${y}" rx="6.3" ry="4.4" transform="rotate(-20 ${x} ${y})" fill="none" stroke="currentColor" stroke-width="1.8"/>`
               : `<ellipse cx="${x}" cy="${y}" rx="6.3" ry="4.6" transform="rotate(-20 ${x} ${y})" fill="currentColor"/>`;
-            if (d === 3 || d === 6) s += `<circle cx="${x + 11}" cy="${y - 2}" r="1.9" fill="currentColor"/>`;
+            if (d === 3 || d === 5 || d === 6) s += `<circle cx="${x + 11}" cy="${y - 2}" r="1.9" fill="currentColor"/>`;
           });
           if (d < 8) s += `<line stroke="currentColor" stroke-width="1.4" x1="${sxx}" x2="${sxx}" y1="${up ? Math.max(...ys) : Math.min(...ys)}" y2="${end}"/>`;
+          if (d === 5) { // the tied quarter: head + stem three eighths later, a tie on the side away from the stem
+            const x2 = xOf(bi, e.t + 3), sx2 = up ? x2 + 5.6 : x2 - 5.6;
+            ys.forEach((y) => {
+              s += `<ellipse cx="${x2}" cy="${y}" rx="6.3" ry="4.6" transform="rotate(-20 ${x2} ${y})" fill="currentColor"/>`;
+              const ty = up ? y + 7 : y - 7, bow = up ? 6 : -6;
+              s += `<path fill="currentColor" d="M${x + 6} ${ty} Q${(x + x2) / 2} ${ty + bow} ${x2 - 6} ${ty} Q${(x + x2) / 2} ${ty + bow * 0.6} ${x + 6} ${ty} z"/>`;
+            });
+            s += `<line stroke="currentColor" stroke-width="1.4" x1="${sx2}" x2="${sx2}" y1="${up ? Math.max(...ys) : Math.min(...ys)}" y2="${end}"/>`;
+          }
           if (g.length === 1 && d === 1) s += up ? `<path fill="currentColor" d="M${sxx} ${end} q2 9 9 14 q3 4 0 12 q1 -9 -9 -14 z"/>` : `<path fill="currentColor" d="M${sxx} ${end} q2 -9 9 -14 q3 -4 0 -12 q1 9 -9 14 z"/>`;
           const ay = up ? Math.max(...ys) + 11 : Math.min(...ys) - 11;
           if (e.stac) s += `<circle cx="${x}" cy="${ay}" r="1.9" fill="currentColor"/>`;

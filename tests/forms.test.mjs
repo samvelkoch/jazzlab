@@ -4,6 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
+import { parsePattern } from '../app/js/music/rhythm.js';
 import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -197,3 +198,49 @@ assert.equal(fitDeg(4, parseChord('Dm7')), 3); assert.equal(fitDeg(10, parseChor
 assert.deepEqual(patternBar(p3, 'Dm7 G7').map((e) => e.m), [50, 53, 60, 43, 47, 53], 'Dm7: D3 F3 C4, G7: G2 B2 F3');
 assert.deepEqual(normalize(patternExercise(p3, ['Dm7'], { id: 'z' })).bars[0].lh[1].notes, ['F3', 'C4']);
 console.log('ok: fitDeg');
+
+// ---------- bossa: dotted bass cell, flat spelling, the 16-bar Blue Bossa ----------
+const b1 = read('content/patterns/b1.json'), b2 = read('content/patterns/b2.json'), bb = read('content/forms/blue-bossa.json');
+const lhOf = (pat, bars, opts = {}) => normalize(patternExercise(pat, bars, { id: 'bz', ...opts })).bars.map((b) => b.lh.map((e) => [e.t, e.d, e.notes.join(' '), e.f[0]]));
+assert.deepEqual(lhOf(b1, ['Cm7'])[0], [[0, 3, 'C3', 5], [3, 5, 'G3', 1]]);
+assert.deepEqual(lhOf(b2, ['Dm7b5'])[0].map((e) => e[2]), ['D3', 'Ab3', 'D3'], 'the b5 of m7b5 is a flat');
+assert.deepEqual(lhOf(b2, ['Dm7b5'])[0].map((e) => [e[0], e[1]]), [[0, 3], [3, 3], [6, 2]]);
+assert.deepEqual(lhOf(b2, ['Dbmaj7'], { flats: true })[0].map((e) => e[2]), ['Db3', 'Ab3', 'Db3']);
+assert.deepEqual(lhOf(b1, ['Ebm7', 'Ab7', 'G7'], { flats: bb.flats }).map((b) => b.map((e) => e[2])), [['Eb3', 'Bb3'], ['Ab2', 'Eb3'], ['G2', 'D3']]);
+assert.deepEqual(lhOf(b1, ['C7'], { flats: true })[0].map((e) => e[2]), ['C3', 'G3']);
+assert.equal(normalize(patternExercise(b1, bb.practice, { id: 'bp', swing: false, flats: true })).rhythm, '4. 4.~4');
+assert.deepEqual(parsePattern(b1.rhythm).map((e) => [e.t, e.d]), b1.events.map((e) => [e.t, e.d]), 'b1 rhythm line matches its events');
+assert.deepEqual(parsePattern(b2.rhythm).map((e) => [e.t, e.d]), b2.events.map((e) => [e.t, e.d]), 'b2 rhythm line matches its events');
+assert.equal(bb.id, 'blue-bossa'); assert.equal(bb.style, 'bossa'); assert.equal(bb.swing, false); assert.equal(bb.flats, true);
+assert.equal(bb.bars.length, 16);
+bb.bars.forEach((b) => assert.ok(barChords(b).length >= 1));
+assert.deepEqual(barChords(bb.bars[15]), ['Dm7b5', 'G7']);
+assert.deepEqual(bb.patterns, ['b1', 'b2']);
+bb.practice.forEach((c) => parseChord(c));
+// every bar unfolds into a valid exercise with both patterns
+[b1, b2].forEach((pat) => assert.equal(normalize(patternExercise(pat, bb.bars, { id: 'bf', flats: true })).bars.length, 16));
+assert.deepEqual(patternBar(b2, 'Dm7b5 G7').map((e) => [e.t, e.m]), [[0, 50], [3, 56], [6, 43]], 'the last bar: D, Ab, then G for the G7');
+assert.equal(parseChord('Dbmaj7').root, 'Db'); assert.equal(parseChord('Dbmaj7').qual, 'maj7');
+assert.equal(parseChord('Ebm7').qual, 'm7'); assert.equal(parseChord('Dm7b5').root, 'D'); assert.equal(parseChord('Dm7b5').qual, 'm7b5');
+assert.deepEqual(chordNames('Dm7b5'), ['D', 'F', 'Ab', 'C']);
+assert.deepEqual(chordNames('Ebm7'), ['Eb', 'Gb', 'Bb', 'Db']);
+assert.deepEqual(chordNames('Ab7'), ['Ab', 'C', 'Eb', 'Gb']);
+assert.deepEqual(chordNames('Dbmaj7'), ['Db', 'F', 'Ab', 'C']);
+assert.deepEqual(chordNames('Cm7'), ['C', 'Eb', 'G', 'Bb']);
+assert.deepEqual(chordNames('Fm7'), ['F', 'Ab', 'C', 'Eb']);
+assert.deepEqual(chordNames('G7'), ['G', 'B', 'D', 'F']);
+assert.deepEqual(chordNames('A7'), ['A', 'C#', 'E', 'G'], 'sharp keys keep their sharps');
+// the bossa track: items resolve to existing content, ids do not collide with the blues
+const bt = read('content/tracks/bossa.json'), blt = read('content/tracks/blues.json');
+assert.equal(bt.id, 'bossa');
+const order = bt.sections.flatMap((x) => x.items);
+assert.deepEqual(order.slice().sort(), Object.keys(bt.items).sort(), 'every item is in a section');
+order.forEach((id) => assert.ok(!(id in blt.items), 'item id collides with the blues: ' + id));
+Object.values(bt.items).forEach((it) => {
+  if (it.form) assert.equal(read(`content/forms/${it.form}.json`).id, it.form);
+  if (it.pattern) assert.equal(read(`content/patterns/${it.pattern}.json`).id, it.pattern);
+  if (it.kind === 'drill') it.tasks.forEach((tk) => (tk.chords || []).forEach((c) => chordNames(c)));
+});
+assert.ok(!Object.values(bt.items).some((it) => it.kind === 'diag'));
+assert.equal(read('content/index.json').courses.find((c) => c.id === 'bossa').ready, true);
+console.log('ok: bossa');

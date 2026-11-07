@@ -4,18 +4,18 @@ import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './
 import { midiState, onMidiState, connect } from './music/midi.js';
 import { sessionNext, sessionAdvance, endSession } from './store.js';
 
-// Item screens register how to link to an item id (set by main.js once the track is loaded).
-let linkOf = () => null;
-export function setItemLinks(fn) { linkOf = fn; }
+// Item screens register how to link to an item id and which track they belong to (set by main.js once the track is loaded).
+let linkOf = () => null, linkTrack = null;
+export function setItemLinks(fn, track = null) { linkOf = fn; linkTrack = track; }
 export const itemHref = (id) => linkOf(id);
 
 /** "Next →" chip for the one-tap session; empty when no session is running or this is the last item. */
 export function sessionChip(currentId) {
-  const nx = sessionNext(currentId);
+  const nx = sessionNext(currentId, linkTrack);
   if (!nx) return null;
   const link = linkOf(nx.id);
   if (!link) return null;
-  return h('a.chip.session', { href: link.href, title: link.title, onclick: () => sessionAdvance(currentId) },
+  return h('a.chip.session', { href: link.href, title: link.title, onclick: () => sessionAdvance(currentId, linkTrack) },
     h('span', null, h('span.sn', null, `${t('nextW')} `), `${nx.at + 1}/${nx.total}`, h('span.st', null, `: ${link.title}`)), h('b', null, '→'));
 }
 export { endSession };

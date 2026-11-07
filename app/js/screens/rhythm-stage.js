@@ -4,7 +4,7 @@
 import { h, ICON } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { store, exProgress, markActive, idle } from '../store.js';
-import { parsePattern, patternRhythm } from '../music/rhythm.js';
+import { parsePattern, patternRhythm, lenToken } from '../music/rhythm.js';
 import { renderRhythmNotation } from '../music/rhythmnote.js';
 import * as audio from '../music/audio.js';
 import { silence } from '../music/midi.js';
@@ -319,12 +319,19 @@ export function createRhythmStage(ex, io) {
   };
 }
 
-/** Exercises without a rhythm line: the first bar's merged rhythm. */
+/** Exercises without a rhythm line: the first bar's merged rhythm (dotted and tied lengths kept: 4., 4.~4, 2.). */
 function fallbackPattern(ex) {
   const b = ex.bars[0], on = new Map();
   [...b.rh, ...b.lh].forEach((e) => on.set(e.t, Math.max(on.get(e.t) || 0, e.d)));
-  const out = []; let tt = 0;
-  [...on.keys()].sort((a, c) => a - c).forEach((s) => { if (s > tt) out.push(s - tt === 2 ? 'r4' : 'r8'); const next = [...on.keys()].filter((x) => x > s).sort((a, c) => a - c)[0] ?? ex.per; const d = Math.min(on.get(s), next - s); out.push(d >= 4 ? '2' : d >= 2 ? '4' : '8'); tt = s + (d >= 4 ? 4 : d >= 2 ? 2 : 1); });
-  while (tt < ex.per) { out.push(ex.per - tt >= 2 ? 'r4' : 'r8'); tt += ex.per - tt >= 2 ? 2 : 1; }
+  const slots = [...on.keys()].sort((a, c) => a - c), out = [];
+  const rest = (from, to) => { let s = from; while (s < to) { const d = s % 2 === 0 && to - s >= 2 ? 2 : 1; out.push(d === 2 ? 'r4' : 'r8'); s += d; } };
+  let tt = 0;
+  slots.forEach((s, k) => {
+    rest(tt, s);
+    const next = k + 1 < slots.length ? slots[k + 1] : ex.per;
+    const d = Math.max(1, Math.min(on.get(s), next - s));
+    out.push(lenToken(d)); tt = s + d;
+  });
+  rest(tt, ex.per);
   return out.join(' ');
 }

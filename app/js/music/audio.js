@@ -120,7 +120,7 @@ export function click(t, strong) {
   o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.05);
 }
 
-// ---------- drums (synthesised, no samples): ride, hi-hat foot "chick", soft kick, rim ----------
+// ---------- drums (synthesised, no samples): ride, hi-hat foot "chick", soft kick, rim, shaker ----------
 let noiseBuf = null;
 function noise() {
   if (noiseBuf) return noiseBuf;
@@ -134,7 +134,7 @@ function noiseHit(t, { type, freq, q = 1, gain, decay, len }) {
   g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
   src.connect(f); f.connect(g); g.connect(bus); src.start(t, Math.random()); src.stop(t + len);
 }
-/** kind: 'ride' | 'hat' | 'kick' | 'rim'; vel 0..1 */
+/** kind: 'ride' | 'hat' | 'kick' | 'rim' | 'shaker'; vel 0..1 */
 export function drum(kind, t, vel = 0.7) {
   if (!ac) return;
   if (kind === 'ride') {
@@ -150,6 +150,8 @@ export function drum(kind, t, vel = 0.7) {
     o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
     g.gain.setValueAtTime(0.5 * vel, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
     o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.32);
+  } else if (kind === 'shaker') { // soft, short, brighter than the hat foot
+    noiseHit(t, { type: 'highpass', freq: 7000, q: 0.7, gain: 0.07 * vel, decay: 0.045, len: 0.08 });
   } else if (kind === 'rim') {
     noiseHit(t, { type: 'bandpass', freq: 1800, q: 4, gain: 0.25 * vel, decay: 0.05, len: 0.08 });
   }

@@ -84,7 +84,7 @@ const DICT = {
     // form
     formUpper: 'ФОРМА', fPlay: 'Играю', fListen: 'Слушаю', fListenHint: 'Левая звучит сама: слушай и смотри на клавиши', fPlayHint: 'Играй левую по кругу под барабаны', fPlayHintScreen: 'Без пианино: левая звучит как подсказка, нажимай на экране',
     chorusW: 'Круг', cleanChoruses: 'чистые круги подряд', slipsW: 'промахов', fPassed: 'Три чистых круга. Ты играешь блюз!', fPassedAgain: 'Повтор зачтён',
-    fSoFar: 'Пока', fCleanOf: 'чистых из', fStart: 'Нажми «Старт»: отсчёт 1 такт, потом 12 тактов по кругу',
+    fSoFar: 'Пока', fCleanOf: 'чистых из', fStart: 'Нажми «Старт»: отсчёт 1 такт, потом {n} тактов по кругу',
     fPlayHintRh: 'Играй лик правой, левая звучит сама', fPlayHintScreenRh: 'Без пианино: лик звучит как подсказка, нажимай на экране', fListenHintRh: 'Лик и левая звучат сами: слушай и смотри на клавиши',
     // licks
     kind_ear: 'Слух', kind_lick: 'Лик', lickUpper: 'ЛИК', lickW: 'лик', questionW: 'вопрос', answerW: 'ответ', qaChip: 'Вопрос и ответ', lkChord: 'Аккорд',
@@ -200,7 +200,7 @@ const DICT = {
     drillHintMidi: 'Play on the piano. No staff needed.', drillHintScreen: 'Tap the keys on screen or connect your piano',
     formUpper: 'FORM', fPlay: 'I play', fListen: 'Listen', fListenHint: 'The left hand plays itself: listen and watch the keys', fPlayHint: 'Play the left hand around the form with the drums', fPlayHintScreen: 'No piano: the left hand sounds as a guide, tap on screen',
     chorusW: 'Chorus', cleanChoruses: 'clean choruses in a row', slipsW: 'slips', fPassed: 'Three clean choruses. You are playing the blues!', fPassedAgain: 'Review passed',
-    fSoFar: 'So far', fCleanOf: 'clean of', fStart: 'Press Start: a 1-bar count-in, then 12 bars on a loop',
+    fSoFar: 'So far', fCleanOf: 'clean of', fStart: 'Press Start: a 1-bar count-in, then {n} bars on a loop',
     fPlayHintRh: 'Play the lick with your right hand; the left hand plays itself', fPlayHintScreenRh: 'No piano: the lick sounds as a guide, tap on screen', fListenHintRh: 'The lick and the left hand play themselves: listen and watch the keys',
     kind_ear: 'Ear', kind_lick: 'Lick', lickUpper: 'LICK', lickW: 'lick', questionW: 'question', answerW: 'answer', qaChip: 'Question and answer', lkChord: 'Chord',
     lk_echo: 'Echo', lk_fingers: 'Fingers', lk_memory: 'By heart',

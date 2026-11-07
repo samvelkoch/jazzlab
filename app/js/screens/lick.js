@@ -237,7 +237,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
       if (k === 0 && slot === 0) enqueue({ t: time - 0.02, phrase: true });
       if (k === 2 && slot === 0) { exp = []; enqueue({ t: time - 0.12, youStart: bar }); }
       // backing: drums or metronome + the left-hand pattern, quietly
-      if (settings.impBeat === 'drums') groove(slot, time, st.swing); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, style: form.style, bar }); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
       lhBar.filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
       const evs = notes.filter((e) => e.t === ls);
       if (k < 2) evs.forEach((e) => play1(e.m, time, e.stac ? Math.min(swingOff() * 0.6, 0.2) : swingOff() * e.d * 0.95, 0.55));

@@ -38,16 +38,29 @@ export function barRhythm(ex, b, lang = 'ru', system = 'food') {
   return { per, onsets, rests, kinds };
 }
 
-/** Parse a rhythm line like "8 8 4 r8 8 4." or "2 2" (half notes) into one bar of events: [{ t, d, rest }]. */
+/**
+ * Parse a rhythm line like "8 8 4 r8 8 4." or "2 2" (half notes) into one bar of events: [{ t, d, rest }].
+ * Lengths: 8 = eighth (1 slot), 4 = quarter (2), 2 = half (4); a dot adds half (4. = 3, 2. = 6);
+ * "~" ties lengths into one note (4.~4 = 5: a dotted quarter tied to a quarter, the bossa bass cell).
+ */
 export function parsePattern(str) {
   const out = []; let t = 0;
   str.trim().split(/\s+/).forEach((tok) => {
-    const m = /^(r?)(2|4|8)(\.?)$/.exec(tok);
+    const m = /^(r?)((?:2|4|8)\.?(?:~(?:2|4|8)\.?)*)$/.exec(tok);
     if (!m) throw new Error('Bad rhythm token: ' + tok);
-    const d = (m[2] === '2' ? 4 : m[2] === '4' ? 2 : 1) * (m[3] ? 1.5 : 1);
+    const d = m[2].split('~').reduce((a, p) => a + (p[0] === '2' ? 4 : p[0] === '4' ? 2 : 1) * (p.length > 1 ? 1.5 : 1), 0);
     out.push({ t, d, rest: !!m[1] }); t += d;
   });
   return out;
+}
+
+/** A note length in eighths as a rhythm token (inverse of parsePattern): 3 -> "4.", 5 -> "4.~4", 6 -> "2.". */
+export function lenToken(d) {
+  const T = { 1: '8', 2: '4', 3: '4.', 4: '2', 5: '4.~4', 6: '2.', 7: '2.~8', 8: '2~2' };
+  if (T[d]) return T[d];
+  const parts = []; let left = d;
+  for (const [n, tok] of [[6, '2.'], [4, '2'], [3, '4.'], [2, '4'], [1, '8']]) while (left >= n) { parts.push(tok); left -= n; }
+  return parts.join('~');
 }
 
 /** Same as barRhythm, for a rhythm line instead of an exercise bar. */

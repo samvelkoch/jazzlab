@@ -34,11 +34,11 @@ export async function renderTrack(root, { model, index, rerender }) {
   const longCount = order.filter((id) => longTerm(rev[id])).length;
   const diagList = store.get('diag', []), lastDiag = diagList[0] || null;
   const diagId = order.find((id) => items[id].kind === 'diag');
-  let cur = session();
+  let cur = session(track.id);
   // a session whose items are all passed (and none due again) is over
   const due = new Set(dueReviews());
-  if (cur && cur.ids.every((id) => !items[id] || (isDone(prog[id]) && !due.has(id) && !q.diag.includes(id)))) { endSession(); cur = null; }
-  const curNext = cur ? sessionNext(null) : null;
+  if (cur && cur.ids.every((id) => !items[id] || (isDone(prog[id]) && !due.has(id) && !q.diag.includes(id)))) { endSession(track.id); cur = null; }
+  const curNext = cur ? sessionNext(null, track.id) : null;
 
   const header = h('header.top', null,
     h('div.brand', { role: 'img', 'aria-label': 'Jazzlab' }, h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
@@ -47,7 +47,7 @@ export async function renderTrack(root, { model, index, rerender }) {
 
   const tabs = h('div.seg.big', { role: 'tablist', 'aria-label': t('courses') },
     ...index.courses.map((c) => h(c.ready ? 'a' : 'button', {
-      href: c.ready ? (c.id === track.id ? '#/' : c.kind === 'course' ? '#/riffs' : `#/track/${c.id}`) : null,
+      href: c.ready ? (c.id === 'blues' ? '#/' : c.kind === 'course' ? '#/riffs' : `#/track/${c.id}`) : null,
       type: c.ready ? null : 'button', role: 'tab', 'aria-selected': String(c.id === track.id), disabled: !c.ready, title: c.ready ? null : t('soon')
     }, L(c.title), c.ready ? null : h('small', null, ' · ' + t('soon')))));
 
@@ -94,13 +94,13 @@ export async function renderTrack(root, { model, index, rerender }) {
   const startBtn = q.ids.length ? h('a.btn.accent.xl', {
     href: (curNext && items[curNext.id] ? items[curNext.id].href : items[q.ids[0]].href),
     html: ICON.play + `<span>${cur && curNext ? t('continueSession') : t('startSession')}</span>`,
-    onclick: () => { if (!(cur && curNext)) startSession(q.ids); }
+    onclick: () => { if (!(cur && curNext)) startSession(q.ids, track.id); }
   }) : null;
   const todayCard = h('section.hero', null,
     h('span.kicker', null, t('today')),
     q.ids.length ? todayList : h('span.herotitle', null, t('nothingToday')),
     startBtn,
-    cur && curNext ? h('button.btn.ghost', { type: 'button', onclick: () => { endSession(); rerender(); } }, t('endSession')) : null);
+    cur && curNext ? h('button.btn.ghost', { type: 'button', onclick: () => { endSession(track.id); rerender(); } }, t('endSession')) : null);
 
   const stats = h('section.panel.stats.two', null,
     h('div', null, h('b', null, String(doneCount), h('small', null, '/' + order.length)), h('span', null, t('itemsDone'))),
@@ -120,7 +120,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     row(t('skEar'), lastDiag && num(lastDiag.earAcc) ? diagFmt.pct(lastDiag.earAcc) : '—'),
     row(t('skChords'), lastDiag && num(lastDiag.chordAcc) ? diagFmt.pct(lastDiag.chordAcc) : '—'),
     !lastDiag && diagId ? h('a.sklink', { href: items[diagId].href }, t('skDoCheck') + ' →') : null,
-    row(t('skLicks'), `${lickDone}/${lickIds.length}`),
+    lickIds.length ? row(t('skLicks'), `${lickDone}/${lickIds.length}`) : null,
     row(t('skChoruses'), String(cleanRounds)),
     row(t('skRecs'), String(store.get('recordings', []).length)),
     row(t('longTermW'), String(longCount)));
