@@ -1,10 +1,13 @@
 // Appearance: palette ("scheme") + light / dark. Palettes live in app/css/app.css.
 import { store } from './store.js';
 
+// [page colour (also <meta name="theme-color">), accent, second swatch] per scheme and theme.
 export const SCHEMES = {
   bossa: { light: ['#f3efe6', '#0f766e', '#1f5fbf'], dark: ['#0f1514', '#2dd4bf', '#7aa7f5'] },
-  studio: { light: ['#eef0f4', '#c25e0a', '#2563c9'], dark: ['#12141a', '#f39a45', '#6aa0f5'] },
-  club: { light: ['#e9ecf2', '#1e3a6e', '#2f5fd0'], dark: ['#0a1120', '#e6b85c', '#7aa7ff'] }
+  studio: { light: ['#eef0f4', '#ad4f08', '#2563c9'], dark: ['#12141a', '#f39a45', '#6aa0f5'] },
+  club: { light: ['#f1ebdf', '#8a5a0a', '#b3261e'], dark: ['#131211', '#dca845', '#ff6a52'] },
+  bluenote: { light: ['#f3eee0', '#b4460a', '#0f2a52'], dark: ['#0a1830', '#ff8b3d', '#86b4ff'] },
+  vinyl: { light: ['#efe3c6', '#8e1c34', '#1a1411'], dark: ['#0e0c0b', '#e0627a', '#f3e8d0'] }
 };
 export function currentTheme() {
   const saved = store.get('theme', null);

@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="app/css/app.css">
 <script>
   // apply the saved theme before first paint (no flash)
-  try { var th = JSON.parse(localStorage.getItem('jazzlab:theme')); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th; var sc = JSON.parse(localStorage.getItem('jazzlab:scheme')); if (sc === 'studio' || sc === 'club' || sc === 'bossa') document.documentElement.dataset.scheme = sc; } catch (e) {}
+  try { var th = JSON.parse(localStorage.getItem('jazzlab:theme')); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th; var sc = JSON.parse(localStorage.getItem('jazzlab:scheme')); if (/^[a-z]+$/.test(sc)) document.documentElement.dataset.scheme = sc; } catch (e) {}
 </script>
 <script type="module" src="app/js/main.js"></script>
 </head>

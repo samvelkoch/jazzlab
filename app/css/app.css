@@ -1,11 +1,14 @@
-/* Jazzlab — palette "Босса" (sand + sea green), light and dark. */
+/* Jazzlab palettes. Every scheme defines the same tokens for light and dark (checked for WCAG AA):
+   "bossa" (default, sand + sea green), "studio", "club", "bluenote", "vinyl".
+   --cta: the accent button on the dark hero card; --lbl: key labels on ivory; --vignette: faint stage light on body (dark only). */
 :root {
   --bg: #f3efe6; --panel: #fffdf8; --sub: #e9e3d6; --fg: #1f2421; --muted: #59605a; --line: #e0d9cb;
-  --accent: #0f766e; --accent-fg: #ffffff; --hero: #0f4f4a; --hero-fg: #ffffff;
+  --accent: #0f766e; --accent-fg: #ffffff; --hero: #0f4f4a; --hero-fg: #ffffff; --cta: #2dd4bf; --cta-fg: #0b1413;
   --rh: #1f5fbf; --rh-soft: #dce6f6; --lh: #c2410c; --lh-soft: #f7dccb;
-  --ok: #15803d; --ok-soft: #dcf0e1; --meh: #9a5b00; --meh-soft: #f6e7c8; --bad: #be123c; --bad-soft: #fbe0e6; --none: #e0d9cb;
+  --ok: #137a38; --ok-soft: #dcf0e1; --meh: #935700; --meh-soft: #f6e7c8; --bad: #be123c; --bad-soft: #fbe0e6; --none: #e0d9cb;
   --paper: #fffdf8; --staff: #7a7f78; --band: rgba(31, 95, 191, .12);
-  --ivory: #fffdf6; --ivory-edge: #cfc8b8; --ebony: #1f2421; --ebony-top: #3b403d;
+  --ivory: #fffdf6; --ivory-edge: #cfc8b8; --ebony: #1f2421; --ebony-top: #3b403d; --lbl: #5f655e;
+  --vignette: none; --on: #ffffff; /* text on solid ok / bad / hand-colour fills */
   --shadow: 0 1px 3px rgba(31, 36, 33, .14);
   --display: "Unbounded", "Arial Black", system-ui, sans-serif;
   --body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -14,57 +17,101 @@
 }
 :root[data-theme="dark"] {
   --bg: #0f1514; --panel: #171f1e; --sub: #212b2a; --fg: #ebefe9; --muted: #a3aca6; --line: #2b3634;
-  --accent: #2dd4bf; --accent-fg: #0b1413; --hero: #163a37; --hero-fg: #ffffff;
+  --accent: #2dd4bf; --accent-fg: #0b1413; --hero: #163a37; --hero-fg: #ffffff; --cta: #2dd4bf; --cta-fg: #0b1413;
   --rh: #7aa7f5; --rh-soft: #213a5e; --lh: #fb8a4c; --lh-soft: #57301a;
   --ok: #4ade80; --ok-soft: #14331f; --meh: #eab308; --meh-soft: #40351a; --bad: #fb7185; --bad-soft: #4a1d27; --none: #2f3a38;
   --paper: #131a19; --staff: #85908b; --band: rgba(122, 167, 245, .16);
-  --ivory: #e9e6dc; --ivory-edge: #8d8a80; --ebony: #070a0a; --ebony-top: #2a302e;
+  --ivory: #e9e6dc; --ivory-edge: #8d8a80; --ebony: #070a0a; --ebony-top: #2a302e; --lbl: #5f655e;
+  --vignette: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(45, 212, 191, .07), transparent 75%);
+  --on: var(--bg);
   --shadow: 0 1px 3px rgba(0, 0, 0, .45);
   color-scheme: dark;
 }
 
-/* ---- other palettes: "Студия" (graphite + orange) and "Клуб" (navy + brass) ---- */
+/* ---- "Студия" (graphite + orange) ---- */
 :root[data-scheme="studio"]:not([data-theme="dark"]) {
   --bg: #eef0f4; --panel: #ffffff; --sub: #e4e7ed; --fg: #191c25; --muted: #596072; --line: #d6dae3;
-  --accent: #c25e0a; --accent-fg: #ffffff; --hero: #232836; --hero-fg: #ffffff;
+  --accent: #ad4f08; --accent-fg: #ffffff; --hero: #232836; --hero-fg: #ffffff; --cta: #f39a45; --cta-fg: #12141a;
   --rh: #2563c9; --rh-soft: #dbe6fa; --lh: #b4520a; --lh-soft: #f8e0c4;
-  --ok: #15803d; --ok-soft: #dff2e5; --meh: #a86200; --meh-soft: #fbecd0; --bad: #c81e24; --bad-soft: #fbe1e2; --none: #d6dae3;
+  --ok: #137a38; --ok-soft: #dff2e5; --meh: #8f5700; --meh-soft: #fbecd0; --bad: #c81e24; --bad-soft: #fbe1e2; --none: #d6dae3;
   --paper: #ffffff; --staff: #7b8190; --band: rgba(37, 99, 201, .12);
-  --ivory: #ffffff; --ivory-edge: #c9ced8; --ebony: #191c25; --ebony-top: #3a3f4c;
+  --ivory: #ffffff; --ivory-edge: #c9ced8; --ebony: #191c25; --ebony-top: #3a3f4c; --lbl: #5f6575;
 }
 :root[data-scheme="studio"][data-theme="dark"] {
   --bg: #12141a; --panel: #1b1e26; --sub: #252935; --fg: #e8eaf0; --muted: #a0a7b6; --line: #2e3340;
-  --accent: #f39a45; --accent-fg: #12141a; --hero: #262b38; --hero-fg: #ffffff;
+  --accent: #f39a45; --accent-fg: #12141a; --hero: #262b38; --hero-fg: #ffffff; --cta: #f39a45; --cta-fg: #12141a;
   --rh: #6aa0f5; --rh-soft: #1d2b45; --lh: #f0a050; --lh-soft: #5a3a1a;
-  --ok: #45c46f; --ok-soft: #173826; --meh: #e9ad40; --meh-soft: #45351a; --bad: #f26166; --bad-soft: #4a1d22; --none: #343a48;
+  --ok: #45c46f; --ok-soft: #173826; --meh: #e9ad40; --meh-soft: #45351a; --bad: #f26166; --bad-soft: #45191e; --none: #343a48;
   --paper: #161921; --staff: #8a91a1; --band: rgba(106, 160, 245, .16);
-  --ivory: #e6e8ee; --ivory-edge: #8a8f9c; --ebony: #08090c; --ebony-top: #2b2f3a;
+  --ivory: #e6e8ee; --ivory-edge: #8a8f9c; --ebony: #08090c; --ebony-top: #2b2f3a; --lbl: #5f6575;
+  --vignette: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(243, 154, 69, .06), transparent 75%);
 }
+/* ---- "Клуб" (charcoal, brass, red neon; cream by day) ---- */
 :root[data-scheme="club"]:not([data-theme="dark"]) {
-  --bg: #e9ecf2; --panel: #ffffff; --sub: #dde2eb; --fg: #0f1a2e; --muted: #4f5b73; --line: #cfd6e2;
-  --accent: #1e3a6e; --accent-fg: #ffffff; --hero: #0f1a2e; --hero-fg: #f3d58a;
-  --rh: #2f5fd0; --rh-soft: #dbe4f8; --lh: #b5591d; --lh-soft: #f3dcc8;
-  --ok: #167a3e; --ok-soft: #ddf0e3; --meh: #9a6300; --meh-soft: #f7e9cc; --bad: #c0262d; --bad-soft: #f8dfe0; --none: #cfd6e2;
-  --paper: #ffffff; --staff: #75809a; --band: rgba(47, 95, 208, .12);
-  --ivory: #ffffff; --ivory-edge: #c3cbd9; --ebony: #0f1a2e; --ebony-top: #2c3a57;
+  --bg: #f1ebdf; --panel: #fffaf0; --sub: #e7dfcf; --fg: #211c16; --muted: #5d5448; --line: #dcd2bd;
+  --accent: #8a5a0a; --accent-fg: #ffffff; --hero: #231a16; --hero-fg: #ecc374; --cta: #dca845; --cta-fg: #17110a;
+  --rh: #2b6a82; --rh-soft: #d9e7ec; --lh: #b3261e; --lh-soft: #f6d9d3;
+  --ok: #3f6f1c; --ok-soft: #e0ecd3; --meh: #8a5a00; --meh-soft: #f4e4bf; --bad: #b3123a; --bad-soft: #f8dbe1; --none: #dcd2bd;
+  --paper: #fffaf0; --staff: #7d756a; --band: rgba(43, 106, 130, .12);
+  --ivory: #fffaf0; --ivory-edge: #cbc0a8; --ebony: #211c16; --ebony-top: #403931; --lbl: #5f574b;
+  --bassc: #6b6a66;
 }
 :root[data-scheme="club"][data-theme="dark"] {
-  --bg: #0a1120; --panel: #111a2d; --sub: #1a2540; --fg: #eef1f7; --muted: #9aa6bd; --line: #24314a;
-  --accent: #e6b85c; --accent-fg: #0a1120; --hero: #16223b; --hero-fg: #f3d58a;
-  --rh: #7aa7ff; --rh-soft: #15233f; --lh: #f2a65e; --lh-soft: #4d3218;
-  --ok: #4cc77a; --ok-soft: #14331f; --meh: #ecb24a; --meh-soft: #41321a; --bad: #ff6b6b; --bad-soft: #4a1d24; --none: #26324b;
-  --paper: #0d1526; --staff: #8693ad; --band: rgba(122, 167, 255, .16);
-  --ivory: #e8ebf2; --ivory-edge: #8790a3; --ebony: #04070e; --ebony-top: #212c45;
+  --bg: #131211; --panel: #1c1a18; --sub: #282521; --fg: #f0eadf; --muted: #aca295; --line: #37322b;
+  --accent: #dca845; --accent-fg: #17110a; --hero: #34161a; --hero-fg: #f5dca3; --cta: #dca845; --cta-fg: #17110a;
+  --rh: #86b6c9; --rh-soft: #1f3039; --lh: #ff6a52; --lh-soft: #4d1f1a;
+  --ok: #86c86a; --ok-soft: #20301a; --meh: #e8b83a; --meh-soft: #40341a; --bad: #ff5470; --bad-soft: #4a1a26; --none: #34302a;
+  --paper: #171513; --staff: #8f877a; --band: rgba(134, 182, 201, .15);
+  --ivory: #e8e2d4; --ivory-edge: #8a857a; --ebony: #070605; --ebony-top: #2a2723; --lbl: #5c574d;
+  --bassc: #a8a39a; --vignette: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(255, 90, 70, .09), transparent 75%);
+}
+/* ---- "Blue Note" (navy, off-white, orange) ---- */
+:root[data-scheme="bluenote"]:not([data-theme="dark"]) {
+  --bg: #f3eee0; --panel: #fffcf3; --sub: #e8e1cd; --fg: #0c1b36; --muted: #4a5873; --line: #dad2bc;
+  --accent: #b4460a; --accent-fg: #ffffff; --hero: #0f2a52; --hero-fg: #f6f1e3; --cta: #ff8b3d; --cta-fg: #0a1830;
+  --rh: #1e55b3; --rh-soft: #dbe4f4; --lh: #a3410c; --lh-soft: #f4dcc3;
+  --ok: #17704a; --ok-soft: #d9eee2; --meh: #8f5700; --meh-soft: #f4e5c3; --bad: #b4162f; --bad-soft: #f8dde0; --none: #dad2bc;
+  --paper: #fffcf3; --staff: #77809a; --band: rgba(30, 85, 179, .12);
+  --ivory: #fffcf3; --ivory-edge: #c9c0a8; --ebony: #0c1b36; --ebony-top: #2c3d5e; --lbl: #5a6279;
+  --bassc: #5f6878;
+}
+:root[data-scheme="bluenote"][data-theme="dark"] {
+  --bg: #0a1830; --panel: #10223f; --sub: #192e52; --fg: #f4efe2; --muted: #a8b6d0; --line: #25395e;
+  --accent: #ff8b3d; --accent-fg: #0a1830; --hero: #173a70; --hero-fg: #f6f1e3; --cta: #ff8b3d; --cta-fg: #0a1830;
+  --rh: #86b4ff; --rh-soft: #1b3560; --lh: #f2c14e; --lh-soft: #4a3a14;
+  --ok: #4fd18b; --ok-soft: #123a2a; --meh: #f0b429; --meh-soft: #44361a; --bad: #ff6b7d; --bad-soft: #4a1c2a; --none: #2a3d62;
+  --paper: #0d1b34; --staff: #8493b1; --band: rgba(134, 180, 255, .16);
+  --ivory: #ece6d6; --ivory-edge: #8a8a82; --ebony: #050b17; --ebony-top: #1f2f4f; --lbl: #5a6279;
+  --vignette: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(42, 98, 184, .2), transparent 75%);
+}
+/* ---- "Винил" (black, cream label, burgundy) ---- */
+:root[data-scheme="vinyl"]:not([data-theme="dark"]) {
+  --bg: #efe3c6; --panel: #f9f0dc; --sub: #e4d6b4; --fg: #1c1411; --muted: #5c4d40; --line: #d8c9a4;
+  --accent: #8e1c34; --accent-fg: #ffffff; --hero: #1a1411; --hero-fg: #f1e3c0; --cta: #e8728a; --cta-fg: #1a0c10;
+  --rh: #2f5d8a; --rh-soft: #d5dfe6; --lh: #a64a0c; --lh-soft: #f1d5b5;
+  --ok: #2f6b3a; --ok-soft: #d9e7cc; --meh: #8a5800; --meh-soft: #f1dfae; --bad: #b82a1a; --bad-soft: #f6d6cd; --none: #d8c9a4;
+  --paper: #f9f0dc; --staff: #7d7060; --band: rgba(47, 93, 138, .12);
+  --ivory: #f9f0dc; --ivory-edge: #c9b98f; --ebony: #1c1411; --ebony-top: #3d322b; --lbl: #5f523f;
+  --bassc: #6b6862;
+}
+:root[data-scheme="vinyl"][data-theme="dark"] {
+  --bg: #0e0c0b; --panel: #181513; --sub: #231f1b; --fg: #f3e8d0; --muted: #b2a68f; --line: #322c26;
+  --accent: #e0627a; --accent-fg: #1a0c10; --hero: #5c1526; --hero-fg: #f6e8c9; --cta: #f08aa0; --cta-fg: #1a0c10;
+  --rh: #8fb4d8; --rh-soft: #1d2e40; --lh: #e8a05a; --lh-soft: #4a2f16;
+  --ok: #7cc08a; --ok-soft: #1b3222; --meh: #e3b341; --meh-soft: #3f3318; --bad: #ff7a59; --bad-soft: #4a2018; --none: #332d26;
+  --paper: #14110f; --staff: #8e8576; --band: rgba(143, 180, 216, .15);
+  --ivory: #efe3c8; --ivory-edge: #8b826d; --ebony: #060504; --ebony-top: #2a2420; --lbl: #5e5545;
+  --bassc: #aaa497; --vignette: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(192, 64, 96, .10), transparent 75%);
 }
 .schemes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .schemes button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border-radius: 12px; border: 2px solid var(--line); background: var(--panel); cursor: pointer; font-weight: 700; font-size: 13px; min-height: 44px; }
 .schemes button[aria-pressed="true"] { border-color: var(--accent); }
-.schemes .sw3 { display: flex; } .schemes .sw3 i { width: 18px; height: 18px; border-radius: 50%; margin-left: -5px; border: 2px solid var(--panel); }
+.schemes .sw3 { display: flex; } .schemes .sw3 i { width: 18px; height: 18px; border-radius: 50%; margin-left: -5px; border: 2px solid var(--panel); box-shadow: 0 0 0 1px rgba(128, 128, 128, .4); }
 .schemes .sw3 i:first-child { margin-left: 0; }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
-body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--body); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg) var(--vignette) no-repeat; color: var(--fg); font: 15px/1.5 var(--body); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
 button, input, select { font: inherit; color: inherit; }
 a { color: inherit; }
 h1 { font: 700 24px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
@@ -154,6 +201,7 @@ a.stepcard:hover { border-color: var(--accent); }
 .hero .kicker { color: inherit; opacity: .75; }
 .herotitle { font: 700 21px/1.25 var(--display); }
 .hero .btn { margin-top: 6px; }
+.hero .btn.accent { background: var(--cta); color: var(--cta-fg); border-color: var(--cta); }
 .stats { padding: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; text-align: center; }
 .stats div { display: flex; flex-direction: column; }
 .stats b { font: 700 20px var(--display); }
@@ -213,12 +261,12 @@ svg.staff { width: 100%; height: 100%; display: block; }
   display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 8px; gap: 6px; z-index: 1; }
 .black { position: absolute; top: 0; height: 60%; background: linear-gradient(var(--ebony-top), var(--ebony) 18%); border-radius: 0 0 6px 6px; z-index: 2;
   display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 6px; gap: 4px; box-shadow: 0 2px 3px rgba(0,0,0,.35); }
-.lbl { font-size: 11px; font-weight: 700; color: #6b6f68; line-height: 1.1; text-align: center; }
+.lbl { font-size: 11px; font-weight: 700; color: var(--lbl); line-height: 1.1; text-align: center; }
 .black .lbl { display: none; }
 .mid::after { content: ""; position: absolute; left: 50%; bottom: -8px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--muted); }
 .badge:empty { display: none; }
 .key .badge { width: 30px; height: 30px; border-radius: 50%; display: none; align-items: center; justify-content: center; padding: 0;
-  font: 700 15px var(--display); color: #fff; background: transparent; }
+  font: 700 15px var(--display); color: var(--on); background: transparent; }
 .key.on-r { background: var(--rh-soft); } .key.on-l { background: var(--lh-soft); }
 .black.on-r { background: var(--rh); } .black.on-l { background: var(--lh); }
 .key.on-r .badge:not(:empty) { display: flex; background: var(--rh); } .key.on-l .badge:not(:empty) { display: flex; background: var(--lh); }
@@ -807,8 +855,8 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 .padpanel { flex: none; padding: 12px 16px; flex-direction: column; }
 .anspanel { flex: none; padding: 12px 16px; gap: 10px; }
 .diagbtn { flex: 1 1 0; justify-content: center; min-height: 72px; }
-.diagbtn.ok { background: var(--ok); color: #fff; border-color: transparent; }
-.diagbtn.bad { background: var(--bad); color: #fff; border-color: transparent; }
+.diagbtn.ok { background: var(--ok); color: var(--on); border-color: transparent; }
+.diagbtn.bad { background: var(--bad); color: var(--on); border-color: transparent; }
 .diagbtn:disabled:not(.ok):not(.bad) { opacity: .55; }
 
 .stats.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
