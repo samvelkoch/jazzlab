@@ -1,0 +1,404 @@
+{
+ "$format": "jazzlab-melody/1",
+ "id": "tinroof-c",
+ "title": {
+  "ru": "Tin Roof Blues (припев)",
+  "en": "Tin Roof Blues (chorus)"
+ },
+ "about": {
+  "ru": "Припев Tin Roof Blues (New Orleans Rhythm Kings, 1923) по лид-шиту, перенесён из Eb в C. Двенадцать тактов, медленный блюз.",
+  "en": "The chorus of Tin Roof Blues (New Orleans Rhythm Kings, 1923) from a lead sheet, moved from Eb to C. Twelve bars, a slow blues."
+ },
+ "source": "OpenEWLD (Wikifonia) MusicXML, public domain; chorus bars 14-25, transposed -3",
+ "form": "tinroof-c",
+ "tempo": 66,
+ "swing": true,
+ "phrases": [
+  [
+   0,
+   1
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   6,
+   7
+  ],
+  [
+   8,
+   9
+  ],
+  [
+   10,
+   11
+  ]
+ ],
+ "bars": [
+  {
+   "chord": "C",
+   "rh": [
+    {
+     "t": 0,
+     "d": 1,
+     "n": "G4",
+     "f": 3
+    },
+    {
+     "t": 1,
+     "d": 1,
+     "n": "Gb4",
+     "f": 3
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "F4",
+     "f": 2
+    },
+    {
+     "t": 3,
+     "d": 1,
+     "n": "E4",
+     "f": 1
+    },
+    {
+     "t": 4,
+     "d": 1,
+     "n": "G4",
+     "f": 3
+    },
+    {
+     "t": 5,
+     "d": 3,
+     "n": "A4",
+     "f": 4
+    }
+   ]
+  },
+  {
+   "chord": "C",
+   "rh": [
+    {
+     "t": 0,
+     "d": 2,
+     "n": "C5",
+     "f": 5
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "E4",
+     "f": 1
+    },
+    {
+     "t": 3,
+     "d": 5,
+     "n": "G4",
+     "f": 3
+    }
+   ]
+  },
+  {
+   "chord": "C",
+   "rh": [
+    {
+     "t": 0,
+     "d": 1,
+     "n": "G4",
+     "f": 3
+    },
+    {
+     "t": 1,
+     "d": 1,
+     "n": "Gb4",
+     "f": 2
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "F4",
+     "f": 2
+    },
+    {
+     "t": 3,
+     "d": 1,
+     "n": "E4",
+     "f": 1
+    },
+    {
+     "t": 4,
+     "d": 1,
+     "n": "G4",
+     "f": 3
+    },
+    {
+     "t": 5,
+     "d": 3,
+     "n": "A4",
+     "f": 3
+    }
+   ]
+  },
+  {
+   "chord": "C7",
+   "rh": [
+    {
+     "t": 0,
+     "d": 2,
+     "n": "C5",
+     "f": 5
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "B4",
+     "f": 4
+    },
+    {
+     "t": 3,
+     "d": 5,
+     "n": "Bb4",
+     "f": 4
+    }
+   ]
+  },
+  {
+   "chord": "F",
+   "rh": [
+    {
+     "t": 0,
+     "d": 1,
+     "n": "C5",
+     "f": 5
+    },
+    {
+     "t": 1,
+     "d": 1,
+     "n": "B4",
+     "f": 4
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "Bb4",
+     "f": 4
+    },
+    {
+     "t": 3,
+     "d": 1,
+     "n": "A4",
+     "f": 3
+    },
+    {
+     "t": 4,
+     "d": 1,
+     "n": "C4",
+     "f": 1
+    },
+    {
+     "t": 5,
+     "d": 3,
+     "n": "D4",
+     "f": 2
+    }
+   ]
+  },
+  {
+   "chord": "F7",
+   "rh": [
+    {
+     "t": 0,
+     "d": 1,
+     "n": "Eb4",
+     "f": 2
+    },
+    {
+     "t": 1,
+     "d": 2,
+     "n": "F4",
+     "f": 3
+    },
+    {
+     "t": 3,
+     "d": 5,
+     "n": "C4",
+     "f": 1
+    }
+   ]
+  },
+  {
+   "chord": "C",
+   "rh": [
+    {
+     "t": 0,
+     "d": 1,
+     "n": "G4",
+     "f": 3
+    },
+    {
+     "t": 1,
+     "d": 1,
+     "n": "Gb4",
+     "f": 3
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "F4",
+     "f": 2
+    },
+    {
+     "t": 3,
+     "d": 1,
+     "n": "E4",
+     "f": 1
+    },
+    {
+     "t": 4,
+     "d": 1,
+     "n": "G4",
+     "f": 3
+    },
+    {
+     "t": 5,
+     "d": 3,
+     "n": "A4",
+     "f": 4
+    }
+   ]
+  },
+  {
+   "chord": "A7",
+   "rh": [
+    {
+     "t": 0,
+     "d": 2,
+     "n": "Db5",
+     "f": 5
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "E4",
+     "f": 1
+    },
+    {
+     "t": 3,
+     "d": 5,
+     "n": "A4",
+     "f": 4
+    }
+   ]
+  },
+  {
+   "chord": "D7",
+   "rh": [
+    {
+     "t": 0,
+     "d": 8,
+     "n": "C5",
+     "f": 5
+    }
+   ]
+  },
+  {
+   "chord": "G7",
+   "rh": [
+    {
+     "t": 0,
+     "d": 1,
+     "n": "C5",
+     "tie": true,
+     "f": 5
+    },
+    {
+     "t": 1,
+     "d": 1,
+     "n": "Eb4",
+     "f": 1
+    },
+    {
+     "t": 2,
+     "d": 1,
+     "n": "Eb4",
+     "f": 1
+    },
+    {
+     "t": 3,
+     "d": 1,
+     "n": "E4",
+     "f": 2
+    },
+    {
+     "t": 4,
+     "d": 2,
+     "n": "G4",
+     "f": 4
+    },
+    {
+     "t": 6,
+     "d": 2,
+     "n": "E4",
+     "f": 2
+    }
+   ]
+  },
+  {
+   "chord": "C",
+   "rh": [
+    {
+     "t": 0,
+     "d": 8,
+     "n": "C4",
+     "f": 1
+    }
+   ]
+  },
+  {
+   "chord": "C G7",
+   "rh": [
+    {
+     "t": 0,
+     "d": 2,
+     "n": "C4",
+     "tie": true,
+     "f": 1
+    },
+    {
+     "t": 6,
+     "d": 2,
+     "n": "Gb4",
+     "f": 5
+    }
+   ]
+  }
+ ],
+ "notes": [
+  "kept bars 14-25 of the score",
+  "bar 1: Bb4 at 0.00 len 1.50 quantised to t0 d1",
+  "bar 1: A4 at 1.50 len 0.50 quantised to t1 d1",
+  "bar 1: Ab4 at 2.00 len 1.50 quantised to t2 d1",
+  "bar 1: G4 at 3.50 len 0.50 quantised to t3 d1",
+  "bar 3: Bb4 at 0.00 len 1.50 quantised to t0 d1",
+  "bar 3: A4 at 1.50 len 0.50 quantised to t1 d1",
+  "bar 3: Ab4 at 2.00 len 1.50 quantised to t2 d1",
+  "bar 3: G4 at 3.50 len 0.50 quantised to t3 d1",
+  "bar 5: Eb5 at 0.00 len 1.50 quantised to t0 d1",
+  "bar 5: D5 at 1.50 len 0.50 quantised to t1 d1",
+  "bar 5: Db5 at 2.00 len 1.50 quantised to t2 d1",
+  "bar 5: C5 at 3.50 len 0.50 quantised to t3 d1",
+  "bar 7: Bb4 at 0.00 len 1.50 quantised to t0 d1",
+  "bar 7: A4 at 1.50 len 0.50 quantised to t1 d1",
+  "bar 7: Ab4 at 2.00 len 1.50 quantised to t2 d1",
+  "bar 7: G4 at 3.50 len 0.50 quantised to t3 d1",
+  "bar 11: 2 chords in beats 1-2, kept Eb",
+  "transposed by -3 semitones; spelling re-derived (flats)",
+  "fingers are automatic (rank of the note within its 2-bar phrase), check them"
+ ]
+}

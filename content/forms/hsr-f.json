@@ -1,0 +1,59 @@
+{
+ "$format": "jazzlab-form/1",
+ "id": "hsr-f",
+ "title": {
+  "ru": "Honeysuckle Rose",
+  "en": "Honeysuckle Rose"
+ },
+ "about": {
+  "ru": "32 тактов, гармония из лид-шита.",
+  "en": "32 bars, the changes from the lead sheet."
+ },
+ "bars": [
+  "Gm7 C7",
+  "Gm7 C7",
+  "Gm7 C7",
+  "Gm7 C7",
+  "F Dm7",
+  "Gm7 C7",
+  "F6",
+  "Am7",
+  "Gm7 C7",
+  "Gm7 C7",
+  "Gm7 C7",
+  "Gm7 C7",
+  "F Dm7",
+  "Gm7 C7",
+  "Am7",
+  "F6",
+  "F6",
+  "F7",
+  "F7",
+  "Bb6",
+  "Bb6",
+  "G7",
+  "G7",
+  "C9",
+  "C7",
+  "Gm7 C7",
+  "Abm7 Db7",
+  "Gm7 C7",
+  "Gm7 C7",
+  "F Dm7",
+  "Gm7 C7",
+  "F6"
+ ],
+ "practice": [
+  "Gm7 C7",
+  "F",
+  "F7",
+  "Bb"
+ ],
+ "patterns": [
+  "s1",
+  "s2"
+ ],
+ "tempo": 66,
+ "swing": true,
+ "flats": true
+}
