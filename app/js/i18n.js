@@ -95,6 +95,14 @@ const DICT = {
     lkF_echo: 'Нота должна совпасть точно, в той же октаве. Ритм важнее: сначала поймай его.', lkF_link: 'Упражнение откроется на выбранном аккорде.',
     lkOpen: 'Открыть упражнение на {c}', lkCleanReps: 'чистые повторы', lkEchoGoal: '3 чистых повтора на каждом аккорде', lkEchoDone: 'Эхо пройдено на всех аккордах. Теперь «Пальцы» →',
     lkAllChords: 'Ещё на других аккордах: {c}', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты',
+    // perform
+    kind_perform: 'Выступление', perfUpper: 'ВЫСТУПЛЕНИЕ', perfEnding: 'Концовка', perfLeft: 'Левая', perfRight: 'Правая', perfOwn: 'или что хочешь',
+    perfChoruses: 'Круги', perfPlayback: 'Прослушать', perfDownload: 'Скачать MIDI', perfDelete: 'Удалить', perfRecords: 'Записи', perfNoRecords: 'Пока нет записей. Сыграй, и запись появится здесь.',
+    perfStart: 'Нажми «Старт»: отсчёт 1 такт, кругов: {n}, и такт концовки. Всё, что сыграешь, записывается.',
+    perfHint: 'Играй обеими руками: запись идёт с пианино', perfHintScreen: 'Без пианино: нажимай клавиши на экране, они тоже записываются',
+    perfTooShort: 'Меньше одного круга: запись не сохранена', perfEmpty: 'Ни одной ноты: запись не сохранена', perfSaved: 'Запись сохранена', perfPlaying: 'Играет запись',
+    perfNotesW: 'нота|ноты|нот', perfChorusesW: 'круг|круга|кругов', perfPctW: 'в точку', perfSplitW: 'в точку · рядом · мимо', perfAvgW: 'мс отклонение в среднем',
+    perfRecs: 'запись|записи|записей', perfBest: 'лучшая',
    navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
   },
   en: {
@@ -186,6 +194,14 @@ const DICT = {
     lkF_echo: 'The note has to match exactly, same octave. Rhythm first: catch it before the notes.', lkF_link: 'The exercise opens on the chosen chord.',
     lkOpen: 'Open the exercise on {c}', lkCleanReps: 'clean repeats', lkEchoGoal: '3 clean repeats on every chord', lkEchoDone: 'Echo done on every chord. Now “Fingers” →',
     lkAllChords: 'Now on the other chords: {c}', lkPassed: 'Lick learned', lkStartHint: 'Press Start: a 1-bar count-in, then 2 bars piano, 2 bars you',
+    // perform
+    kind_perform: 'Performance', perfUpper: 'PERFORMANCE', perfEnding: 'Ending', perfLeft: 'Left', perfRight: 'Right', perfOwn: 'or whatever you like',
+    perfChoruses: 'Choruses', perfPlayback: 'Listen back', perfDownload: 'Download MIDI', perfDelete: 'Delete', perfRecords: 'Recordings', perfNoRecords: 'No recordings yet. Play, and the recording shows up here.',
+    perfStart: 'Press Start: a 1-bar count-in, {n} choruses and one ending bar. Everything you play is recorded.',
+    perfHint: 'Play with both hands: recording from the piano', perfHintScreen: 'No piano: tap the on-screen keys, they are recorded too',
+    perfTooShort: 'Less than one chorus: not saved', perfEmpty: 'Not a single note: not saved', perfSaved: 'Recording saved', perfPlaying: 'Playing the recording',
+    perfNotesW: 'note|notes', perfChorusesW: 'chorus|choruses', perfPctW: 'on the grid', perfSplitW: 'on · near · off', perfAvgW: 'ms average deviation',
+    perfRecs: 'recording|recordings', perfBest: 'best',
    navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
   }
 };
@@ -198,3 +214,10 @@ export const t = (key) => (DICT[lang] && DICT[lang][key]) || DICT.ru[key] || key
 /** Pick a localized content string: {ru, en} or plain string. */
 export const L = (v) => (v && typeof v === 'object' ? v[lang] || v.ru || v.en || '' : v || '');
 document.documentElement.lang = lang;
+/** Count word from a 'one|few|many' (ru) or 'one|other' (en) dictionary entry. */
+export function plural(n, key) {
+  const f = t(key).split('|');
+  if (lang !== 'ru') return f[n === 1 ? 0 : 1] || f[0];
+  const d = n % 10, dd = n % 100;
+  return f[d === 1 && dd !== 11 ? 0 : d >= 2 && d <= 4 && (dd < 12 || dd > 14) ? 1 : 2] || f[0];
+}

@@ -28,6 +28,11 @@
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
       "about": { "ru": "Две-три минуты в день. Слух это навык, он растёт от повторов.", "en": "Two or three minutes a day. The ear is a skill; it grows with repetition." },
       "items": ["ear-find"]
+    },
+    {
+      "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
+      "about": { "ru": "Весь блюз обеими руками под барабаны. Это не упражнение, а результат: запись остаётся, её можно послушать и сохранить.", "en": "The whole blues with both hands over drums. Not an exercise but a result: the recording stays, you can listen to it and save it." },
+      "items": ["perf-blues"]
     }
   ],
   "items": {
@@ -74,6 +79,11 @@
     "lick-l2": { "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1" },
     "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1" },
     "form-rh-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1", "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" } },
-    "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } }
+    "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } },
+    "perf-blues": {
+      "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3"], "choruses": 3,
+      "title": { "ru": "Блюз в C, три круга", "en": "Blues in C, three choruses" },
+      "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ» и «Три удара», или что хочешь. Отсчёт, три круга, такт концовки.", "en": "Left: root and fifth. Right: the «Answer» and «Three hits» licks, or whatever you like. Count-in, three choruses, one ending bar." }
+    }
   }
 }

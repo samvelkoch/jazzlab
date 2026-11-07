@@ -1,6 +1,6 @@
 // Track screen (the home screen): "Today" with the one-tap session, the track's sections and items, stats.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
-import { t, L } from '../i18n.js';
+import { t, L, plural } from '../i18n.js';
 import { progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
 const fmtTime = (sec) => { const m = Math.round(sec / 60); return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`; };
@@ -53,6 +53,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'ear' && typeof p.best === 'number') return `${Math.round(p.best * 100)}%`;
     if (it.kind === 'form' && p.choruses) return `${p.cleanChoruses || 0} ${t('fCleanOf')} ${p.choruses} · ${t('bestStreak')} ${p.bestStreak || 0}`;
     if (it.kind === 'lick' && p.echo && !isDone(p)) { const v = Object.entries(p.echo).map(([c, n]) => `${c} ${Math.min(n, 3)}/3`).join(' · '); return v ? `${t('lk_echo')}: ${v}` : ''; }
+    if (it.kind === 'perform' && p.runs) return `${p.runs} ${plural(p.runs, 'perfRecs')} · ${t('perfBest')} ${p.bestPct || 0}%`;
     if (it.kind === 'pattern' && p.stages) { const n = ['rhythm', 'notes', 'tempo', 'memory'].filter((s) => p.stages[s]).length; return n ? `${t('stagesW')} ${n}/4` : ''; }
     return '';
   };

@@ -1,6 +1,6 @@
 // Boot + hash router.
 //   #/              blues track (home)      #/track/<id>   another track
-//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | form | lick
+//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | form | lick | perform
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
 //   #/riffs         the book course         #/ex/<id>, #/imp/<step>  its exercises and improvisation
 import { applyTheme, currentTheme } from './theme.js';
@@ -17,6 +17,7 @@ import { renderDrill } from './screens/drill.js';
 import { renderEar } from './screens/ear.js';
 import { renderForm } from './screens/form.js';
 import { renderLick } from './screens/lick.js';
+import { renderPerform } from './screens/perform.js';
 import { renderChordsHub, renderDecoder, renderKeys, renderLesson, renderPractice } from './screens/chords.js';
 import { compExercise } from './music/chord-ex.js';
 
@@ -50,7 +51,7 @@ async function trackModel(id) {
   if (models[id]) return models[id];
   const track = await get(`tracks/${id}.json`);
   const formIds = new Set(), patIds = new Set(), lickIds = new Set();
-  Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); if (it.lick) lickIds.add(it.lick); });
+  Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); if (it.lick) lickIds.add(it.lick); if (Array.isArray(it.licks)) it.licks.forEach((l) => lickIds.add(l)); });
   const forms = {}, patterns = {}, licks = {};
   await Promise.all([
     ...[...formIds].map(async (f) => { forms[f] = await get(`forms/${f}.json`); }),
@@ -129,6 +130,7 @@ async function route() {
       else if (item.kind === 'ear') cleanup = renderEar(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, back });
       else if (item.kind === 'lick') cleanup = renderLick(root, { track: model.track, itemId: item.id, item, lick: model.licks[item.lick], pattern: model.patterns[item.pattern], form: model.forms[item.form], back });
+      else if (item.kind === 'perform') cleanup = renderPerform(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], licks: (item.licks || []).map((l) => model.licks[l]).filter(Boolean), back });
       else if (item.kind === 'pattern') {
         const form = model.forms[item.form], pattern = model.patterns[item.pattern];
         const ex = normalize(patternExercise(pattern, form.practice || form.bars, {
