@@ -5,7 +5,7 @@
   "about": { "ru": "Самый простой мотор левой: корень аккорда на «1», квинта на «3». Мизинец на корне, большой на квинте.", "en": "The simplest left-hand motor: chord root on 1, fifth on 3. Pinky on the root, thumb on the fifth." },
   "tempo": 60,
   "swing": true,
-  "rhythm": "4 4 4 4",
+  "rhythm": "2 2",
   "events": [
     { "t": 0, "d": 4, "deg": 0, "f": 5 },
     { "t": 4, "d": 4, "deg": 7, "f": 1 }

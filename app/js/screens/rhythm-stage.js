@@ -317,7 +317,7 @@ function fallbackPattern(ex) {
   const b = ex.bars[0], on = new Map();
   [...b.rh, ...b.lh].forEach((e) => on.set(e.t, Math.max(on.get(e.t) || 0, e.d)));
   const out = []; let tt = 0;
-  [...on.keys()].sort((a, c) => a - c).forEach((s) => { if (s > tt) out.push(s - tt === 2 ? 'r4' : 'r8'); const next = [...on.keys()].filter((x) => x > s).sort((a, c) => a - c)[0] ?? ex.per; const d = Math.min(on.get(s), next - s); out.push(d >= 2 ? '4' : '8'); tt = s + (d >= 2 ? 2 : 1); });
+  [...on.keys()].sort((a, c) => a - c).forEach((s) => { if (s > tt) out.push(s - tt === 2 ? 'r4' : 'r8'); const next = [...on.keys()].filter((x) => x > s).sort((a, c) => a - c)[0] ?? ex.per; const d = Math.min(on.get(s), next - s); out.push(d >= 4 ? '2' : d >= 2 ? '4' : '8'); tt = s + (d >= 4 ? 4 : d >= 2 ? 2 : 1); });
   while (tt < ex.per) { out.push(ex.per - tt >= 2 ? 'r4' : 'r8'); tt += ex.per - tt >= 2 ? 2 : 1; }
   return out.join(' ');
 }

@@ -5,7 +5,7 @@ import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { toMidi, noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { chordPcs } from '../music/forms.js';
+import { chordPcs, spell } from '../music/forms.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote } from '../music/midi.js';
 
@@ -35,7 +35,9 @@ function makeTasks(item) {
 export function renderDrill(root, { track, itemId, item, back }) {
   const settings = { names: 'en', pianoSnd: true, ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
-  const nm = (pc, oct = 4) => noteName(midiToName(pc + 12 * (oct + 1)), names);
+  // names come from the task spec (Bb stays Bb, not A#); chord tones are spelled with flats (C7 = C E G Bb)
+  const nm = (x) => noteName(x.name + '4', names);
+  const nmFlat = (pc) => noteName(spell(60 + pc, true), names);
   const st = { tasks: [], k: -1, running: false, t0: 0, errors: 0, log: [], held: new Set(), got: new Set() };
   const wasDue = reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date();
 
@@ -80,10 +82,10 @@ export function renderDrill(root, { track, itemId, item, back }) {
     prog.textContent = `${st.k + 1} / ${st.tasks.length}`;
     st.got.clear(); st.errors = 0; st.t0 = performance.now();
     kb.show({ rh: null, lh: null }, { rh: null, lh: null }, 'both');
-    if (x.type === 'note') { promptK.textContent = t('dPlay'); promptB.textContent = nm(x.pc); promptS.textContent = t('dAnyOctave'); }
-    else if (x.type === 'all') { const n = keysOf(x.pc).length; promptK.textContent = t('dAll'); promptB.textContent = nm(x.pc); promptS.textContent = t('dAllSub').replace('{n}', n); }
-    else if (x.type === 'interval') { promptK.textContent = t(INTERVAL_KEY[x.semis] || 'int_up'); promptB.textContent = `${nm(x.pc)} ↑`; promptS.textContent = t('dIntervalSub').replace('{n}', x.semis); kb.show({ rh: { notes: [midiToName(60 + x.pc)], f: [] }, lh: null }, { rh: null, lh: null }, 'both'); }
-    else if (x.type === 'chord') { promptK.textContent = t('dChord'); promptB.textContent = x.name; promptS.textContent = t('dChordSub').replace('{notes}', x.pcs.map((pc) => nm(pc)).join(' · ')); }
+    if (x.type === 'note') { promptK.textContent = t('dPlay'); promptB.textContent = nm(x); promptS.textContent = t('dAnyOctave'); }
+    else if (x.type === 'all') { const n = keysOf(x.pc).length; promptK.textContent = t('dAll'); promptB.textContent = nm(x); promptS.textContent = t('dAllSub').replace('{n}', n); }
+    else if (x.type === 'interval') { promptK.textContent = t(INTERVAL_KEY[x.semis] || 'int_up'); promptB.textContent = `${nm(x)} ↑`; promptS.textContent = t('dIntervalSub').replace('{n}', x.semis); kb.show({ rh: { notes: [midiToName(60 + x.pc)], f: [] }, lh: null }, { rh: null, lh: null }, 'both'); }
+    else if (x.type === 'chord') { promptK.textContent = t('dChord'); promptB.textContent = x.name; promptS.textContent = t('dChordSub').replace('{notes}', x.pcs.map((pc) => nmFlat(pc)).join(' · ')); }
     fb('');
   }
   const keysOf = (pc) => { const out = []; for (let m = LO; m <= HI; m++) if (pcOf(m) === pc) out.push(m); return out; };

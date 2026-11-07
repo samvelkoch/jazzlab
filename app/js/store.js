@@ -47,6 +47,8 @@ export function reviews() { return store.get('review', {}); }
 export function scheduleReview(id, ok, now = new Date()) {
   const all = reviews();
   const cur = all[id] || { n: 0 };
+  // passing again before the due date is practice, not a review: keep the schedule as it is
+  if (ok && cur.due && new Date(cur.due) > now) return cur;
   const n = ok ? Math.min(cur.n + 1, REVIEW_STEPS.length) : 0;
   const days = REVIEW_STEPS[Math.max(0, Math.min(n, REVIEW_STEPS.length) - 1)] || REVIEW_STEPS[0];
   const due = new Date(now); due.setHours(4, 0, 0, 0); due.setDate(due.getDate() + (ok ? days : 1));

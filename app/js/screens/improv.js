@@ -36,7 +36,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
   const stageBtn = (sid, n) => h('button', { type: 'button', 'data-stage': sid, onclick: () => setStage(sid) }, h('span.num', null, String(n)), t('imp_' + sid));
   const stages = h('nav.seg.stages', { 'aria-label': 'stages' }, stageBtn('rhythm', 1), stageBtn('echo', 2), stageBtn('own', 3));
   const header = h('header.top', null,
-    h('a.iconbtn', { href: '#/', 'aria-label': t('back'), title: t('back'), html: ICON.back }),
+    h('a.iconbtn', { href: '#/riffs', 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null,
       h('span.kicker', null, `${t('stepUpper')} ${step.n} · ${t('improv').toUpperCase()}`),
       h('span.title', null, `${t('impNotes')}: ${sorted.map((x) => nn(x.k)).join(', ')}`)),

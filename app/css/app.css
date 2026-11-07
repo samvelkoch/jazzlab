@@ -432,6 +432,7 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .rnote .staffline { stroke: var(--fg); stroke-width: 2; }
 .rnote .tsig { font: 700 24px var(--display); fill: var(--fg); }
 .rnote .fill { fill: var(--fg); } .rnote .stem { stroke: var(--fg); stroke-width: 2.5; }
+.rnote .hollow { fill: none; stroke: var(--fg); stroke-width: 3; } .rnote .rn.now .hollow { stroke: var(--accent); }
 .rnote .glyph { fill: none; stroke: var(--fg); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .rnote .rn.now .fill { fill: var(--accent); } .rnote .rn.now .stem, .rnote .rn.now .glyph { stroke: var(--accent); }
 .rnote .count { font: 500 20px var(--display); fill: var(--muted); text-anchor: middle; }
