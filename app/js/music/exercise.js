@@ -40,7 +40,9 @@ export function normalize(raw) {
     // custom header + back link are for generated exercises (left-hand patterns over a form)
     passAnyTempo: raw.passAnyTempo !== false, kicker: raw.kicker || null, back: raw.back || '#/',
     // generated lick exercises: passing "by heart" marks this track item (the lick) as done
-    doneId: raw.doneId || null
+    doneId: raw.doneId || null,
+    // learned by ear first (a melody phrase's echo): open on the notes, no «rhythm first» nudge
+    byEar: !!raw.byEar
   };
 }
 

@@ -21,13 +21,14 @@ const MAX_RECS = 10;
 const TAP_DUR = 0.3;
 const r3 = (x) => Math.round(x * 1000) / 1000;
 
-export function renderPerform(root, { track, itemId, item, form, pattern, licks, ending, endItem, back }) {
+export function renderPerform(root, { track, itemId, item, form, pattern, licks, ending, endItem, melody, melItem, back }) {
   const settings = { names: 'en', pianoSnd: true, perfBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
   const chords = [...new Set(bars.flatMap(barChords))]; // distinct chords (a bar may hold two: "C7 A7")
   const lhByChord = Object.fromEntries(chords.map((c) => [c, patternBar(pattern, c)]));
-  const rhMidi = licks.flatMap((l) => chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m)));
+  const rhMidi = licks.flatMap((l) => chords.flatMap((c) => lickBars(l, c).flat().map((e) => e.m)))
+    .concat(melody ? melody.bars.flatMap((b) => (b.rh || []).map((e) => toMidi(e.n))) : []); // the keyboard covers the tune too
   const lhMidi = Object.values(lhByChord).flat().map((e) => e.m);
   const END_BARS = ending ? ending.bars.length : 1; // bars after the last chorus
   const endMidi = ending ? ending.bars.flatMap((b) => [...b.rh, ...b.lh].flatMap((e) => e.notes.map(toMidi))) : [];
@@ -50,6 +51,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const strip = h('div.perfstrip', null,
     h('span', null, h('b', null, `${t('perfLeft')}:`), ...chords.map((c) => h('span.pchord', null, `${c} `, h('span.fnotes', null, [...new Map(lhByChord[c].map((e) => [e.m, e])).values()].map((e) => noteName(patSpell(e.m, e.deg, parseChord(c), !!form.flats), names)).join(' · '))))),
     licks.length ? h('span', null, h('b', null, `${t('perfRight')}:`), ` ${licks.map((l) => `«${L(l.title)}»`).join(', ')} ${t('perfOwn')}`) : null,
+    melody ? h('span', null, h('b', null, `${t('perfMelody')}:`), ' ', melItem ? h('a', { href: melItem.href }, `«${L(melody.title)}»`) : `«${L(melody.title)}»`) : null,
     ending ? h('span', null, h('b', null, `${t('perfEnding')}:`), ' ', endItem ? h('a', { href: endItem.href }, `«${L(ending.title)}»`) : `«${L(ending.title)}»`) : null);
   const summary = h('div.dsummary.perfsum');
   const sumActs = h('div.perfacts');

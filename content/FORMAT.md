@@ -82,9 +82,11 @@ all tracks (the bossa ear game is `ear-find-bossa`, not `ear-find`). Each track 
 (`"kind": "track"`, `"ready": true` shows it in the home tabs, opened at `#/track/<id>`; the blues is `#/`).
 
 The bossa track (`content/tracks/bossa.json`): chord drills of Blue Bossa (`d-chords-cm`, `d-chords-db`), the patterns
-`pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), `ear-find-bossa`, and `perf-bossa`
-(2 choruses, no licks, no ending: one ending bar). No check-up item; the home «Навыки» card hides the lick row for a
-track without licks. The melody comes later. Passing an item (drill thresholds, the exercise's «by heart» stage,
+`pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), the melody section (`mel-bossa`, the
+tune `bossa-cm` by echo, and `form-mel`, the tune over the b1 bass on the form screen), `ear-find-bossa`, and `perf-bossa`
+(2 choruses, no licks, `melody: "bossa-cm"` as a reminder, no ending: one ending bar). No check-up item; the home
+«Навыки» card hides the lick row for a track without licks and shows «Фразы мелодии» (phrases with 3 clean echoes) for a
+track with a melody item. Passing an item (drill thresholds, the exercise's «by heart» stage,
 3 clean choruses of a form) schedules a review in 1, 3, 7, 14 then 30 days.
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
@@ -157,6 +159,41 @@ Track items that use licks:
   first bar. The bar labels say «вопрос» / «ответ» (from each lick's `role`). The about comes from the item's `about`.
   Scoring and passing are the same as with one lick.
   `"form-rh-qa": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"], "title", "about" }`
+# Melodies (`jazzlab-melody/1`)
+
+`content/melodies/<id>.json`: a written right-hand tune over one form, in absolute pitches, in the form's key (flats).
+
+```jsonc
+{
+  "$format": "jazzlab-melody/1", "id": "bossa-cm", "title": {…}, "about": {…},
+  "form": "blue-bossa", "tempo": 66, "swing": false,
+  "phrases": [[0, 1], [2, 3]],               // echo chunks: [firstBar, lastBar], 0-based, inclusive
+  "bars": [                                   // one entry per form bar, chord = that form bar (checked by the tests)
+    { "chord": "Cm7", "rh": [ { "t": 0, "d": 2, "n": "G4", "f": 1 } ] }  // t = eighth slot 0..7, d in eighths (t + d ≤ 8),
+  ]                                                                       // n = ONE pitch name, f = finger
+}
+```
+
+A pickup into the next phrase (notes at the end of the previous bar) belongs to the bar it is written in: a phrase is
+exactly its bars. `melodyBarNotes()` / `melodyNotes()` / `melodyExercise()` in `app/js/music/forms.js`. The track loader
+reads a melody when an item has `melody` (and its `form`, even when the item has none).
+
+- `kind: "melody"`: `"mel-bossa": { "kind": "melody", "melody": "bossa-cm", "pattern": "b1" }` opens
+  `app/js/screens/melody.js` (title and about default to the melody's). Echo: a phrase chip per `phrases` entry with its
+  clean count n/3 (default = the first phrase under 3); count-in 1 bar, then the piano plays the phrase (RH = the melody
+  bars, LH = `pattern` over each bar's chord, drums in the form's `style`), then as many bars for you (LH and drums keep
+  going), and so on until Stop. Scoring as the lick echo: every note's onset inside the timing window, the same MIDI
+  notes, nothing extra → a clean repeat. 3 clean repeats of every phrase → `stages.echo`. Progress:
+  `echo: { 0: n, 1: n, … }` (by phrase index), `stages.echo`, `stages.done`.
+- `#/t/<track>/<item>/fingers/<n>` = phrase n as an exercise (id `<item>-p<n>`, RH = the melody, LH = the pattern,
+  straight, `tempo.start` = melody tempo − 10, no `doneId`, `byEar: true` = it opens on Notes, no Rhythm-first nudge); `#/t/<track>/<item>/fingers/all` = all the bars
+  (id `<item>-all`, `doneId` = the item): its «by heart» passes the melody item and schedules its review.
+- `kind: "form"` with `hand: "rh"` and `melody`: you play the tune, bar k of the melody over bar k of the form, the app
+  plays the left-hand `pattern`. The cells show each bar's first note (— for an empty bar). Scoring and passing as with
+  licks: 3 clean choruses, slips by note count.
+  `"form-mel": { "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "melody": "bossa-cm", "title", "about" }`
+- `kind: "perform"` with `melody`: a reminder line «Мелодия: «<title>»» linking to the track's `melody` item for it.
+
 ## Chords mode (`content/chords/lessons.json`, `jazzlab-chords/1`)
 
 The path of the «Аккорды» section. Each lesson: `id`, `n`, `sym` (the example chord, in C), optional `compare`
@@ -171,7 +208,7 @@ slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord
 ## Performance (`kind: "perform"`)
 
 `"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "choruses": 3, "title", "about" }`
-opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
+(optional `melody`: a melody id, shown as a reminder linking to its `melody` item) opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
 `ending`: the drums keep the groove through every ending bar but the last, which gets beat 1 only (blues-end: 2 bars).
 A form without `ending` gets one ending bar, beat 1 only. The reminders link to the track's `exercise` item for the ending. `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
 Every note played is recorded as `{ t, d, m, v }` (`t`, `d` in seconds from the first beat of chorus 1, `v` 0..1).

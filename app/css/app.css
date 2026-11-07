@@ -581,6 +581,11 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .lickscreen[data-lstage="fingers"] footer .seg, .lickscreen[data-lstage="memory"] footer .seg,
 .lickscreen[data-lstage="fingers"] footer .stepper, .lickscreen[data-lstage="memory"] footer .stepper { display: none; }
 .lickscreen .kb { height: clamp(90px, 16dvh, 150px); }
+/* melody: phrase chips carry their clean count */
+.melscreen .lickchords { flex-wrap: wrap; flex: 0 1 auto; max-width: 100%; }
+.melscreen .lickchords small { margin-left: 2px; color: var(--muted); font-weight: 600; font-size: 12px; }
+.melscreen .lickchords button.ok small { color: var(--ok); }
+.melscreen .licklink .btn.ghost { min-height: 40px; }
 .fnotes.rh { color: var(--rh); }
 @media (max-width: 640px) {
   .lickpanel { flex: none; overflow: visible; padding: 12px; }
