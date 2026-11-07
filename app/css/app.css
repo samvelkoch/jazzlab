@@ -345,8 +345,9 @@ footer.actions { flex: none; display: flex; align-items: center; gap: 10px; flex
   header.top .chip span { display: none; }
 }
 @media (max-width: 900px) {
-  main.course { flex-direction: column; }
+  main.course { flex-direction: column; align-items: stretch; }
   .courseside { width: 100%; }
+  .coursemain { width: 100%; }
   .stages button { padding: 0 10px; }
   header.top { flex-wrap: wrap; row-gap: 10px; }
   header.top .chip { max-width: 220px; }
@@ -889,4 +890,8 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   .coursemain > .row .seg.big { flex: 1 1 0; min-width: 0; max-width: none; }
   .coursemain > .row h1 { flex: none; }
   .cycle { flex-wrap: wrap; } .cyc { min-width: 0; flex: 1 1 140px; }
+}
+@media (max-width: 640px) {
+  .seg.big > * { flex: none; }
+  .seg.big small { display: none; }
 }
