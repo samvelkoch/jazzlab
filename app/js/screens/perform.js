@@ -70,7 +70,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const beatSeg = seg([['drums', t('drums')], ['click', t('metronome')]], settings.perfBeat, (v) => { settings.perfBeat = v; store.set('settings', { ...store.get('settings', {}), perfBeat: v }); }, 'backing');
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => toggle() });
-  const footer = h('footer.actions', null, swingSeg, beatSeg, chorusBox, tempoBox, footHint, h('div.grow'), primary);
+  const footer = h('footer.actions', null, form.style === 'bossa' ? null : swingSeg, beatSeg, chorusBox, tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.formscreen.perfscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
 
