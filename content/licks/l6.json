@@ -1,0 +1,21 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "l6",
+  "title": { "ru": "Ответ: синяя терция дрожит", "en": "Answer: the blue third trembles" },
+  "about": { "ru": "Eb–E–Eb–E: так звучит блюз. Потом вверх до Bb и домой на корень.", "en": "Eb–E–Eb–E is the sound of the blues. Then up to Bb and home to the root." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "events": [
+    { "t": 0, "d": 1, "deg": 3, "f": 2 },
+    { "t": 1, "d": 1, "deg": 4, "f": 3 },
+    { "t": 2, "d": 1, "deg": 3, "f": 2 },
+    { "t": 3, "d": 1, "deg": 4, "f": 3 },
+    { "t": 4, "d": 1, "deg": 7, "f": 4 },
+    { "t": 5, "d": 1, "deg": 10, "f": 5 },
+    { "t": 6, "d": 1, "deg": 7, "f": 4 },
+    { "t": 7, "d": 1, "deg": 4, "f": 3 },
+    { "t": 8, "d": 4, "deg": 0, "f": 1, "stac": false }
+  ]
+}

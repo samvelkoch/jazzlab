@@ -118,6 +118,11 @@ Track items that use licks:
   `pattern`). Passing its «by heart» stage passes the lick item and schedules its review.
 - `kind: "form"` with `hand: "rh"` and `lick`: the app always plays the left-hand `pattern`, you play the lick, starting on
   bars 1, 3, 5, … and transposed to the chord of its first bar. Passing is the same: 3 clean choruses.
+- `kind: "form"` with `hand: "rh"` and `licks: [question, answer]` (two lick ids, instead of `lick`): question and answer
+  take turns. The first lick starts on bars 1, 5, 9, the second on bars 3, 7, 11, each transposed to the chord of its
+  first bar. The bar labels say «вопрос» / «ответ» (from each lick's `role`). The about comes from the item's `about`.
+  Scoring and passing are the same as with one lick.
+  `"form-rh-qa": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"], "title", "about" }`
 ## Chords mode (`content/chords/lessons.json`, `jazzlab-chords/1`)
 
 The path of the «Аккорды» section. Each lesson: `id`, `n`, `sym` (the example chord, in C), optional `compare`
@@ -131,7 +136,7 @@ slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord
 
 ## Performance (`kind: "perform"`)
 
-`"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3"], "choruses": 3, "title", "about" }`
+`"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "choruses": 3, "title", "about" }`
 opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
 `ending`: the drums keep the groove through every ending bar but the last, which gets beat 1 only (blues-end: 2 bars).
 A form without `ending` gets one ending bar, beat 1 only. The reminders link to the track's `exercise` item for the ending. `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
