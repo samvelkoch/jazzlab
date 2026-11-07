@@ -103,6 +103,21 @@ const DICT = {
     perfTooShort: 'Меньше одного круга: запись не сохранена', perfEmpty: 'Ни одной ноты: запись не сохранена', perfSaved: 'Запись сохранена', perfPlaying: 'Играет запись',
     perfNotesW: 'нота|ноты|нот', perfChorusesW: 'круг|круга|кругов', perfPctW: 'в точку', perfSplitW: 'в точку · рядом · мимо', perfAvgW: 'мс отклонение в среднем',
     perfRecs: 'запись|записи|записей', perfBest: 'лучшая',
+    // check-up (diag) and the Skills card
+    kind_diag: 'Замер', diagUpper: 'ЗАМЕР', dgStart: 'Начать замер', dgGo: 'Поехали', dgAgain: 'Ещё раз', dgStopW: 'Стоп',
+    dgIdleSub: 'Четыре короткие части, минут десять. Нужны клавиши (на экране или пианино) и звук.', dgLastW: 'Последний замер', dgFirstNote: 'Первый замер: точка отсчёта, не оценка.',
+    dgPart_rhythm: 'Ритм', dgPart_names: 'Ноты', dgPart_ear: 'Слух', dgPart_chords: 'Аккорды',
+    dgIntro_rhythm: 'Четыре щелчка отсчёта, потом ещё 16. Нажимай на каждый щелчок: кнопкой, пробелом или любой клавишей пианино.',
+    dgIntro_names: 'Я называю ноту, ты находишь её на клавишах в любой октаве. 8 заданий, считается время.',
+    dgIntro_ear: 'Звучит нота, ты находишь её на клавишах. 8 раундов, диапазон шире ко второй половине.',
+    dgIntro_chords: 'Звучит аккорд: мажор, минор или доминанта. Ответь кнопкой. 8 раундов.',
+    dgCountIn: 'ОТСЧЁТ', dgListen: 'слушай щелчки', dgTapNow: 'ЖМИ НА ЩЕЛЧОК', dgTapPad: 'Жми на каждый щелчок', dgTapPadSub: 'кнопка, пробел или клавиша пианино',
+    dgChordQ: 'КАКОЙ АККОРД?', dgChordSub: 'мажор, минор или доминанта', dgMajor: 'Мажор', dgMinor: 'Минор', dgDom: 'Доминанта',
+    dgSaved: 'Замер сохранён', dgResRhythm: 'ритм', dgResNames: 'ноты, на задание', dgResEar: 'слух', dgResChords: 'аккорды',
+    dgPrevW: 'прошлый', dgBaseW: 'первый', dgBetter: 'лучше', dgWorse: 'хуже', dgAccW: 'точность', dgHitsW: 'ударов', dgFewHits: 'мало ударов', dgOf: 'из',
+    skillsTitle: 'Навыки', skRhythm: 'Ритм', skNames: 'Ноты', skEar: 'Слух', skChords: 'Аккорды', skLicks: 'Словарь ликов', skChoruses: 'Чистых кругов формы', skRecs: 'Записей выступлений',
+    dgHint: 'Нужны звук и клавиши: на экране или пианино',
+    skDoCheck: 'Сделать замер', skMeasured: 'замер',
    navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
   },
   en: {
@@ -202,6 +217,21 @@ const DICT = {
     perfTooShort: 'Less than one chorus: not saved', perfEmpty: 'Not a single note: not saved', perfSaved: 'Recording saved', perfPlaying: 'Playing the recording',
     perfNotesW: 'note|notes', perfChorusesW: 'chorus|choruses', perfPctW: 'on the grid', perfSplitW: 'on · near · off', perfAvgW: 'ms average deviation',
     perfRecs: 'recording|recordings', perfBest: 'best',
+    // check-up (diag) and the Skills card
+    kind_diag: 'Check-up', diagUpper: 'CHECK-UP', dgStart: 'Start check-up', dgGo: "Let's go", dgAgain: 'Again', dgStopW: 'Stop',
+    dgIdleSub: 'Four short parts, about ten minutes. You need keys (on screen or a piano) and sound.', dgLastW: 'Last check-up', dgFirstNote: 'The first check-up is a baseline, not a grade.',
+    dgPart_rhythm: 'Rhythm', dgPart_names: 'Notes', dgPart_ear: 'Ear', dgPart_chords: 'Chords',
+    dgIntro_rhythm: 'Four count-in clicks, then 16 more. Tap on every click: the button, the space bar or any piano key.',
+    dgIntro_names: 'I name a note, you find it on the keys in any octave. 8 tasks, timed.',
+    dgIntro_ear: 'A note sounds, you find it on the keys. 8 rounds, the range widens in the second half.',
+    dgIntro_chords: 'A chord sounds: major, minor or dominant. Answer with a button. 8 rounds.',
+    dgCountIn: 'COUNT-IN', dgListen: 'listen to the clicks', dgTapNow: 'TAP ON THE CLICK', dgTapPad: 'Tap on every click', dgTapPadSub: 'button, space bar or a piano key',
+    dgChordQ: 'WHICH CHORD?', dgChordSub: 'major, minor or dominant', dgMajor: 'Major', dgMinor: 'Minor', dgDom: 'Dominant',
+    dgSaved: 'Check-up saved', dgResRhythm: 'rhythm', dgResNames: 'notes, per task', dgResEar: 'ear', dgResChords: 'chords',
+    dgPrevW: 'last', dgBaseW: 'first', dgBetter: 'better', dgWorse: 'worse', dgAccW: 'accuracy', dgHitsW: 'taps', dgFewHits: 'too few taps', dgOf: 'of',
+    skillsTitle: 'Skills', skRhythm: 'Rhythm', skNames: 'Notes', skEar: 'Ear', skChords: 'Chords', skLicks: 'Lick vocabulary', skChoruses: 'Clean choruses', skRecs: 'Performance recordings',
+    dgHint: 'You need sound and keys: on screen or a piano',
+    skDoCheck: 'Take the check-up', skMeasured: 'check-up',
    navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
   }
 };

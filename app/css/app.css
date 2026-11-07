@@ -776,3 +776,44 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   .perfsum .dstat { min-width: 0; flex: 1 1 40%; }
   .perfacts .btn span { display: inline; }
 }
+
+/* ---------- check-up (diag) and the Skills card ---------- */
+.diagscreen .kbpanel, .diagscreen .padpanel, .diagscreen .anspanel { display: none; }
+.diagscreen[data-input="keys"] .kbpanel { display: block; }
+.diagscreen[data-input="pad"] .padpanel, .diagscreen[data-input="ans"] .anspanel { display: flex; }
+.diagscreen .dprompt.small { font-size: clamp(32px, 6dvh, 52px); }
+.diagscreen .dsub { max-width: 560px; }
+.diagstrip { display: flex; gap: 6px; }
+.diagstrip i { flex: 1 1 0; height: 6px; border-radius: 3px; background: var(--sub); }
+.diagstrip i.done { background: var(--accent); opacity: .55; } .diagstrip i.cur { background: var(--accent); }
+.diagsum { flex-wrap: wrap; }
+.diagsum .dstat { flex: 1 1 130px; text-align: center; gap: 2px; }
+.diagsum .dstat b { display: flex; align-items: baseline; gap: 6px; }
+.diagsum .dref { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.darrow { font-size: 16px; font-weight: 800; }
+.darrow.up { color: var(--ok); } .darrow.down { color: var(--bad); }
+.diagpad { flex: 1 1 0; min-height: clamp(150px, 26dvh, 260px); font: inherit; border: 2px dashed var(--rh); background: var(--rh-soft); border-radius: 24px; color: var(--fg); display: flex; align-items: center; justify-content: center; gap: 22px; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; padding: 16px; }
+.diagpad.hit { animation: padhit .18s ease-out; }
+.padpanel { flex: none; padding: 12px 16px; flex-direction: column; }
+.anspanel { flex: none; padding: 12px 16px; gap: 10px; }
+.diagbtn { flex: 1 1 0; justify-content: center; min-height: 72px; }
+.diagbtn.ok { background: var(--ok); color: #fff; border-color: transparent; }
+.diagbtn.bad { background: var(--bad); color: #fff; border-color: transparent; }
+.diagbtn:disabled:not(.ok):not(.bad) { opacity: .55; }
+
+.stats.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.skills { padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.skills .row { align-items: baseline; margin-bottom: 2px; }
+.skhead { font: 700 13px var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.skrow { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
+.skrow span { color: var(--muted); min-width: 0; }
+.skrow b { font-variant-numeric: tabular-nums; text-align: right; flex: none; }
+.sklink { font-weight: 700; font-size: 14px; color: var(--accent); text-decoration: none; padding: 2px 0 4px; }
+@media (max-width: 640px) {
+  .diagpad { flex: none; min-height: 180px; }
+  .padicon { width: 56px; height: 56px; }
+  .anspanel { flex-direction: column; }
+  .diagscreen .dcard { min-height: 160px; }
+  .diagsum .dstat { flex-basis: 40%; }
+}
+.skrow span::first-letter { text-transform: uppercase; }
