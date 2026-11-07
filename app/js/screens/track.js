@@ -3,6 +3,7 @@ import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { diagFmt } from './diag.js';
 import { freshItems } from '../queue.js';
 import { t, L, plural } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
 const fmtTime = (sec) => { const m = Math.round(sec / 60); return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`; };
@@ -85,13 +86,13 @@ export async function renderTrack(root, { model, index, rerender }) {
     const badge = { done: t('done'), now: t('now'), review: t('reviewW'), meh: t('inProgress'), none: '' }[s];
     return h('a.item', { href: it.href, 'data-status': s },
       h('span.kicker', null, kindLabel(it.kind)),
-      h('span.itemtitle', null, it.title),
-      h('span.itemmeta', null, meta(id) || (r && !q.due.includes(id) ? `${t('nextReview')} ${new Date(r.due).toLocaleDateString()}` : it.about || '')),
+      h('span.itemtitle', null, markTerms(it.title, undefined, 'span')),
+      h('span.itemmeta', null, meta(id) || (r && !q.due.includes(id) ? `${t('nextReview')} ${new Date(r.due).toLocaleDateString()}` : markTerms(it.about || '', undefined, 'span'))),
       badge ? h('span.badge.' + (s === 'review' ? 'now' : s), null, badge) : null);
   };
   const section = (sec) => h('section.tsection', null,
-    h('div.row', null, h('h2', null, L(sec.title)), h('div.grow'), h('span.meta', null, `${sec.items.filter((id) => isDone(prog[id])).length}/${sec.items.length}`)),
-    h('p.muted', null, L(sec.about)),
+    h('div.row', null, h('h2', null, markTerms(L(sec.title))), h('div.grow'), h('span.meta', null, `${sec.items.filter((id) => isDone(prog[id])).length}/${sec.items.length}`)),
+    h('p.muted', null, markTerms(L(sec.about))),
     h('div.items', null, ...sec.items.map(itemCard)));
 
   // ---- today ----
@@ -133,7 +134,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     row(t('skChoruses'), String(cleanRounds)),
     row(t('skRecs'), String(store.get('recordings', []).length)),
     row(t('longTermW'), String(longCount)));
-  const goal = h('section.panel.tip', null, h('b', null, t('trackGoal')), h('p', null, L(track.about)));
+  const goal = h('section.panel.tip', null, h('b', null, t('trackGoal')), h('p', null, markTerms(L(track.about))));
 
   root.replaceChildren(header,
     h('main.course', null,

@@ -1,6 +1,7 @@
 // Exercise screen: stages Rhythm (tap the rhythm on one key) → Notes (wait mode) → In tempo → By heart.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview } from '../store.js';
 import { buildSteps, dynAt, midiRange } from '../music/exercise.js';
 import { toMidi, midiToName, noteName } from '../music/notes.js';
@@ -57,7 +58,7 @@ export function renderExercise(root, { ex, rerender }) {
     h('a.iconbtn', { href: ex.back || '#/', 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null,
       h('span.kicker', null, ex.kicker ? L(ex.kicker) : `${t('stepUpper')} ${ex.step} · ${t('exerciseUpper')} ${ex.number}`),
-      h('span.title', null, L(ex.title))),
+      h('span.title', null, markTerms(L(ex.title)))),
     h('div.grow'), stages, h('div.grow'),
     sessionChip(ex.id), midiChip(), settingsPanel, themeButton());
 
@@ -73,7 +74,7 @@ export function renderExercise(root, { ex, rerender }) {
     h('div.legend', null,
       h('span', null, h('i.dot.rh'), t('legendRh')), h('span', null, h('i.dot.lh'), t('legendLh')),
       h('span', null, h('i.dot.ok'), t('legendOk')), h('span', null, h('i.dot.meh'), t('legendMeh')), h('span', null, h('i.dot.bad'), t('legendBad')),
-      ex.about ? h('span.about', null, L(ex.about)) : null));
+      ex.about ? h('span.about', null, markTerms(L(ex.about))) : null));
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
 

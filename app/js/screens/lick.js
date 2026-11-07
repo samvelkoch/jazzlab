@@ -6,6 +6,7 @@
 // (LH = the pattern over lick.prog transposed), echo counts per key, fingers at #/t/<track>/<item>/fingers/<key>.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -72,7 +73,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   const roll = h('div.roll.lickroll');
   const echoBox = h('div.lickecho', null, h('div.cycle', null, cyc[0].el, cyc[1].el), roll);
   const openBtn = h('a.btn.accent.xl.lickopen');
-  const linkBox = h('div.licklink', null, h('p.dabout', null, L(lick.about)), openBtn);
+  const linkBox = h('div.licklink', null, h('p.dabout', null, markTerms(L(lick.about))), openBtn);
   const panel = h('section.panel.imppanel.lickpanel', null,
     h('div.rhead', null, title, h('div.grow'), counts, chordSeg),
     h('div.lickinfo', null, sub, fbEl),

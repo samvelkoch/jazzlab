@@ -2,6 +2,7 @@
 // (a fifth from C4, an octave, two octaves). Rounds are ok (first try), meh (found, few slips or a replay) or miss.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -36,7 +37,7 @@ export function renderEar(root, { track, itemId, item, back }) {
   const panel = h('section.panel.drillpanel', null,
     h('div.staffhead', null, prog, h('div.grow'), fbEl),
     card, summary,
-    h('p.muted.dabout', null, L(item.about)));
+    h('p.muted.dabout', null, markTerms(L(item.about))));
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
   const replayBtn = h('button.btn.earreplay', { type: 'button', title: t('earReplay'), onclick: () => replay(), html: ICON.speaker + `<span>${t('earReplay')}</span>` });

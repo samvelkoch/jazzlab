@@ -8,6 +8,7 @@
 import { applyTheme, currentTheme } from './theme.js';
 import { t, L } from './i18n.js';
 import { h, ICON, setItemLinks } from './ui.js';
+import { loadGlossary, closeTermPop } from './glossary.js';
 import { autoConnect } from './music/midi.js';
 import { loadExercise, normalize } from './music/exercise.js';
 import { patternExercise, lickExercise, lickExerciseKey, melodyExercise, barChords } from './music/forms.js';
@@ -91,6 +92,8 @@ function message(text, err) {
 
 async function route() {
   if (cleanup) { cleanup(); cleanup = null; }
+  closeTermPop();
+  await loadGlossary(); // the terms every screen marks; a failed load only means no marks
   const hash = location.hash.replace(/^#/, '') || '/';
   const rerender = () => route();
   try {

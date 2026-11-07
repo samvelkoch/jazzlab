@@ -1,0 +1,419 @@
+{
+  "$format": "jazzlab-glossary/1",
+  "terms": [
+    {
+      "id": "chromatic",
+      "match": ["хроматик", "хроматическ", "полутон", "полтона", "chromatic", "half-step", "semitone"],
+      "title": { "ru": "Хроматика", "en": "Chromatics" },
+      "short": {
+        "ru": "Ход по соседним клавишам подряд, белым и чёрным, без пропусков. Например G → Gb → F → E. Звучит как скольжение. Полутон: шаг на ближайшую соседнюю клавишу.",
+        "en": "Moving over neighbouring keys one after another, white and black, with no gaps. For example G → Gb → F → E. It sounds like sliding. A half-step is one move to the nearest key."
+      }
+    },
+    {
+      "id": "grace",
+      "match": ["форшлаг", "grace note"],
+      "title": { "ru": "Форшлаг", "en": "Grace note" },
+      "short": {
+        "ru": "Короткая нота-украшение перед основной: быстро задел соседнюю клавишу и сразу на нужную. Пишется мелкой нотой.",
+        "en": "A quick decoration note before the main one: you brush the neighbouring key and land on the right one at once. Written as a small note."
+      }
+    },
+    {
+      "id": "accent",
+      "match": ["акцент", "accent"],
+      "title": { "ru": "Акцент", "en": "Accent" },
+      "short": {
+        "ru": "Нота громче соседних. Ударь её чуть сильнее, остальные тише.",
+        "en": "A note louder than its neighbours. Press it a little harder and keep the others softer."
+      }
+    },
+    {
+      "id": "syncopation",
+      "match": ["синкоп", "syncopation", "syncopated"],
+      "title": { "ru": "Синкопа", "en": "Syncopation" },
+      "short": {
+        "ru": "Нота приходится между долями, на «и», а не на счёт. От этого ритм «качается».",
+        "en": "A note that falls between the beats, on the “and”, not on the count. That is what makes a rhythm sway."
+      }
+    },
+    {
+      "id": "swing",
+      "match": ["свинг", "swing"],
+      "title": { "ru": "Свинг", "en": "Swing" },
+      "short": {
+        "ru": "Восьмые играются неровно: первая длиннее, вторая короче, примерно как «дли-инная-короткая». Прямые восьмые, наоборот, ровные.",
+        "en": "Eighths are played unevenly: the first is longer, the second shorter, roughly “lo-ong-short”. Straight eighths, by contrast, are even."
+      }
+    },
+    {
+      "id": "staccato",
+      "match": ["стаккато", "staccato"],
+      "title": { "ru": "Стаккато", "en": "Staccato" },
+      "short": {
+        "ru": "Играть коротко и отрывисто: нажал и сразу убрал палец, как будто клавиша горячая.",
+        "en": "Playing short and detached: press and lift the finger at once, as if the key were hot."
+      }
+    },
+    {
+      "id": "pickup",
+      "match": ["затакт", "pickup", "pick-up"],
+      "title": { "ru": "Затакт", "en": "Pickup" },
+      "short": {
+        "ru": "Нота или две перед первой долей. Фраза как будто берёт разбег, как «раз-два-ТРИ» перед прыжком.",
+        "en": "A note or two before the first beat. The phrase takes a run-up, like “one-two-THREE” before a jump."
+      }
+    },
+    {
+      "id": "rest",
+      "match": ["пауз", "rest"],
+      "title": { "ru": "Пауза", "en": "Rest" },
+      "short": {
+        "ru": "Момент тишины в ритме. Счёт идёт дальше, ты просто ничего не играешь. Пауза тоже часть музыки.",
+        "en": "A moment of silence inside the rhythm. The count keeps going, you just do not play. A rest is part of the music too."
+      }
+    },
+    {
+      "id": "quarter",
+      "match": ["четверт", "quarter"],
+      "title": { "ru": "Четверть", "en": "Quarter note" },
+      "short": {
+        "ru": "Одна ровная доля счёта: «раз», «два», «три», «четыре». Столько длится один шаг, или один удар ногой.",
+        "en": "One even beat of the count: “one”, “two”, “three”, “four”. As long as one step, or one tap of the foot."
+      }
+    },
+    {
+      "id": "eighth",
+      "match": ["восьм", "eighth"],
+      "title": { "ru": "Восьмая", "en": "Eighth note" },
+      "short": {
+        "ru": "Половина доли: на каждый счёт приходится две восьмые, «раз-и, два-и». Играются вдвое быстрее четвертей.",
+        "en": "Half a beat: two eighths fit into each count, “one-and, two-and”. Played twice as fast as quarters."
+      }
+    },
+    {
+      "id": "half-note",
+      "match": ["половинн", "half note"],
+      "title": { "ru": "Половинная", "en": "Half note" },
+      "short": {
+        "ru": "Нота на две доли: нажал на «раз» и держишь до «три». Самый неспешный ритм.",
+        "en": "A note lasting two beats: press on “one” and hold until “three”. The most relaxed rhythm."
+      }
+    },
+    {
+      "id": "dotted-quarter",
+      "match": ["четверть с точк", "dotted quarter"],
+      "title": { "ru": "Четверть с точкой", "en": "Dotted quarter" },
+      "short": {
+        "ru": "Нота длиннее обычной четверти: она длится три восьмые, то есть полторы доли. Начал на «раз», держи до «и» после «два».",
+        "en": "A note longer than a plain quarter: it lasts three eighths, a beat and a half. Start on “one”, hold until the “and” after “two”."
+      }
+    },
+    {
+      "id": "bar",
+      "match": ["такт", "bar"],
+      "title": { "ru": "Такт", "en": "Bar" },
+      "short": {
+        "ru": "Один короткий отрезок музыки, в нём четыре счёта: «раз, два, три, четыре». Музыка идёт такт за тактом, как шаги.",
+        "en": "One short chunk of music with four counts in it: “one, two, three, four”. Music goes bar by bar, like steps."
+      }
+    },
+    {
+      "id": "third",
+      "match": ["терци", "minor third", "blue third", "thirds"],
+      "title": { "ru": "Терция", "en": "Third" },
+      "short": {
+        "ru": "Нота на три-четыре клавиши выше корня: от C это Eb или E. Именно она делает аккорд грустным (минор) или светлым (мажор).",
+        "en": "The note three or four keys above the root: from C it is Eb or E. It is the one that makes a chord sound sad (minor) or bright (major)."
+      }
+    },
+    {
+      "id": "fifth",
+      "match": ["квинт", "fifth"],
+      "title": { "ru": "Квинта", "en": "Fifth" },
+      "short": {
+        "ru": "Нота в семи клавишах вверх от корня, чёрные тоже считаем: от C это G. Корень и квинта звучат устойчиво, как пустой прочный аккорд.",
+        "en": "The note seven keys above the root, black keys counted too: from C it is G. Root and fifth sound steady, like a sturdy bare chord."
+      }
+    },
+    {
+      "id": "seventh",
+      "match": ["септим", "seventh"],
+      "title": { "ru": "Септима", "en": "Seventh" },
+      "short": {
+        "ru": "Нота прямо под следующим корнем сверху: от C это Bb, на две клавиши ниже верхней C. Она добавляет аккорду джазовый, чуть тревожный цвет.",
+        "en": "The note just under the next root above: from C it is Bb, two keys below the upper C. It gives a chord its jazzy, slightly restless colour."
+      }
+    },
+    {
+      "id": "seventh-chord",
+      "match": ["септаккорд", "c7", "f7", "g7", "d7", "a7", "db7", "cm7", "fm7", "gm7", "dm7", "am7", "ebm7", "fmaj7", "bbmaj7", "dbmaj7", "dm7b5"],
+      "title": { "ru": "Септаккорд (C7)", "en": "Seventh chord (C7)" },
+      "short": {
+        "ru": "Аккорд из четырёх нот: корень, терция, квинта и септима. Цифра 7 в названии говорит, что седьмая нота в нём есть. Так звучит блюз и джаз.",
+        "en": "A chord of four notes: root, third, fifth and seventh. The 7 in the name says the seventh note is there. This is how blues and jazz sound."
+      }
+    },
+    {
+      "id": "root",
+      "match": ["корен", "корн", "root"],
+      "title": { "ru": "Корень аккорда", "en": "Chord root" },
+      "short": {
+        "ru": "Главная нота аккорда, его имя и опора. В C7 корень это C, в F7 это F. Левая рука чаще всего играет корень.",
+        "en": "The main note of a chord, its name and its foundation. In C7 the root is C, in F7 it is F. The left hand mostly plays the root."
+      }
+    },
+    {
+      "id": "approach",
+      "match": ["подход", "подъезд", "approach"],
+      "title": { "ru": "Подход", "en": "Approach note" },
+      "short": {
+        "ru": "Нота-подъезд на полтона снизу или сверху к главной: G# → A. Мимоходом коснулся соседней клавиши и пришёл куда надо.",
+        "en": "A lead-in note one half-step below or above the target: G# → A. You touch the neighbouring key in passing and arrive where you meant to."
+      }
+    },
+    {
+      "id": "blues-scale",
+      "match": ["блюзовая гамм", "блюзовой гамм", "блюзовую гамм", "блюзовые гамм", "blues scale"],
+      "title": { "ru": "Блюзовая гамма", "en": "Blues scale" },
+      "short": {
+        "ru": "Шесть нот, из которых сложен блюз: C, Eb, F, Gb, G, Bb. Любая мелодия из этих клавиш сразу звучит по-блюзовому.",
+        "en": "The six notes blues is built from: C, Eb, F, Gb, G, Bb. Any melody made of these keys sounds bluesy right away."
+      }
+    },
+    {
+      "id": "blue-note",
+      "match": ["синяя", "синюю", "синей", "синие", "синий", "blue note", "blue third"],
+      "title": { "ru": "Синяя нота", "en": "Blue note" },
+      "short": {
+        "ru": "Нота, которая нарочно «не дотягивает» до мажора: Eb вместо E над C. Из-за неё блюз звучит грустно и немного скрипуче.",
+        "en": "A note that deliberately falls short of major: Eb instead of E over C. It is why blues sounds sad and a little gritty."
+      }
+    },
+    {
+      "id": "scale",
+      "match": ["гамм", "scale"],
+      "title": { "ru": "Гамма", "en": "Scale" },
+      "short": {
+        "ru": "Набор нот, выстроенных по порядку, как лесенка. Из нот одной гаммы получается мелодия, которая звучит «в одном настроении».",
+        "en": "A set of notes lined up in order, like a staircase. A tune built from one scale sounds as if it stays in one mood."
+      }
+    },
+    {
+      "id": "octave",
+      "match": ["октав", "octave"],
+      "title": { "ru": "Октава", "en": "Octave" },
+      "short": {
+        "ru": "Одна и та же нота, но выше или ниже: C и следующая C через восемь белых клавиш. Звучат похоже, как мужской и женский голос на одну мелодию.",
+        "en": "The same note higher or lower: C and the next C, eight white keys away. They sound alike, like a man and a woman singing one tune."
+      }
+    },
+    {
+      "id": "passing-note",
+      "match": ["проходящ", "passing note"],
+      "title": { "ru": "Проходящая нота", "en": "Passing note" },
+      "short": {
+        "ru": "Нота, на которой не останавливаются: проходишь через неё на пути между двумя главными, как через турникет.",
+        "en": "A note you do not stop on: you pass through it on the way between two main notes, like a turnstile."
+      }
+    },
+    {
+      "id": "lick",
+      "match": ["лик", "фраз", "lick", "phrase"],
+      "title": { "ru": "Лик (фраза)", "en": "Lick (phrase)" },
+      "short": {
+        "ru": "Короткая готовая фраза на пару тактов, как фраза в речи. Её выучиваешь пальцами и вставляешь в игру.",
+        "en": "A short ready-made phrase a couple of bars long, like a phrase in speech. You learn it with your fingers and drop it into your playing."
+      }
+    },
+    {
+      "id": "question-answer",
+      "match": ["вопрос", "ответ", "question", "answer"],
+      "title": { "ru": "Вопрос и ответ", "en": "Question and answer" },
+      "short": {
+        "ru": "Музыкальный разговор: фраза-вопрос повисает в воздухе, фраза-ответ возвращается на корень и ставит точку.",
+        "en": "A musical conversation: the question phrase hangs in the air, the answer phrase comes back to the root and ends it."
+      }
+    },
+    {
+      "id": "form",
+      "match": ["форма", "форму", "форме", "формой", "12-тактов", "32-тактов", "12 тактов", "32 такт", "двенадцать тактов", "шестнадцать тактов", "aaba", "the form", "12-bar", "32-bar"],
+      "title": { "ru": "Форма", "en": "Form" },
+      "short": {
+        "ru": "Схема пьесы: сколько в ней тактов и какие аккорды в каком такте. У блюза 12 тактов, у стандарта обычно 32 в порядке AABA: часть A дважды, бридж, снова A.",
+        "en": "The plan of a tune: how many bars it has and which chord sits in which bar. Blues has 12 bars; a standard usually has 32 as AABA: part A twice, the bridge, A again."
+      }
+    },
+    {
+      "id": "bridge",
+      "match": ["бридж", "bridge"],
+      "title": { "ru": "Бридж", "en": "Bridge" },
+      "short": {
+        "ru": "Средняя часть песни, буква B в AABA. Другие аккорды, другое настроение, потом возвращается знакомая часть A.",
+        "en": "The middle part of a tune, the B in AABA. Different chords, a different mood, then the familiar A returns."
+      }
+    },
+    {
+      "id": "standard",
+      "match": ["стандарт", "standard"],
+      "title": { "ru": "Стандарт", "en": "Standard" },
+      "short": {
+        "ru": "Известная джазовая песня, которую знают все музыканты и играют по-своему: мелодия и аккорды общие, остальное — импровизация. Дорожка «Джазовые стандарты» учит таким вещам.",
+        "en": "A well-known jazz tune that every musician knows and plays in their own way: the melody and chords are shared, the rest is improvisation. The “Jazz standards” track teaches such tunes."
+      }
+    },
+    {
+      "id": "lead-sheet",
+      "match": ["лид-шит", "lead sheet", "lead-sheet"],
+      "title": { "ru": "Лид-шит", "en": "Lead sheet" },
+      "short": {
+        "ru": "Листок с одной мелодией и буквами аккордов над ней. Музыканты играют по такому листку, а детали придумывают сами.",
+        "en": "A sheet with just the melody and chord letters above it. Players read it and invent the details themselves."
+      }
+    },
+    {
+      "id": "chorus",
+      "match": ["круг", "припев", "chorus"],
+      "title": { "ru": "Круг (chorus)", "en": "Chorus (a pass)" },
+      "short": {
+        "ru": "Один проход всей формы от начала до конца: 12 тактов блюза или 32 стандарта. Потом схема начинается снова, поэтому «по кругу».",
+        "en": "One pass through the whole form from start to end: 12 bars of blues or 32 of a standard. Then the plan starts again, hence “round and round”."
+      }
+    },
+    {
+      "id": "turnaround",
+      "match": ["оборот", "turnaround"],
+      "title": { "ru": "Оборот", "en": "Turnaround" },
+      "short": {
+        "ru": "Последние два такта круга, которые разворачивают музыку обратно к началу. Как поворот на дорожке: тебя разворачивает и несёт дальше.",
+        "en": "The last two bars of a chorus that swing the music back to the start. Like a turn on a running track: it swings you round and sends you on."
+      }
+    },
+    {
+      "id": "shell",
+      "match": ["шелл", "shell"],
+      "title": { "ru": "Шелл-войсинг", "en": "Shell voicing" },
+      "short": {
+        "ru": "Аккорд из трёх нот без лишнего: корень, терция и септима. Этого хватает, чтобы слух понял, какой это аккорд. Легко для руки.",
+        "en": "A chord of three notes with nothing extra: root, third and seventh. That is enough for the ear to know which chord it is. Easy on the hand."
+      }
+    },
+    {
+      "id": "voice-leading",
+      "match": ["голосоведен", "voice leading", "voice-leading"],
+      "title": { "ru": "Голосоведение", "en": "Voice leading" },
+      "short": {
+        "ru": "От аккорда к аккорду переходишь с минимальным движением: одна нота сдвигается, остальные стоят. Звучит плавно, а рука не прыгает.",
+        "en": "Moving from chord to chord with the least motion: one note shifts, the others stay put. It sounds smooth and the hand does not jump."
+      }
+    },
+    {
+      "id": "ii-v-i",
+      "match": ["ii–v–i", "ii-v-i", "ii—v—i", "каденци", "cadence"],
+      "title": { "ru": "II–V–I (каденция)", "en": "II–V–I (cadence)" },
+      "short": {
+        "ru": "Три аккорда подряд, самый частый ход в джазе. Сначала напряжение, потом ещё сильнее, потом облегчение: «пришли домой».",
+        "en": "Three chords in a row, the most common move in jazz. First tension, then more of it, then relief: “we are home”."
+      }
+    },
+    {
+      "id": "dorian",
+      "match": ["дорийск", "dorian"],
+      "title": { "ru": "Дорийский лад", "en": "Dorian mode" },
+      "short": {
+        "ru": "Минорный набор нот, чуть светлее обычного минора. Например D E F G A B C. Любимый лад джазовых импровизаций на минорных аккордах.",
+        "en": "A minor set of notes, a little brighter than plain minor. For example D E F G A B C. A favourite for jazz improvising over minor chords."
+      }
+    },
+    {
+      "id": "clave",
+      "match": ["клаве", "clave"],
+      "title": { "ru": "Клаве", "en": "Clave" },
+      "short": {
+        "ru": "Короткий повторяющийся ритмический узор, на который опирается латиноамериканская музыка. Как невидимый пульс: все играют вокруг него.",
+        "en": "A short repeating rhythm pattern that Latin music leans on. Like an invisible pulse that everybody plays around."
+      }
+    },
+    {
+      "id": "bossa-cell",
+      "match": ["ячейк", "bossa pattern", "bossa cell"],
+      "title": { "ru": "Ячейка боссы", "en": "Bossa pattern" },
+      "short": {
+        "ru": "Узор левой руки в босса-нове: корень на «раз», квинта на «и» второй доли, и она тянется. Играется ровно, без свинга.",
+        "en": "The left-hand pattern of bossa nova: root on “one”, fifth on the “and” of two, held on. Played evenly, without swing."
+      }
+    },
+    {
+      "id": "boogie",
+      "match": ["буги", "boogie"],
+      "title": { "ru": "Буги", "en": "Boogie" },
+      "short": {
+        "ru": "Левая рука бегает восьмыми вверх и обратно вниз по одним и тем же нотам, а сама стоит на месте. Так играют блюз для танцев.",
+        "en": "The left hand runs in eighths up and back down the same notes while the hand stays put. The way blues is played for dancing."
+      }
+    },
+    {
+      "id": "groove",
+      "match": ["грув", "groove"],
+      "title": { "ru": "Грув", "en": "Groove" },
+      "short": {
+        "ru": "Ровный живой ход, в котором хочется покачивать головой. Левая рука держит его, а правая играет сверху.",
+        "en": "A steady, lively flow that makes you want to nod your head. The left hand keeps it going and the right plays on top."
+      }
+    },
+    {
+      "id": "tempo",
+      "match": ["темп", "bpm", "tempo"],
+      "title": { "ru": "Темп (bpm)", "en": "Tempo (bpm)" },
+      "short": {
+        "ru": "Скорость музыки. Её меряют в bpm: сколько долей прозвучит за минуту. 60 bpm это одна доля в секунду, как шаг не спеша.",
+        "en": "The speed of the music. Measured in bpm: how many beats sound in a minute. 60 bpm is one beat a second, like an easy walking step."
+      }
+    },
+    {
+      "id": "metronome",
+      "match": ["метроном", "metronome"],
+      "title": { "ru": "Метроном", "en": "Metronome" },
+      "short": {
+        "ru": "Ровное тиканье, которое отсчитывает доли за тебя. Играй так, чтобы ноты попадали в тик, а не бежали вперёд или отставали.",
+        "en": "An even tick that counts the beats for you. Play so your notes land on the tick instead of rushing or dragging."
+      }
+    },
+    {
+      "id": "echo",
+      "match": ["эхо", "echo"],
+      "title": { "ru": "Эхо", "en": "Echo" },
+      "short": {
+        "ru": "Пианино играет короткую фразу, ты сразу повторяешь её тем же. Так учатся на слух, без нот: услышал и сыграл.",
+        "en": "The piano plays a short phrase and you repeat it right away. A way of learning by ear, without notation: you hear it and play it."
+      }
+    },
+    {
+      "id": "by-heart",
+      "match": ["по памяти", "наизусть", "by heart", "from memory"],
+      "title": { "ru": "По памяти", "en": "By heart" },
+      "short": {
+        "ru": "Играешь без подсказок на экране, только из головы и рук. Это и есть момент, когда фраза стала твоей.",
+        "en": "Playing with no hints on screen, only from your head and hands. That is the moment a phrase becomes yours."
+      }
+    },
+    {
+      "id": "major-minor",
+      "match": ["мажор", "минор", "major", "minor"],
+      "title": { "ru": "Мажор и минор", "en": "Major and minor" },
+      "short": {
+        "ru": "Два настроения музыки. Мажор светлый и открытый, минор грустный и задумчивый. Разница в одной ноте: терции, на клавишу ниже в миноре.",
+        "en": "Two moods of music. Major sounds bright and open, minor sad and thoughtful. The difference is one note: the third, a key lower in minor."
+      }
+    },
+    {
+      "id": "tonic",
+      "match": ["тоник", "тональност", "tonic", "tonality"],
+      "title": { "ru": "Тоника и тональность", "en": "Tonic and key" },
+      "short": {
+        "ru": "Тоника это «дом» мелодии, нота, где она хочет остановиться. Тональность называют по ней: в C все дороги ведут к C.",
+        "en": "The tonic is the “home” of a tune, the note where it wants to rest. The key is named after it: in C, all roads lead to C."
+      }
+    }
+  ]
+}
