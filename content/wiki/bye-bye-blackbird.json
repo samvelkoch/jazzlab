@@ -1,0 +1,45 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "bye-bye-blackbird",
+  "kind": "tune",
+  "title": { "ru": "Bye Bye Blackbird", "en": "Bye Bye Blackbird" },
+  "lead": {
+    "ru": "Песня 1926 года: музыка Рэя Хендерсона, слова Морта Диксона. Сначала поп-хит, потом — джазовый стандарт.",
+    "en": "A 1926 song with music by Ray Henderson and lyrics by Mort Dixon. First a pop hit, later a jazz standard."
+  },
+  "body": {
+    "ru": [
+      "Ноты выпустило нью-йоркское издательство Jerome H. Remick в 1926 году. Первым песню записал оркестр Сэма Ланина в марте того же года, а за ним — Ник Лукас, Джин Остин и другие.",
+      "Обычно играют только припев. Куплет, который идёт перед ним, сегодня мало кто знает.",
+      "Для джазменов песню открыл заново Майлз Дэвис: в 1957 году она вышла на его альбоме 'Round About Midnight.",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь мелодию эхом по два такта, потом играешь её поверх левой руки, а в «Выступлении» исполняешь два квадрата подряд. Мелодия взята из первого издания 1926 года."
+    ],
+    "en": [
+      "Jerome H. Remick of New York published the sheet music in 1926. Sam Lanin's Dance Orchestra made the first recording in March that year, followed by Nick Lucas, Gene Austin and others.",
+      "Most players perform only the chorus. The verse that comes before it is little known today.",
+      "Miles Davis brought the song back for jazz players: it appeared on his 1957 album 'Round About Midnight.",
+      "On the Standard track, section \"Tunes\", you learn the melody by echo two bars at a time, then play it over the left hand, and in \"Performance\" you play two choruses in a row. The melody comes from the 1926 first edition."
+    ]
+  },
+  "facts": [
+    { "ru": "В 1926 году песня вошла в число самых популярных песен года.", "en": "In 1926 it was among the most popular songs of the year." },
+    { "ru": "Её пели и играли Джон Колтрейн, Джули Лондон, Джо Кокер, Ринго Старр и Пол Маккартни.", "en": "It has been recorded by John Coltrane, Julie London, Joe Cocker, Ringo Starr and Paul McCartney." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Blackbird_1926.png?width=800",
+    "alt": { "ru": "Обложка нот Bye Bye Blackbird, 1926", "en": "Bye Bye Blackbird sheet music cover, 1926" },
+    "credit": "Jerome H. Remick & Co., 1926",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Blackbird_1926.png"
+  },
+  "links": [
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Bye_Bye_Blackbird" },
+    { "title": { "ru": "Ноты первого издания на IMSLP", "en": "First-edition sheet music on IMSLP" }, "url": "https://imslp.org/wiki/Bye_Bye_Blackbird_(Henderson,_Ray)" }
+  ],
+  "related": ["ray-henderson", "jazz-standard", "swing", "ii-v-i"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Bye_Bye_Blackbird",
+    "https://commons.wikimedia.org/wiki/File:Blackbird_1926.png",
+    "https://imslp.org/wiki/Bye_Bye_Blackbird_(Henderson,_Ray)"
+  ]
+}

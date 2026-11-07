@@ -903,6 +903,7 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 @media (max-width: 640px) {
   .seg.big > * { flex: none; }
   .seg.big small { display: none; }
+}
 /* phone: the home / course header in two tight rows — brand · piano · theme, then sections · language */
 @media (max-width: 640px) {
   header.top:has(.brand) { flex-wrap: wrap; gap: 8px; row-gap: 10px; }
@@ -917,4 +918,50 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 @media (max-width: 640px) {
   header.top:has(.brand) > .chip { padding: 0; width: 44px; justify-content: center; }
   header.top:has(.brand) > .chip span { display: none; }
+}
+
+/* ---------- reference (wiki) ---------- */
+.itemwrap { position: relative; display: flex; flex-direction: column; }
+.itemwrap > .item { flex: 1 1 auto; }
+.item.haswiki { padding-bottom: 36px; }
+.wikilink { position: absolute; left: 16px; bottom: 10px; font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; padding: 4px 0; }
+.wikilink:hover { text-decoration: underline; }
+.factcard .sklink { display: inline-block; margin-top: 8px; }
+.factcard[hidden] { display: none; }
+main.wikimain { flex: 1; display: flex; flex-direction: column; gap: 22px; padding: 24px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left)); max-width: 1160px; width: 100%; margin: 0 auto; }
+.wikihead h1 { margin: 2px 0 4px; }
+.wikigroup h2 { font: 500 19px/1.25 var(--display); margin: 0 0 12px; }
+.wiki { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.wikicard { display: flex; flex-direction: column; overflow: hidden; border-radius: 18px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); text-decoration: none; }
+.wikicard:hover { border-color: var(--accent); }
+.wikithumb { margin: 0; aspect-ratio: 16 / 9; background: var(--sub); overflow: hidden; }
+.wikithumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; }
+.wikicardtext { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 16px; }
+.wikicardtext b { font: 700 16px/1.3 var(--display); }
+.wikicardtext span { font-size: 14px; color: var(--muted); }
+.wikiart { max-width: 720px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.65; }
+.wikiart h1 { margin: 2px 0 0; line-height: 1.2; }
+.wikiart p { margin: 6px 0; }
+.wikiart .wikilead { font-size: 18px; line-height: 1.55; }
+.wikiback { font-size: 14px; font-weight: 700; color: var(--accent); text-decoration: none; margin-bottom: 8px; }
+.wikifig { margin: 10px 0; }
+.wikifig img { display: block; max-width: 100%; max-height: 460px; height: auto; border-radius: 16px; background: var(--sub); }
+.wikifig figcaption { margin-top: 6px; font-size: 12px; line-height: 1.4; }
+.wikifig figcaption a, .wikisources, .wikisources a { color: var(--muted); }
+.wikifacts { padding: 14px 18px; margin: 12px 0 4px; }
+.wikifacts ul { margin: 6px 0 0; padding-left: 20px; font-size: 15px; }
+.wikifacts li + li { margin-top: 4px; }
+.wikisec h2 { font: 500 17px/1.25 var(--display); margin: 16px 0 6px; }
+.wikilinks { margin: 0; padding-left: 20px; }
+.wikilinks a { color: var(--accent); font-weight: 600; }
+.wikichips { display: flex; flex-wrap: wrap; gap: 8px; }
+.wikichips .chip { text-decoration: none; }
+.wikisources { margin-top: 18px; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+@media (max-width: 1000px) { .wiki { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  main.wikimain { padding: 16px 16px 32px; gap: 18px; }
+  .wiki { grid-template-columns: 1fr; }
+  .wikiart { font-size: 15px; }
+  .wikiart .wikilead { font-size: 17px; }
+  header.top:has(.brand) > .navtabs a { flex: 1 1 auto; padding: 0 4px; font-size: 14px; }
 }

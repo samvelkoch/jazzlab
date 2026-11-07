@@ -1,0 +1,45 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "honeysuckle-rose",
+  "kind": "tune",
+  "title": { "ru": "Honeysuckle Rose", "en": "Honeysuckle Rose" },
+  "lead": {
+    "ru": "Песня Фэтса Уоллера на слова Энди Разафа, вышедшая в 1929 году. Весёлый свинговый стандарт.",
+    "en": "A song by Fats Waller with lyrics by Andy Razaf, published in 1929. A cheerful swing standard."
+  },
+  "body": {
+    "ru": [
+      "Уоллер и Разаф написали песню в 1928 году в Эсбери-Парке, штат Нью-Джерси. Впервые она прозвучала в 1929 году в ревю Load of Coal в гарлемском клубе Connie's Inn как номер для степа.",
+      "Сам Уоллер записывал её много раз, а за ним — Флетчер Хендерсон, Каунт Бейси, Луи Армстронг, Бенни Гудмен, Элла Фицджеральд и Сара Воан.",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь мелодию эхом по два такта, потом играешь её поверх левой руки, а в «Выступлении» исполняешь два квадрата подряд."
+    ],
+    "en": [
+      "Waller and Razaf wrote the song in 1928 in Asbury Park, New Jersey. It was first heard in 1929 in the revue Load of Coal at Connie's Inn in Harlem, as a tap-dance number.",
+      "Waller recorded it many times himself, and so did Fletcher Henderson, Count Basie, Louis Armstrong, Benny Goodman, Ella Fitzgerald and Sarah Vaughan.",
+      "On the Standard track, section \"Tunes\", you learn the melody by echo two bars at a time, then play it over the left hand, and in \"Performance\" you play two choruses in a row."
+    ]
+  },
+  "facts": [
+    { "ru": "Запись Уоллера 1934 года включена в Зал славы «Грэмми» в 1999 году.", "en": "Waller's 1934 recording entered the Grammy Hall of Fame in 1999." },
+    { "ru": "Ноты 1929 года выпустило издательство Santly Bros.", "en": "The 1929 sheet music was published by Santly Bros." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Honeysuckle_rose.jpg?width=800",
+    "alt": { "ru": "Обложка нот Honeysuckle Rose, 1929", "en": "Honeysuckle Rose sheet music cover, 1929" },
+    "credit": "Santly Bros., 1929",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Honeysuckle_rose.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/Honeysuckle_Rose" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Honeysuckle_Rose_(song)" },
+    { "title": { "ru": "Ноты 1929 года на IMSLP", "en": "1929 sheet music on IMSLP" }, "url": "https://imslp.org/wiki/Honeysuckle_Rose_(Waller,_Fats)" }
+  ],
+  "related": ["fats-waller", "jazz-standard", "swing", "aint-misbehavin"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Honeysuckle_Rose_(song)",
+    "https://ru.wikipedia.org/wiki/Honeysuckle_Rose",
+    "https://commons.wikimedia.org/wiki/File:Honeysuckle_rose.jpg",
+    "https://imslp.org/wiki/Honeysuckle_Rose_(Waller,_Fats)"
+  ]
+}

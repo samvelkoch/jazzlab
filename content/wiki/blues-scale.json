@@ -1,0 +1,33 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "blues-scale",
+  "kind": "concept",
+  "title": { "ru": "Блюзовая гамма", "en": "Blues scale" },
+  "lead": {
+    "ru": "Шесть нот: минорная пентатоника плюс одна «блюзовая» нота, пониженная квинта. В до: C Eb F Gb G Bb.",
+    "en": "Six notes: the minor pentatonic plus one \"blue\" note, the flat fifth. In C: C Eb F Gb G Bb."
+  },
+  "body": {
+    "ru": [
+      "Начни с минорной пентатоники в до: C Eb F G Bb. Добавь между F и G ноту Gb, и получится блюзовая гамма. Эта лишняя нота звучит чуть «не по правилам», в ней и есть блюзовый привкус.",
+      "Gb можно записать и как F#. А вообще блюзовые ноты часто поют и играют чуть выше или ниже обычных, «между клавишами».",
+      "В приложении это дорожка «Блюз», раздел «Правая рука». Лик l2 спускается по блюзовой гамме, а лик l4 приложение называет «блюзовая гамма под одной рукой: пять пальцев на пять нот»."
+    ],
+    "en": [
+      "Start with the C minor pentatonic: C Eb F G Bb. Add Gb between F and G and you have the blues scale. That extra note sounds slightly \"against the rules\", and that is where the blues flavour lives.",
+      "Gb can also be spelled F#. More broadly, blue notes are often sung and played slightly above or below the standard pitch, \"between the keys\".",
+      "In the app this is the Blues track, \"Right hand\". Lick l2 runs down the blues scale, and the app describes lick l4 as \"the blues scale under one hand: five fingers on five notes\"."
+    ]
+  },
+  "facts": [
+    { "ru": "Есть и мажорная блюзовая гамма: в до это C D Eb E G A.", "en": "There is also a major blues scale: in C it is C D Eb E G A." },
+    { "ru": "Пониженная квинта — самая известная блюзовая нота.", "en": "The flat fifth is the best-known blue note." }
+  ],
+  "links": [
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Blues_scale" }
+  ],
+  "related": ["blues", "twelve-bar-blues", "call-and-response"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Blues_scale"
+  ]
+}

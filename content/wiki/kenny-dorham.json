@@ -1,0 +1,46 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "kenny-dorham",
+  "kind": "person",
+  "title": { "ru": "Кенни Дорэм", "en": "Kenny Dorham" },
+  "lead": {
+    "ru": "Американский джазовый трубач из Техаса, автор стандарта Blue Bossa.",
+    "en": "An American jazz trumpeter from Texas, composer of the standard Blue Bossa."
+  },
+  "body": {
+    "ru": [
+      "Кенни Дорэм (настоящее имя Маккинли Говард Дорэм) родился в 1924 году в Фэрфилде, штат Техас. Он играл на трубе и иногда пел.",
+      "Он выступал с лучшими музыкантами бибопа. В 1948 году пришёл в квинтет Чарли Паркера, был среди основателей Jazz Messengers, а в 1956 году заменил Клиффорда Брауна в квинтете Макса Роуча.",
+      "Его самая известная пьеса — Blue Bossa. Впервые её записал саксофонист Джо Хендерсон в 1963 году, и Дорэм играл на этой записи на трубе. Умер Дорэм в Нью-Йорке в 1972 году.",
+      "В дорожке «Босса-нова», раздел «Мелодия», ты играешь мелодию по мотивам его Blue Bossa."
+    ],
+    "en": [
+      "Kenny Dorham (born McKinley Howard Dorham) was born in 1924 in Fairfield, Texas. He played trumpet and sometimes sang.",
+      "He worked with the best bebop musicians. In 1948 he joined Charlie Parker's quintet, he was a founding member of the Jazz Messengers, and in 1956 he replaced Clifford Brown in Max Roach's quintet.",
+      "His best-known tune is Blue Bossa. Saxophonist Joe Henderson first recorded it in 1963, with Dorham on trumpet. Dorham died in New York in 1972.",
+      "On the Bossa nova track, section \"Melody\", you play a melody after his Blue Bossa."
+    ]
+  },
+  "facts": [
+    { "ru": "Годы жизни: 30 августа 1924 — 5 декабря 1972.", "en": "Lived 30 August 1924 – 5 December 1972." },
+    { "ru": "Был одним из основателей группы Jazz Messengers.", "en": "He was a charter member of the Jazz Messengers." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kenny_Dorham_holding_trumpet.jpg?width=800",
+    "alt": { "ru": "Кенни Дорэм с трубой, реклама в журнале DownBeat, 1962", "en": "Kenny Dorham holding a trumpet, DownBeat advertisement, 1962" },
+    "credit": "The Fred. Gretsch Mfg. Co., DownBeat, 8 November 1962",
+    "license": "Public domain (US: published 1931–1977 without a copyright notice)",
+    "source": "https://commons.wikimedia.org/wiki/File:Kenny_Dorham_holding_trumpet.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Kenny_Dorham" },
+    { "title": { "ru": "Альбом Page One (Википедия, англ.)", "en": "Page One album (Wikipedia)" }, "url": "https://en.wikipedia.org/wiki/Page_One_(Joe_Henderson_album)" }
+  ],
+  "related": ["blue-bossa", "bossa-nova", "jobim"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Kenny_Dorham",
+    "https://en.wikipedia.org/wiki/Page_One_(Joe_Henderson_album)",
+    "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q200131|Q498729|Q1980821|Q1775121&props=sitelinks&sitefilter=ruwiki|enwiki&format=json",
+    "https://commons.wikimedia.org/wiki/File:Kenny_Dorham_holding_trumpet.jpg"
+  ]
+}

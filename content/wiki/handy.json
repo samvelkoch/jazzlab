@@ -1,0 +1,48 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "handy",
+  "kind": "person",
+  "title": { "ru": "У. К. Хэнди", "en": "W. C. Handy" },
+  "lead": {
+    "ru": "Американский композитор и корнетист, которого называют «отцом блюза». Он одним из первых стал издавать блюзы нотами.",
+    "en": "An American composer and cornetist known as the \"Father of the Blues\". He was one of the first to publish blues as sheet music."
+  },
+  "body": {
+    "ru": [
+      "Уильям Кристофер Хэнди родился в 1873 году во Флоренсе, штат Алабама. Он играл на корнете и трубе, писал песни и делал аранжировки.",
+      "В 1912 году вышла его «Memphis Blues», а в 1914 году — St. Louis Blues, которая стала огромным хитом. Потом были «Beale Street Blues» и другие песни. Вместе с Гарри Пейсом он держал собственное нотное издательство.",
+      "Хэнди сам назвал себя «отцом блюза», и так же называется его автобиография 1941 года. В старости он ослеп и умер в Нью-Йорке в 1958 году.",
+      "В дорожке «Блюз», раздел «Пьеса», ты учишь припев его St. Louis Blues."
+    ],
+    "en": [
+      "William Christopher Handy was born in 1873 in Florence, Alabama. He played cornet and trumpet, wrote songs and made arrangements.",
+      "His \"Memphis Blues\" came out in 1912, and in 1914 St. Louis Blues became a huge hit. \"Beale Street Blues\" and other songs followed. With Harry Pace he ran his own sheet-music publishing firm.",
+      "Handy called himself the \"Father of the Blues\", which is also the title of his 1941 autobiography. He lost his sight in later life and died in New York in 1958.",
+      "On the Blues track, section \"Tune\", you learn the chorus of his St. Louis Blues."
+    ]
+  },
+  "facts": [
+    { "ru": "Годы жизни: 16 ноября 1873 — 28 марта 1958.", "en": "Lived 16 November 1873 – 28 March 1958." },
+    { "ru": "Права на «Memphis Blues» он продал всего за 100 долларов.", "en": "He sold the rights to \"Memphis Blues\" for just 100 dollars." },
+    { "ru": "В 1958 году о нём сняли фильм «St. Louis Blues», Хэнди сыграл Нат «Кинг» Коул.", "en": "The 1958 film \"St. Louis Blues\" told his story, with Nat \"King\" Cole as Handy." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/W._C._Handy_(1941_Van_Vechten_portrait).jpg?width=800",
+    "alt": { "ru": "У. К. Хэнди, портрет 1941 года", "en": "W. C. Handy, 1941 portrait" },
+    "credit": "Carl Van Vechten, 1941 (Library of Congress)",
+    "license": "Public domain (Library of Congress: no known restrictions)",
+    "source": "https://commons.wikimedia.org/wiki/File:W._C._Handy_(1941_Van_Vechten_portrait).jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%A5%D1%8D%D0%BD%D0%B4%D0%B8,_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84%D0%B5%D1%80" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/W._C._Handy" },
+    { "title": { "ru": "Ноты Хэнди на IMSLP", "en": "Handy's sheet music on IMSLP" }, "url": "https://imslp.org/wiki/Category:Handy,_W._C." }
+  ],
+  "related": ["st-louis-blues", "blues", "twelve-bar-blues"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/W._C._Handy",
+    "https://ru.wikipedia.org/wiki/%D0%A5%D1%8D%D0%BD%D0%B4%D0%B8,_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC_%D0%9A%D1%80%D0%B8%D1%81%D1%82%D0%BE%D1%84%D0%B5%D1%80",
+    "https://commons.wikimedia.org/wiki/File:W._C._Handy_(1941_Van_Vechten_portrait).jpg",
+    "https://imslp.org/wiki/Category:Handy,_W._C."
+  ]
+}

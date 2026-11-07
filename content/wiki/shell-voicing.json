@@ -1,0 +1,38 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "shell-voicing",
+  "kind": "concept",
+  "title": { "ru": "Шелл-войсинг", "en": "Shell voicing" },
+  "lead": {
+    "ru": "Аккорд-«скорлупа» в левой руке: корень и ещё одна нота, терция или септима. Всего две клавиши, а аккорд уже слышен.",
+    "en": "A \"shell\" chord in the left hand: the root plus one more note, the third or the seventh. Just two keys, and the chord is already there."
+  },
+  "body": {
+    "ru": [
+      "Это самый простой способ взять аккорд левой рукой: не все ноты, а только опору. Рука остаётся лёгкой, а правой руке хватает места для мелодии.",
+      "Так играл Бад Пауэлл, один из создателей бибопа: корень с децимой (это терция октавой выше) или корень с малой септимой.",
+      "В приложении это дорожка «Стандарт», раздел «Левая рука»: сначала одни корни, потом шелл, где от аккорда к аккорду двигается одна нота. В дорожке «Блюз» в разделе «Форма» есть «Блюз на шелле» с рисунком «Корень и шелл»."
+    ],
+    "en": [
+      "It is the simplest way to take a chord in the left hand: not every note, only the frame. The hand stays light, and the right hand has room for the melody.",
+      "Bud Powell, one of the makers of bebop, played this way: root with a tenth (a third an octave up) or root with a minor seventh.",
+      "In the app this is the Standard track, \"Left hand\": first roots alone, then the shell, where one note moves from chord to chord. The Blues track's \"Form\" section has \"Blues on shells\" with the \"Root and shell\" pattern."
+    ]
+  },
+  "facts": [
+    { "ru": "Войсинг — это то, как ноты аккорда расставлены по клавиатуре.", "en": "A voicing is how a chord's notes are spread across the instrument." },
+    { "ru": "Слово shell по-английски значит «скорлупа», «оболочка».", "en": "Shell means the outer case of something: the chord with its inside left out." }
+  ],
+  "links": [
+    { "title": { "ru": "Википедия: Пауэлл, Бад", "en": "Wikipedia (Russian): Bud Powell" }, "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D1%83%D1%8D%D0%BB%D0%BB,_%D0%91%D0%B0%D0%B4" },
+    { "title": { "ru": "Википедия (англ.): Bud Powell", "en": "Wikipedia: Bud Powell" }, "url": "https://en.wikipedia.org/wiki/Bud_Powell" },
+    { "title": { "ru": "Википедия (англ.): Voicing", "en": "Wikipedia: Voicing (music)" }, "url": "https://en.wikipedia.org/wiki/Voicing_(music)" }
+  ],
+  "related": ["ii-v-i", "twelve-bar-blues", "jazz-standard", "blues"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Voicing_(music)",
+    "https://en.wikipedia.org/wiki/Bud_Powell",
+    "https://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D1%83%D1%8D%D0%BB%D0%BB,_%D0%91%D0%B0%D0%B4",
+    "https://en.wikipedia.org/wiki/Jazz_piano"
+  ]
+}

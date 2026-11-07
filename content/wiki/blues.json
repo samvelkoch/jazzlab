@@ -1,0 +1,46 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "blues",
+  "kind": "style",
+  "title": { "ru": "Блюз", "en": "Blues" },
+  "lead": {
+    "ru": "Музыка афроамериканцев с юга США, родившаяся во второй половине XIX века. Из неё вырос джаз и почти вся популярная музыка XX века.",
+    "en": "Music of African Americans from the US South, born in the second half of the 19th century. Jazz and much of 20th-century popular music grew out of it."
+  },
+  "body": {
+    "ru": [
+      "Корни блюза — рабочие песни, протяжные «полевые» выкрики и спиричуэлс. Колыбелью стиля часто называют дельту Миссисипи.",
+      "У блюза узнаваемый звук. «Блюзовые ноты» — это чуть пониженные ступени лада, отсюда грустный, «тянущий» оттенок. Чаще всего блюз идёт по кругу из 12 тактов и трёх аккордов. Певец и инструмент перекликаются, как в разговоре.",
+      "Первые блюзы напечатали нотами в 1910-х годах. В 1920 году Мейми Смит записала Crazy Blues — первую пластинку афроамериканской певицы.",
+      "В приложении блюзу посвящена целая дорожка «Блюз»: левая рука, 12-тактовая форма под барабаны, фразы правой руки на слух и пьесы. Играем со свингом."
+    ],
+    "en": [
+      "The blues grew from work songs, field hollers and spirituals. The Mississippi Delta is often called its birthplace.",
+      "The blues has a recognisable sound. \"Blue notes\" are slightly lowered scale steps that give it a sad, bending colour. Most often it runs around a 12-bar cycle of three chords. The singer and the instrument answer each other, like a conversation.",
+      "The first blues were printed as sheet music in the 1910s. In 1920 Mamie Smith recorded Crazy Blues, the first record by an African-American singer.",
+      "In the app the whole \"Blues\" track is about it: left hand, the 12-bar form over drums, right-hand phrases by ear, and tunes. It is played with swing."
+    ]
+  },
+  "facts": [
+    { "ru": "Первая блюзовая пьеса с авторским правом — Dallas Blues Харта Ванда, 1912 год.", "en": "The first copyrighted blues composition was Hart Wand's Dallas Blues, 1912." },
+    { "ru": "Слово «блюз», возможно, идёт от выражения blue devils — «хандра».", "en": "The word \"blues\" may come from \"blue devils\", meaning melancholy." },
+    { "ru": "Типичный куплет — AAB: строка, её повтор и строка-ответ.", "en": "A typical verse is AAB: a line, its repeat, and an answering line." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/MaRainey.jpg?width=800",
+    "alt": { "ru": "Певица Ма Рейни, «мать блюза»", "en": "Singer Ma Rainey, the \"Mother of the Blues\"" },
+    "credit": "Unknown author",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:MaRainey.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D1%8E%D0%B7" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Blues" }
+  ],
+  "related": ["twelve-bar-blues", "blues-scale", "call-and-response", "swing", "st-louis-blues", "tin-roof-blues", "handy"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Blues",
+    "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D1%8E%D0%B7",
+    "https://commons.wikimedia.org/wiki/File:MaRainey.jpg"
+  ]
+}

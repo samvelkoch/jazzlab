@@ -4,6 +4,7 @@
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
 //   #/t/<track>/<item>/fingers/<key>    a key-relative lick (item.keys) in one key (RH lick + LH pattern over lick.prog)
 //   #/t/<track>/<item>/fingers/<n|all>  a melody phrase (or the whole melody) as an exercise (RH melody + LH pattern)
+//   #/wiki, #/wiki/<id>  the reference (short articles)
 //   #/riffs         the book course         #/ex/<id>, #/imp/<step>  its exercises and improvisation
 import { applyTheme, currentTheme } from './theme.js';
 import { t, L } from './i18n.js';
@@ -24,6 +25,7 @@ import { renderPerform } from './screens/perform.js';
 import { renderDiag } from './screens/diag.js';
 import { renderChordsHub, renderDecoder, renderKeys, renderLesson, renderPractice } from './screens/chords.js';
 import { compExercise } from './music/chord-ex.js';
+import { renderWikiIndex, renderWikiArticle } from './screens/wiki.js';
 
 applyTheme(currentTheme());
 autoConnect();
@@ -96,6 +98,15 @@ async function route() {
   try {
     const mc = /^\/chords(?:\/(what|keys|l|play|rhythm)(?:\/(.*))?)?$/.exec(hash);
     if (mc) { await routeChords(mc[1], mc[2] ? decodeURIComponent(mc[2]) : '', rerender); window.scrollTo(0, 0); return; }
+    const mw = /^\/wiki(?:\/([a-z0-9-]+))?$/.exec(hash);
+    if (mw) {
+      document.title = `${t('wikiTab')} · Jazzlab`;
+      if (!mw[1]) await renderWikiIndex(root, { rerender });
+      else if (!(await renderWikiArticle(root, { id: mw[1], rerender }))) { message(t('notFound')); return; }
+      else document.title = `${root.querySelector('h1').textContent} · Jazzlab`;
+      window.scrollTo(0, 0);
+      return;
+    }
     const mi = /^\/imp\/(s\d+)$/.exec(hash);
     const m = /^\/ex\/([a-z0-9-]+)$/.exec(hash);
     const mt = /^\/track\/([a-z0-9-]+)$/.exec(hash);

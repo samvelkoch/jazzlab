@@ -1,0 +1,47 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "bossa-nova",
+  "kind": "style",
+  "title": { "ru": "Босса-нова", "en": "Bossa nova" },
+  "lead": {
+    "ru": "Спокойная бразильская музыка конца 1950-х из Рио-де-Жанейро: ритм самбы, тихий голос и джазовые аккорды.",
+    "en": "Calm Brazilian music from late-1950s Rio de Janeiro: a samba rhythm, a quiet voice and jazz chords."
+  },
+  "body": {
+    "ru": [
+      "Отцами стиля считают композитора Антониу Карлуса Жобина и гитариста Жуана Жилберту. Стихи ко многим песням писал поэт Винисиус ди Морайс. Отправной точкой называют песню Жобина Chega de Saudade в исполнении Жилберту.",
+      "Название значит примерно «новая манера». Жилберту переложил ритм самбы на гитару с нейлоновыми струнами: большой палец изображает басовый барабан, остальные пальцы — мелкую перкуссию.",
+      "Главное отличие от джаза — ровные восьмые, без свинга. Музыка звучит мягко и сдержанно.",
+      "В приложении есть дорожка «Босса-нова»: аккорды, левая рука (бас и квинта ровными восьмыми), 16-тактовая форма, мелодия по мотивам Blue Bossa и фразы правой руки."
+    ],
+    "en": [
+      "The style's founders are considered to be composer Antônio Carlos Jobim and guitarist João Gilberto. Poet Vinicius de Moraes wrote lyrics for many songs. Jobim's Chega de Saudade, sung by Gilberto, is named as the starting point.",
+      "The name means roughly \"new style\". Gilberto moved the samba beat onto a nylon-string guitar: the thumb plays the part of the bass drum, the fingers the small percussion.",
+      "The main difference from jazz: even eighths, no swing. The music sounds soft and restrained.",
+      "The app has a \"Bossa nova\" track: chords, left hand (root and fifth in even eighths), the 16-bar form, a melody based on Blue Bossa, and right-hand phrases."
+    ]
+  },
+  "facts": [
+    { "ru": "Альбом Getz/Gilberto со Стэном Гетцем и Жобином вышел в 1964 году и получил «Грэмми».", "en": "The album Getz/Gilberto, with Stan Getz and Jobim, came out in 1964 and won a Grammy." },
+    { "ru": "Мировым символом стиля стала песня «Девушка из Ипанемы» (1962).", "en": "The Girl from Ipanema (1962) became the style's worldwide emblem." },
+    { "ru": "Колыбелью стиля называют клубы Beco das Garrafas в Копакабане.", "en": "The Beco das Garrafas clubs in Copacabana are called the cradle of the style." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jo%C3%A3o_Gilberto.jpg?width=800",
+    "alt": { "ru": "Жуан Жилберту с гитарой, 2006", "en": "João Gilberto with a guitar, 2006" },
+    "credit": "Tuca Vieira",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Jo%C3%A3o_Gilberto.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D1%81%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Bossa_nova" }
+  ],
+  "related": ["jobim", "blue-bossa", "clave", "kenny-dorham", "swing"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Bossa_nova",
+    "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D1%81%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0",
+    "https://en.wikipedia.org/wiki/Jo%C3%A3o_Gilberto",
+    "https://commons.wikimedia.org/wiki/File:Jo%C3%A3o_Gilberto.jpg"
+  ]
+}

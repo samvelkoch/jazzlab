@@ -1,0 +1,37 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "blue-bossa",
+  "kind": "tune",
+  "title": { "ru": "Blue Bossa", "en": "Blue Bossa" },
+  "lead": {
+    "ru": "Пьеса трубача Кенни Дорэма 1963 года, где джаз встречается с босса-новой. Она стала джазовым стандартом.",
+    "en": "Trumpeter Kenny Dorham's 1963 tune where jazz meets bossa nova. It became a jazz standard."
+  },
+  "body": {
+    "ru": [
+      "Blue Bossa впервые прозвучала на альбоме саксофониста Джо Хендерсона Page One. Его записали 3 июня 1963 года для лейбла Blue Note, и Blue Bossa открывает пластинку. На трубе играет сам Дорэм, на рояле — Маккой Тайнер.",
+      "Пьеса соединяет хард-боп, напористый джаз 1950-х, с мягким ритмом босса-новы. Она в миноре и звучит немного грустно, но легко.",
+      "В дорожке «Босса-нова», раздел «Мелодия», ты играешь не оригинал, а мелодию по мотивам Blue Bossa на её аккордах: 16 тактов в до миноре, а во второй половине гармония поднимается на полтона."
+    ],
+    "en": [
+      "Blue Bossa was introduced on saxophonist Joe Henderson's album Page One. It was recorded on 3 June 1963 for Blue Note, and Blue Bossa opens the record. Dorham himself plays trumpet, with McCoy Tyner on piano.",
+      "The tune blends hard bop with the gentle rhythm of bossa nova. It is in a minor key and sounds a little sad, but light.",
+      "On the Bossa nova track, section \"Melody\", you play not the original but a melody after Blue Bossa on its chords: 16 bars in C minor, with the harmony moving up a half step in the second half."
+    ]
+  },
+  "facts": [
+    { "ru": "Первая запись: альбом Джо Хендерсона Page One, 1963.", "en": "First recording: Joe Henderson's album Page One, 1963." },
+    { "ru": "Автор — Кенни Дорэм, а не бразилец, хотя пьеса в стиле босса-новы.", "en": "It was written by Kenny Dorham, an American, even though it is in bossa nova style." }
+  ],
+  "links": [
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Blue_Bossa" },
+    { "title": { "ru": "Альбом Page One (Википедия, англ.)", "en": "Page One album (Wikipedia)" }, "url": "https://en.wikipedia.org/wiki/Page_One_(Joe_Henderson_album)" }
+  ],
+  "related": ["kenny-dorham", "bossa-nova", "jobim", "jazz-standard", "clave"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Blue_Bossa",
+    "https://en.wikipedia.org/wiki/Page_One_(Joe_Henderson_album)",
+    "https://en.wikipedia.org/wiki/Kenny_Dorham",
+    "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q200131|Q498729|Q1980821|Q1775121&props=sitelinks&sitefilter=ruwiki|enwiki&format=json"
+  ]
+}

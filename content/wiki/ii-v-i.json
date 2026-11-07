@@ -1,0 +1,55 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "ii-v-i",
+  "kind": "concept",
+  "title": {
+    "ru": "II–V–I",
+    "en": "ii–V–I"
+  },
+  "lead": {
+    "ru": "Три аккорда подряд, которые ведут музыку домой: в фа мажоре это Gm7 · C7 · Fmaj7. Главный оборот джаза.",
+    "en": "Three chords in a row that lead the music home: in F major, Gm7 · C7 · Fmaj7. The most important progression in jazz."
+  },
+  "body": {
+    "ru": [
+      "В джазе II играют как минорный септаккорд, V как доминантсептаккорд, I как большой мажорный септаккорд. В фа мажоре это Gm7 · C7 · Fmaj7.",
+      "Оборот сильно тянет к I, поэтому им заканчивают фразы и переходят в новые тональности. Его вставляют даже в блюз, где своего II–V–I обычно нет.",
+      "Секрет плавности: терция одного аккорда становится септимой следующего. В фа: у Gm7 это Bb и F, у C7 это E и Bb, у Fmaj7 это A и E. Руки почти не двигаются.",
+      "В приложении это дорожка «Стандарт», раздел «Правая рука»: фразы на II–V–I сначала в фа, потом теми же пальцами в си-бемоль. Левая рука учит Gm7 C7 · Fmaj7 · Cm7 F7 · Bbmaj7."
+    ],
+    "en": [
+      "In jazz the ii is played as a minor seventh, the V as a dominant seventh and the I as a major seventh. In F that is Gm7 · C7 · Fmaj7.",
+      "The progression pulls hard toward I, so it ends phrases and moves into new keys. It is even added to the blues, which normally lacks it.",
+      "The secret of the smooth sound: the third of one chord becomes the seventh of the next. In F: Gm7 has Bb and F, C7 has E and Bb, Fmaj7 has A and E. The hands barely move.",
+      "In the app this is the Standard track, \"Right hand\": phrases over ii–V–I, first in F, then with the same fingers in Bb. The left hand learns Gm7 C7 · Fmaj7 · Cm7 F7 · Bbmaj7."
+    ]
+  },
+  "facts": [
+    {
+      "ru": "II–V–I есть в Honeysuckle Rose (1928) и Satin Doll (1953).",
+      "en": "ii–V–I appears in Honeysuckle Rose (1928) and Satin Doll (1953)."
+    },
+    {
+      "ru": "В миноре II становится полууменьшённым: Dm7b5 · G7 · Cm.",
+      "en": "In minor the ii becomes half-diminished: Dm7b5 · G7 · Cm."
+    }
+  ],
+  "links": [
+    {
+      "title": {
+        "ru": "Википедия (англ.)",
+        "en": "Wikipedia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Ii%E2%80%93V%E2%80%93I_progression"
+    }
+  ],
+  "related": [
+    "jazz-standard",
+    "shell-voicing",
+    "honeysuckle-rose",
+    "twelve-bar-blues"
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Ii%E2%80%93V%E2%80%93I_progression"
+  ]
+}

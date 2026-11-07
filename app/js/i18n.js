@@ -130,7 +130,9 @@ const DICT = {
     skillsTitle: 'Навыки', skRhythm: 'Ритм', skNames: 'Ноты', skEar: 'Слух', skChords: 'Аккорды', skLicks: 'Словарь ликов', skChoruses: 'Чистых кругов формы', skRecs: 'Записей выступлений',
     dgHint: 'Нужны звук и клавиши: на экране или пианино',
     skDoCheck: 'Сделать замер', skMeasured: 'замер',
-   navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
+   navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы',
+    wikiTab: 'Справочник', wikiUpper: 'СПРАВОЧНИК', wikiIntro: 'Отправная точка: короткие заметки и ссылки, чтобы было откуда начать.', wikiBack: 'Весь справочник',
+    factOfDay: 'Факт дня', aboutTune: 'об этой вещи ⓘ', factsW: 'Факты', linksW: 'Ссылки', relatedW: 'Связано', sourcesW: 'Источники', imageCredit: 'Фото: {credit}, {license}'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -256,7 +258,9 @@ const DICT = {
     skillsTitle: 'Skills', skRhythm: 'Rhythm', skNames: 'Notes', skEar: 'Ear', skChords: 'Chords', skLicks: 'Lick vocabulary', skChoruses: 'Clean choruses', skRecs: 'Performance recordings',
     dgHint: 'You need sound and keys: on screen or a piano',
     skDoCheck: 'Take the check-up', skMeasured: 'check-up',
-   navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
+   navCourse: 'Course', navChords: 'Chords', sections: 'Sections',
+    wikiTab: 'Reference', wikiUpper: 'REFERENCE', wikiIntro: 'A starting point: short notes and links, so there is somewhere to begin.', wikiBack: 'All articles',
+    factOfDay: 'Fact of the day', aboutTune: 'about this tune ⓘ', factsW: 'Facts', linksW: 'Links', relatedW: 'Related', sourcesW: 'Sources', imageCredit: 'Image: {credit}, {license}'
   }
 };
 
