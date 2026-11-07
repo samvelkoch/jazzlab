@@ -1,0 +1,61 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "call-and-response",
+  "kind": "concept",
+  "title": {
+    "ru": "Вопрос и ответ",
+    "en": "Call and response"
+  },
+  "lead": {
+    "ru": "Музыкальный разговор: один голос или инструмент «спрашивает» фразой, другой ему «отвечает».",
+    "en": "A musical conversation: one voice or instrument \"asks\" with a phrase, and another \"answers\"."
+  },
+  "body": {
+    "ru": [
+      "Приём пришёл из музыки многих народов Африки. Например, в барабанных ансамблях главный барабанщик задаёт рисунок, а другой отвечает.",
+      "В Америке его сохранили рабочие песни, спиричуэлс, госпел, блюз и джаз. В блюзе певец поёт строку, а гитара или фортепиано отвечает короткой фразой.",
+      "В приложении фразы правой руки в каждой дорожке заканчиваются упражнением «вопрос и ответ»: «Блюз: вопрос и ответ», «Blue Bossa: вопрос и ответ», «Стандарт: вопрос и ответ»."
+    ],
+    "en": [
+      "The technique comes from the music of many African peoples. In drum ensembles, for example, the master drummer sets a pattern and another drummer answers it.",
+      "In America it lived on in work songs, spirituals, gospel, blues and jazz. In the blues the singer sings a line and the guitar or piano answers with a short phrase.",
+      "In the app, the right-hand phrases on every track end with a call-and-response exercise: \"Blues: call and response\", \"Blue Bossa: call and response\", \"Standard: call and response\"."
+    ]
+  },
+  "facts": [
+    {
+      "ru": "Песня Mannish Boy Мадди Уотерса почти целиком построена на перекличке солиста и хора.",
+      "en": "Muddy Waters' Mannish Boy is almost entirely leader-and-chorus call and response."
+    },
+    {
+      "ru": "Перекличку привезли в Америку порабощённые африканцы. Из неё выросли приёмы госпела, блюза, соула и джаза.",
+      "en": "Enslaved Africans brought call and response to the Americas. It went on to shape gospel, blues, soul and jazz."
+    }
+  ],
+  "links": [
+    {
+      "title": {
+        "ru": "Википедия (англ.)",
+        "en": "Wikipedia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Call_and_response_(music)"
+    },
+    {
+      "title": {
+        "ru": "Википедия: Респонсорное пение (соседняя тема: солист и хор в церковной музыке)",
+        "en": "Wikipedia (Russian): responsorial singing (a neighbouring topic)"
+      },
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%B5%D1%81%D0%BF%D0%BE%D0%BD%D1%81%D0%BE%D1%80%D0%BD%D0%BE%D0%B5_%D0%BF%D0%B5%D0%BD%D0%B8%D0%B5"
+    }
+  ],
+  "related": [
+    "blues",
+    "twelve-bar-blues",
+    "blue-bossa",
+    "jazz-standard"
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Call_and_response_(music)",
+    "https://ru.wikipedia.org/wiki/%D0%A0%D0%B5%D1%81%D0%BF%D0%BE%D0%BD%D1%81%D0%BE%D1%80%D0%BD%D0%BE%D0%B5_%D0%BF%D0%B5%D0%BD%D0%B8%D0%B5"
+  ]
+}

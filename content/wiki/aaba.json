@@ -1,0 +1,37 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "aaba",
+  "kind": "concept",
+  "title": { "ru": "Форма AABA", "en": "AABA form" },
+  "lead": {
+    "ru": "Самая частая форма песни в джазовых стандартах: четыре части по 8 тактов, всего 32 такта.",
+    "en": "The most common song form among jazz standards: four 8-bar sections, 32 bars in all."
+  },
+  "body": {
+    "ru": [
+      "Буквы — это части песни. «A» — главная мелодия, она звучит три раза. «B» — контрастная середина, её называют «бридж» (мост). Порядок: A, A, B, A.",
+      "Часть A обычно заканчивается в основной тональности, как точка в конце фразы. Бридж уходит в другую тональность и подводит к возвращению A.",
+      "Эта форма стала главной в американской песне примерно в 1925–1926 годах и держалась до 1950-х. Так устроены, например, Over the Rainbow и I Got Rhythm.",
+      "В приложении на дорожке «Стандарт» есть раздел «Форма»: 32 такта AABA в фа мажоре (F), бридж уходит в си-бемоль (Bb)."
+    ],
+    "en": [
+      "The letters stand for parts of the song. \"A\" is the main melody; it is heard three times. \"B\" is a contrasting middle called the bridge. The order is A, A, B, A.",
+      "The A section usually ends in the home key, like a full stop at the end of a sentence. The bridge moves to another key and leads back to A.",
+      "This form became the main form of American popular song around 1925–1926 and stayed so into the 1950s. Over the Rainbow and I Got Rhythm are built this way.",
+      "In the app, the \"Standard\" track has a \"Form\" section: 32 bars of AABA in F, with the bridge going to Bb."
+    ]
+  },
+  "facts": [
+    { "ru": "Бридж ещё называют middle eight («средние восемь») и release.", "en": "The bridge is also called the middle eight or the release." },
+    { "ru": "Форма пришла из песен Tin Pan Alley — так называли американские нотные издательства популярных песен.", "en": "The form comes from Tin Pan Alley, the name for America's popular-song publishers." }
+  ],
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/32-%D1%82%D0%B0%D0%BA%D1%82%D0%BE%D0%B2%D0%B0%D1%8F_%D1%84%D0%BE%D1%80%D0%BC%D0%B0" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Thirty-two-bar_form" }
+  ],
+  "related": ["jazz-standard", "twelve-bar-blues", "ii-v-i", "honeysuckle-rose", "aint-misbehavin"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Thirty-two-bar_form",
+    "https://ru.wikipedia.org/wiki/32-%D1%82%D0%B0%D0%BA%D1%82%D0%BE%D0%B2%D0%B0%D1%8F_%D1%84%D0%BE%D1%80%D0%BC%D0%B0"
+  ]
+}

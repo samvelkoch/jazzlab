@@ -1,0 +1,41 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "clave",
+  "kind": "concept",
+  "title": { "ru": "Клаве и ритм боссы", "en": "Clave and the bossa rhythm" },
+  "lead": {
+    "ru": "Клаве — повторяющийся рисунок из пяти ударов, на котором держится время в кубинской и бразильской музыке. Босса-нова взяла его родственника.",
+    "en": "Clave is a repeating five-stroke pattern that organises time in Cuban and Brazilian music. Bossa nova uses a close relative of it."
+  },
+  "body": {
+    "ru": [
+      "Слово clave по-испански значит «ключ». Рисунок делится на две половины: в одной три удара, в другой два. Если пьеса начинается с тройки, говорят «клаве 3-2», если с двойки — «2-3». Так назвали в Нью-Йорке в 1940-х, когда кубинские ритмы встретились с джазом.",
+      "Корни у клаве африканские. Тем же словом называют две деревянные палочки, которыми этот рисунок отстукивают.",
+      "В босса-нове барабанщик играет похожий рисунок по ободу малого барабана, но один удар на «двойке» сдвинут чуть позже. Жобим считал это скорее ритмическим мотивом, чем настоящим клаве. Босса играется ровно, без свинга.",
+      "В приложении это дорожка «Босса-нова». В разделе «Левая рука» ячейка боссы — корень и квинта, ровными восьмыми, без свинга, а в разделе «Форма» барабаны играют грув боссы."
+    ],
+    "en": [
+      "Clave is Spanish for \"key\". The pattern has two halves: three strokes on one side, two on the other. A tune that starts on the three side is in \"3-2 clave\", one that starts on the two side is in \"2-3\". The terms came from New York in the 1940s, when Cuban rhythm met jazz.",
+      "Clave has African roots. The same word names the two hardwood sticks used to tap the pattern.",
+      "In bossa nova the drummer plays a similar pattern on the snare rim, but one stroke on the two side comes a little later. Jobim saw it more as a rhythmic motif than a true clave. Bossa is played straight, without swing.",
+      "In the app this is the Bossa nova track. In \"Left hand\" the bossa cell is root and fifth, even eighths, no swing, and in \"Form\" the drums play a bossa groove."
+    ]
+  },
+  "facts": [
+    { "ru": "Босса-нова родилась в конце 1950-х в Рио-де-Жанейро как спокойная самба.", "en": "Bossa nova was born in late-1950s Rio de Janeiro as a relaxed kind of samba." },
+    { "ru": "В гитаре боссы большой палец играет бас на счёт 1 и 2, как барабан сурдо.", "en": "In bossa guitar the thumb plays bass on beats 1 and 2, like the surdo drum." }
+  ],
+  "links": [
+    { "title": { "ru": "Википедия: Клаве (ритм)", "en": "Wikipedia (Russian): Clave" }, "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BB%D0%B0%D0%B2%D0%B5_(%D1%80%D0%B8%D1%82%D0%BC)" },
+    { "title": { "ru": "Википедия (англ.): Clave", "en": "Wikipedia: Clave (rhythm)" }, "url": "https://en.wikipedia.org/wiki/Clave_(rhythm)" },
+    { "title": { "ru": "Википедия: Босанова", "en": "Wikipedia (Russian): Bossa nova" }, "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D1%81%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0" },
+    { "title": { "ru": "Википедия (англ.): Bossa nova", "en": "Wikipedia: Bossa nova" }, "url": "https://en.wikipedia.org/wiki/Bossa_nova" }
+  ],
+  "related": ["bossa-nova", "jobim", "blue-bossa"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Clave_(rhythm)",
+    "https://ru.wikipedia.org/wiki/%D0%9A%D0%BB%D0%B0%D0%B2%D0%B5_(%D1%80%D0%B8%D1%82%D0%BC)",
+    "https://en.wikipedia.org/wiki/Bossa_nova",
+    "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D1%81%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0"
+  ]
+}

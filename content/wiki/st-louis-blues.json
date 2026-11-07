@@ -1,0 +1,46 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "st-louis-blues",
+  "kind": "tune",
+  "title": { "ru": "St. Louis Blues", "en": "St. Louis Blues" },
+  "lead": {
+    "ru": "Песня У. К. Хэнди 1914 года, один из первых блюзов, ставших настоящим поп-хитом.",
+    "en": "W. C. Handy's 1914 song, one of the first blues to become a real pop hit."
+  },
+  "body": {
+    "ru": [
+      "Хэнди издал St. Louis Blues в 1914 году в своём издательстве Pace & Handy Music Co. Песня сложена из нескольких разных частей, как регтайм, а куплеты идут по схеме 12-тактового блюза.",
+      "Посередине есть 16 тактов в ритме хабанеры. Хэнди называл это танго, а Джелли Ролл Мортон позже назвал такой приём «испанским оттенком».",
+      "Самая известная запись сделана в 1925 году: поёт Бесси Смит, на корнете Луи Армстронг.",
+      "В дорожке «Блюз», раздел «Пьеса», ты учишь припев этой песни эхом по два такта."
+    ],
+    "en": [
+      "Handy published St. Louis Blues in 1914 through his own firm, Pace & Handy Music Co. The song is built from several contrasting strains, like a rag, and the verses follow the 12-bar blues.",
+      "In the middle there are 16 bars in a habanera rhythm. Handy called it a tango; Jelly Roll Morton later called this kind of thing the \"Spanish tinge\".",
+      "The best-known recording was made in 1925: Bessie Smith sings, Louis Armstrong plays cornet.",
+      "On the Blues track, section \"Tune\", you learn the song's chorus by echo, two bars at a time."
+    ]
+  },
+  "facts": [
+    { "ru": "St. Louis Blues вышла 11 сентября 1914 года.", "en": "St. Louis Blues was published on 11 September 1914." },
+    { "ru": "Запись Бесси Смит и Луи Армстронга 1925 года включена в Зал славы «Грэмми» в 1993 году.", "en": "The 1925 recording by Bessie Smith and Louis Armstrong entered the Grammy Hall of Fame in 1993." },
+    { "ru": "Песню называют «Гамлетом джазмена»: её играют все.", "en": "The song has been called \"the jazzman's Hamlet\": everyone plays it." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/St._Louis_Blues_cover.jpg?width=800",
+    "alt": { "ru": "Обложка нот St. Louis Blues, 1914", "en": "St. Louis Blues sheet music cover, 1914" },
+    "credit": "Pace & Handy Music Co., 1914",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:St._Louis_Blues_cover.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/St._Louis_Blues_(song)" },
+    { "title": { "ru": "Ноты первого издания на IMSLP", "en": "First-edition sheet music on IMSLP" }, "url": "https://imslp.org/wiki/St._Louis_Blues_(Handy,_W._C.)" }
+  ],
+  "related": ["handy", "blues", "twelve-bar-blues"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/St._Louis_Blues_(song)",
+    "https://commons.wikimedia.org/wiki/File:St._Louis_Blues_cover.jpg",
+    "https://imslp.org/wiki/St._Louis_Blues_(Handy,_W._C.)"
+  ]
+}

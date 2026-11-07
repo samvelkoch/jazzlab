@@ -1,0 +1,46 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "ray-henderson",
+  "kind": "person",
+  "title": { "ru": "Рэй Хендерсон", "en": "Ray Henderson" },
+  "lead": {
+    "ru": "Американский композитор-песенник 1920-х, автор музыки к Bye Bye Blackbird.",
+    "en": "An American songwriter of the 1920s who composed the music of Bye Bye Blackbird."
+  },
+  "body": {
+    "ru": [
+      "Рэй Хендерсон (настоящее имя Рэймонд Брост) родился в 1896 году в Буффало, штат Нью-Йорк. Он писал музыку для популярных песен.",
+      "В 1926 году вышла Bye Bye Blackbird: музыка Хендерсона, слова Морта Диксона. Позже её играли и пели многие, от Майлза Дэвиса до Пола Маккартни.",
+      "С 1925 по 1930 год Хендерсон работал в знаменитом трио песенников вместе с Лью Брауном и Баддом Де Сильвой. Среди их хитов — «The Birth of the Blues» и «Button Up Your Overcoat».",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь Bye Bye Blackbird по первому изданию нот."
+    ],
+    "en": [
+      "Ray Henderson (born Raymond Brost) was born in 1896 in Buffalo, New York. He wrote the music for popular songs.",
+      "Bye Bye Blackbird came out in 1926, with music by Henderson and lyrics by Mort Dixon. Many later played and sang it, from Miles Davis to Paul McCartney.",
+      "From 1925 to 1930 Henderson was part of a famous songwriting trio with Lew Brown and Buddy De Sylva. Their hits include \"The Birth of the Blues\" and \"Button Up Your Overcoat\".",
+      "On the Standard track, section \"Tunes\", you learn Bye Bye Blackbird from its first edition."
+    ]
+  },
+  "facts": [
+    { "ru": "Годы жизни: 1 декабря 1896 — 31 декабря 1970.", "en": "Lived 1 December 1896 – 31 December 1970." },
+    { "ru": "Ему же принадлежит музыка песни «Five Foot Two, Eyes of Blue» (1925).", "en": "He also wrote the music of \"Five Foot Two, Eyes of Blue\" (1925)." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ray_Henderson_(1896%E2%80%931970).png?width=800",
+    "alt": { "ru": "Рэй Хендерсон, 1928", "en": "Ray Henderson, 1928" },
+    "credit": "Unknown author, Music Trade Indicator, 4 February 1928",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Ray_Henderson_(1896%E2%80%931970).png"
+  },
+  "links": [
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Ray_Henderson" },
+    { "title": { "ru": "Bye Bye Blackbird (Википедия, англ.)", "en": "Bye Bye Blackbird (Wikipedia)" }, "url": "https://en.wikipedia.org/wiki/Bye_Bye_Blackbird" }
+  ],
+  "related": ["bye-bye-blackbird", "jazz-standard"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Ray_Henderson",
+    "https://en.wikipedia.org/wiki/Bye_Bye_Blackbird",
+    "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q200131|Q498729|Q1980821|Q1775121&props=sitelinks&sitefilter=ruwiki|enwiki&format=json",
+    "https://commons.wikimedia.org/wiki/File:Ray_Henderson_(1896%E2%80%931970).png"
+  ]
+}

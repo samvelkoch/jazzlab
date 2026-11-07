@@ -1,0 +1,50 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "tea-for-two",
+  "kind": "tune",
+  "title": { "ru": "Tea for Two", "en": "Tea for Two" },
+  "lead": {
+    "ru": "Песня 1924 года из мюзикла No, No, Nanette: музыка Винсента Юманса, слова Ирвинга Цезаря. В СССР её знали как «Таити-трот».",
+    "en": "A 1924 song from the musical No, No, Nanette, with music by Vincent Youmans and lyrics by Irving Caesar. In the Soviet Union it was known as \"Tahiti Trot\"."
+  },
+  "body": {
+    "ru": [
+      "Песня прозвучала в 1924 году, ещё до бродвейской премьеры мюзикла No, No, Nanette. На Бродвее шоу открылось 16 сентября 1925 года. Самой популярной первой записью стала версия певицы Мэрион Харрис.",
+      "Для джаза песню особенно важной сделал пианист Арт Тейтум. Позже её играли Бад Пауэлл и Телониус Монк.",
+      "В 1927 году Дмитрий Шостакович послушал пластинку с этой песней и сделал её оркестровую версию, «Таити-трот». На оркестровку у него ушло 45 минут.",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь мелодию эхом по два такта, потом играешь её поверх левой руки, а в «Выступлении» исполняешь два квадрата подряд."
+    ],
+    "en": [
+      "The song was heard in 1924, before the musical No, No, Nanette reached Broadway. The show opened there on 16 September 1925. The most popular early recording was by the singer Marion Harris.",
+      "The pianist Art Tatum made the song especially important for jazz. Later Bud Powell and Thelonious Monk played it too.",
+      "In 1927 Dmitri Shostakovich heard a record of the song and orchestrated it as \"Tahiti Trot\". The orchestration took him 45 minutes.",
+      "On the Standard track, section \"Tunes\", you learn the melody by echo two bars at a time, then play it over the left hand, and in \"Performance\" you play two choruses in a row."
+    ]
+  },
+  "facts": [
+    { "ru": "Запись Мэрион Харрис 1925 года 11 недель была на первом месте.", "en": "Marion Harris's 1925 recording spent 11 weeks at number one." },
+    { "ru": "Запись Арта Тейтума 1939 года отмечена наградой Зала славы «Грэмми».", "en": "Art Tatum's 1939 recording received a Grammy Hall of Fame Award." },
+    { "ru": "Шостакович позже включил «Таити-трот» в балет «Золотой век».", "en": "Shostakovich later put \"Tahiti Trot\" into his ballet The Golden Age." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Marion_Harris%E2%80%93Tea_For_Two.jpg?width=800",
+    "alt": { "ru": "Наклейка пластинки Tea for Two в исполнении Мэрион Харрис, 1925", "en": "Record label of Tea for Two sung by Marion Harris, 1925" },
+    "credit": "Brunswick Records, 1925",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Marion_Harris%E2%80%93Tea_For_Two.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/Tea_for_Two" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Tea_for_Two_(song)" },
+    { "title": { "ru": "Ноты 1924 года на IMSLP (в составе No, No, Nanette)", "en": "1924 sheet music on IMSLP (under No, No, Nanette)" }, "url": "https://imslp.org/wiki/No,_No,_Nanette_(Youmans,_Vincent)" }
+  ],
+  "related": ["jazz-standard", "swing", "aaba"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Tea_for_Two",
+    "https://en.wikipedia.org/wiki/Tea_for_Two_(song)",
+    "https://ru.wikipedia.org/wiki/Tea_for_Two",
+    "https://commons.wikimedia.org/wiki/File:Marion_Harris–Tea_For_Two.jpg",
+    "https://imslp.org/wiki/Tea_for_Two_(Youmans,_Vincent)",
+    "https://imslp.org/wiki/No,_No,_Nanette_(Youmans,_Vincent)"
+  ]
+}

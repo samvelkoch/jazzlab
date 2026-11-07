@@ -1,0 +1,48 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "swing",
+  "kind": "style",
+  "title": { "ru": "Свинг", "en": "Swing" },
+  "lead": {
+    "ru": "Особое джазовое «покачивание» ритма: в каждой паре восьмых первая нота звучит длиннее, вторая короче.",
+    "en": "The special jazz \"lilt\" of the rhythm: in each pair of eighth notes the first is longer and the second shorter."
+  },
+  "body": {
+    "ru": [
+      "В нотах восьмые пишут ровными, но играют неровно: «до-о-оба, до-о-оба». Часто первую ноту считают вдвое длиннее второй, как в триоли. На деле соотношение гибкое.",
+      "На медленном темпе разница между длинной и короткой нотой больше, на быстром — почти исчезает. Вторую ноту пары нередко слегка подчёркивают.",
+      "Свингом называют и эпоху биг-бендов, примерно 1935–1946 годы: оркестры Бенни Гудмена, Дюка Эллингтона, Каунта Бейси.",
+      "В приложении со свингом играются дорожки «Блюз» и «Стандарт». В «Босса-нове» восьмые ровные, без свинга."
+    ],
+    "en": [
+      "Eighth notes are written even but played uneven: \"doo-ba, doo-ba\". The first note is often thought of as twice as long as the second, like a triplet. In practice the ratio is flexible.",
+      "At slow tempos the gap between the long and short note is wider; at fast tempos it nearly disappears. The second note of the pair is often lightly accented.",
+      "\"Swing\" is also the name of the big-band era, roughly 1935 to 1946: the bands of Benny Goodman, Duke Ellington and Count Basie.",
+      "In the app the \"Blues\" and \"Standard\" tracks are played with swing. On the \"Bossa nova\" track the eighths are even, with no swing."
+    ]
+  },
+  "facts": [
+    { "ru": "В джазе соотношение длинной и короткой ноты обычно от 1:1 до 3:1.", "en": "In jazz the long-to-short ratio usually falls between 1:1 and 3:1." },
+    { "ru": "Бенни Гудмен называл свинг «свободой слова в музыке».", "en": "Benny Goodman called swing \"free speech in music\"." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Count_Basie_(1955_Kriegsmann_portrait_-_square_crop).jpg?width=800",
+    "alt": { "ru": "Каунт Бейси за роялем, около 1955", "en": "Count Basie at the piano, c. 1955" },
+    "credit": "James J. Kriegsmann",
+    "license": "Public domain (US, published 1955 without a copyright notice)",
+    "source": "https://commons.wikimedia.org/wiki/File:Count_Basie_(1955_Kriegsmann_portrait_-_square_crop).jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%B8%D0%BD%D0%B3_(%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD)" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Swing_(jazz_performance_style)" },
+    { "title": { "ru": "Эпоха свинга (англ.)", "en": "Swing era" }, "url": "https://en.wikipedia.org/wiki/Swing_music" }
+  ],
+  "related": ["blues", "jazz-standard", "bossa-nova", "twelve-bar-blues"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Swing_(jazz_performance_style)",
+    "https://ru.wikipedia.org/wiki/%D0%A1%D0%B2%D0%B8%D0%BD%D0%B3_(%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD)",
+    "https://en.wikipedia.org/wiki/Swing_music",
+    "https://en.wikipedia.org/wiki/Count_Basie",
+    "https://commons.wikimedia.org/wiki/File:Count_Basie_(1955_Kriegsmann_portrait_-_square_crop).jpg"
+  ]
+}

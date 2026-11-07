@@ -1,0 +1,47 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "aint-misbehavin",
+  "kind": "tune",
+  "title": { "ru": "Ain't Misbehavin'", "en": "Ain't Misbehavin'" },
+  "lead": {
+    "ru": "Песня 1929 года: музыка Фэтса Уоллера и Гарри Брукса, слова Энди Разафа. Одна из самых известных песен своего времени.",
+    "en": "A 1929 song with music by Fats Waller and Harry Brooks and lyrics by Andy Razaf. One of the best-known songs of its time."
+  },
+  "body": {
+    "ru": [
+      "Песню написали для ревю Connie's Hot Chocolates. Его показывали в гарлемском клубе Connie's Inn, а в июне 1929 года перенесли на Бродвей под названием Hot Chocolates.",
+      "Луи Армстронг руководил оркестром этого шоу. Он сыграл песню соло на трубе, публике так понравилось, что его вывели на сцену.",
+      "В том же 1929 году песню записали Армстронг, сам Уоллер, оркестр Лео Райсмана и другие.",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь мелодию эхом по два такта, потом играешь её поверх левой руки, а в «Выступлении» исполняешь два квадрата подряд."
+    ],
+    "en": [
+      "The song was written for the revue Connie's Hot Chocolates. It ran at Connie's Inn in Harlem and moved to Broadway in June 1929 as Hot Chocolates.",
+      "Louis Armstrong led the show's orchestra. He played the song as a trumpet solo, and the audience loved it so much that he was brought up on stage.",
+      "In that same year of 1929 the song was recorded by Armstrong, by Waller himself, by Leo Reisman's orchestra and others.",
+      "On the Standard track, section \"Tunes\", you learn the melody by echo two bars at a time, then play it over the left hand, and in \"Performance\" you play two choruses in a row."
+    ]
+  },
+  "facts": [
+    { "ru": "Запись Уоллера получила награду Зала славы «Грэмми» в 1984 году, а в 2004-м вошла в Национальный реестр звукозаписей США.", "en": "Waller's recording received a Grammy Hall of Fame Award in 1984 and joined the US National Recording Registry in 2004." },
+    { "ru": "В США песня перешла в общественное достояние 1 января 2025 года.", "en": "The song entered the US public domain on 1 January 2025." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Misbehave.jpg?width=800",
+    "alt": { "ru": "Обложка нот Ain't Misbehavin', 1929", "en": "Ain't Misbehavin' sheet music cover, 1929" },
+    "credit": "Mills Music, 1929",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Misbehave.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/Ain%E2%80%99t_Misbehavin%E2%80%99_(%D0%BF%D0%B5%D1%81%D0%BD%D1%8F)" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Ain%27t_Misbehavin%27_(song)" },
+    { "title": { "ru": "Ноты 1929 года на IMSLP", "en": "1929 sheet music on IMSLP" }, "url": "https://imslp.org/wiki/Ain't_Misbehavin'_(Waller,_Fats)" }
+  ],
+  "related": ["fats-waller", "jazz-standard", "swing", "honeysuckle-rose"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Ain%27t_Misbehavin%27_(song)",
+    "https://ru.wikipedia.org/wiki/Ain%E2%80%99t_Misbehavin%E2%80%99_(%D0%BF%D0%B5%D1%81%D0%BD%D1%8F)",
+    "https://commons.wikimedia.org/wiki/File:Misbehave.jpg",
+    "https://imslp.org/wiki/Ain't_Misbehavin'_(Waller,_Fats)"
+  ]
+}

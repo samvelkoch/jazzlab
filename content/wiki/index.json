@@ -1,0 +1,19 @@
+{
+  "$format": "jazzlab-wiki-index/1",
+  "groups": [
+    { "kind": "style", "title": { "ru": "Стили", "en": "Styles" }, "ids": ["blues", "bossa-nova", "jazz-standard", "swing"] },
+    { "kind": "concept", "title": { "ru": "Понятия", "en": "Ideas" }, "ids": ["twelve-bar-blues", "ii-v-i", "blues-scale", "shell-voicing", "clave", "aaba", "call-and-response"] },
+    { "kind": "tune", "title": { "ru": "Пьесы", "en": "Tunes" }, "ids": ["st-louis-blues", "tin-roof-blues", "bye-bye-blackbird", "sweet-georgia-brown", "honeysuckle-rose", "aint-misbehavin", "tea-for-two", "blue-bossa"] },
+    { "kind": "person", "title": { "ru": "Люди", "en": "People" }, "ids": ["handy", "fats-waller", "jobim", "kenny-dorham", "ray-henderson"] }
+  ],
+  "tunes": {
+    "stl-c": "st-louis-blues",
+    "tinroof-c": "tin-roof-blues",
+    "bbb-g": "bye-bye-blackbird",
+    "sgb-f": "sweet-georgia-brown",
+    "hsr-f": "honeysuckle-rose",
+    "aim-f": "aint-misbehavin",
+    "tft-f": "tea-for-two",
+    "bossa-cm": "blue-bossa"
+  }
+}

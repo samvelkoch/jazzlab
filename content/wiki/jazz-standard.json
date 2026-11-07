@@ -1,0 +1,37 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "jazz-standard",
+  "kind": "style",
+  "title": { "ru": "Джазовый стандарт", "en": "Jazz standard" },
+  "lead": {
+    "ru": "Пьеса, которую знают и играют почти все джазовые музыканты. Это общий репертуар: на нём можно играть с незнакомыми людьми.",
+    "en": "A tune that nearly every jazz musician knows and plays. It is the shared repertoire you can play with people you have just met."
+  },
+  "body": {
+    "ru": [
+      "Большинство стандартов — песни 1920–1940-х годов из бродвейских мюзиклов, голливудских фильмов и нотных издательств Tin Pan Alley. Вместе их называют «Великим американским песенником».",
+      "Точного списка нет, и он со временем меняется. Позже к классике добавились, например, босса-новы Жобина.",
+      "Музыканты учат стандарты по сборникам вроде Real Book, где записаны только мелодия и буквы аккордов. Остальное — аранжировку и импровизацию — каждый придумывает сам.",
+      "В приложении стандартам посвящена дорожка «Стандарт»: левая рука, 32-тактовая форма AABA, собственная мелодия «Стандарт в F», пьесы вроде Bye Bye Blackbird и фразы II–V–I. Играем со свингом."
+    ],
+    "en": [
+      "Most standards are songs from the 1920s to the 1940s, from Broadway shows, Hollywood films and the Tin Pan Alley publishers. Together they are called the Great American Songbook.",
+      "There is no fixed list, and it changes over time. Later additions to the classics include Jobim's bossa novas.",
+      "Musicians learn standards from books such as the Real Book, which give only the melody and chord symbols. The rest, the arrangement and the improvisation, is up to each player.",
+      "In the app the \"Standard\" track is about them: left hand, the 32-bar AABA form, the app's own tune \"Standard in F\", tunes like Bye Bye Blackbird, and II–V–I phrases. It is played with swing."
+    ]
+  },
+  "facts": [
+    { "ru": "Больше 20 лет, с 1930-х, самым записываемым стандартом была St. Louis Blues.", "en": "For over 20 years from the 1930s, St. Louis Blues was the most recorded standard." },
+    { "ru": "У пьесы Caravan Эллингтона и Тизола почти 1500 версий.", "en": "Ellington and Tizol's Caravan has almost 1,500 versions." }
+  ],
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9_%D1%81%D1%82%D0%B0%D0%BD%D0%B4%D0%B0%D1%80%D1%82" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Jazz_standard" }
+  ],
+  "related": ["aaba", "ii-v-i", "shell-voicing", "swing", "bye-bye-blackbird", "sweet-georgia-brown", "honeysuckle-rose", "aint-misbehavin", "tea-for-two", "st-louis-blues"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Jazz_standard",
+    "https://ru.wikipedia.org/wiki/%D0%94%D0%B6%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9_%D1%81%D1%82%D0%B0%D0%BD%D0%B4%D0%B0%D1%80%D1%82"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "tin-roof-blues",
+  "kind": "tune",
+  "title": { "ru": "Tin Roof Blues", "en": "Tin Roof Blues" },
+  "lead": {
+    "ru": "Медленный блюз New Orleans Rhythm Kings, записанный в 1923 году. Сегодня это один из самых часто записываемых номеров традиционного джаза.",
+    "en": "A slow blues by the New Orleans Rhythm Kings, recorded in 1923. Today it is one of the most recorded numbers in traditional jazz."
+  },
+  "body": {
+    "ru": [
+      "Пьесу сочинили музыканты самого оркестра: Пол Марес, Бен Поллак, Мел Штитцель, Джордж Брунис и Леон Роппола. Слова позже написал Уолтер Мелроуз.",
+      "Оркестр записал её в марте 1923 года на студии Gennett в Ричмонде, штат Индиана. Ноты выпустило чикагское издательство братьев Мелроуз. На обложке нарисован танцзал Tin Roof Café в Новом Орлеане — отсюда и название.",
+      "Потом её играли Джелли Ролл Мортон, Кинг Оливер, Сидни Беше, Луи Армстронг и многие другие.",
+      "В дорожке «Блюз», раздел «Пьеса», ты учишь её припев эхом по два такта."
+    ],
+    "en": [
+      "The tune was written by members of the band: Paul Mares, Ben Pollack, Mel Stitzel, George Brunies and Leon Roppolo. Walter Melrose added lyrics.",
+      "The band recorded it in March 1923 for Gennett in Richmond, Indiana. The sheet music came out from the Melrose Brothers in Chicago. Its cover shows the Tin Roof Café dance hall in New Orleans, which gave the tune its name.",
+      "Later it was played by Jelly Roll Morton, King Oliver, Sidney Bechet, Louis Armstrong and many others.",
+      "On the Blues track, section \"Tune\", you learn its chorus by echo, two bars at a time."
+    ]
+  },
+  "facts": [
+    { "ru": "Первая пластинка вышла на Gennett, на обороте — That's a Plenty.", "en": "The first record came out on Gennett, with That's a Plenty on the other side." },
+    { "ru": "Джелли Ролл Мортон записал её на перфоролл для механического пианино в 1924 году.", "en": "Jelly Roll Morton recorded it on a player-piano roll in 1924." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tin_Roof_Blues_1923_Melrose.jpg?width=800",
+    "alt": { "ru": "Обложка нот Tin Roof Blues, 1923", "en": "Tin Roof Blues sheet music cover, 1923" },
+    "credit": "Melrose Brothers Music Company, 1923",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Tin_Roof_Blues_1923_Melrose.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/Tin_Roof_Blues" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Tin_Roof_Blues" }
+  ],
+  "related": ["blues", "st-louis-blues"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Tin_Roof_Blues",
+    "https://ru.wikipedia.org/wiki/Tin_Roof_Blues",
+    "https://commons.wikimedia.org/wiki/File:Tin_Roof_Blues_1923_Melrose.jpg"
+  ]
+}

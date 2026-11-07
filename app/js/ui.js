@@ -90,10 +90,10 @@ export function langSwitch(onChange) {
   return wrap;
 }
 
-/** Top-level sections: course / chords. */
+/** Top-level sections: course / chords / reference. */
 export function navTabs(active) {
   const a = (id, href, label) => h('a', { href, 'aria-current': id === active ? 'page' : null }, label);
-  return h('nav.seg.big.navtabs', { 'aria-label': t('sections') }, a('course', '#/', t('navCourse')), a('chords', '#/chords', t('navChords')));
+  return h('nav.seg.big.navtabs', { 'aria-label': t('sections') }, a('course', '#/', t('navCourse')), a('chords', '#/chords', t('navChords')), a('wiki', '#/wiki', t('wikiTab')));
 }
 
 const VIRTUAL = /midiweb|session|сеть|network|iac|virtual/i;

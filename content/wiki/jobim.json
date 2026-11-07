@@ -1,0 +1,47 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "jobim",
+  "kind": "person",
+  "title": { "ru": "Антониу Карлос Жобин", "en": "Antônio Carlos Jobim" },
+  "lead": {
+    "ru": "Бразильский композитор и пианист, один из создателей босса-новы. Его песня «Девушка из Ипанемы» — одна из самых записываемых в мире.",
+    "en": "A Brazilian composer and pianist, one of the creators of bossa nova. His song \"The Girl from Ipanema\" is one of the most recorded songs ever."
+  },
+  "body": {
+    "ru": [
+      "Антониу Карлос Жобин родился в Рио-де-Жанейро в 1927 году. Весь мир знает его как Тома Жобима. Его фамилию по-русски пишут и «Жобин», и «Жобим».",
+      "Жобин соединил бразильскую самбу со спокойным, «прохладным» джазом. Так получилась босса-нова. Его песни Chega de Saudade и Desafinado записал Жуан Жилберту на своём первом альбоме 1958 года, и с этого началось новое течение.",
+      "В 1964 году вышел альбом Getz/Gilberto, где почти все песни написал Жобин. Песня «Девушка из Ипанемы» оттуда стала мировым хитом, а альбом получил «Грэмми» как альбом года.",
+      "Пьесу Blue Bossa, по мотивам которой ты играешь мелодию в дорожке «Босса-нова», написал не Жобин, а джазмен Кенни Дорэм. Но без Жобина и его друзей такой музыки бы не было."
+    ],
+    "en": [
+      "Antônio Carlos Jobim was born in Rio de Janeiro in 1927. The world knows him as Tom Jobim. In Russian his surname is spelled both «Жобин» and «Жобим».",
+      "Jobim blended Brazilian samba with cool jazz, and bossa nova was the result. João Gilberto recorded his songs Chega de Saudade and Desafinado on his 1958 debut album, and that launched the new movement.",
+      "In 1964 the album Getz/Gilberto came out, with almost all songs by Jobim. \"The Girl from Ipanema\" from it became a worldwide hit, and the album won the Grammy for Album of the Year.",
+      "Blue Bossa, the tune behind the melody you learn on the Bossa nova track, was written not by Jobim but by the jazzman Kenny Dorham. Still, without Jobim and his circle there would be no such music."
+    ]
+  },
+  "facts": [
+    { "ru": "Годы жизни: 25 января 1927 — 8 декабря 1994.", "en": "Lived 25 January 1927 – 8 December 1994." },
+    { "ru": "С Винисиусом ди Морайсом он написал музыку к фильму «Чёрный Орфей» (1959).", "en": "With Vinicius de Moraes he wrote the score for the film Black Orpheus (1959)." },
+    { "ru": "С 1999 года главный аэропорт Рио, Галеан, носит его имя.", "en": "Since 1999 Rio's Galeão airport has been named after him." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ant%C3%B4nio_Carlos_Jobim_(cropped).jpg?width=800",
+    "alt": { "ru": "Том Жобим, 1965", "en": "Tom Jobim, 1965" },
+    "credit": "Unknown photographer, Correio da Manhã / Arquivo Nacional (Brazil); restoration by PerfectSoundWhatever",
+    "license": "Public domain (Arquivo Nacional Collection)",
+    "source": "https://commons.wikimedia.org/wiki/File:Ant%C3%B4nio_Carlos_Jobim_(cropped).jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%96%D0%BE%D0%B1%D0%B8%D0%BD,_%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D0%B8%D1%83_%D0%9A%D0%B0%D1%80%D0%BB%D0%BE%D1%81" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Antonio_Carlos_Jobim" }
+  ],
+  "related": ["bossa-nova", "blue-bossa", "kenny-dorham", "clave"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Antonio_Carlos_Jobim",
+    "https://ru.wikipedia.org/wiki/%D0%96%D0%BE%D0%B1%D0%B8%D0%BD,_%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D0%B8%D1%83_%D0%9A%D0%B0%D1%80%D0%BB%D0%BE%D1%81",
+    "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q200131|Q498729|Q1980821|Q1775121&props=sitelinks&sitefilter=ruwiki|enwiki&format=json",
+    "https://commons.wikimedia.org/wiki/File:Ant%C3%B4nio_Carlos_Jobim_(cropped).jpg"
+  ]
+}

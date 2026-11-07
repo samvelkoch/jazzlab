@@ -3,6 +3,7 @@ import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { diagFmt } from './diag.js';
 import { freshItems } from '../queue.js';
 import { t, L, plural } from '../i18n.js';
+import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
 import { store, progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
@@ -80,15 +81,20 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'exercise' && !isDone(p)) { const e = prog[it.ex]; const n = e && e.stages ? ['notes', 'tempo', 'memory'].filter((s) => e.stages[s]).length : 0; return n ? `${t('stagesW')} ${n}/3` : ''; }
     return '';
   };
+  // a melody item links to its tune's article in the reference (a sibling link: anchors cannot nest)
+  const wiki = await wikiIndex().catch(() => null);
+  const wikiOf = (it) => (it.kind === 'melody' && wiki && wiki.tunes && wiki.tunes[it.melody]) || null;
   const itemCard = (id) => {
     const it = items[id], s = status(id);
     const r = rev[id];
     const badge = { done: t('done'), now: t('now'), review: t('reviewW'), meh: t('inProgress'), none: '' }[s];
-    return h('a.item', { href: it.href, 'data-status': s },
+    const art = wikiOf(it);
+    const card = h('a.item' + (art ? '.haswiki' : ''), { href: it.href, 'data-status': s },
       h('span.kicker', null, kindLabel(it.kind)),
       h('span.itemtitle', null, markTerms(it.title, undefined, 'span')),
       h('span.itemmeta', null, meta(id) || (r && !q.due.includes(id) ? `${t('nextReview')} ${new Date(r.due).toLocaleDateString()}` : markTerms(it.about || '', undefined, 'span'))),
       badge ? h('span.badge.' + (s === 'review' ? 'now' : s), null, badge) : null);
+    return art ? h('div.itemwrap', null, card, h('a.wikilink', { href: `#/wiki/${art}` }, t('aboutTune'))) : card;
   };
   const section = (sec) => h('section.tsection', null,
     h('div.row', null, h('h2', null, markTerms(L(sec.title))), h('div.grow'), h('span.meta', null, `${sec.items.filter((id) => isDone(prog[id])).length}/${sec.items.length}`)),
@@ -135,11 +141,19 @@ export async function renderTrack(root, { model, index, rerender }) {
     row(t('skRecs'), String(store.get('recordings', []).length)),
     row(t('longTermW'), String(longCount)));
   const goal = h('section.panel.tip', null, h('b', null, t('trackGoal')), h('p', null, markTerms(L(track.about))));
+  // fact of the day: filled in when its article arrives; stays hidden if the reference cannot load
+  const fact = h('section.panel.tip.factcard', { hidden: true });
+  factOfDay().then((f) => {
+    if (!f) return;
+    fact.replaceChildren(h('b', null, t('factOfDay')), h('p', null, L(f.fact)),
+      h('a.sklink', { href: `#/wiki/${f.article.id}` }, `${L(f.article.title)} →`));
+    fact.hidden = false;
+  }).catch(() => {});
 
   root.replaceChildren(header,
     h('main.course', null,
       h('div.coursemain', null,
         h('div.row', null, h('h1', null, L(track.title)), h('div.grow'), tabs),
         ...track.sections.map(section)),
-      h('aside.courseside', null, todayCard, skills, stats, goal)));
+      h('aside.courseside', null, todayCard, skills, stats, goal, fact)));
 }

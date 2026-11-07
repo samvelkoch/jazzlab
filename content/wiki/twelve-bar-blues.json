@@ -1,0 +1,68 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "twelve-bar-blues",
+  "kind": "concept",
+  "title": {
+    "ru": "12-тактовый блюз",
+    "en": "Twelve-bar blues"
+  },
+  "lead": {
+    "ru": "Круг из двенадцати тактов всего на трёх аккордах, в до это C7, F7 и G7. По-русски его часто называют «блюзовым квадратом».",
+    "en": "A twelve-bar cycle on just three chords: in C, they are C7, F7 and G7. In Russian it is often called the \"blues square\"."
+  },
+  "body": {
+    "ru": [
+      "В до мажоре это C7, F7 и G7. Двенадцать тактов делятся на три строки по четыре. Такты 1–4 стоят на C7 (во втором такте можно уйти на F7, это «быстрая смена»). Такты 5–6 на F7, такты 7–8 снова на C7.",
+      "Такт 9 на G7, такт 10 на F7 или G7. Последние два такта называют оборотом: если закончить на G7, круг тянет начаться заново, а если на C7, пьеса заканчивается.",
+      "Слова и мелодия блюза часто идут по схеме AAB: фраза, её повтор, потом новая фраза-ответ.",
+      "В приложении это дорожка «Блюз». В разделе «Левая рука» ты учишь аккорды на коротком упражнении из четырёх тактов C7 · F7 · G7 · C7, а в разделе «Форма» играешь весь блюз по кругу под барабаны, три чистых круга подряд. Куплеты St. Louis Blues тоже идут по этой форме."
+    ],
+    "en": [
+      "In C these are C7, F7 and G7. The twelve bars fall into three lines of four. Bars 1–4 sit on C7 (bar 2 may move to F7, the \"quick change\"). Bars 5–6 are on F7, bars 7–8 back on C7.",
+      "Bar 9 is on G7, bar 10 on F7 or G7. The last two bars are the turnaround: end on G7 and the cycle wants to start again; end on C7 and the piece is over.",
+      "Blues lyrics and melodies often follow an AAB shape: a phrase, its repeat, then a new answering phrase.",
+      "In the app this is the Blues track. In \"Left hand\" you learn the chords on a short four-bar drill, C7 · F7 · G7 · C7, and in \"Form\" you play the whole blues on a loop under drums, three clean rounds in a row. The verses of St. Louis Blues use this form too."
+    ]
+  },
+  "facts": [
+    {
+      "ru": "Джазмены любят блюз на джем-сейшнах: эту схему знают все.",
+      "en": "Jazz players use the blues at jam sessions because everyone knows the scheme."
+    },
+    {
+      "ru": "В 1950-х форму подхватил рок-н-ролл, например Rock Around the Clock.",
+      "en": "In the 1950s rock and roll took up the form, for example in Rock Around the Clock."
+    },
+    {
+      "ru": "Если укоротить или удлинить части, получится 8- или 16-тактовый блюз.",
+      "en": "Shorten or lengthen the sections and you get an eight- or sixteen-bar blues."
+    }
+  ],
+  "links": [
+    {
+      "title": {
+        "ru": "Википедия: Блюзовый квадрат",
+        "en": "Wikipedia (Russian)"
+      },
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D1%8E%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9_%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82"
+    },
+    {
+      "title": {
+        "ru": "Википедия (англ.)",
+        "en": "Wikipedia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Twelve-bar_blues"
+    }
+  ],
+  "related": [
+    "blues",
+    "st-louis-blues",
+    "shell-voicing",
+    "blues-scale",
+    "call-and-response"
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Twelve-bar_blues",
+    "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D1%8E%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9_%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82"
+  ]
+}

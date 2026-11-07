@@ -1,0 +1,47 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "sweet-georgia-brown",
+  "kind": "tune",
+  "title": { "ru": "Sweet Georgia Brown", "en": "Sweet Georgia Brown" },
+  "lead": {
+    "ru": "Песня 1925 года Бена Берни, Мейсео Пинкарда и Кеннета Кейси. Один из самых записываемых джазовых стандартов.",
+    "en": "A 1925 song by Ben Bernie, Maceo Pinkard and Kenneth Casey. One of the most recorded jazz standards."
+  },
+  "body": {
+    "ru": [
+      "Оркестр Бена Берни записал песню 19 марта 1925 года, а на следующий день издательство Jerome H. Remick выпустило ноты. Пластинка несколько недель была на первом месте.",
+      "Гармония движется по кругу: каждый аккорд тянет к следующему, пока мелодия не придёт домой. Поэтому на этой песне так удобно импровизировать.",
+      "Её играли Арт Тейтум, Джанго Рейнхардт, Чарли Паркер, Бад Пауэлл, Элла Фицджеральд и Оскар Питерсон.",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь мелодию эхом по два такта, потом играешь её поверх левой руки, а в «Выступлении» исполняешь два квадрата подряд. Мелодия взята из первого издания 1925 года."
+    ],
+    "en": [
+      "Ben Bernie's orchestra recorded the song on 19 March 1925, and Jerome H. Remick published the sheet music the next day. The record spent several weeks at number one.",
+      "The harmony moves around a circle: each chord pulls to the next until the melody comes home. That is why the tune is so good for improvising.",
+      "It was played by Art Tatum, Django Reinhardt, Charlie Parker, Bud Powell, Ella Fitzgerald and Oscar Peterson.",
+      "On the Standard track, section \"Tunes\", you learn the melody by echo two bars at a time, then play it over the left hand, and in \"Performance\" you play two choruses in a row. The melody comes from the 1925 first edition."
+    ]
+  },
+  "facts": [
+    { "ru": "Версия Brother Bones 1949 года со свистом стала музыкальной темой баскетбольной команды Harlem Globetrotters.", "en": "Brother Bones's whistled 1949 version became the theme of the Harlem Globetrotters basketball team." },
+    { "ru": "В 2025 году эту запись Brother Bones внесли в Национальный реестр звукозаписей США.", "en": "In 2025 the Brother Bones recording was added to the US National Recording Registry." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sweet_Georgia_Brown_(1925)_sheet_music_cover.jpg?width=800",
+    "alt": { "ru": "Обложка нот Sweet Georgia Brown, 1925", "en": "Sweet Georgia Brown sheet music cover, 1925" },
+    "credit": "Jerome H. Remick & Co., 1925 (scan: University of Maine, Vocal Popular Sheet Music Collection)",
+    "license": "Public domain (US, published before 1931)",
+    "source": "https://commons.wikimedia.org/wiki/File:Sweet_Georgia_Brown_(1925)_sheet_music_cover.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/Sweet_Georgia_Brown" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Sweet_Georgia_Brown" },
+    { "title": { "ru": "Ноты первого издания на IMSLP", "en": "First-edition sheet music on IMSLP" }, "url": "https://imslp.org/wiki/Sweet_Georgia_Brown_(Bernie,_Ben)" }
+  ],
+  "related": ["jazz-standard", "swing", "ii-v-i"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Sweet_Georgia_Brown",
+    "https://ru.wikipedia.org/wiki/Sweet_Georgia_Brown",
+    "https://commons.wikimedia.org/wiki/File:Sweet_Georgia_Brown_(1925)_sheet_music_cover.jpg",
+    "https://imslp.org/wiki/Sweet_Georgia_Brown_(Bernie,_Ben)"
+  ]
+}

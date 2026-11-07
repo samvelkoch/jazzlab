@@ -1,0 +1,46 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "fats-waller",
+  "kind": "person",
+  "title": { "ru": "Фэтс Уоллер", "en": "Fats Waller" },
+  "lead": {
+    "ru": "Пианист, органист, певец и композитор из Нью-Йорка, один из главных мастеров страйда. Он написал Honeysuckle Rose и Ain't Misbehavin'.",
+    "en": "A New York pianist, organist, singer and composer, one of the great masters of stride piano. He wrote Honeysuckle Rose and Ain't Misbehavin'."
+  },
+  "body": {
+    "ru": [
+      "Томас Райт Уоллер родился в Нью-Йорке в 1904 году. В пятнадцать лет он уже играл на органе в нью-йоркском театре «Линкольн». Учил его страйд-пианист Джеймс П. Джонсон, который остался ему другом на всю жизнь.",
+      "Страйд — это когда левая рука прыгает: бас внизу, аккорд в середине, и так на каждую долю. Уоллер играл так легко и весело, что его стиль повлиял на многих пианистов. Его считают и первым крупным джазовым органистом.",
+      "Самые известные его песни — Honeysuckle Rose и Ain't Misbehavin', обе 1929 года, слова к ним написал Энди Разаф. Уоллер был ещё и прекрасным шоуменом, пел и шутил прямо за роялем.",
+      "В дорожке «Стандарт», раздел «Пьесы», ты учишь обе эти песни."
+    ],
+    "en": [
+      "Thomas Wright Waller was born in New York in 1904. At fifteen he was already the organist at New York's Lincoln Theatre. His teacher was the stride pianist James P. Johnson, who stayed his friend for life.",
+      "In stride, the left hand jumps: a bass note low, a chord in the middle, on every beat. Waller played it with such ease and fun that his style shaped many pianists. He is also called the first important jazz organist.",
+      "His best-known songs are Honeysuckle Rose and Ain't Misbehavin', both from 1929, with lyrics by Andy Razaf. Waller was also a great entertainer who sang and joked right at the piano.",
+      "On the Standard track, section \"Tunes\", you learn both of these songs."
+    ]
+  },
+  "facts": [
+    { "ru": "Годы жизни: 21 мая 1904 — 15 декабря 1943.", "en": "Lived 21 May 1904 – 15 December 1943." },
+    { "ru": "Права примерно на двадцать песен, включая Ain't Misbehavin', он продал всего за 500 долларов.", "en": "He sold the rights to about twenty songs, including Ain't Misbehavin', for just 500 dollars." },
+    { "ru": "В 1993 году он посмертно получил «Грэмми» за достижения всей жизни.", "en": "In 1993 he received a posthumous Grammy Lifetime Achievement Award." }
+  ],
+  "image": {
+    "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fats_Waller_edit.jpg?width=800",
+    "alt": { "ru": "Фэтс Уоллер за роялем, 1938", "en": "Fats Waller at the piano, 1938" },
+    "credit": "Alan Fisher, New York World-Telegram and the Sun (Library of Congress); retouched by Jafeluv",
+    "license": "Public domain (Library of Congress: no known copyright restrictions)",
+    "source": "https://commons.wikimedia.org/wiki/File:Fats_Waller_edit.jpg"
+  },
+  "links": [
+    { "title": { "ru": "Википедия", "en": "Wikipedia (Russian)" }, "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%BE%D0%BB%D0%BB%D0%B5%D1%80,_%D0%A4%D1%8D%D1%82%D1%81" },
+    { "title": { "ru": "Википедия (англ.)", "en": "Wikipedia" }, "url": "https://en.wikipedia.org/wiki/Fats_Waller" }
+  ],
+  "related": ["honeysuckle-rose", "aint-misbehavin", "swing", "jazz-standard"],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Fats_Waller",
+    "https://ru.wikipedia.org/wiki/%D0%A3%D0%BE%D0%BB%D0%BB%D0%B5%D1%80,_%D0%A4%D1%8D%D1%82%D1%81",
+    "https://commons.wikimedia.org/wiki/File:Fats_Waller_edit.jpg"
+  ]
+}
