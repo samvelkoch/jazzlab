@@ -25,8 +25,14 @@ export function spell(m, flats) {
   return (flats ? FLAT_NAMES[pc] : SHARP_NAMES[pc]) + oct;
 }
 export const flatsFor = (chord) => /b/.test(chord.root) || chord.root === 'F';
-/** Left-hand pattern spelling: the chord's own spelling, but the b3 and b7 are always flats (Bb over C7, not A#). */
-export const patSpell = (m, deg, chord) => spell(m, flatsFor(chord) || [3, 10].includes(((deg % 12) + 12) % 12));
+/**
+ * Left-hand pattern spelling: the chord's own spelling, but the b3 and b7 are always flats (Bb over C7, not A#),
+ * and so is the b5 of a m7b5 / dim chord (Ab over Dm7b5, not G#). flats = true forces flats (a form in a flat key).
+ */
+export const patSpell = (m, deg, chord, flats = false) => {
+  const pc = ((deg % 12) + 12) % 12;
+  return spell(m, flats || flatsFor(chord) || [3, 10].includes(pc) || (pc === 6 && chord.offsets.includes(6) && !chord.offsets.includes(7)));
+};
 
 /**
  * Root for the left hand: keep it between F2 (41) and E3 (52) so the hand stays in one place.
@@ -48,7 +54,7 @@ export function barChords(name) {
 export const chordAt = (barName, t) => { const c = barChords(barName); return c[c.length > 1 && t >= 4 ? 1 : 0]; };
 
 /** Chord tones as names, spelled like the left-hand pattern: A7 = A C# E G, C7 = C E G Bb, Dm7 = D F A C. */
-export const chordNames = (name) => { const c = parseChord(name); return c.offsets.map((o) => patSpell(60 + c.pc + o, o, c).replace(/-?\d+$/, '')); };
+export const chordNames = (name, flats = false) => { const c = parseChord(name); return c.offsets.map((o) => patSpell(60 + c.pc + o, o, c, flats).replace(/-?\d+$/, '')); };
 
 // a pattern event's notes: deg may be a number or an array (several notes at once), f the same shape
 const evDegs = (e) => (Array.isArray(e.deg) ? e.deg : [e.deg]);
@@ -71,6 +77,7 @@ const evFingers = (e) => (Array.isArray(e.f) ? e.f : e.f ? [e.f] : []);
  * pattern: { id, title, bars: 1, events: [{ t, d, deg, f, stac? }] } — deg = semitones above the root
  * (or an array of them, played together, with f an array of the same length).
  * bars: ['C7', 'F7', 'C7 A7', ...] one or two chords per bar (an event at t < 4 uses the first, t >= 4 the second).
+ * opts.flats = spell every note with flats (the form's `flats`, a flat key like Blue Bossa).
  * Returns a raw jazzlab-exercise/1 object (call normalize() on it).
  */
 export function patternExercise(pattern, bars, opts = {}) {
@@ -79,7 +86,7 @@ export function patternExercise(pattern, bars, opts = {}) {
     rh: [],
     lh: ev.map((e) => {
       const chord = parseChord(chordAt(name, e.t)), root = lhRoot(chord);
-      return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord); }), f: evFingers(e), stac: !!e.stac, sug: false };
+      return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord, !!opts.flats); }), f: evFingers(e), stac: !!e.stac, sug: false };
     }),
     chord: name
   }));
@@ -154,7 +161,7 @@ export function lickBars(lick, chordName) {
  * Returns a raw jazzlab-exercise/1 object (call normalize() on it).
  */
 export function lickExercise(lick, chordName, pattern, opts = {}) {
-  const lh = pattern ? patternExercise(pattern, [chordName]).bars[0].lh : []; // multi-note events stay one event
+  const lh = pattern ? patternExercise(pattern, [chordName], { flats: opts.flats }).bars[0].lh : []; // multi-note events stay one event
   const bars = lickBars(lick, chordName).map((evs) => ({
     rh: evs.map((e) => ({ t: e.t, d: e.d, n: [lickSpell(e.m, e.deg)], f: e.f ? [e.f] : [], stac: e.stac, sug: false })),
     lh: lh.map((e) => ({ ...e, n: e.n.slice(), f: e.f.slice() })),

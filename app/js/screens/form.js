@@ -35,7 +35,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const lickWord = (k) => !pair ? t('lickW') : lickAt(k).role === 'question' ? t('questionW') : lickAt(k).role === 'answer' ? t('answerW') : (k / 2) % 2 === 0 ? t('questionW') : t('answerW');
   const barNotes = rh ? rhNotes : lhNotes; // what you play (expected + keyboard)
   const maxSlips = Math.max(1, Math.round(barNotes.flat().length / SLIP_PER)); // misses + wrong notes allowed in a clean chorus
-  const st = { mode: 'play', bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing, playing: false, streak: 0, choruses: 0 };
+  const st = { mode: 'play', bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing && form.style !== 'bossa', playing: false, streak: 0, choruses: 0 };
   const wasDue = reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date();
   const midiOn = () => midiState().connected;
 
@@ -49,7 +49,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const cells = bars.map((c, k) => {
     const lh = barNotes[k];
     const uniq = [...new Map(lh.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
-    const label = rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(barChords(c)[0]))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c)), names)).join(' · ');
+    const label = rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(barChords(c)[0]))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
@@ -129,7 +129,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
       const slot = g % PER, bar = Math.floor(g / PER) % NB, chorus = Math.floor(g / (PER * NB));
       const time = beatTime + (slot % 2 ? swingOff() : 0);
       if (time > ahead) break;
-      if (settings.impBeat === 'drums') groove(slot, time, st.swing); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, style: form.style, bar: Math.floor(g / PER) }); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
       // right-hand mode: the left hand is the band, always audible
       if (rh) lhNotes[bar].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.35));
       const evs = barNotes[bar].filter((e) => e.t === slot);

@@ -1,0 +1,61 @@
+{
+  "$format": "jazzlab-track/1",
+  "id": "bossa",
+  "title": { "ru": "Босса-нова", "en": "Bossa nova" },
+  "about": { "ru": "Цель дорожки: Blue Bossa целиком, левая держит ячейку боссы, правая ведёт мелодию. Ровные восьмые, не спеша.", "en": "Goal: the whole of Blue Bossa, the left hand holding the bossa cell, the right hand carrying the melody. Even eighths, no hurry." },
+  "sections": [
+    {
+      "id": "keys", "title": { "ru": "Аккорды боссы", "en": "Bossa chords" },
+      "about": { "ru": "Семь форм ладони, из которых сделана вся пьеса. Любой рукой, в любом порядке.", "en": "The seven hand shapes the whole tune is made of. Any hand, any order." },
+      "items": ["d-chords-cm", "d-chords-db"]
+    },
+    {
+      "id": "lh", "title": { "ru": "Левая рука", "en": "Left hand" },
+      "about": { "ru": "Ячейка боссы: корень и квинта, ровно, без свинга. Учится на четырёх тактах Cm7 · Fm7 · Dm7b5 · G7.", "en": "The bossa cell: root and fifth, even, no swing. Learned over four bars Cm7 · Fm7 · Dm7b5 · G7." },
+      "items": ["pat-b1", "pat-b2"]
+    },
+    {
+      "id": "form", "title": { "ru": "Форма", "en": "The form" },
+      "about": { "ru": "Все шестнадцать тактов по кругу под барабаны боссы. Три чистых круга подряд, и левая готова.", "en": "All sixteen bars on a loop over bossa drums. Three clean choruses in a row and the left hand is ready." },
+      "items": ["form-b1", "form-b2"]
+    },
+    {
+      "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
+      "about": { "ru": "Две-три минуты в день. Слух растёт от повторов.", "en": "Two or three minutes a day. The ear grows with repetition." },
+      "items": ["ear-find-bossa"]
+    },
+    {
+      "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
+      "about": { "ru": "Вся пьеса под барабаны. Это не упражнение, а результат: запись остаётся, её можно послушать и сохранить.", "en": "The whole tune over drums. Not an exercise but a result: the recording stays, you can listen to it and save it." },
+      "items": ["perf-bossa"]
+    }
+  ],
+  "items": {
+    "d-chords-cm": {
+      "kind": "drill", "title": { "ru": "Аккорды до минора", "en": "C minor chords" },
+      "about": { "ru": "Cm7, Fm7, G7, Dm7b5: четыре формы ладони первой половины.", "en": "Cm7, Fm7, G7, Dm7b5: the four hand shapes of the first half." },
+      "tasks": [{ "type": "chord", "chords": ["Cm7", "Fm7", "G7", "Dm7b5"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 }
+    },
+    "d-chords-db": {
+      "kind": "drill", "title": { "ru": "Аккорды в Db", "en": "Chords in D-flat" },
+      "about": { "ru": "Ebm7, Ab7, Dbmaj7: три формы второй половины, все на чёрных.", "en": "Ebm7, Ab7, Dbmaj7: the three shapes of the second half, all on the black keys." },
+      "tasks": [{ "type": "chord", "chords": ["Ebm7", "Ab7", "Dbmaj7"], "n": 6 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 }
+    },
+    "pat-b1": { "kind": "pattern", "pattern": "b1", "form": "blue-bossa" },
+    "pat-b2": { "kind": "pattern", "pattern": "b2", "form": "blue-bossa" },
+    "form-b1": { "kind": "form", "form": "blue-bossa", "pattern": "b1", "title": { "ru": "Blue Bossa на басу", "en": "Blue Bossa, bass only" } },
+    "form-b2": { "kind": "form", "form": "blue-bossa", "pattern": "b2", "title": { "ru": "Blue Bossa с ходом", "en": "Blue Bossa with the move" } },
+    "ear-find-bossa": {
+      "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
+      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала рядом с C4, потом шире, потом через три октавы.", "en": "I play a note, you find it on the keys. Close to C4 first, then wider, then across three octaves." },
+      "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 }
+    },
+    "perf-bossa": {
+      "kind": "perform", "form": "blue-bossa", "pattern": "b1", "licks": [], "choruses": 2,
+      "title": { "ru": "Blue Bossa, два круга", "en": "Blue Bossa, two choruses" },
+      "about": { "ru": "Левая держит ячейку, правая пока что хочешь: аккордовые ноты или просто слушай гармонию. Запись остаётся.", "en": "The left hand holds the cell; the right hand, for now, whatever you like: chord tones, or just listen to the harmony. The recording stays." }
+    }
+  }
+}

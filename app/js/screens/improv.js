@@ -260,7 +260,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
         if (k === youBar() + 0 && bar > 0 || (k !== youBar() && bar > 0)) { /* nothing */ }
       }
       accomp(k, slot, time, beat);
-      if (settings.impBeat === 'drums') groove(slot, time, st.swing); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, bar }); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
       if (k === 0 && st.stage === 'echo' && phrase) { const pn = phrase.notes.find((x) => x.slot === slot); if (pn) play1(pn.m, time, swingOff() * pn.len * 0.95, 0.55); }
       if (k === youBar()) { const o = pats[st.ri].rh.onsets.find((x) => x.slot === slot); if (o) exp.push({ t: time, slot, hit: false, m: phrase && st.stage === 'echo' ? (phrase.notes.find((x) => x.slot === slot) || {}).m : null }); }
       if (k === youBar() && slot === PER - 1) queue.push({ t: time + beat + 0.25, youEnd: bar });

@@ -1,5 +1,7 @@
 // Rhythm pattern in notation, like the box above each exercise in the book: one line, note heads + stems,
 // beamed eighths, rests, counting "1 + 2 + 3 + 4 +" underneath. x positions match the rhythm lane below it.
+import { parsePattern, lenToken } from './rhythm.js';
+
 const NS = 'http://www.w3.org/2000/svg';
 export const NOTE_X0 = 30, NOTE_W = 940; // same 3% / 94% inset as the lane
 
@@ -33,9 +35,21 @@ export function renderRhythmNotation(svg, events, per = 8) {
       }
       return;
     }
-    el('ellipse', { cx: x, cy: LINE, rx: 10.5, ry: 7.5, transform: `rotate(-20 ${x} ${LINE})`, class: e.d >= 4 ? 'hollow' : 'fill' }, g); // half note = hollow head
-    el('line', { x1: x + 9.5, x2: x + 9.5, y1: LINE - 3, y2: LINE - STEM - 30, class: 'stem' }, g);
-    if (e.d === 1.5 || e.d === 3) el('circle', { cx: x + 20, cy: LINE - 4, r: 3, class: 'fill' }, g);
+    // a length with no single note value (5 = dotted quarter + quarter) is drawn as tied notes: 4.~4
+    const parts = Number.isInteger(e.d) && ![1, 2, 3, 4, 6].includes(e.d) ? lenToken(e.d).split('~').map((p) => parsePattern(p)[0].d) : [e.d];
+    let at = e.t, px = x;
+    parts.forEach((d, i) => {
+      const hx = xs(at);
+      el('ellipse', { cx: hx, cy: LINE, rx: 10.5, ry: 7.5, transform: `rotate(-20 ${hx} ${LINE})`, class: d >= 4 ? 'hollow' : 'fill' }, g); // half note = hollow head
+      el('line', { x1: hx + 9.5, x2: hx + 9.5, y1: LINE - 3, y2: LINE - STEM - 30, class: 'stem' }, g);
+      if (d === 1.5 || d === 3 || d === 6) el('circle', { cx: hx + 20, cy: LINE - 4, r: 3, class: 'fill' }, g);
+      if (i > 0) { // tie under the heads, from the previous note to this one
+        el('path', { d: `M${px + 4} ${LINE + 11} Q${(px + hx) / 2} ${LINE + 24} ${hx - 4} ${LINE + 11} Q${(px + hx) / 2} ${LINE + 20} ${px + 4} ${LINE + 11}`, class: 'fill' }, g);
+        if (d === 1) el('path', { d: `M${hx + 9.5} ${LINE - STEM - 30} c2 12 16 14 12 30 c0 -10 -8 -14 -12 -16`, class: 'fill' }, g);
+      }
+      px = hx; at += d;
+    });
+    if (parts.length > 1) return;
     const beam = isBeamed(e, k);
     if (beam === 'start') {
       const x2 = xs(events[k + 1].t);

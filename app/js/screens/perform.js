@@ -31,7 +31,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const lhMidi = Object.values(lhByChord).flat().map((e) => e.m);
   const END_BARS = ending ? ending.bars.length : 1; // bars after the last chorus
   const endMidi = ending ? ending.bars.flatMap((b) => [...b.rh, ...b.lh].flatMap((e) => e.notes.map(toMidi))) : [];
-  const st = { bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing, choruses: item.choruses || 3, mode: null }; // mode: null | 'run' | 'play'
+  const st = { bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing && form.style !== 'bossa', choruses: item.choruses || 3, mode: null }; // mode: null | 'run' | 'play'
   const myRecs = () => store.get('recordings', []).filter((r) => r.itemId === itemId);
   let current = myRecs()[0] || null; // the recording shown in the summary
   const midiOn = () => midiState().connected;
@@ -48,7 +48,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const grid = h('div.fgrid', null, ...cells);
   const nn = (m) => noteName(midiToName(m), names);
   const strip = h('div.perfstrip', null,
-    h('span', null, h('b', null, `${t('perfLeft')}:`), ...chords.map((c) => h('span.pchord', null, `${c} `, h('span.fnotes', null, [...new Map(lhByChord[c].map((e) => [e.m, e])).values()].map((e) => noteName(patSpell(e.m, e.deg, parseChord(c)), names)).join(' · '))))),
+    h('span', null, h('b', null, `${t('perfLeft')}:`), ...chords.map((c) => h('span.pchord', null, `${c} `, h('span.fnotes', null, [...new Map(lhByChord[c].map((e) => [e.m, e])).values()].map((e) => noteName(patSpell(e.m, e.deg, parseChord(c), !!form.flats), names)).join(' · '))))),
     licks.length ? h('span', null, h('b', null, `${t('perfRight')}:`), ` ${licks.map((l) => `«${L(l.title)}»`).join(', ')} ${t('perfOwn')}`) : null,
     ending ? h('span', null, h('b', null, `${t('perfEnding')}:`), ' ', endItem ? h('a', { href: endItem.href }, `«${L(ending.title)}»`) : `«${L(ending.title)}»`) : null);
   const summary = h('div.dsummary.perfsum');
@@ -146,11 +146,11 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
       const time = beatTime + (slot % 2 ? run.swingOff : 0);
       if (time > ahead) break;
       if (g === run.last) { // the last ending bar: beat 1 only, then silence
-        if (drums) groove(0, time, run.swing); else audio.click(time, true);
+        if (drums) groove(0, time, { swing: run.swing, style: form.style, bar: barG }); else audio.click(time, true);
         if (run.endBars === 1) queue.push({ t: time, barStart: -1 });
         g++; break;
       }
-      if (drums) groove(slot, time, run.swing); else if (slot % 2 === 0) audio.click(time, slot === 0);
+      if (drums) groove(slot, time, { swing: run.swing, style: form.style, bar: barG }); else if (slot % 2 === 0) audio.click(time, slot === 0);
       if (g >= run.total) { if (g === run.total) queue.push({ t: time, barStart: -1 }); } // ending bars: groove on, no form cell
       else {
         if (slot === 0) queue.push({ t: time, barStart: bar, chorus });

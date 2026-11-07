@@ -1,0 +1,13 @@
+{
+  "$format": "jazzlab-form/1",
+  "id": "blue-bossa",
+  "title": { "ru": "Blue Bossa", "en": "Blue Bossa" },
+  "about": { "ru": "Шестнадцать тактов в до миноре с заходом в Db мажор. Гармония классической босса-новы Кенни Дорэма.", "en": "Sixteen bars in C minor with a trip to D-flat major. The harmony of Kenny Dorham's classic bossa nova." },
+  "tempo": 66,
+  "swing": false,
+  "style": "bossa",
+  "flats": true,
+  "bars": ["Cm7", "Cm7", "Fm7", "Fm7", "Dm7b5", "G7", "Cm7", "Cm7", "Ebm7", "Ab7", "Dbmaj7", "Dbmaj7", "Dm7b5", "G7", "Cm7", "Dm7b5 G7"],
+  "practice": ["Cm7", "Fm7", "Dm7b5", "G7"],
+  "patterns": ["b1", "b2"]
+}

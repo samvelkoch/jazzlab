@@ -64,20 +64,22 @@ export function dueReviews(now = new Date()) {
 /** "In long-term memory" = interval of 14 days or more. */
 export const longTerm = (r) => !!(r && r.interval >= 14);
 
-// ---- one-tap session: a queue of item ids to go through ----
-// session = { ids: [...], at: index, started: ISO }
-export function session() { return store.get('session', null); }
-export function startSession(ids) { const s = { ids, at: 0, started: new Date().toISOString() }; store.set('session', s); return s; }
-export function endSession() { store.set('session', null); }
+// ---- one-tap session: a queue of item ids to go through, one per track ----
+// session = { ids: [...], at: index, started: ISO }. The blues keeps the original key 'session'; other tracks use
+// 'session:<track>', so starting the bossa session does not end the blues one (item ids are unique across tracks).
+const sessKey = (track) => (!track || track === 'blues' ? 'session' : 'session:' + track);
+export function session(track) { return store.get(sessKey(track), null); }
+export function startSession(ids, track) { const s = { ids, at: 0, started: new Date().toISOString() }; store.set(sessKey(track), s); return s; }
+export function endSession(track) { store.set(sessKey(track), null); }
 /** Next item after the given one (or the first not yet reached); null when the queue is finished. */
-export function sessionNext(afterId) {
-  const s = session(); if (!s || !s.ids.length) return null;
+export function sessionNext(afterId, track) {
+  const s = session(track); if (!s || !s.ids.length) return null;
   const k = afterId ? s.ids.indexOf(afterId) : -1;
   const at = k >= 0 ? k + 1 : s.at;
   if (at >= s.ids.length) return null;
   return { id: s.ids[at], at, total: s.ids.length };
 }
-export function sessionAdvance(id) {
-  const s = session(); if (!s) return;
-  const k = s.ids.indexOf(id); if (k >= 0) { s.at = Math.max(s.at, k + 1); store.set('session', s); }
+export function sessionAdvance(id, track) {
+  const s = session(track); if (!s) return;
+  const k = s.ids.indexOf(id); if (k >= 0) { s.at = Math.max(s.at, k + 1); store.set(sessKey(track), s); }
 }

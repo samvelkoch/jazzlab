@@ -41,6 +41,8 @@ function graceXml(g, staff, voice) {
 }
 
 function noteXml(e, staff, voice, beam) {
+  // 5 eighths (the bossa bass cell) has no single note value: a dotted quarter tied to a quarter
+  if (e.d === 5 && !e.rest) return noteXml({ ...e, d: 3, tie: 'start' }, staff, voice, beam) + noteXml({ ...e, t: e.t + 3, d: 2, tie: 'stop', grace: null, acc: false, stac: false, f: [] }, staff, voice, null);
   const dot = DOTTED[e.d] ? '<dot/>' : '';
   if (e.rest) return `<note><rest/><duration>${e.d}</duration><voice>${voice}</voice><type>${TYPE[e.d]}</type>${dot}<staff>${staff}</staff></note>`;
   return (e.grace ? graceXml(e.grace, staff, voice) : '') + e.notes.map((n, i) => {
@@ -50,10 +52,11 @@ function noteXml(e, staff, voice, beam) {
     const bm = beam && i === 0 ? `<beam number="1">${beam}</beam>` : '';
     const arts = (e.stac ? '<staccato/>' : '') + (e.acc ? '<accent/>' : '');
     const f = e.f[i];
-    const notations = (arts || f !== undefined)
-      ? '<notations>' + (arts ? `<articulations>${arts}</articulations>` : '') + (f !== undefined ? `<technical><fingering>${f}</fingering></technical>` : '') + '</notations>'
+    const tie = e.tie ? `<tie type="${e.tie}"/>` : '', tied = e.tie ? `<tied type="${e.tie}"/>` : '';
+    const notations = (arts || f !== undefined || tied)
+      ? '<notations>' + tied + (arts ? `<articulations>${arts}</articulations>` : '') + (f !== undefined ? `<technical><fingering>${f}</fingering></technical>` : '') + '</notations>'
       : '';
-    return `<note>${i ? '<chord/>' : ''}<pitch>${pitch}</pitch><duration>${e.d}</duration><voice>${voice}</voice><type>${TYPE[e.d]}</type>${dot}${acc}<stem>${staff === 1 ? 'up' : 'down'}</stem><staff>${staff}</staff>${bm}${notations}</note>`;
+    return `<note>${i ? '<chord/>' : ''}<pitch>${pitch}</pitch><duration>${e.d}</duration>${tie}<voice>${voice}</voice><type>${TYPE[e.d]}</type>${dot}${acc}<stem>${staff === 1 ? 'up' : 'down'}</stem><staff>${staff}</staff>${bm}${notations}</note>`;
   }).join('');
 }
 

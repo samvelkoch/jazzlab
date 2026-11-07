@@ -1,0 +1,13 @@
+{
+  "$format": "jazzlab-pattern/1",
+  "id": "b1",
+  "title": { "ru": "Бас боссы", "en": "Bossa bass" },
+  "about": { "ru": "Корень на «1», квинта на «и» второй доли и держится до конца такта. Это ячейка боссы: она не свингует и не меняется весь такт.", "en": "The root on 1, the fifth on the «and» of 2, held to the end of the bar. This is the bossa cell: it does not swing and stays the same all bar." },
+  "tempo": 60,
+  "swing": false,
+  "rhythm": "4. 4.~4",
+  "events": [
+    { "t": 0, "d": 3, "deg": 0, "f": 5 },
+    { "t": 3, "d": 5, "deg": 7, "f": 1 }
+  ]
+}

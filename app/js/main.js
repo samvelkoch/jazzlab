@@ -119,9 +119,9 @@ async function route() {
       const item = model.items[mtf[2]], chord = mtf[3];
       const form = item && model.forms[item.form];
       if (!item || item.kind !== 'lick' || !form || !form.bars.flatMap(barChords).includes(chord)) { message(t('notFound')); return; }
-      setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null);
+      setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mtf[1]);
       const ex = normalize(lickExercise(model.licks[item.lick], chord, model.patterns[item.pattern], {
-        id: `${item.id}-${chord.toLowerCase()}`, course: mtf[1], doneId: item.id, back: item.href,
+        id: `${item.id}-${chord.toLowerCase()}`, course: mtf[1], doneId: item.id, back: item.href, flats: !!form.flats,
         kicker: `${L(model.track.title).toUpperCase()} · ${t('lickUpper')} · ${chord}`
       }));
       document.title = `${item.title} · ${chord} · Jazzlab`;
@@ -130,7 +130,7 @@ async function route() {
       const model = await trackModel(mti[1]);
       const item = model.items[mti[2]];
       if (!item) { message(t('notFound')); return; }
-      setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null);
+      setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mti[1]);
       const back = mti[1] === 'blues' ? '#/' : `#/track/${mti[1]}`;
       document.title = `${item.title} · Jazzlab`;
       if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
@@ -154,7 +154,7 @@ async function route() {
       } else if (item.kind === 'pattern') {
         const form = model.forms[item.form], pattern = model.patterns[item.pattern];
         const ex = normalize(patternExercise(pattern, form.practice || form.bars, {
-          id: item.id, course: mti[1], swing: form.swing, back, title: item.title, about: item.about || null,
+          id: item.id, course: mti[1], swing: form.style === 'bossa' ? false : form.swing, flats: !!form.flats, back, title: item.title, about: item.about || null,
           kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_pattern').toUpperCase()} · ${(form.practice || form.bars).join(' ')}`
         }));
         cleanup = renderExercise(root, { ex, rerender });
@@ -162,7 +162,7 @@ async function route() {
     } else {
       const id = mt ? mt[1] : 'blues';
       const [{ index }, model] = await Promise.all([content(), trackModel(id)]);
-      setItemLinks((iid) => model.items[iid] ? { href: model.items[iid].href, title: model.items[iid].title } : null);
+      setItemLinks((iid) => model.items[iid] ? { href: model.items[iid].href, title: model.items[iid].title } : null, id);
       document.title = 'Jazzlab';
       await renderTrack(root, { model, index, rerender });
     }

@@ -17,7 +17,7 @@ Time unit = one eighth note. A 4/4 bar has slots `0..7` (`1 + 2 + 3 + 4 +`).
   "passAnyTempo": true,               // default true: a clean run passes the «In tempo» / «By heart» stages at any tempo;
                                       // false = the stage passes only at tempo.target (old behaviour)
   "swing": false,                     // default eighths feel (user can switch)
-  "rhythm": "8 8 4 8 8 r8 8",         // informational; the Rhythm stage derives the rhythm from the bars
+  "rhythm": "8 8 4 8 8 r8 8",         // one bar, drawn and clapped in the Rhythm stage (without it the stage uses the first bar's merged rhythm)
   "defaults": { "stac": true },       // defaults for every event
   "dyn": [                            // dynamics; level 0..1 drives playback loudness
     { "bar": 0, "mark": "mp", "level": 0.55 },
@@ -31,6 +31,11 @@ Time unit = one eighth note. A 4/4 bar has slots `0..7` (`1 + 2 + 3 + 4 +`).
   ]
 }
 ```
+
+Rhythm tokens: `8` eighth, `4` quarter, `2` half, `r` before one = a rest; a dot adds half (`4.` = 3 eighths,
+`2.` = 6); `~` ties lengths into one note (`4.~4` = 5 eighths: a dotted quarter tied to a quarter, the bossa bass cell).
+`parsePattern()` / `lenToken()` in `app/js/music/rhythm.js`. Events of 3, 5 and 6 eighths are drawn dotted / tied
+in the Rhythm stage and on the staff, and exported to MusicXML as a dotted quarter + tied quarter for 5.
 
 Event fields: `t` slot, `d` length in eighths (default 1), `n` pitches (`C4` = middle C, `F#3`, `Bb4`),
 `f` fingers per pitch, `acc` accent, `stac` staccato, `sug` = fingering is our suggestion (not printed in the source),
@@ -71,7 +76,15 @@ An `ear` item is the «Find the note» game: `"kind": "ear", "rounds": 12, "rang
 meh (≤ 2 wrong keys or a replay) or miss (3+ wrong keys; the 4th reveals the answer). Accuracy = (ok + 0.5 · meh) / rounds,
 stored as `best` (a number 0..1). Passing sets `stages.done` and schedules a review.
 
-Item screens are `#/t/<track>/<item>`. Passing an item (drill thresholds, the exercise's «by heart» stage,
+Item screens are `#/t/<track>/<item>`. Item ids are store keys (progress, reviews), so they must be unique across
+all tracks (the bossa ear game is `ear-find-bossa`, not `ear-find`). Each track has its own one-tap session
+(store `session` for the blues, `session:<track>` for the others). A track is listed in `content/index.json`
+(`"kind": "track"`, `"ready": true` shows it in the home tabs, opened at `#/track/<id>`; the blues is `#/`).
+
+The bossa track (`content/tracks/bossa.json`): chord drills of Blue Bossa (`d-chords-cm`, `d-chords-db`), the patterns
+`pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), `ear-find-bossa`, and `perf-bossa`
+(2 choruses, no licks, no ending: one ending bar). No check-up item; the home «Навыки» card hides the lick row for a
+track without licks. The melody comes later. Passing an item (drill thresholds, the exercise's «by heart» stage,
 3 clean choruses of a form) schedules a review in 1, 3, 7, 14 then 30 days.
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
@@ -80,15 +93,29 @@ Item screens are `#/t/<track>/<item>`. Passing an item (drill thresholds, the ex
 space (`"C7 A7"`, the turnaround in `blues-c-ta`): the first covers slots 0..3, the second slots 4..7 (`barChords()` /
 `chordAt()` in `forms.js`); licks and the right-hand form mode use the first chord of the bar. `practice` = a short chord
 sequence to learn a pattern on, `tempo`, `swing`, optional `ending` = an exercise id (`"blues-end"`): the bars played
-after the last chorus in a performance; its bar count sets the ending length.
+after the last chorus in a performance; its bar count sets the ending length. Any number of bars works (Blue Bossa has 16;
+the form grid wraps 4 bars per row).
+
+- `"style": "bossa"` (optional; default = the swing / straight jazz groove): the drums play a 2-bar bossa nova groove
+  (shaker on every eighth, bass drum on slots 0, 3, 4, 7, rim click on the 3-2 bossa clave: bar A slots 0, 3, 6, bar B
+  slots 2, 5; `groove(slot, time, { swing, style, bar })` in `app/js/music/drums.js`, `bar` = the bar index from the
+  start, its parity picks A or B). A bossa form plays straight eighths: set `"swing": false`. The form, performance and
+  lick screens pass the style through; the metronome-click backing is unchanged.
+- `"flats": true` (optional): spell every left-hand note with flats (a flat key: Blue Bossa in C minor / Db major).
+  `patternExercise(pattern, bars, { flats })`; the form and performance cells use it too.
 
 `content/patterns/<id>.json`: `events` relative to the chord root, `deg` = semitones above it, `d` in eighths, `f` finger.
 `patternExercise()` in `app/js/music/forms.js` unfolds a pattern over a chord list into a normal exercise; the root sits
 between F2 and E3 (C → C3, F → F2, G → G2) so the hand stays in place. Spelling: the chord's own (flats for F and flat
-roots), but `deg` 3 and 10 are always flats (Bb3 over C7). Any number of events per bar works (p2 «Буги» has 8 eighths).
+roots), but `deg` 3 and 10 are always flats (Bb3 over C7), and so is the b5 of a m7b5 / dim chord (Ab over Dm7b5);
+the form's `flats` forces flats everywhere. `chordNames()` (the drill prompts) spells the same way: Dm7b5 = D F Ab C,
+Ebm7 = Eb Gb Bb Db, Dbmaj7 = Db F Ab C. Any number of events per bar works (p2 «Буги» has 8 eighths).
 `deg` may be an array (several notes at once) with `f` an array of the same length:
 `{ "t": 2, "d": 2, "deg": [4, 10], "f": [2, 1] }` (p3 «Корень и шелл»: the third and seventh on 2 and 4). The exercise gets
 one event with all the notes; `patternBar()` returns one entry per note, so the form screen scores each of them.
+`b1` «Бас боссы» (`t 0 d 3` root, `t 3 d 5` fifth, `"rhythm": "4. 4.~4"`) and `b2` «Бас боссы с ходом» (root, fifth,
+root on 4: `"4. 4. 4"`) are the bossa cells; over a two-chord bar each event takes the chord at its slot, so b1 (no event
+after slot 3) plays only the first chord of `"Dm7b5 G7"`, b2 plays the G on 4.
 The form screen allows max(1, round(notes per chorus / 40)) slips in a clean chorus: 1 for p1 / p1q, 2 for p2.
 
 # Licks (`jazzlab-lick/1`)
