@@ -65,12 +65,14 @@ const evDegs = (e) => (Array.isArray(e.deg) ? e.deg : [e.deg]);
  * over a minor chord the 3rd becomes 3 (Dm7: F, not F#), over a maj7 the 7th becomes 11, over m7b5/dim the 5th becomes 6.
  * opts.minorToMajor (a lick written over a minor / dorian sound): the mirror case, the minor 3rd becomes 4 over a chord
  * with a major third and no minor one (Cm7 dorian over Dbmaj7: Fb → F, over G7: Bb → B). Degrees above 12 keep their octave.
+ * A plain major triad takes the 7th as a major 7th (G: F#, not F).
  */
 export function fitDeg(deg, chord, opts = {}) {
   const o = chord.offsets, pc = ((deg % 12) + 12) % 12, oct = deg - pc;
   if (opts.minorToMajor && pc === 3 && o.includes(4) && !o.includes(3)) return oct + 4;
   if (pc === 4 && o.includes(3) && !o.includes(4)) return oct + 3;
   if (pc === 10 && o.includes(11)) return oct + 11;
+  if (pc === 10 && chord.qual === '') return oct + 11; // a plain major triad (tonic or IV of a tune): major-seventh colour, not F7 over F
   if (pc === 10 && o.includes(9) && !o.includes(10) && chord.qual === 'dim7') return oct + 9;
   if (pc === 7 && o.includes(6) && !o.includes(7)) return oct + 6;
   return deg;
@@ -368,12 +370,15 @@ export function iivPairs(bars) {
 
 // ---------- melodies (jazzlab-melody/1) ----------
 // A melody is written out in absolute pitches, one entry per form bar: bars[i] = { chord, rh: [{ t, d, n, f }] },
-// n = one pitch name in the form's key (flats). phrases = [[firstBar, lastBar], ...] = the echo chunks.
+// n = one pitch name in the form's key. phrases = [[firstBar, lastBar], ...] = the echo chunks.
+// An event with "tie": true continues the note of the previous bar: it is not struck again, so it is never expected,
+// scored or played; the previous bar's note simply ends at the bar line.
 
-/** Right-hand notes of melody bar k (MIDI): [{ t, d, m, f, name }], sorted by t. An empty or missing bar gives []. */
+/** Right-hand notes of melody bar k (MIDI): [{ t, d, m, f, name }], sorted by t. Tied events are left out (not struck).
+ *  An empty or missing bar (or one holding only a tie) gives []. */
 export function melodyBarNotes(melody, k) {
   const b = melody.bars[k];
-  return (b && b.rh ? b.rh : []).map((e) => ({ t: e.t, d: e.d || 1, m: toMidi(e.n), f: e.f || 0, name: e.n }))
+  return (b && b.rh ? b.rh : []).filter((e) => !e.tie).map((e) => ({ t: e.t, d: e.d || 1, m: toMidi(e.n), f: e.f || 0, name: e.n }))
     .sort((a, b2) => a.t - b2.t);
 }
 
@@ -393,7 +398,7 @@ export function melodyExercise(melody, [from, to], pattern, opts = {}) {
   const chords = src.map((b) => b.chord);
   const lhBars = pattern ? patternExercise(pattern, chords, { flats: opts.flats !== false }).bars : chords.map(() => ({ lh: [] }));
   const bars = src.map((b, k) => ({
-    rh: (b.rh || []).map((e) => ({ t: e.t, d: e.d || 1, n: [e.n], f: e.f ? [e.f] : [], stac: false, sug: false })),
+    rh: (b.rh || []).filter((e) => !e.tie).map((e) => ({ t: e.t, d: e.d || 1, n: [e.n], f: e.f ? [e.f] : [], stac: false, sug: false })),
     lh: lhBars[k].lh,
     chord: b.chord
   }));

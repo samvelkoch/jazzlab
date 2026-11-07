@@ -1,0 +1,130 @@
+{
+  "$format": "jazzlab-melody/1",
+  "id": "sgb-f",
+  "title": {
+    "ru": "Sweet Georgia Brown (припев)",
+    "en": "Sweet Georgia Brown (chorus)"
+  },
+  "about": {
+    "ru": "Припев Sweet Georgia Brown (1925) по первому изданию, перенесён из G в F. Аккорды идут по кругу: D7, G7, C7, F.",
+    "en": "The chorus of Sweet Georgia Brown (1925) from the first edition, moved from G to F. The chords go round the circle: D7, G7, C7, F."
+  },
+  "source": "Ben Bernie / Maceo Pinkard / Kenneth Casey, Sweet Georgia Brown, Jerome H. Remick & Co., New York / Detroit, 1925, first edition with ukulele arrangement (IMSLP #718454), chorus, vocal line and ukulele chord symbols, transposed from G to F; public domain",
+  "form": "sgb-f",
+  "tempo": 66,
+  "swing": true,
+  "phrases": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      10,
+      11
+    ],
+    [
+      12,
+      13
+    ],
+    [
+      14,
+      15
+    ],
+    [
+      16,
+      17
+    ],
+    [
+      18,
+      19
+    ],
+    [
+      20,
+      21
+    ],
+    [
+      22,
+      23
+    ],
+    [
+      24,
+      25
+    ],
+    [
+      26,
+      27
+    ],
+    [
+      28,
+      29
+    ],
+    [
+      30,
+      31
+    ]
+  ],
+  "notes": [
+    "KEY: the 1925 edition prints the chorus in G major (one sharp; chords E7 A7 D7 G). It is transposed here down a whole tone to F major (E7->D7, A7->G7, D7->C7, G->F, Em7->Dm7, B7->A7, Em->Dm) to fit the form sgb-f; all pitches below are the transposed ones. Raised chromatic notes are spelled as sharps (F#4, C#5), as printed (G#, D#) in the original.",
+    "Source pages: chorus = PDF pages 4-5 (printed pages 4 and 5), cut time read as 8 eighths per bar. 32 bars: page 4 = 16 bars (4 systems x 4), page 5 = 4 + 5 + 4 + 3 bars including the endings.",
+    "Bars 12 and 14: the edition prints D7 then '(D7+5)' over beat 4 (original key); the vocabulary has no +5, so both bars are 'C7' (augmented fifth dropped). Bar 14: the printed G of bar 13 still sounds under the tied first beat; D7 is printed from beat 2, so bar 14 is just 'C7'.",
+    "Bar 15: printed G on beat 1 and '(Em7)' over beat 4 only; a beat-4 chord cannot be expressed (two chords split at beat 3), so bar 15 is 'F' and the Dm7 (Em7 in G) passing chord is dropped.",
+    "Bars 15-16 ('Not much!') are marked '(spoken ad lib)' in the edition; the printed pitches are kept (A4 quarter, then G4 dotted half).",
+    "Bar 24: printed A7 (carried from bar 21) for the held note, then '(B7)' over the half rest on beat 3 -> 'G7 A7'.",
+    "Bar 31: printed A7 on beat 1 and D7 on beat 3 -> 'G7 C7'.",
+    "Bar 32: the chorus has 1st/2nd endings; the 2nd (final) ending is used. 1st ending = G (beat 1), B7 (beat 3) -> 'F A7' in F, the turnaround back to the top that a looping form would normally use. 2nd ending prints G, D7 (beat 3), G (beat 4) -> 'F'; the passing C7 (D7 in G) is dropped.",
+    "Bar 32 rhythm anomaly: the 2nd ending prints a half note tied to an eighth on the and-of-4 plus an eighth rest = only 6 eighths. No note is invented: the tied tone is rendered as one held F4 (t0, 7 eighths, tied from bar 31) followed by the eighth rest.",
+    "Chord symbols as printed (normalized only by transposition): plain triads stay plain ('F', 'Dm'), dominant sevenths '7'. Chords not printed in a bar carry over the last printed one (bars 2-4, 6-8, 10-11, 18-20, 22-23 follow the chord printed at the start of the 4-bar group).",
+    "D.S. after the 2nd ending returns to the segno at the start of the verse (page 2); not relevant to the chorus transcription.",
+    "Fingerings are editorial (not in the source)."
+  ],
+  "bars": [
+    {"chord": "D7", "rh": [{"t": 0, "d": 1, "n": "D4", "f": 1}, {"t": 1, "d": 2, "n": "E4", "f": 2}, {"t": 3, "d": 4, "n": "F#4", "f": 3}, {"t": 7, "d": 1, "n": "D4", "f": 1}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 1, "n": "A4", "f": 4}, {"t": 1, "d": 2, "n": "F#4", "f": 3}, {"t": 3, "d": 4, "n": "B4", "f": 5}, {"t": 7, "d": 1, "n": "A4", "f": 4}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 4, "n": "D5", "f": 5}, {"t": 4, "d": 1, "n": "A4", "f": 3}, {"t": 5, "d": 2, "n": "F#4", "f": 2}, {"t": 7, "d": 1, "n": "D4", "f": 1}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 6, "n": "D4", "f": 1, "tie": true}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 1, "n": "D4", "f": 1}, {"t": 1, "d": 2, "n": "E4", "f": 2}, {"t": 3, "d": 4, "n": "F4", "f": 3}, {"t": 7, "d": 1, "n": "D4", "f": 1}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 1, "n": "A4", "f": 4}, {"t": 1, "d": 2, "n": "F4", "f": 3}, {"t": 3, "d": 4, "n": "B4", "f": 5}, {"t": 7, "d": 1, "n": "G4", "f": 3}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 4, "n": "D5", "f": 5}, {"t": 4, "d": 1, "n": "B4", "f": 4}, {"t": 5, "d": 2, "n": "A4", "f": 3}, {"t": 7, "d": 1, "n": "G4", "f": 2}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 6, "n": "G4", "f": 2, "tie": true}]},
+    {"chord": "C7", "rh": [{"t": 0, "d": 1, "n": "C4", "f": 1}, {"t": 1, "d": 2, "n": "D4", "f": 2}, {"t": 3, "d": 4, "n": "E4", "f": 3}, {"t": 7, "d": 1, "n": "C4", "f": 1}]},
+    {"chord": "C7", "rh": [{"t": 0, "d": 1, "n": "G4", "f": 4}, {"t": 1, "d": 2, "n": "E4", "f": 3}, {"t": 3, "d": 4, "n": "A4", "f": 5}, {"t": 7, "d": 1, "n": "G4", "f": 4}]},
+    {"chord": "C7", "rh": [{"t": 0, "d": 4, "n": "C5", "f": 5}, {"t": 4, "d": 1, "n": "G4", "f": 3}, {"t": 5, "d": 2, "n": "E4", "f": 2}, {"t": 7, "d": 1, "n": "C4", "f": 1}]},
+    {"chord": "C7", "rh": [{"t": 0, "d": 2, "n": "C4", "f": 1, "tie": true}, {"t": 2, "d": 1, "n": "C4", "f": 1}, {"t": 3, "d": 2, "n": "D4", "f": 2}, {"t": 5, "d": 1, "n": "C4", "f": 1}, {"t": 6, "d": 2, "n": "D4", "f": 2}]},
+    {"chord": "F", "rh": [{"t": 0, "d": 8, "n": "A4", "f": 5}]},
+    {"chord": "C7", "rh": [{"t": 0, "d": 2, "n": "A4", "f": 5, "tie": true}, {"t": 2, "d": 1, "n": "C4", "f": 1}, {"t": 3, "d": 2, "n": "D4", "f": 2}, {"t": 5, "d": 1, "n": "C4", "f": 1}, {"t": 6, "d": 2, "n": "D4", "f": 2}]},
+    {"chord": "F", "rh": [{"t": 0, "d": 6, "n": "A4", "f": 4}, {"t": 6, "d": 2, "n": "A4", "f": 4}]},
+    {"chord": "A7", "rh": [{"t": 0, "d": 6, "n": "G4", "f": 3}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 1, "n": "D4", "f": 1}, {"t": 1, "d": 2, "n": "E4", "f": 2}, {"t": 3, "d": 4, "n": "F#4", "f": 3}, {"t": 7, "d": 1, "n": "D4", "f": 1}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 1, "n": "A4", "f": 4}, {"t": 1, "d": 2, "n": "F#4", "f": 3}, {"t": 3, "d": 4, "n": "B4", "f": 5}, {"t": 7, "d": 1, "n": "A4", "f": 4}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 4, "n": "D5", "f": 5}, {"t": 4, "d": 1, "n": "A4", "f": 3}, {"t": 5, "d": 2, "n": "F#4", "f": 2}, {"t": 7, "d": 1, "n": "D4", "f": 1}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 6, "n": "D4", "f": 1, "tie": true}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 1, "n": "D4", "f": 1}, {"t": 1, "d": 2, "n": "E4", "f": 2}, {"t": 3, "d": 4, "n": "F4", "f": 3}, {"t": 7, "d": 1, "n": "D4", "f": 1}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 1, "n": "A4", "f": 4}, {"t": 1, "d": 2, "n": "F4", "f": 3}, {"t": 3, "d": 4, "n": "B4", "f": 5}, {"t": 7, "d": 1, "n": "G4", "f": 3}]},
+    {"chord": "G7", "rh": [{"t": 0, "d": 4, "n": "D5", "f": 5}, {"t": 4, "d": 1, "n": "B4", "f": 4}, {"t": 5, "d": 2, "n": "A4", "f": 3}, {"t": 7, "d": 1, "n": "G4", "f": 2}]},
+    {"chord": "G7 A7", "rh": [{"t": 0, "d": 4, "n": "G4", "f": 2, "tie": true}]},
+    {"chord": "Dm", "rh": [{"t": 0, "d": 3, "n": "A4", "f": 4}, {"t": 3, "d": 3, "n": "A4", "f": 4}]},
+    {"chord": "A7", "rh": [{"t": 0, "d": 1, "n": "G4", "f": 3}, {"t": 1, "d": 2, "n": "E4", "f": 1}, {"t": 3, "d": 5, "n": "A4", "f": 4}]},
+    {"chord": "Dm", "rh": [{"t": 0, "d": 3, "n": "A4", "f": 4}, {"t": 3, "d": 3, "n": "A4", "f": 4}]},
+    {"chord": "A7", "rh": [{"t": 0, "d": 1, "n": "G4", "f": 3}, {"t": 1, "d": 2, "n": "E4", "f": 1}, {"t": 3, "d": 3, "n": "A4", "f": 4}]},
+    {"chord": "F", "rh": [{"t": 0, "d": 1, "n": "C4", "f": 1}, {"t": 1, "d": 2, "n": "D4", "f": 2}, {"t": 3, "d": 2, "n": "F4", "f": 3}, {"t": 5, "d": 3, "n": "A4", "f": 5}]},
+    {"chord": "D7", "rh": [{"t": 0, "d": 1, "n": "C5", "f": 3}, {"t": 1, "d": 2, "n": "C#5", "f": 4}, {"t": 3, "d": 2, "n": "D5", "f": 5}, {"t": 5, "d": 3, "n": "A4", "f": 2}]},
+    {"chord": "G7 C7", "rh": [{"t": 0, "d": 4, "n": "G4", "f": 2}, {"t": 4, "d": 1, "n": "C5", "f": 5}, {"t": 5, "d": 2, "n": "A4", "f": 3}, {"t": 7, "d": 1, "n": "F4", "f": 1}]},
+    {"chord": "F", "rh": [{"t": 0, "d": 7, "n": "F4", "f": 1, "tie": true}]}
+  ]
+}
