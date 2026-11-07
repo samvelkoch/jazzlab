@@ -9,7 +9,7 @@ import { t, L, plural } from '../i18n.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { melodyNotes, patternBar } from '../music/forms.js';
+import { melodyNotes, patternBars } from '../music/forms.js';
 import * as audio from '../music/audio.js';
 import { groove } from '../music/drums.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -28,7 +28,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     stage: store.get('melStage:' + itemId, 'echo'),
     phrase: firstOpen >= 0 ? firstOpen : 0,
     bpm: store.get('tempo:' + itemId, melody.tempo || form.tempo || 66),
-    swing: false, // a bossa tune: straight eighths
+    swing: !!melody.swing && form.style !== 'bossa', // the tune's feel: a bossa is straight, a standard swings
     playing: false,
     clean
   };
@@ -40,13 +40,14 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
 
   // notes of the current phrase
   let notes = [], rows = [], nb = 2, LEN = 16, lhBars = []; // rows: distinct pitches, low → high
+  const lhTune = pattern ? patternBars(pattern, melody.bars.map((b) => b.chord)) : []; // the left hand over the whole tune, in order
   function computeNotes() {
     const [from, to] = phrases[st.phrase];
     nb = to - from + 1; LEN = nb * PER;
     notes = melodyNotes(melody, [from, to]);
     const uniq = [...new Map(notes.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
     rows = uniq.map((e) => ({ m: e.m, name: noteName(e.name, names), f: e.f, spelled: e.name }));
-    lhBars = Array.from({ length: nb }, (_, k) => (pattern ? patternBar(pattern, melody.bars[from + k].chord) : []));
+    lhBars = pattern ? lhTune.slice(from, to + 1) : Array.from({ length: nb }, () => []);
   }
   computeNotes();
 
@@ -103,7 +104,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
 
   // ---------- keyboard: one range for the whole tune and the left-hand pattern, the current phrase lit ----------
   const rhAll = melodyNotes(melody, [0, melody.bars.length - 1]).map((e) => e.m);
-  const lhAll = pattern ? melody.bars.flatMap((b) => patternBar(pattern, b.chord).map((e) => e.m)) : [];
+  const lhAll = lhTune.flat().map((e) => e.m);
   const lo = Math.min(...rhAll, ...lhAll), hi = Math.max(...rhAll, ...lhAll);
   audio.preloadPiano(lo - 2, hi + 4);
   const kb = createKeyboard(kbEl, [lo, hi], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
@@ -234,7 +235,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
 
   // ---------- transport: 1-bar count-in, then an endless cycle of 2 × nb bars (nb piano + nb you) ----------
   let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], barSt = null, lastResult = '';
-  const eighthOff = () => 60 / st.bpm / 2; // straight eighths
+  const eighthOff = () => { const beat = 60 / st.bpm; return st.swing ? beat * 2 / 3 : beat / 2; }; // the offbeat's offset in the beat
   const enqueue = (x) => { queue.push(x); queue.sort((a, b) => a.t - b.t); };
   function play() {
     if (!audio.ensureAudio() || st.playing) return;
@@ -255,17 +256,21 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
       if (k === 0 && slot === 0) enqueue({ t: time - 0.02, phrase: true });
       if (k === nb && slot === 0) { exp = []; enqueue({ t: time - 0.12, youStart: bar }); }
       // backing: drums or metronome + the left-hand pattern over the phrase bar's chord, in both halves
-      if (settings.impBeat === 'drums') groove(slot, time, { swing: false, style: form.style, bar }); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, style: form.style, bar }); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
       lhBars[pb].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
       const evs = notes.filter((e) => e.t === ls);
-      if (k < nb) evs.forEach((e) => play1(e.m, time, eighthOff() * e.d * 0.95, 0.55));
+      if (k < nb) evs.forEach((e) => play1(e.m, time, beat / 2 * e.d * 0.95, 0.55));
       else evs.forEach((e) => exp.push({ t: time, slot: ls, len: e.d, hit: false, m: e.m }));
       if (k === cycle - 1 && slot === PER - 1) enqueue({ t: time + beat * 0.5 + 0.25, youEnd: bar });
       if (slot % 2) beatTime += beat;
       g++;
     }
   }
-  const posAt = (T) => (run ? 2 * (T - run.t0) / run.beat : -1); // straight eighths: position in eighth slots
+  function posAt(T) { // position in eighth slots (swing-aware)
+    if (!run) return -1;
+    const beats = (T - run.t0) / run.beat, w = Math.floor(beats), f = beats - w, sw = st.swing ? 2 / 3 : 0.5;
+    return 2 * w + (f < sw ? f / sw : 1 + (f - sw) / (1 - sw));
+  }
   function tick() {
     const now = audio.now();
     while (queue.length && queue[0].t <= now) {
@@ -312,7 +317,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';
     barSt[cls]++;
-    const el = addBlock(mine, 'mine', best.slot + dt / eighthOff(), best.len, m);
+    const el = addBlock(mine, 'mine', best.slot + dt / (30 / st.bpm), best.len, m);
     el.classList.add(cls);
     if (best.m !== m) el.classList.add('other');
     barSt.notes.push({ m, slot: best.slot, same: best.m === m });

@@ -3,6 +3,6 @@
     { "id": "blues", "kind": "track", "ready": true, "title": { "ru": "Блюз", "en": "Blues" } },
     { "id": "jazz-rhythms", "kind": "course", "ready": true, "title": { "ru": "Риффы", "en": "Riffs" } },
     { "id": "bossa", "kind": "track", "ready": true, "title": { "ru": "Босса-нова", "en": "Bossa nova" } },
-    { "id": "standard", "kind": "track", "ready": false, "title": { "ru": "Стандарт", "en": "Standard" } }
+    { "id": "std", "kind": "track", "ready": true, "title": { "ru": "Стандарт", "en": "Standard" } }
   ]
 }

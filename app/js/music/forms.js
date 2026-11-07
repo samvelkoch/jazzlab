@@ -82,14 +82,30 @@ const evFingers = (e) => (Array.isArray(e.f) ? e.f : e.f ? [e.f] : []);
  */
 export function patternExercise(pattern, bars, opts = {}) {
   const ev = pattern.events;
-  const out = bars.map((name) => ({
-    rh: [],
-    lh: ev.map((e) => {
-      const chord = parseChord(chordAt(name, e.t)), root = lhRoot(chord);
-      return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord, !!opts.flats); }), f: evFingers(e), stac: !!e.stac, sug: false };
-    }),
-    chord: name
-  }));
+  const lead = pattern.voicing === 'lead';
+  let prev = opts.prev || null; // a voice-led pattern: the shell pair of the previous bar
+  const out = bars.map((name) => {
+    if (lead) {
+      // one event per pattern event, its notes from patternBar (low → high, fingers by pitch)
+      const pb = patternBar(pattern, name, { prev }); prev = pb.pair;
+      return {
+        rh: [],
+        lh: ev.map((e, i) => {
+          const notes = pb.filter((x) => x.ev === i).sort((a, b) => a.m - b.m);
+          return { t: e.t, d: e.d || 1, n: notes.map((x) => patSpell(x.m, x.deg, parseChord(x.chord), !!opts.flats)), f: notes.map((x) => x.f).filter(Boolean), stac: !!e.stac, sug: false };
+        }),
+        chord: name
+      };
+    }
+    return {
+      rh: [],
+      lh: ev.map((e) => {
+        const chord = parseChord(chordAt(name, e.t)), root = lhRoot(chord);
+        return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord, !!opts.flats); }), f: evFingers(e), stac: !!e.stac, sug: false };
+      }),
+      chord: name
+    };
+  });
   return {
     $format: 'jazzlab-exercise/1',
     id: opts.id || `pat-${pattern.id}`,
@@ -106,16 +122,72 @@ export function patternExercise(pattern, bars, opts = {}) {
   };
 }
 
+// ---------- voice leading (pattern "voicing": "lead") ----------
+// The root stays lhRoot; a two-note event (the shell: third + seventh) is placed in the window C3..B3 (48..59), each note's
+// octave chosen so the pair is closest (sum of semitone moves, low note to low note, high to high) to the previous pair.
+// The first pair of a sequence is measured against root + the fitted degrees (as p3 plays them), each moved by octaves
+// into the window. The window is exactly one octave, so every pitch class has one place in it: Gm7 → F3 Bb3,
+// C7 → E3 Bb3, Fmaj7 → E3 A3 (one note moves at a time). `prev` is kept so a wider window would just work.
+export const LEAD_LO = 48, LEAD_HI = 59;
+const intoWindow = (m) => { let x = m; while (x < LEAD_LO) x += 12; while (x > LEAD_HI) x -= 12; return x; };
+const inWindow = (pc) => { const out = []; for (let m = LEAD_LO; m <= LEAD_HI; m++) if (((m % 12) + 12) % 12 === pc) out.push(m); return out; };
 /**
- * Left-hand notes (MIDI) of a pattern in one form bar: [{ t, d, m, f, stac, deg, chord }], one entry per note
- * (a two-note event gives two entries with the same t, d). chord = the chord name at that slot.
+ * The voice-led shell pair of a chord: degs = the two fitted degrees, prev = the previous pair (MIDI) or null.
+ * Returns the two MIDI notes in the order of degs.
  */
-export function patternBar(pattern, barName) {
-  return pattern.events.flatMap((e) => {
-    const name = chordAt(barName, e.t), root = lhRoot(parseChord(name)), fs = evFingers(e);
-    const chord = parseChord(name);
-    return evDegs(e).map((g0, i) => { const g = fitDeg(g0, chord); return { t: e.t, d: e.d || 1, m: root + g, f: fs[i] || 0, stac: !!e.stac, deg: g, chord: name }; });
+export function leadPair(degs, chord, prev) {
+  const root = lhRoot(chord);
+  const ref = (prev && prev.length === 2 ? prev : degs.map((g) => intoWindow(root + g))).slice().sort((a, b) => a - b);
+  const [ca, cb] = degs.map((g) => inWindow((((chord.pc + g) % 12) + 12) % 12));
+  let best = null, bestCost = Infinity;
+  ca.forEach((a) => cb.forEach((b) => {
+    if (a === b) return;
+    const s = [a, b].sort((x, y) => x - y);
+    const cost = Math.abs(s[0] - ref[0]) + Math.abs(s[1] - ref[1]) + (Math.abs(a + b - 107) / 1000); // tie → nearer the window centre
+    if (cost < bestCost) { bestCost = cost; best = [a, b]; }
+  }));
+  return best;
+}
+
+/**
+ * Left-hand notes (MIDI) of a pattern in one form bar: [{ t, d, m, f, stac, deg, chord, ev }], one entry per note
+ * (a two-note event gives two entries with the same t, d; ev = the event index). chord = the chord name at that slot.
+ * A voice-led pattern ("voicing": "lead") places its two-note events by leadPair(), following opts.prev (the previous
+ * bar's pair); the second chord of a two-chord bar follows the first. The returned array has .pair = the last pair
+ * used (or opts.prev when the bar has none), to pass as prev to the next bar.
+ */
+export function patternBar(pattern, barName, opts = {}) {
+  const lead = pattern.voicing === 'lead';
+  let prev = opts.prev || null;
+  const pairs = {}; // chord slot (0 | 1) -> pair, computed in time order
+  const order = pattern.events.map((e, i) => i).sort((a, b) => pattern.events[a].t - pattern.events[b].t);
+  const res = [];
+  order.forEach((i) => {
+    const e = pattern.events[i];
+    const name = chordAt(barName, e.t), chord = parseChord(name), root = lhRoot(chord), fs = evFingers(e);
+    const degs = evDegs(e).map((g0) => fitDeg(g0, chord));
+    if (lead && degs.length === 2) {
+      const key = barChords(barName).length > 1 && e.t >= 4 ? 1 : 0;
+      if (!pairs[key]) { pairs[key] = leadPair(degs, chord, prev); prev = pairs[key]; }
+      const ms = pairs[key], hiF = [...fs].sort((a, b) => b - a); // lower note takes the larger finger (2), upper the smaller (1)
+      const lowFirst = ms[0] < ms[1];
+      degs.forEach((g, k) => {
+        const isLow = (k === 0) === lowFirst;
+        res.push({ t: e.t, d: e.d || 1, m: ms[k], f: (isLow ? hiF[0] : hiF[1]) || 0, stac: !!e.stac, deg: g, chord: name, ev: i });
+      });
+    } else {
+      degs.forEach((g, k) => res.push({ t: e.t, d: e.d || 1, m: root + g, f: fs[k] || 0, stac: !!e.stac, deg: g, chord: name, ev: i }));
+    }
   });
+  res.sort((a, b) => a.t - b.t || a.ev - b.ev);
+  res.pair = prev;
+  return res;
+}
+
+/** patternBar over a sequence of bars, threading the voice-led pair from bar to bar: one array per bar. */
+export function patternBars(pattern, bars, opts = {}) {
+  let prev = opts.prev || null;
+  return bars.map((name) => { const pb = patternBar(pattern, name, { prev }); prev = pb.pair; return pb; });
 }
 
 /** Expected MIDI set at a slot of a form bar. */

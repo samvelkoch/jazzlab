@@ -1,0 +1,17 @@
+{
+  "$format": "jazzlab-form/1",
+  "id": "std-f",
+  "title": { "ru": "Стандарт в F", "en": "A standard in F" },
+  "about": { "ru": "32 такта AABA: A в фа мажоре, бридж в Bb. Свинг.", "en": "32 bars AABA: the A sections in F major, the bridge in B-flat. Swing." },
+  "tempo": 66,
+  "swing": true,
+  "flats": true,
+  "bars": [
+    "Fmaj7", "Gm7 C7", "Fmaj7", "Gm7 C7", "Fmaj7", "Bbmaj7", "Am7 D7", "Gm7 C7",
+    "Fmaj7", "Gm7 C7", "Fmaj7", "Gm7 C7", "Fmaj7", "Bbmaj7", "Am7 D7", "Cm7 F7",
+    "Cm7 F7", "Bbmaj7", "Cm7 F7", "Bbmaj7", "Am7 D7", "Gm7 C7", "Gm7", "C7",
+    "Fmaj7", "Gm7 C7", "Fmaj7", "Gm7 C7", "Fmaj7", "Bbmaj7", "Gm7 C7", "Fmaj7"
+  ],
+  "practice": ["Gm7 C7", "Fmaj7", "Cm7 F7", "Bbmaj7"],
+  "patterns": ["s1", "s2"]
+}

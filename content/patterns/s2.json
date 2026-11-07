@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-pattern/1",
+  "id": "s2",
+  "title": { "ru": "Шелл с голосоведением", "en": "Shell with voice leading" },
+  "about": { "ru": "Корень в своей октаве, а терция с септимой выбираются ближе всего к предыдущей паре, в окне C3–B3. Так между аккордами движется одна нота, а не вся рука.", "en": "The root stays in its octave; the third and seventh take the place nearest the previous pair, between C3 and B3. So from chord to chord one note moves, not the whole hand." },
+  "tempo": 60,
+  "swing": true,
+  "voicing": "lead",
+  "rhythm": "8 r8 4 8 r8 4",
+  "events": [
+    { "t": 0, "d": 1, "deg": 0, "f": 5 },
+    { "t": 2, "d": 2, "deg": [4, 10], "f": [2, 1] },
+    { "t": 4, "d": 1, "deg": 0, "f": 5 },
+    { "t": 6, "d": 2, "deg": [4, 10], "f": [2, 1] }
+  ]
+}

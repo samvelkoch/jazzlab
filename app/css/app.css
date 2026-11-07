@@ -538,6 +538,10 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .fcell.ok { border-color: var(--ok); } .fcell.meh { border-color: var(--meh); } .fcell.bad { border-color: var(--bad); }
 .fcell.ok .fno { color: var(--ok); } .fcell.bad .fno { color: var(--bad); }
 .loops i.off { background: var(--none); }
+/* a long form (32 bars): smaller cells, the grid scrolls inside the panel, the current bar is kept in view */
+.fgrid.long { position: relative; grid-auto-rows: minmax(46px, 1fr); overflow-y: auto; }
+.fgrid.long .fcell { padding: 6px 8px 9px; }
+.fgrid.long .fchord { font-size: clamp(16px, 2.6dvh, 22px); }
 .formscreen .kb { height: clamp(110px, 22dvh, 190px); }
 
 @media (max-width: 1100px) { .items { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

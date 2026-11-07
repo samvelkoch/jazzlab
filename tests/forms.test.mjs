@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
 import { parsePattern } from '../app/js/music/rhythm.js';
-import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes } from '../app/js/music/forms.js';
+import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, patternBars, leadPair, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames, melodyExercise, melodyNotes, melodyBarNotes } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -280,3 +280,76 @@ const secIds = bt.sections.map((x) => x.id);
 assert.equal(secIds.indexOf('melody'), secIds.indexOf('form') + 1);
 assert.equal(secIds.indexOf('ear'), secIds.indexOf('melody') + 1);
 console.log('ok: melody');
+
+// ---------- the standard: voice-led shell, 32-bar AABA form, the 32-bar tune ----------
+const s1 = read('content/patterns/s1.json'), s2 = read('content/patterns/s2.json'), sf = read('content/forms/std-f.json');
+assert.equal(s2.voicing, 'lead'); assert.equal(s1.voicing, undefined);
+// one note moves at a time: Gm7 F3 Bb3 → C7 E3 Bb3 → Fmaj7 E3 A3 (the shell pair placed in C3..B3)
+const shell = (b) => [...new Set(b.filter((e) => e.t === 2).map((e) => e.m))].sort((a, z) => a - z);
+const vl = patternBars(s2, ['Gm7', 'C7', 'Fmaj7']);
+assert.deepEqual(vl.map(shell), [[53, 58], [52, 58], [52, 57]]);
+assert.deepEqual(vl.map((b) => b.filter((e) => e.t === 6).map((e) => e.m).sort((a, z) => a - z)), [[53, 58], [52, 58], [52, 57]], 'beat 4 = beat 2');
+assert.deepEqual(vl.map((b) => b.filter((e) => e.t === 0).map((e) => e.m)), [[43], [48], [41]], 'the root stays in its octave');
+assert.deepEqual(vl[0].pair.slice().sort(), [53, 58]);
+vl.forEach((b) => { const sh = b.filter((e) => e.t === 2).sort((a, z) => a.m - z.m); assert.deepEqual(sh.map((e) => e.f), [2, 1], 'lower note 2, upper 1'); });
+// threading by hand gives the same as patternBars; the exercise threads too
+let pv = null; const byHand = ['Gm7', 'C7', 'Fmaj7'].map((c) => { const b = patternBar(s2, c, { prev: pv }); pv = b.pair; return shell(b); });
+assert.deepEqual(byHand, [[53, 58], [52, 58], [52, 57]]);
+const s2x = patternExercise(s2, ['Gm7', 'C7', 'Fmaj7'], { flats: true });
+assert.deepEqual(s2x.bars.map((b) => b.lh[1].n), [['F3', 'Bb3'], ['E3', 'Bb3'], ['E3', 'A3']]);
+assert.deepEqual(s2x.bars[0].lh[1].f, [2, 1]);
+assert.equal(normalize(s2x).bars.length, 3);
+// a two-chord bar: the second chord's pair follows the first
+const two = patternBar(s2, 'Gm7 C7');
+assert.deepEqual([2, 6].map((s) => two.filter((e) => e.t === s).map((e) => e.m).sort((a, z) => a - z)), [[53, 58], [52, 58]]);
+assert.deepEqual(two.pair.slice().sort(), [52, 58]);
+assert.deepEqual(leadPair([4, 11], parseChord('Fmaj7'), [52, 58]).slice().sort(), [52, 57]);
+// every shell note of the form sits in C3..B3
+patternBars(s2, sf.bars).flat().filter((e) => e.t % 4 === 2).forEach((e) => assert.ok(e.m >= 48 && e.m <= 59, `shell note ${e.m} in ${e.chord}`));
+// s1: the root on 1 and 3; a two-chord bar plays both roots
+assert.deepEqual(patternBar(s1, 'Gm7 C7').map((e) => [e.t, e.m]), [[0, 43], [4, 48]], 'G2 then C3');
+assert.deepEqual(patternBar(s1, 'Fmaj7').map((e) => [e.t, e.m]), [[0, 41], [4, 41]]);
+// the form
+assert.equal(sf.id, 'std-f'); assert.equal(sf.bars.length, 32); assert.equal(sf.swing, true); assert.equal(sf.flats, true);
+sf.bars.forEach((b) => barChords(b));
+assert.deepEqual(sf.practice, ['Gm7 C7', 'Fmaj7', 'Cm7 F7', 'Bbmaj7']);
+assert.deepEqual(sf.patterns, ['s1', 's2']);
+assert.equal(normalize(patternExercise(s2, sf.bars, { flats: true })).bars.length, 32);
+assert.equal(normalize(patternExercise(s1, sf.practice, { flats: true })).bars.length, 4);
+// drill spelling
+assert.deepEqual(chordNames('Fmaj7'), ['F', 'A', 'C', 'E']);
+assert.deepEqual(chordNames('Am7'), ['A', 'C', 'E', 'G']);
+assert.deepEqual(chordNames('D7'), ['D', 'F#', 'A', 'C']);
+// the tune
+const std = read('content/melodies/std-f.json');
+assert.equal(std.form, 'std-f'); assert.equal(std.bars.length, 32);
+std.bars.forEach((b, k) => {
+  assert.equal(b.chord, sf.bars[k], `std melody bar ${k + 1} chord`);
+  b.rh.forEach((e) => assert.ok(e.t >= 0 && e.t + (e.d || 1) <= 8, `std melody bar ${k + 1}: t ${e.t} + d ${e.d} > 8`));
+});
+assert.equal(std.phrases.length, 16);
+std.phrases.forEach(([a, z]) => assert.ok(a >= 0 && a <= z && z < std.bars.length));
+const sm01 = melodyExercise(std, [0, 1], s1, { id: 'sm' });
+assert.equal(sm01.bars.length, 2); assert.equal(normalize(sm01).bars.length, 2);
+assert.deepEqual(sm01.bars[1].lh.map((e) => e.n[0]), ['G2', 'C3']);
+const sAll = normalize(melodyExercise(std, [0, 31], s1, { id: 'mel-std-all', doneId: 'mel-std' }));
+assert.equal(sAll.bars.length, 32);
+assert.equal(buildSteps(sAll).length, 32 * 8);
+assert.equal(normalize(melodyExercise(std, [0, 31], s2, { id: 'x2' })).bars.length, 32);
+// the std track: items resolve, every item in a section, ids do not collide with the blues or the bossa
+const stt = read('content/tracks/std.json');
+assert.equal(stt.id, 'std');
+const sorder = stt.sections.flatMap((x) => x.items);
+assert.deepEqual(sorder.slice().sort(), Object.keys(stt.items).sort(), 'every std item is in a section');
+sorder.forEach((id) => assert.ok(!(id in blt.items) && !(id in bt.items), 'std item id collides with the blues / bossa: ' + id));
+Object.values(stt.items).forEach((it) => {
+  if (it.form) assert.equal(read(`content/forms/${it.form}.json`).id, it.form);
+  if (it.pattern) assert.equal(read(`content/patterns/${it.pattern}.json`).id, it.pattern);
+  if (it.melody) assert.equal(read(`content/melodies/${it.melody}.json`).id, it.melody);
+  if (it.kind === 'drill') it.tasks.forEach((tk) => (tk.chords || []).forEach((c) => chordNames(c)));
+});
+assert.equal(stt.items['pat-s2-form'].over, 'bars');
+const idx = read('content/index.json').courses;
+assert.equal(idx.find((c) => c.id === 'std').ready, true);
+assert.ok(!idx.some((c) => c.id === 'standard'), 'the old placeholder is gone');
+console.log('ok: standard');
