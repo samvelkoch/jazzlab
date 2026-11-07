@@ -103,11 +103,16 @@ and `perf-std` (2 choruses, s2 shell, the tune and the licks k1, k2 as reminders
 `docs/specs/2026-11-07-standard-design.md`). A form of more than 16 bars gets a compact grid (`.fgrid.long`) that scrolls
 inside the panel and keeps the current bar in view. The melody echo swings when the melody has `"swing": true` (not on a bossa form).
 
-The `tunes` section («Пьесы», after `melody`) of the std track holds two real tunes of the twenties from their first editions:
-Bye Bye Blackbird in G (`bbb-g`, sharps, plain triads and `C#dim7`) and Sweet Georgia Brown in F (`sgb-f`), each with
-`mel-<tune>` (echo, fingers, by heart over s1) and `form-mel-<tune>` (the whole tune over the s1 bass); `perf-bbb` / `perf-sgb`
-in `perf` (2 choruses, the s2 shell, the tune as a reminder, `licks: []`). A plain major triad takes a major 7th in the
+The `tunes` section («Пьесы», after `melody`) of the std track holds five real tunes of the twenties, from first editions and
+lead sheets: Bye Bye Blackbird in G (`bbb-g`, sharps, plain triads and `C#dim7`), Sweet Georgia Brown in F (`sgb-f`) and, from
+lead sheets (`scripts/import_tune.py`), Honeysuckle Rose (`hsr-f`), Ain't Misbehavin' (`aim-f`) and Tea for Two (`tft-f`), each with
+`mel-<tune>` (echo, fingers, by heart over s1; x = bbb, sgb, hsr, aim, tft) and `form-mel-<tune>` (the whole tune over the s1 bass);
+`perf-<x>` in `perf` (2 choruses, the s2 shell, the tune as a reminder, `licks: []`). A plain major triad takes a major 7th in the
 voice-led shell (`fitDeg`: G gets F#, not F). The sharp-key form's exercises are spelled with sharps (`flats: !!form.flats`).
+The blues track's `tune` section has two blues choruses: St. Louis Blues (`stl-c`, over `blues-c`) and Tin Roof Blues (`tinroof-c`,
+its own 12-bar form with plain triads C, F and A7 / D7; `mel-tinroof`, `form-mel-tinroof`, p1 / p2 / p3).
+The home «Сегодня» queue takes at most one `melody` item and one `form` item with a `melody` among the fresh items (the earliest of
+each in section order; `freshItems()` in `app/js/queue.js`), so many tunes do not stack in one session.
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
 
@@ -267,7 +272,7 @@ Melody = the first part's top voice quantised to eighths (anything off the grid 
 rank of each note within its 2-bar phrase, lowest = 1, a suggestion: check them); a note tied over a bar line becomes a
 `"tie": true` event at the start of the next bar; chords come from the `<harmony>` elements, two per bar at most (the first
 covers beats 1–2, the second beats 3–4; a chord printed on beat 2 or 4 is placed on beat 3 and noted; a bar without a
-chord repeats the last one). Everything the script had to guess is written into the melody's `notes` array: read it, then
+chord repeats the last one). Repeats with 1st/2nd endings are expanded (a plain repeat plays twice). Written swing (a dotted eighth + a sixteenth) is quantised to two eighths: onsets round half down, and a note lasts until the next onset. Everything the script had to guess is written into the melody's `notes` array: read it, then
 fix the JSON by hand (chord qualities outside `QUAL` in `forms.js`, pickups, endings). `--dry` prints without writing. Then add the items to a track and run the tests.
 
 - `kind: "melody"`: `"mel-bossa": { "kind": "melody", "melody": "bossa-cm", "pattern": "b1" }` opens

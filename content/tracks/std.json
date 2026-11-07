@@ -26,8 +26,8 @@
     },
     {
       "id": "tunes", "title": { "ru": "Пьесы", "en": "Tunes" },
-      "about": { "ru": "Две настоящие вещи двадцатых по первым изданиям: Bye Bye Blackbird в G и Sweet Georgia Brown в F. Эхо, пальцы, вся вещь, потом над басом.", "en": "Two real tunes of the twenties from their first editions: Bye Bye Blackbird in G and Sweet Georgia Brown in F. Echo, fingers, the whole tune, then over the bass." },
-      "items": ["mel-bbb", "form-mel-bbb", "mel-sgb", "form-mel-sgb"]
+      "about": { "ru": "Пять настоящих вещей двадцатых по лид-шитам и первым изданиям: Bye Bye Blackbird, Sweet Georgia Brown, Honeysuckle Rose, Ain't Misbehavin', Tea for Two. Эхо, пальцы, вся вещь, потом над басом.", "en": "Five real tunes of the twenties from lead sheets and first editions: Bye Bye Blackbird, Sweet Georgia Brown, Honeysuckle Rose, Ain't Misbehavin', Tea for Two. Echo, fingers, the whole tune, then over the bass." },
+      "items": ["mel-bbb", "form-mel-bbb", "mel-sgb", "form-mel-sgb", "mel-hsr", "form-mel-hsr", "mel-aim", "form-mel-aim", "mel-tft", "form-mel-tft"]
     },
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
@@ -42,7 +42,7 @@
     {
       "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
       "about": { "ru": "Вся пьеса под барабаны. Это не упражнение, а результат: запись остаётся, её можно послушать и сохранить.", "en": "The whole tune over drums. Not an exercise but a result: the recording stays, you can listen to it and save it." },
-      "items": ["perf-std", "perf-bbb", "perf-sgb"]
+      "items": ["perf-std", "perf-bbb", "perf-sgb", "perf-hsr", "perf-aim", "perf-tft"]
     }
   ],
   "items": {
@@ -85,6 +85,24 @@
       "title": { "ru": "Sweet Georgia Brown над басом", "en": "Sweet Georgia Brown over the bass" },
       "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
     },
+    "mel-hsr": { "kind": "melody", "melody": "hsr-f", "pattern": "s1" },
+    "form-mel-hsr": {
+      "kind": "form", "form": "hsr-f", "pattern": "s1", "hand": "rh", "melody": "hsr-f",
+      "title": { "ru": "Honeysuckle Rose над басом", "en": "Honeysuckle Rose over the bass" },
+      "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
+    },
+    "mel-aim": { "kind": "melody", "melody": "aim-f", "pattern": "s1" },
+    "form-mel-aim": {
+      "kind": "form", "form": "aim-f", "pattern": "s1", "hand": "rh", "melody": "aim-f",
+      "title": { "ru": "Ain't Misbehavin' над басом", "en": "Ain't Misbehavin' over the bass" },
+      "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
+    },
+    "mel-tft": { "kind": "melody", "melody": "tft-f", "pattern": "s1" },
+    "form-mel-tft": {
+      "kind": "form", "form": "tft-f", "pattern": "s1", "hand": "rh", "melody": "tft-f",
+      "title": { "ru": "Tea for Two над басом", "en": "Tea for Two over the bass" },
+      "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
+    },
     "lick-k1": { "kind": "lick", "lick": "k1", "keys": ["F", "Bb"], "pattern": "s2" },
     "lick-k2": { "kind": "lick", "lick": "k2", "keys": ["F", "Bb"], "pattern": "s2" },
     "lick-k3": { "kind": "lick", "lick": "k3", "keys": ["F", "Bb"], "pattern": "s2" },
@@ -117,6 +135,21 @@
     "perf-sgb": {
       "kind": "perform", "form": "sgb-f", "pattern": "s2", "melody": "sgb-f", "licks": [], "choruses": 2,
       "title": { "ru": "Sweet Georgia Brown, два круга", "en": "Sweet Georgia Brown, two choruses" },
+      "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
+    },
+    "perf-hsr": {
+      "kind": "perform", "form": "hsr-f", "pattern": "s2", "melody": "hsr-f", "licks": [], "choruses": 2,
+      "title": { "ru": "Honeysuckle Rose, два круга", "en": "Honeysuckle Rose, two choruses" },
+      "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
+    },
+    "perf-aim": {
+      "kind": "perform", "form": "aim-f", "pattern": "s2", "melody": "aim-f", "licks": [], "choruses": 2,
+      "title": { "ru": "Ain't Misbehavin', два круга", "en": "Ain't Misbehavin', two choruses" },
+      "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
+    },
+    "perf-tft": {
+      "kind": "perform", "form": "tft-f", "pattern": "s2", "melody": "tft-f", "licks": [], "choruses": 2,
+      "title": { "ru": "Tea for Two, два круга", "en": "Tea for Two, two choruses" },
       "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     }
   }

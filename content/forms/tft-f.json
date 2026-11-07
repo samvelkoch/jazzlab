@@ -1,0 +1,59 @@
+{
+ "$format": "jazzlab-form/1",
+ "id": "tft-f",
+ "title": {
+  "ru": "Tea for Two",
+  "en": "Tea for Two"
+ },
+ "about": {
+  "ru": "32 тактов, гармония из лид-шита.",
+  "en": "32 bars, the changes from the lead sheet."
+ },
+ "bars": [
+  "Gm C7",
+  "Gm C7",
+  "F",
+  "F",
+  "Gm C7",
+  "Gm C7",
+  "F",
+  "F",
+  "D D7",
+  "D D7",
+  "A",
+  "A",
+  "D E7",
+  "D E7",
+  "A",
+  "C7",
+  "Gm C7",
+  "Gm C7",
+  "F",
+  "F",
+  "Gm C7",
+  "Gm C7",
+  "Am",
+  "D7",
+  "Gm D",
+  "Gm D7",
+  "D7 Gm",
+  "Bb",
+  "Gm C7",
+  "Gm C7",
+  "F",
+  "F"
+ ],
+ "practice": [
+  "Gm C7",
+  "F",
+  "D D7",
+  "A"
+ ],
+ "patterns": [
+  "s1",
+  "s2"
+ ],
+ "tempo": 66,
+ "swing": true,
+ "flats": true
+}

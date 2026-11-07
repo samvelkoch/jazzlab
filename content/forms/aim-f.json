@@ -1,0 +1,59 @@
+{
+ "$format": "jazzlab-form/1",
+ "id": "aim-f",
+ "title": {
+  "ru": "Ain't Misbehavin'",
+  "en": "Ain't Misbehavin'"
+ },
+ "about": {
+  "ru": "32 тактов, гармония из лид-шита.",
+  "en": "32 bars, the changes from the lead sheet."
+ },
+ "bars": [
+  "F",
+  "Gm7 C7",
+  "F",
+  "Bb Bbm",
+  "F Dm",
+  "Gm7 C7",
+  "F",
+  "Gm7 C7",
+  "F",
+  "Gm7 C7",
+  "F",
+  "Bb Bbm",
+  "F Dm",
+  "Gm7 C7",
+  "F",
+  "Gm7 C7",
+  "C7",
+  "Gm7",
+  "Dm",
+  "Bb7",
+  "G7",
+  "D7",
+  "C",
+  "Dm7 G7",
+  "C7 D7",
+  "G7 C7",
+  "F",
+  "Gm7 C7",
+  "F",
+  "Bbm",
+  "F Dm",
+  "Gm7 C"
+ ],
+ "practice": [
+  "F",
+  "Gm7 C7",
+  "Bb",
+  "Bbm"
+ ],
+ "patterns": [
+  "s1",
+  "s2"
+ ],
+ "tempo": 66,
+ "swing": true,
+ "flats": true
+}

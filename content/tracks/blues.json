@@ -31,8 +31,8 @@
     },
     {
       "id": "tune", "title": { "ru": "Пьеса", "en": "The tune" },
-      "about": { "ru": "Настоящий блюз 1914 года: припев St. Louis Blues. Эхо по два такта, пальцы, потом над басом.", "en": "A real 1914 blues: the chorus of St. Louis Blues. Echo two bars at a time, fingers, then over the bass." },
-      "items": ["mel-stl", "form-mel-stl"]
+      "about": { "ru": "Настоящие блюзы 1910–20-х: припевы St. Louis Blues и Tin Roof Blues. Эхо по два такта, пальцы, потом над басом.", "en": "Real blues of the 1910s–20s: the choruses of St. Louis Blues and Tin Roof Blues. Echo two bars at a time, fingers, then over the bass." },
+      "items": ["mel-stl", "form-mel-stl", "mel-tinroof", "form-mel-tinroof"]
     },
     {
       "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
@@ -119,6 +119,12 @@
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "melody": "stl-c",
       "title": { "ru": "St. Louis Blues над басом", "en": "St. Louis Blues over the bass" },
       "about": { "ru": "Левая играет корень и квинту, ты ведёшь припев целиком. Три чистых круга подряд.", "en": "The left hand plays root and fifth, you carry the whole chorus. Three clean choruses in a row." }
+    },
+    "mel-tinroof": { "kind": "melody", "melody": "tinroof-c", "pattern": "p1" },
+    "form-mel-tinroof": {
+      "kind": "form", "form": "tinroof-c", "pattern": "p1", "hand": "rh", "melody": "tinroof-c",
+      "title": { "ru": "Tin Roof Blues над басом", "en": "Tin Roof Blues over the bass" },
+      "about": { "ru": "Левая корень и квинта, ты ведёшь припев. Три чистых круга подряд.", "en": "The left hand plays root and fifth, you carry the chorus. Three clean choruses in a row." }
     },
     "perf-blues": {
       "kind": "perform", "form": "blues-c-ta", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "melody": "stl-c", "choruses": 3,
