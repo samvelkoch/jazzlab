@@ -84,8 +84,11 @@ all tracks (the bossa ear game is `ear-find-bossa`, not `ear-find`). Each track 
 
 The bossa track (`content/tracks/bossa.json`): chord drills of Blue Bossa (`d-chords-cm`, `d-chords-db`), the patterns
 `pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), the melody section (`mel-bossa`, the
-tune `bossa-cm` by echo, and `form-mel`, the tune over the b1 bass on the form screen), `ear-find-bossa`, and `perf-bossa`
-(2 choruses, no licks, `melody: "bossa-cm"` as a reminder, no ending: one ending bar). No check-up item; the home
+tune `bossa-cm` by echo, and `form-mel`, the tune over the b1 bass on the form screen), the right hand (`rh`: the dorian
+licks `lick-bl1`..`lick-bl3` echoed over `"chords": ["Cm7", "Fm7", "G7"]`, `form-rh-bl1` = bl1 on every odd bar of the form,
+`form-rh-qa-bossa` = bl2 / bl1 taking turns), `ear-find-bossa`, the ending `end-bossa` (`bossa-end`, also the form's
+`ending`: Dm7b5, G7 on the «и» of two, Cm for the whole second bar, straight, 56 → 66) and `perf-bossa` (2 choruses, the
+licks bl1, bl3 and `melody: "bossa-cm"` as reminders, the ending). No check-up item; the home
 «Навыки» card hides the lick row for a track without licks and shows «Фразы мелодии» (phrases with 3 clean echoes) for a
 track with a melody item. Passing an item (drill thresholds, the exercise's «by heart» stage,
 3 clean choruses of a form) schedules a review in 1, 3, 7, 14 then 30 days.
@@ -153,6 +156,7 @@ The form screen allows max(1, round(notes per chorus / 40)) slips in a clean cho
   "$format": "jazzlab-lick/1", "id": "l1", "title": {…}, "about": {…},
   "role": "answer",          // question (does not end on the root) | answer (ends on the root)
   "bars": 2, "tempo": 66, "swing": true,
+  "scale": "dorian",         // optional: written over a minor 7th / dorian sound (the bossa licks bl1..bl3); see fitting below
   "events": [
     { "t": 0, "d": 1, "deg": 3, "f": 2 },            // t = eighth slot 0..15 over the 2 bars, d in eighths
     { "t": 8, "d": 4, "deg": 0, "f": 1, "stac": false } // deg = semitones above the root, f = finger, stac optional
@@ -161,8 +165,16 @@ The form screen allows max(1, round(notes per chorus / 40)) slips in a clean cho
 ```
 
 The right-hand root is `rhRoot = pc <= 7 ? 60 + pc : 48 + pc` (C → C4, F → F4, G → G4, A → A3). Spelling: flats for the
-blue notes (Eb and Bb over C), the passing #4 (`deg` 6) as a sharp (F# over C). `lickNotes()` / `lickExercise()` in
+blue notes (Eb and Bb over C), the passing #4 (`deg` 6) as a sharp (F# over C), except over a chord with a flat fifth
+(m7b5, dim7), where deg 6 is that b5 and stays a flat (Ab over Dm7b5). `lickNotes()` / `lickExercise()` in
 `app/js/music/forms.js` turn a lick into MIDI notes or into a 2-bar exercise (RH = the lick, LH = a pattern over the chord).
+
+Fitting to the chord: `lickNotes()` passes every degree through `fitDeg(deg, chord, opts)`, the same rule as the patterns
+(4 → 3 over a minor chord, 10 → 11 over maj7, 7 → 6 over m7b5 / dim; the octave of a degree above 12 is kept). A lick with
+`"scale": "dorian"` also passes `{ minorToMajor: true }`: the mirror case, 3 → 4 over a chord with a major third and no
+minor one (G7: B, Dbmaj7: F). So a dorian lick played over Dbmaj7 gets the major third and the major seventh (F, C), over G7
+the major third (B). Blues licks (no `scale`) keep their blue thirds over a dominant chord (l1 over C7 = Eb E G Bb …).
+The returned `deg` is the fitted degree and `name` the spelled note (the lick, form and exercise screens show `name`).
 
 Track items that use licks:
 
@@ -172,10 +184,13 @@ Track items that use licks:
 ```
 
 - `kind: "lick"` opens the lick screen (`#/t/<track>/<item>`): Echo (the piano plays the lick for 2 bars, you repeat it
-  in the next 2; 3 clean repeats on every chord of the form, the chords being the form's distinct `bars`) → Fingers →
-  By heart. Title and about default to the lick's. Progress: `echo: { C7: n, … }`, `stages.echo`, `stages.done`.
+  in the next 2; 3 clean repeats on every chord of the form, the chords being the form's distinct `bars`, or the item's
+  own `"chords": ["Cm7", "Fm7", "G7"]` when set) → Fingers → By heart. Title and about default to the lick's. Progress:
+  `echo: { C7: n, … }`, `stages.echo`, `stages.done`. The echo plays straight or swung by `lick.swing` (else `form.swing`)
+  with the form's drum `style`.
 - `#/t/<track>/<item>/fingers/<chord>` is the lick over one chord as an exercise (id `<item>-<chord lowercased>`, LH =
-  `pattern`). Passing its «by heart» stage passes the lick item and schedules its review.
+  `pattern`); the chord must be in `item.chords` when the item sets it, else any chord of the form. Passing its «by heart»
+  stage passes the lick item and schedules its review.
 - `kind: "form"` with `hand: "rh"` and `lick`: the app always plays the left-hand `pattern`, you play the lick, starting on
   bars 1, 3, 5, … and transposed to the chord of its first bar. Passing is the same: 3 clean choruses.
 - `kind: "form"` with `hand: "rh"` and `lickKey` (a key-relative lick, see below), or `licksKey: [question, answer]`: the

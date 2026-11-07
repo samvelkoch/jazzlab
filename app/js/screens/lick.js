@@ -1,7 +1,7 @@
 // Lick screen: a 2-bar right-hand phrase, learned by ear first.
 // Stages: Echo (the piano plays the lick for 2 bars, you repeat it in the next 2, over drums + the left-hand pattern)
 // → Fingers / By heart (the generated exercise: RH lick + LH pattern over the chosen chord, #/t/<track>/<item>/fingers/<chord>).
-// Echo is passed with 3 clean repeats on every chord of the form; "by heart" in the exercise passes the lick item.
+// Echo is passed with 3 clean repeats on every chord of the form (or of item.chords, when the item sets its own); "by heart" in the exercise passes the lick item.
 // A key-relative lick (lick.prog, item.keys): the chips are the keys, the lick plays over its progression in each key
 // (LH = the pattern over lick.prog transposed), echo counts per key, fingers at #/t/<track>/<item>/fingers/<key>.
 import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
@@ -24,8 +24,8 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   const names = settings.names === 'off' ? 'en' : settings.names;
   const keyed = Array.isArray(item.keys) && item.keys.length > 0 && Array.isArray(lick.prog); // over keys, not chords
   const form = form0 || {};
-  // the chips: the keys of a key-relative lick, or the form's distinct chords
-  const chords = keyed ? item.keys.slice() : [...new Set(form.bars.flatMap(barChords))];
+  // the chips: the keys of a key-relative lick, the item's own chord set (item.chords), or the form's distinct chords
+  const chords = keyed ? item.keys.slice() : Array.isArray(item.chords) && item.chords.length ? item.chords.slice() : [...new Set(form.bars.flatMap(barChords))];
   const tk = (k) => (keyed && { lkChord: 'lkKey', lkEchoGoal: 'lkEchoGoalKey', lkEchoDone: 'lkEchoDoneKey', lkAllChords: 'lkAllKeys', lkOpen: 'lkOpenKey' }[k]) || k;
   const notesOf = (c) => (keyed ? lickKeyNotes(lick, c) : lickNotes(lick, c));
   const spelled = (e) => e.name || lickSpell(e.m, e.deg);

@@ -60,7 +60,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const cells = bars.map((c, k) => {
     const lh = barNotes[k];
     const uniq = [...new Map(lh.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
-    const label = mel ? (lh.length ? noteName(lh[0].name, names) : '—') : kl ? (kAt[k] ? `${kWord(kAt[k])} · ${kAt[k].key}` : '') : rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName(midiToName(rhRoot(parseChord(barChords(c)[0]))), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
+    const label = mel ? (lh.length ? noteName(lh[0].name, names) : '—') : kl ? (kAt[k] ? `${kWord(kAt[k])} · ${kAt[k].key}` : '') : rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName((() => { const ch = parseChord(barChords(c)[0]); return patSpell(rhRoot(ch), 0, ch, !!form.flats); })(), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
