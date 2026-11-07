@@ -1,0 +1,11 @@
+{
+  "$format": "jazzlab-form/1",
+  "id": "blues-c",
+  "title": { "ru": "Блюз в C, 12 тактов", "en": "12-bar blues in C" },
+  "about": { "ru": "Три аккорда, двенадцать тактов, по кругу. Левая держит грув, правая потом добавит фразы.", "en": "Three chords, twelve bars, on a loop. The left hand keeps the groove; the right will add phrases later." },
+  "tempo": 66,
+  "swing": true,
+  "bars": ["C7", "C7", "C7", "C7", "F7", "F7", "C7", "C7", "G7", "F7", "C7", "G7"],
+  "practice": ["C7", "F7", "G7", "C7"],
+  "patterns": ["p1", "p1q"]
+}

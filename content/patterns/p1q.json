@@ -1,0 +1,15 @@
+{
+  "$format": "jazzlab-pattern/1",
+  "id": "p1q",
+  "title": { "ru": "Корень и квинта, четверти", "en": "Root and fifth, quarter notes" },
+  "about": { "ru": "Тот же мотор, но четвертями: корень, квинта, корень, квинта. Коротко, с лёгким акцентом на «1» и «3».", "en": "Same motor in quarter notes: root, fifth, root, fifth. Short, with a light accent on 1 and 3." },
+  "tempo": 60,
+  "swing": true,
+  "rhythm": "4 4 4 4",
+  "events": [
+    { "t": 0, "d": 2, "deg": 0, "f": 5, "stac": true },
+    { "t": 2, "d": 2, "deg": 7, "f": 1, "stac": true },
+    { "t": 4, "d": 2, "deg": 0, "f": 5, "stac": true },
+    { "t": 6, "d": 2, "deg": 7, "f": 1, "stac": true }
+  ]
+}

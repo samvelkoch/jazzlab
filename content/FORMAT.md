@@ -38,3 +38,35 @@ Event fields: `t` slot, `d` length in eighths (default 1), `n` pitches (`C4` = m
 
 Add an exercise: create the file, then add its id to `available` in `content/courses/<course>.json`.
 Check: `node tests/export.test.mjs`.
+
+
+# Tracks (`jazzlab-track/1`)
+
+`content/tracks/<id>.json`. A track is sections of items; the home screen renders it and builds today's session
+(reviews due, then the next unfinished items).
+
+```jsonc
+{
+  "$format": "jazzlab-track/1", "id": "blues", "title": {…}, "about": {…},
+  "sections": [ { "id": "keys", "title": {…}, "about": {…}, "items": ["d-white", "pat-p1", "form-p1"] } ],
+  "items": {
+    "d-white": { "kind": "drill", "title": {…}, "about": {…},
+      "tasks": [ { "type": "note", "notes": ["C", "D"], "n": 16 } ],   // note | all | interval (+ "semis") | chord (+ "chords")
+      "pass": { "acc": 0.9, "avgMs": 2500 } },
+    "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" }, // unfolded over form.practice as an exercise
+    "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": {…} }
+  }
+}
+```
+
+Item screens are `#/t/<track>/<item>`. Passing an item (drill thresholds, the exercise's «by heart» stage,
+3 clean choruses of a form) schedules a review in 1, 3, 7, 14 then 30 days.
+
+# Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
+
+`content/forms/<id>.json`: `bars` = one chord per bar (`C7`, `Fm7`, `Bbmaj7`, `Dm7b5`…), `practice` = a short chord
+sequence to learn a pattern on, `tempo`, `swing`.
+
+`content/patterns/<id>.json`: `events` relative to the chord root, `deg` = semitones above it, `d` in eighths, `f` finger.
+`patternExercise()` in `app/js/music/forms.js` unfolds a pattern over a chord list into a normal exercise; the root sits
+between F2 and E3 (C → C3, F → F2, G → G2) so the hand stays in place.

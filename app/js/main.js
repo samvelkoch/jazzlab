@@ -1,12 +1,19 @@
-// Boot + hash router: #/ (course) and #/ex/<id> (exercise).
+// Boot + hash router.
+//   #/              blues track (home)      #/track/<id>   another track
+//   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | form
+//   #/riffs         the book course         #/ex/<id>, #/imp/<step>  its exercises and improvisation
 import { applyTheme, currentTheme } from './theme.js';
 import { t, L } from './i18n.js';
-import { h, ICON } from './ui.js';
+import { h, ICON, setItemLinks } from './ui.js';
 import { autoConnect } from './music/midi.js';
-import { loadExercise } from './music/exercise.js';
+import { loadExercise, normalize } from './music/exercise.js';
+import { patternExercise } from './music/forms.js';
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
+import { renderTrack } from './screens/track.js';
+import { renderDrill } from './screens/drill.js';
+import { renderForm } from './screens/form.js';
 
 applyTheme(currentTheme());
 autoConnect();
@@ -15,15 +22,35 @@ const root = document.getElementById('app');
 const base = new URL('../../content/', import.meta.url);
 let cleanup = null;
 let cache = null;
+const models = {};
 
+const get = async (p) => { const r = await fetch(new URL(p, base)); if (!r.ok) throw new Error(`${p}: HTTP ${r.status}`); return r.json(); };
 async function content() {
   if (cache) return cache;
-  const get = async (p) => { const r = await fetch(new URL(p, base)); if (!r.ok) throw new Error(`${p}: HTTP ${r.status}`); return r.json(); };
-  const index = await get('index.json');
-  const course = await get('courses/jazz-rhythms.json');
-  const improv = await get('improv.json');
+  const [index, course, improv] = await Promise.all([get('index.json'), get('courses/jazz-rhythms.json'), get('improv.json')]);
   cache = { index, course, improv };
   return cache;
+}
+
+/** Load a track with its forms and patterns; resolve every item to { kind, title, about, href, ... }. */
+async function trackModel(id) {
+  if (models[id]) return models[id];
+  const track = await get(`tracks/${id}.json`);
+  const formIds = new Set(), patIds = new Set();
+  Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); });
+  const forms = {}, patterns = {};
+  await Promise.all([
+    ...[...formIds].map(async (f) => { forms[f] = await get(`forms/${f}.json`); }),
+    ...[...patIds].map(async (p) => { patterns[p] = await get(`patterns/${p}.json`); })
+  ]);
+  const items = {};
+  Object.entries(track.items).forEach(([iid, it]) => {
+    const title = it.title ? L(it.title) : it.kind === 'pattern' ? L(patterns[it.pattern].title) : it.kind === 'form' ? L(forms[it.form].title) : iid;
+    const about = it.about ? L(it.about) : it.kind === 'pattern' ? L(patterns[it.pattern].about) : it.kind === 'form' ? L(forms[it.form].about) : '';
+    items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}` };
+  });
+  models[id] = { track, forms, patterns, items };
+  return models[id];
 }
 
 function message(text, err) {
@@ -39,6 +66,8 @@ async function route() {
   try {
     const mi = /^\/imp\/(s\d+)$/.exec(hash);
     const m = /^\/ex\/([a-z0-9-]+)$/.exec(hash);
+    const mt = /^\/track\/([a-z0-9-]+)$/.exec(hash);
+    const mti = /^\/t\/([a-z0-9-]+)\/([a-z0-9-]+)$/.exec(hash);
     if (mi) {
       const { course, improv } = await content();
       const step = course.steps.find((s) => s.id === mi[1]);
@@ -51,12 +80,36 @@ async function route() {
       const { course } = await content();
       if (!course.available.includes(m[1])) { message(t('notFound')); return; }
       const ex = await loadExercise(m[1]);
+      ex.back = '#/riffs';
       document.title = `${L(ex.title)} · Jazzlab`;
       cleanup = renderExercise(root, { ex, rerender });
-    } else {
+    } else if (hash === '/riffs') {
       const { index, course } = await content();
-      document.title = 'Jazzlab';
+      document.title = `${t('riffs')} · Jazzlab`;
       await renderCourse(root, { index, course, rerender });
+    } else if (mti) {
+      const model = await trackModel(mti[1]);
+      const item = model.items[mti[2]];
+      if (!item) { message(t('notFound')); return; }
+      setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null);
+      const back = mti[1] === 'blues' ? '#/' : `#/track/${mti[1]}`;
+      document.title = `${item.title} · Jazzlab`;
+      if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
+      else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], back });
+      else if (item.kind === 'pattern') {
+        const form = model.forms[item.form], pattern = model.patterns[item.pattern];
+        const ex = normalize(patternExercise(pattern, form.practice || form.bars, {
+          id: item.id, course: mti[1], swing: form.swing, back,
+          kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_pattern').toUpperCase()} · ${(form.practice || form.bars).join(' ')}`
+        }));
+        cleanup = renderExercise(root, { ex, rerender });
+      } else message(t('notFound'));
+    } else {
+      const id = mt ? mt[1] : 'blues';
+      const [{ index }, model] = await Promise.all([content(), trackModel(id)]);
+      setItemLinks((iid) => model.items[iid] ? { href: model.items[iid].href, title: model.items[iid].title } : null);
+      document.title = 'Jazzlab';
+      await renderTrack(root, { model, index, rerender });
     }
     window.scrollTo(0, 0);
   } catch (err) {

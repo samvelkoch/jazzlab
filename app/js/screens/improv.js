@@ -7,6 +7,7 @@ import { toMidi, noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { patternRhythm } from '../music/rhythm.js';
 import * as audio from '../music/audio.js';
+import { groove } from '../music/drums.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
 
 const PER = 8; // eighths per bar (4/4)
@@ -259,26 +260,12 @@ export function renderImprov(root, { step, imp, rhythms }) {
         if (k === youBar() + 0 && bar > 0 || (k !== youBar() && bar > 0)) { /* nothing */ }
       }
       accomp(k, slot, time, beat);
-      if (settings.impBeat === 'drums') groove(slot, time); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
+      if (settings.impBeat === 'drums') groove(slot, time, st.swing); else if (settings.met && slot % 2 === 0) audio.click(time, slot === 0);
       if (k === 0 && st.stage === 'echo' && phrase) { const pn = phrase.notes.find((x) => x.slot === slot); if (pn) play1(pn.m, time, swingOff() * pn.len * 0.95, 0.55); }
       if (k === youBar()) { const o = pats[st.ri].rh.onsets.find((x) => x.slot === slot); if (o) exp.push({ t: time, slot, hit: false, m: phrase && st.stage === 'echo' ? (phrase.notes.find((x) => x.slot === slot) || {}).m : null }); }
       if (k === youBar() && slot === PER - 1) queue.push({ t: time + beat + 0.25, youEnd: bar });
       if (slot % 2) beatTime += beat;
       g++;
-    }
-  }
-  // Drummer: swing = ride "ding ding-a ding ding-a" + hi-hat foot on 2 and 4 + feathered kick;
-  // straight = ride eighths, hat on 2 and 4, kick on 1 and 3.
-  function groove(slot, time) {
-    const beatN = slot >> 1, off = slot % 2 === 1;
-    if (st.swing) {
-      if (!off || beatN % 2 === 1) audio.drum('ride', time, off ? 0.55 : beatN % 2 ? 0.9 : 0.75);
-      if (!off && beatN % 2 === 1) audio.drum('hat', time, 0.9);
-      if (!off) audio.drum('kick', time, 0.25);
-    } else {
-      audio.drum('ride', time, off ? 0.5 : 0.8);
-      if (!off && beatN % 2 === 1) audio.drum('hat', time, 0.9);
-      if (!off && beatN % 2 === 0) audio.drum('kick', time, beatN === 0 ? 0.6 : 0.45);
     }
   }
   function posAt(T) {

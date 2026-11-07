@@ -2,6 +2,23 @@
 import { t, getLang, setLang } from './i18n.js';
 import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './theme.js';
 import { midiState, onMidiState, connect } from './music/midi.js';
+import { sessionNext, sessionAdvance, endSession } from './store.js';
+
+// Item screens register how to link to an item id (set by main.js once the track is loaded).
+let linkOf = () => null;
+export function setItemLinks(fn) { linkOf = fn; }
+export const itemHref = (id) => linkOf(id);
+
+/** "Next →" chip for the one-tap session; empty when no session is running or this is the last item. */
+export function sessionChip(currentId) {
+  const nx = sessionNext(currentId);
+  if (!nx) return null;
+  const link = linkOf(nx.id);
+  if (!link) return null;
+  return h('a.chip.session', { href: link.href, title: link.title, onclick: () => sessionAdvance(currentId) },
+    h('span', null, `${t('nextW')} ${nx.at + 1}/${nx.total}: ${link.title}`), h('b', null, '→'));
+}
+export { endSession };
 
 /** h('button.btn.primary', {onclick, 'aria-label': ...}, ...children) */
 export function h(sel, attrs, ...kids) {

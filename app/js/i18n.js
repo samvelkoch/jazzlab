@@ -64,7 +64,22 @@ const DICT = {
     sayIt: 'Говори слоги вслух!', nowSoloLoop: 'Чисто! Дальше сам, я замолкаю', learnedPattern: 'Ритм выучен. Теперь по кругу без слогов', streakTo: 'подряд',
     cleanW: 'чисто', roundClean: 'Чистый подход!', loopPlay: 'По кругу',
     sylSystem: 'Слоги ритма', syl_food: 'ко-фе', syl_kodaly: 'Kodály', syl_takadimi: 'Takadimi', syl_scat: 'Скэт',
-    planned: 'В плане', min: 'мин', h: 'ч'
+    planned: 'В плане', min: 'мин', h: 'ч',
+    // tracks, session, reviews
+    riffs: 'Риффы', nextW: 'Дальше', startSession: 'Начать', continueSession: 'Продолжить занятие', endSession: 'Закончить занятие',
+    nothingToday: 'На сегодня всё. Сыграй блюз для души.', reviewW: 'повтор', nextReview: 'повтор', inProgress: 'начато',
+    kind_drill: 'Дрил', kind_pattern: 'Левая рука', kind_form: 'Форма', itemsDone: 'элементов', longTermW: 'в долгой памяти', trackGoal: 'Цель дорожки',
+    stagesW: 'этапов', bestStreak: 'подряд', sec: 'с', again: 'Ещё раз',
+    // drill
+    drillUpper: 'ДРИЛ', dPlay: 'СЫГРАЙ', dAnyOctave: 'в любой октаве', dAll: 'ВСЕ', dAllSub: 'все {n} клавиши с этим именем', dChord: 'СОБЕРИ АККОРД', dChordSub: 'ноты: {notes}',
+    int_m3: 'МАЛАЯ ТЕРЦИЯ ВВЕРХ ОТ', int_M3: 'БОЛЬШАЯ ТЕРЦИЯ ВВЕРХ ОТ', int_p4: 'КВАРТА ВВЕРХ ОТ', int_p5: 'КВИНТА ВВЕРХ ОТ', int_m7: 'МАЛАЯ СЕПТИМА ВВЕРХ ОТ', int_p8: 'ОКТАВА ВВЕРХ ОТ', int_up: 'ВВЕРХ ОТ', dIntervalSub: '{n} клавиш вверх, считая чёрные',
+    dWithErrors: 'с ошибками: {n}', dPassed: 'Зачёт', dNotYet: 'Пока нет', dPassedSub: 'Этот дрил вернётся на повтор через несколько дней.', dMoreAccurate: 'Точнее: меньше ошибочных нажатий.', dFaster: 'Точно, но медленно: ещё раз, не считая от до.',
+    dAccuracy: 'точность', dAvgTime: 'на задание', dClean: 'чисто', dBest: 'ЛУЧШИЙ РЕЗУЛЬТАТ', dReady: 'ДРИЛ', dGoal: 'Цель: точность {acc}% и не дольше {s} с на задание',
+    drillHintMidi: 'Играй на пианино. Нотный стан не нужен.', drillHintScreen: 'Нажимай клавиши на экране или подключи пианино',
+    // form
+    formUpper: 'ФОРМА', fPlay: 'Играю', fListen: 'Слушаю', fListenHint: 'Левая звучит сама: слушай и смотри на клавиши', fPlayHint: 'Играй левую по кругу под барабаны', fPlayHintScreen: 'Без пианино: левая звучит как подсказка, нажимай на экране',
+    chorusW: 'Круг', cleanChoruses: 'чистые круги подряд', slipsW: 'промахов', fPassed: 'Три чистых круга. Ты играешь блюз!', fPassedAgain: 'Повтор зачтён',
+    fSoFar: 'Пока', fCleanOf: 'чистых из', fStart: 'Нажми «Старт»: отсчёт 1 такт, потом 12 тактов по кругу'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -128,7 +143,19 @@ const DICT = {
     sayIt: 'Say the syllables aloud!', nowSoloLoop: 'Clean! Now on your own, I go quiet', learnedPattern: 'Rhythm learned. Now loop it without syllables', streakTo: 'in a row',
     cleanW: 'clean', roundClean: 'Clean round!', loopPlay: 'Loop',
     sylSystem: 'Rhythm syllables', syl_food: 'cof-fee', syl_kodaly: 'Kodály', syl_takadimi: 'Takadimi', syl_scat: 'Scat',
-    planned: 'Planned', min: 'min', h: 'h'
+    planned: 'Planned', min: 'min', h: 'h',
+    riffs: 'Riffs', nextW: 'Next', startSession: 'Start', continueSession: 'Continue session', endSession: 'End session',
+    nothingToday: 'Nothing due today. Play a blues for fun.', reviewW: 'review', nextReview: 'review', inProgress: 'started',
+    kind_drill: 'Drill', kind_pattern: 'Left hand', kind_form: 'Form', itemsDone: 'items', longTermW: 'in long-term memory', trackGoal: 'Track goal',
+    stagesW: 'stages', bestStreak: 'in a row', sec: 's', again: 'Again',
+    drillUpper: 'DRILL', dPlay: 'PLAY', dAnyOctave: 'any octave', dAll: 'ALL', dAllSub: 'all {n} keys with this name', dChord: 'BUILD THE CHORD', dChordSub: 'notes: {notes}',
+    int_m3: 'MINOR THIRD UP FROM', int_M3: 'MAJOR THIRD UP FROM', int_p4: 'FOURTH UP FROM', int_p5: 'FIFTH UP FROM', int_m7: 'MINOR SEVENTH UP FROM', int_p8: 'OCTAVE UP FROM', int_up: 'UP FROM', dIntervalSub: '{n} keys up, black keys included',
+    dWithErrors: 'with mistakes: {n}', dPassed: 'Passed', dNotYet: 'Not yet', dPassedSub: 'This drill comes back for review in a few days.', dMoreAccurate: 'More accuracy: fewer wrong keys.', dFaster: 'Accurate but slow: again, without counting up from C.',
+    dAccuracy: 'accuracy', dAvgTime: 'per task', dClean: 'clean', dBest: 'BEST RESULT', dReady: 'DRILL', dGoal: 'Goal: {acc}% accuracy and at most {s} s per task',
+    drillHintMidi: 'Play on the piano. No staff needed.', drillHintScreen: 'Tap the keys on screen or connect your piano',
+    formUpper: 'FORM', fPlay: 'I play', fListen: 'Listen', fListenHint: 'The left hand plays itself: listen and watch the keys', fPlayHint: 'Play the left hand around the form with the drums', fPlayHintScreen: 'No piano: the left hand sounds as a guide, tap on screen',
+    chorusW: 'Chorus', cleanChoruses: 'clean choruses in a row', slipsW: 'slips', fPassed: 'Three clean choruses. You are playing the blues!', fPassedAgain: 'Review passed',
+    fSoFar: 'So far', fCleanOf: 'clean of', fStart: 'Press Start: a 1-bar count-in, then 12 bars on a loop'
   }
 };
 

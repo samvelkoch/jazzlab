@@ -1,0 +1,59 @@
+{
+  "$format": "jazzlab-track/1",
+  "id": "blues",
+  "title": { "ru": "Блюз", "en": "Blues" },
+  "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
+  "sections": [
+    {
+      "id": "keys", "title": { "ru": "Клавиатура", "en": "The keyboard" },
+      "about": { "ru": "Названия нот как рефлекс. Задание крупно, играй на пианино, стан не нужен.", "en": "Note names as a reflex. Big prompts, play on the piano, no staff needed." },
+      "items": ["d-white", "d-black", "d-all", "d-fifths", "d-chords"]
+    },
+    {
+      "id": "lh", "title": { "ru": "Левая рука", "en": "Left hand" },
+      "about": { "ru": "Мотор блюза. Учится на четырёх тактах C7 · F7 · G7 · C7, потом идёт в форму.", "en": "The blues motor. Learned over four bars C7 · F7 · G7 · C7, then taken into the form." },
+      "items": ["pat-p1", "pat-p1q"]
+    },
+    {
+      "id": "form", "title": { "ru": "Форма", "en": "The form" },
+      "about": { "ru": "Весь блюз по кругу под барабаны. Три чистых круга подряд, и ты играешь блюз.", "en": "The whole blues on a loop with drums. Three clean choruses in a row and you are playing the blues." },
+      "items": ["form-p1", "form-p1q"]
+    }
+  ],
+  "items": {
+    "d-white": {
+      "kind": "drill", "title": { "ru": "Белые ноты", "en": "White notes" },
+      "about": { "ru": "Я называю ноту, ты играешь её в любой октаве. Быстро, не считая от до.", "en": "I name a note, you play it in any octave. Fast, without counting up from C." },
+      "tasks": [{ "type": "note", "notes": ["C", "D", "E", "F", "G", "A", "B"], "n": 16 }],
+      "pass": { "acc": 0.9, "avgMs": 2500 }
+    },
+    "d-black": {
+      "kind": "drill", "title": { "ru": "Чёрные ноты блюза", "en": "Blues black notes" },
+      "about": { "ru": "Bb, Eb, F#, Ab, Db: чёрные клавиши, которые живут в блюзе. Любая октава.", "en": "Bb, Eb, F#, Ab, Db: the black keys that live in the blues. Any octave." },
+      "tasks": [{ "type": "note", "notes": ["Bb", "Eb", "F#", "Ab", "Db"], "n": 14 }],
+      "pass": { "acc": 0.9, "avgMs": 3000 }
+    },
+    "d-all": {
+      "kind": "drill", "title": { "ru": "Все октавы", "en": "Every octave" },
+      "about": { "ru": "Сыграй все клавиши с этим именем, снизу вверх. На экране их четыре, на пианино больше: хватит четырёх.", "en": "Play every key with this name, bottom to top. Four are on screen; four are enough." },
+      "tasks": [{ "type": "all", "notes": ["C", "F", "G", "Bb", "Eb"], "n": 5 }],
+      "pass": { "acc": 0.9, "avgMs": 7000 }
+    },
+    "d-fifths": {
+      "kind": "drill", "title": { "ru": "Квинты", "en": "Fifths" },
+      "about": { "ru": "Квинта: семь клавиш вверх, включая чёрные. Левая рука блюза живёт на корне и квинте.", "en": "A fifth: seven keys up, black ones included. The blues left hand lives on the root and the fifth." },
+      "tasks": [{ "type": "interval", "semis": 7, "label": "fifth", "notes": ["C", "F", "G", "Bb", "Eb", "D", "A"], "n": 12 }],
+      "pass": { "acc": 0.9, "avgMs": 4000 }
+    },
+    "d-chords": {
+      "kind": "drill", "title": { "ru": "Аккорды блюза", "en": "Blues chords" },
+      "about": { "ru": "C7, F7, G7: четыре ноты вместе, любой рукой, в любом порядке. Это формы ладони, а не теория.", "en": "C7, F7, G7: four notes together, any hand, any order. Hand shapes, not theory." },
+      "tasks": [{ "type": "chord", "chords": ["C7", "F7", "G7"], "n": 9 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 }
+    },
+    "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" },
+    "pat-p1q": { "kind": "pattern", "pattern": "p1q", "form": "blues-c" },
+    "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": { "ru": "Блюз на половинных", "en": "Blues in half notes" } },
+    "form-p1q": { "kind": "form", "form": "blues-c", "pattern": "p1q", "title": { "ru": "Блюз на четвертях", "en": "Blues in quarter notes" } }
+  }
+}

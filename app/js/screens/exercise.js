@@ -1,7 +1,7 @@
 // Exercise screen: stages Rhythm (tap the rhythm on one key) → Notes (wait mode) → In tempo → By heart.
-import { h, ICON, themeButton, midiChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
 import { t, L } from '../i18n.js';
-import { store, exProgress, updateEx, markActive, idle } from '../store.js';
+import { store, exProgress, updateEx, markActive, idle, scheduleReview } from '../store.js';
 import { buildSteps, dynAt, midiRange } from '../music/exercise.js';
 import { toMidi, midiToName, noteName } from '../music/notes.js';
 import { createStaff } from '../music/staff.js';
@@ -54,12 +54,12 @@ export function renderExercise(root, { ex, rerender }) {
   }
 
   const header = h('header.top', null,
-    h('a.iconbtn', { href: '#/', 'aria-label': t('back'), title: t('back'), html: ICON.back }),
+    h('a.iconbtn', { href: ex.back, 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null,
-      h('span.kicker', null, `${t('stepUpper')} ${ex.step} · ${t('exerciseUpper')} ${ex.number}`),
+      h('span.kicker', null, ex.kicker || `${t('stepUpper')} ${ex.step} · ${t('exerciseUpper')} ${ex.number}`),
       h('span.title', null, L(ex.title))),
     h('div.grow'), stages, h('div.grow'),
-    midiChip(), settingsPanel, themeButton());
+    sessionChip(ex.id), midiChip(), settingsPanel, themeButton());
 
   const fbEl = h('span.fb', { 'aria-live': 'polite' });
   const barEl = h('span.barno');
@@ -137,7 +137,7 @@ export function renderExercise(root, { ex, rerender }) {
   const clearMarks = () => staff.clearMarks();
   function setBpm(v) {
     st.bpm = Math.max(30, Math.min(200, Math.round(v)));
-    bpmOut.innerHTML = `♩ ${st.bpm} <small>/ ${ex.tempo.target}</small>`;
+    bpmOut.innerHTML = ex.passAnyTempo ? `♩ ${st.bpm}` : `♩ ${st.bpm} <small>/ ${ex.tempo.target}</small>`;
     store.set('tempo:' + ex.id, st.bpm);
     if (st.stage === 'rhythm') rs.refresh();
   }
@@ -342,7 +342,7 @@ export function renderExercise(root, { ex, rerender }) {
       html = `${t('result')}: <b>${Math.round(pct * 100)}%</b> ${t('evenPct')} · ` + html;
       if (fullRun && pct >= PASS && st.hands === 'both') {
         updateEx(ex.id, (p) => ({ ...p, bestTempo: Math.max(p.bestTempo || 0, st.bpm) }));
-        if (st.bpm >= ex.tempo.target) { fb(html); complete(st.stage); return; }
+        if (ex.passAnyTempo || st.bpm >= ex.tempo.target) { fb(html); complete(st.stage); return; }
         setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`;
       }
     } else if (msg) html += ' · ' + msg;
@@ -351,6 +351,7 @@ export function renderExercise(root, { ex, rerender }) {
   function complete(stage) {
     const summary = fbEl.innerHTML;
     updateEx(ex.id, (p) => ({ ...p, stages: { ...p.stages, [stage]: true } }));
+    if (stage === 'memory') scheduleReview(ex.id, true); // "by heart" is the gate for spaced review
     setStage(st.stage); // repaint stage marks
     fb(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · ${summary}` + (stage === 'rhythm' ? ` · <b>${t('nowNotes')} →</b>` : ''));
     if (stage === 'rhythm') rs.say(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · <b>${t('nowNotes')} →</b>`);

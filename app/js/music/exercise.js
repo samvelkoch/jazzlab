@@ -35,7 +35,9 @@ export function normalize(raw) {
     beats, per, bars, dyn,
     tempo: { start: (raw.tempo && raw.tempo.start) || 60, target: (raw.tempo && raw.tempo.target) || 90 },
     swing: !!raw.swing, rhythm: raw.rhythm || null,
-    export: raw.export || {}
+    export: raw.export || {},
+    // generated exercises (left-hand patterns over a form): pass at any tempo, custom header + back link
+    passAnyTempo: !!raw.passAnyTempo, kicker: raw.kicker || null, back: raw.back || '#/'
   };
 }
 
