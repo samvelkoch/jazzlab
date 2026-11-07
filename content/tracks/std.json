@@ -1,7 +1,7 @@
 {
   "$format": "jazzlab-track/1",
   "id": "std",
-  "title": { "ru": "Стандарт", "en": "Standard" },
+  "title": { "ru": "Джазовые стандарты", "en": "Jazz standards" },
   "about": { "ru": "Цель дорожки: 32-тактовый стандарт целиком. Левая ведёт аккорды голосоведением, правая мелодию, потом свои фразы по II–V–I.", "en": "Goal: a whole 32-bar standard. The left hand leads the chords with voice leading, the right hand carries the tune, then your own phrases over II–V–I." },
   "sections": [
     {
