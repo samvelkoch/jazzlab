@@ -80,7 +80,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form, bac
   }, 'backing');
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: onPrimary });
-  const footer = h('footer.actions', null, swingSeg, beatSeg, tempoBox, footHint, h('div.grow'), primary);
+  const footer = h('footer.actions', null, h('div.footsegs', null, swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.impscreen.lickscreen', null, header, h('main.ex.imp', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
 

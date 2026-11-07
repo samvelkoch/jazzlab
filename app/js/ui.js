@@ -16,7 +16,7 @@ export function sessionChip(currentId) {
   const link = linkOf(nx.id);
   if (!link) return null;
   return h('a.chip.session', { href: link.href, title: link.title, onclick: () => sessionAdvance(currentId) },
-    h('span', null, `${t('nextW')} ${nx.at + 1}/${nx.total}: ${link.title}`), h('b', null, '→'));
+    h('span', null, h('span.sn', null, `${t('nextW')} `), `${nx.at + 1}/${nx.total}`, h('span.st', null, `: ${link.title}`)), h('b', null, '→'));
 }
 export { endSession };
 

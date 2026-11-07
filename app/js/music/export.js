@@ -162,3 +162,25 @@ export function toMidiFile(ex, title) {
   });
   return new Uint8Array([0x4d, 0x54, 0x68, 0x64, ...u32(6), ...u16(1), ...u16(tracks.length), ...u16(PPQ), ...tracks.flat()]);
 }
+
+/**
+ * A performance recording as a Standard MIDI file (type 1: conductor + one piano track).
+ * rec = { bpm, notes: [{ t, d, m, v }] } with t (onset) and d (duration) in SECONDS from the first beat of
+ * chorus 1 and v = velocity 0..1. Seconds become ticks at rec.bpm, so the file lines up with the bar grid;
+ * swing is already in the real timing and needs no handling. Notes with t < 0 are clamped to 0.
+ */
+export function recordingToMidi(rec, title) {
+  const bpm = rec.bpm || 120, us = Math.round(60000000 / bpm);
+  const tick = (sec) => Math.max(0, Math.round(sec * bpm / 60 * PPQ));
+  const conductor = [[0, 0, metaName(title)], [0, 0, [0xff, 0x58, 0x04, 4, 0x02, 0x18, 0x08]], [0, 0, [0xff, 0x59, 0x02, 0x00, 0x00]],
+    [0, 0, [0xff, 0x51, 0x03, (us >> 16) & 255, (us >> 8) & 255, us & 255]]];
+  const evs = [[0, 0, metaName('Piano')], [0, 0, [0xc0, 0]]];
+  (rec.notes || []).forEach((n) => {
+    const m = Math.max(0, Math.min(127, Math.round(n.m)));
+    const v = Math.max(1, Math.min(127, Math.round((n.v ?? 0.6) * 127)));
+    const on = tick(n.t), off = Math.max(on + 1, tick(n.t + (n.d || 0)));
+    evs.push([on, 1, [0x90, m, v]]); evs.push([off, 0, [0x80, m, 0]]);
+  });
+  const tracks = [track(conductor), track(evs)];
+  return new Uint8Array([0x4d, 0x54, 0x68, 0x64, ...u32(6), ...u16(1), ...u16(tracks.length), ...u16(PPQ), ...tracks.flat()]);
+}

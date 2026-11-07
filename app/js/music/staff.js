@@ -214,6 +214,8 @@ export function createStaff(svg, ex, opts = {}) {
       band.setAttribute('x', x - 13);
       svg.querySelectorAll('.nt,.nm').forEach((el) => el.classList.toggle('cur', +el.dataset.i === i));
     },
+    /** On-screen box of the cursor band (to scroll a narrow staff after it). */
+    bandRect() { return band.getBoundingClientRect(); },
     mark(i, cls) {
       svg.querySelectorAll(`.nt[data-i="${i}"]`).forEach((g) => { g.classList.remove('ok', 'meh', 'bad'); if (cls) g.classList.add(cls); });
     },
