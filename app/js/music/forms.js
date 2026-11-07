@@ -52,6 +52,18 @@ export const chordNames = (name) => { const c = parseChord(name); return c.offse
 
 // a pattern event's notes: deg may be a number or an array (several notes at once), f the same shape
 const evDegs = (e) => (Array.isArray(e.deg) ? e.deg : [e.deg]);
+/**
+ * Fit a pattern degree to the chord quality: patterns are written over a dominant 7th (3rd = 4, 7th = 10);
+ * over a minor chord the 3rd becomes 3 (Dm7: F, not F#), over a maj7 the 7th becomes 11, over m7b5/dim the 5th becomes 6.
+ */
+export function fitDeg(deg, chord) {
+  const o = chord.offsets, pc = ((deg % 12) + 12) % 12, oct = deg - pc;
+  if (pc === 4 && o.includes(3) && !o.includes(4)) return oct + 3;
+  if (pc === 10 && o.includes(11)) return oct + 11;
+  if (pc === 10 && o.includes(9) && !o.includes(10) && chord.qual === 'dim7') return oct + 9;
+  if (pc === 7 && o.includes(6) && !o.includes(7)) return oct + 6;
+  return deg;
+}
 const evFingers = (e) => (Array.isArray(e.f) ? e.f : e.f ? [e.f] : []);
 
 /**
@@ -67,7 +79,7 @@ export function patternExercise(pattern, bars, opts = {}) {
     rh: [],
     lh: ev.map((e) => {
       const chord = parseChord(chordAt(name, e.t)), root = lhRoot(chord);
-      return { t: e.t, d: e.d || 1, n: evDegs(e).map((g) => patSpell(root + g, g, chord)), f: evFingers(e), stac: !!e.stac, sug: false };
+      return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord); }), f: evFingers(e), stac: !!e.stac, sug: false };
     }),
     chord: name
   }));
@@ -94,7 +106,8 @@ export function patternExercise(pattern, bars, opts = {}) {
 export function patternBar(pattern, barName) {
   return pattern.events.flatMap((e) => {
     const name = chordAt(barName, e.t), root = lhRoot(parseChord(name)), fs = evFingers(e);
-    return evDegs(e).map((g, i) => ({ t: e.t, d: e.d || 1, m: root + g, f: fs[i] || 0, stac: !!e.stac, deg: g, chord: name }));
+    const chord = parseChord(name);
+    return evDegs(e).map((g0, i) => { const g = fitDeg(g0, chord); return { t: e.t, d: e.d || 1, m: root + g, f: fs[i] || 0, stac: !!e.stac, deg: g, chord: name }; });
   });
 }
 

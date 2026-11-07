@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { normalize, buildSteps } from '../app/js/music/exercise.js';
-import { parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames } from '../app/js/music/forms.js';
+import { fitDeg, parseChord, chordPcs, patternExercise, patternBar, expectedAtSlot, lhRoot, spell, rhRoot, lickNotes, lickBars, lickExercise, barChords, chordNames } from '../app/js/music/forms.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -129,8 +129,9 @@ assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'l
 Object.values(blues.items).forEach((it) => { if (it.lick) read(`content/licks/${it.lick}.json`); (it.licks || []).forEach((l) => read(`content/licks/${l}.json`)); });
 
 // p3 «Корень и шелл»: root on 1 and 3, third + seventh together on 2 and 4
-const p3 = read('content/patterns/p3.json');
+
 assert.ok(form.patterns.includes('p3'));
+const p3 = read('content/patterns/p3.json');
 const sx = normalize(patternExercise(p3, ['C7', 'F7'], { id: 's' }));
 assert.deepEqual(sx.bars[0].lh.map((e) => e.t), [0, 2, 4, 6]);
 assert.deepEqual(sx.bars[0].lh[1].notes, ['E3', 'Bb3']);
@@ -189,3 +190,10 @@ assert.equal(blues.items['perf-blues'].form, 'blues-c-ta');
 Object.values(blues.items).forEach((it) => { if (it.form) read(`content/forms/${it.form}.json`); });
 Object.values(blues.items).filter((it) => it.kind === 'drill').forEach((it) => it.tasks.filter((k) => k.type === 'chord').forEach((k) => k.chords.forEach((c) => chordPcs(c))));
 console.log('ok: forms');
+
+// pattern degrees follow the chord quality: the shell over Dm7 is F + C, not F# + C
+assert.equal(fitDeg(4, parseChord('Dm7')), 3); assert.equal(fitDeg(10, parseChord('Cmaj7')), 11); assert.equal(fitDeg(4, parseChord('C7')), 4);
+
+assert.deepEqual(patternBar(p3, 'Dm7 G7').map((e) => e.m), [50, 53, 60, 43, 47, 53], 'Dm7: D3 F3 C4, G7: G2 B2 F3');
+assert.deepEqual(normalize(patternExercise(p3, ['Dm7'], { id: 'z' })).bars[0].lh[1].notes, ['F3', 'C4']);
+console.log('ok: fitDeg');
