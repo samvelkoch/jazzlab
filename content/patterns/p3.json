@@ -1,0 +1,15 @@
+{
+  "$format": "jazzlab-pattern/1",
+  "id": "p3",
+  "title": { "ru": "Корень и шелл", "en": "Root and shell" },
+  "about": { "ru": "Корень на «1» и «3», терция с септимой на «2» и «4»: так аккомпанирует джазовая левая. Две ноты говорят, какой это аккорд.", "en": "The root on 1 and 3, the third and seventh together on 2 and 4: this is how a jazz left hand comps. Two notes tell you which chord it is." },
+  "tempo": 60,
+  "swing": true,
+  "rhythm": "8 r8 4 8 r8 4",
+  "events": [
+    { "t": 0, "d": 1, "deg": 0, "f": 5 },
+    { "t": 2, "d": 2, "deg": [4, 10], "f": [2, 1] },
+    { "t": 4, "d": 1, "deg": 0, "f": 5 },
+    { "t": 6, "d": 2, "deg": [4, 10], "f": [2, 1] }
+  ]
+}

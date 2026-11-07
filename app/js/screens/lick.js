@@ -7,7 +7,7 @@ import { t, L } from '../i18n.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { lickNotes, lickSpell, patternBar } from '../music/forms.js';
+import { lickNotes, lickSpell, patternBar, barChords } from '../music/forms.js';
 import * as audio from '../music/audio.js';
 import { groove } from '../music/drums.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -20,7 +20,7 @@ const CLEAN_TO_PASS = 3; // clean repeats per chord
 export function renderLick(root, { track, itemId, item, lick, pattern, form, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
-  const chords = [...new Set(form.bars)];
+  const chords = [...new Set(form.bars.flatMap(barChords))];
   const saved = exProgress(itemId);
   const st = {
     stage: store.get('lickStage:' + itemId, 'echo'),

@@ -5,7 +5,7 @@ import { t, L } from '../i18n.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { toMidi, noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { chordPcs, spell } from '../music/forms.js';
+import { chordPcs, chordNames } from '../music/forms.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote } from '../music/midi.js';
 
@@ -20,7 +20,7 @@ function makeTasks(item) {
     const pool = [];
     if (spec.type === 'note' || spec.type === 'all') spec.notes.forEach((n) => pool.push({ type: spec.type, name: n, pc: pcOf(toMidi(n + '4')) }));
     else if (spec.type === 'interval') spec.notes.forEach((n) => pool.push({ type: 'interval', name: n, pc: pcOf(toMidi(n + '4')), semis: spec.semis }));
-    else if (spec.type === 'chord') spec.chords.forEach((c) => pool.push({ type: 'chord', name: c, pcs: chordPcs(c) }));
+    else if (spec.type === 'chord') spec.chords.forEach((c) => pool.push({ type: 'chord', name: c, pcs: chordPcs(c), tones: chordNames(c) }));
     const n = spec.n || pool.length;
     let last = null;
     for (let k = 0; k < n; k++) {
@@ -35,9 +35,8 @@ function makeTasks(item) {
 export function renderDrill(root, { track, itemId, item, back }) {
   const settings = { names: 'en', pianoSnd: true, ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
-  // names come from the task spec (Bb stays Bb, not A#); chord tones are spelled with flats (C7 = C E G Bb)
+  // names come from the task spec (Bb stays Bb, not A#); chord tones are spelled like the chord (C7 = C E G Bb, A7 = A C# E G)
   const nm = (x) => noteName(x.name + '4', names);
-  const nmFlat = (pc) => noteName(spell(60 + pc, true), names);
   const st = { tasks: [], k: -1, running: false, t0: 0, errors: 0, log: [], held: new Set(), got: new Set() };
   const wasDue = reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date();
 
@@ -85,7 +84,7 @@ export function renderDrill(root, { track, itemId, item, back }) {
     if (x.type === 'note') { promptK.textContent = t('dPlay'); promptB.textContent = nm(x); promptS.textContent = t('dAnyOctave'); }
     else if (x.type === 'all') { const n = keysOf(x.pc).length; promptK.textContent = t('dAll'); promptB.textContent = nm(x); promptS.textContent = t('dAllSub').replace('{n}', n); }
     else if (x.type === 'interval') { promptK.textContent = t(INTERVAL_KEY[x.semis] || 'int_up'); promptB.textContent = `${nm(x)} ↑`; promptS.textContent = t('dIntervalSub').replace('{n}', x.semis); kb.show({ rh: { notes: [midiToName(60 + x.pc)], f: [] }, lh: null }, { rh: null, lh: null }, 'both'); }
-    else if (x.type === 'chord') { promptK.textContent = t('dChord'); promptB.textContent = x.name; promptS.textContent = t('dChordSub').replace('{notes}', x.pcs.map((pc) => nmFlat(pc)).join(' · ')); }
+    else if (x.type === 'chord') { promptK.textContent = t('dChord'); promptB.textContent = x.name; promptS.textContent = t('dChordSub').replace('{notes}', x.tones.map((n) => noteName(n + '4', names)).join(' · ')); }
     fb('');
   }
   const keysOf = (pc) => { const out = []; for (let m = LO; m <= HI; m++) if (pcOf(m) === pc) out.push(m); return out; };

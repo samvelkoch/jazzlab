@@ -8,7 +8,7 @@ import { t, L } from './i18n.js';
 import { h, ICON, setItemLinks } from './ui.js';
 import { autoConnect } from './music/midi.js';
 import { loadExercise, normalize } from './music/exercise.js';
-import { patternExercise, lickExercise } from './music/forms.js';
+import { patternExercise, lickExercise, barChords } from './music/forms.js';
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
@@ -118,7 +118,7 @@ async function route() {
       const model = await trackModel(mtf[1]);
       const item = model.items[mtf[2]], chord = mtf[3];
       const form = item && model.forms[item.form];
-      if (!item || item.kind !== 'lick' || !form || !form.bars.includes(chord)) { message(t('notFound')); return; }
+      if (!item || item.kind !== 'lick' || !form || !form.bars.flatMap(barChords).includes(chord)) { message(t('notFound')); return; }
       setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null);
       const ex = normalize(lickExercise(model.licks[item.lick], chord, model.patterns[item.pattern], {
         id: `${item.id}-${chord.toLowerCase()}`, course: mtf[1], doneId: item.id, back: item.href,
@@ -154,7 +154,7 @@ async function route() {
       } else if (item.kind === 'pattern') {
         const form = model.forms[item.form], pattern = model.patterns[item.pattern];
         const ex = normalize(patternExercise(pattern, form.practice || form.bars, {
-          id: item.id, course: mti[1], swing: form.swing, back,
+          id: item.id, course: mti[1], swing: form.swing, back, title: item.title, about: item.about || null,
           kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_pattern').toUpperCase()} · ${(form.practice || form.bars).join(' ')}`
         }));
         cleanup = renderExercise(root, { ex, rerender });
