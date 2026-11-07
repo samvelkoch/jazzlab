@@ -1,10 +1,9 @@
 // Grand-staff SVG renderer for one exercise (eighth-note grid).
 import { dia, noteName, midiToName } from './notes.js';
 
-const SV = { L: 84, BW: 229, SLOT: 25, PAD: 24, hs: 6, tTop: 60, bTop: 210, H: 330 };
+const SV = { L: 84, SLOT: 25, PAD: 24, hs: 6, tTop: 60, bTop: 210, H: 330 };
 const STF = { t: { top: SV.tTop, bot: 30, mid: 34 }, b: { top: SV.bTop, bot: 18, mid: 22 } };
 const yOf = (d, st) => STF[st].top + 48 - (d - STF[st].bot) * SV.hs;
-const xOf = (bar, slot) => SV.L + bar * SV.BW + SV.PAD + slot * SV.SLOT;
 
 function restsFor(evs, per) {
   const occ = new Array(per).fill(false);
@@ -33,8 +32,91 @@ function ledgers(x, d, st) {
   for (let k = t0 + 2; k <= d; k += 2) s += `<line class="ledger" x1="${x - 10}" x2="${x + 10}" y1="${yOf(k, st)}" y2="${yOf(k, st)}"/>`;
   return s;
 }
-const sharp = (x, y) => `<text class="accd" x="${x - 21}" y="${y + 5}">♯</text>`;
-const flat = (x, y) => `<text class="accd" x="${x - 20}" y="${y + 5}">♭</text>`;
+// Accidentals are drawn as paths (not font glyphs): same bold shape on every device.
+// Sizes in staff units (1 space = 12). (x, y) = notehead centre; c = column (0 nearest the head).
+const HEAD = 6.3, ACC_W = 10, ACC_GAP = 3, ACC_COL = ACC_W + 1.5;
+const accOf = (n) => (/^[A-G]#/.test(n) ? 1 : /^[A-G]b/.test(n) ? -1 : 0);
+function accSVG(a, x, y, c = 0, k = 1) {
+  const r = x - k * (HEAD + ACC_GAP) - c * ACC_COL * k; // right edge of the sign
+  const L = (v) => (r - (ACC_W - v) * k).toFixed(1), Y = (v) => (y + v * k).toFixed(1);
+  if (a > 0) {
+    const bar = (yy) => `M${L(0)} ${Y(yy + 1.8)} L${L(10)} ${Y(yy - 1.2)} L${L(10)} ${Y(yy - 4.9)} L${L(0)} ${Y(yy - 1.9)} Z`;
+    return `<g class="acc"><path d="${bar(-2.6)} ${bar(5.6)}"/>` +
+      `<path class="acc-s" stroke-width="${1.6 * k}" d="M${L(3)} ${Y(-12)} L${L(3)} ${Y(15.5)} M${L(7.2)} ${Y(-14.5)} L${L(7.2)} ${Y(13)}"/></g>`;
+  }
+  // flat: tall stem + filled bowl with an open counter
+  return `<g class="acc"><path class="acc-s" stroke-width="${1.7 * k}" d="M${L(1.6)} ${Y(-18)} L${L(1.6)} ${Y(5.6)}"/>` +
+    `<path d="M${L(1)} ${Y(-1.6)} C${L(4)} ${Y(-6.4)} ${L(10.4)} ${Y(-6.6)} ${L(9.6)} ${Y(-1.6)} C${L(9.2)} ${Y(1.4)} ${L(5)} ${Y(4)} ${L(1)} ${Y(6.2)} L${L(1)} ${Y(3.6)}` +
+    ` C${L(4)} ${Y(1.8)} ${L(6.6)} ${Y(0)} ${L(6.6)} ${Y(-2)} C${L(6.6)} ${Y(-4.4)} ${L(3.6)} ${Y(-3.6)} ${L(1)} ${Y(0.6)} Z"/></g>`;
+}
+/** Column per note for a chord's accidentals: signs closer than a 6th stack leftwards (top one nearest the head). */
+function accCols(notes) {
+  const cols = notes.map(() => -1), used = [];
+  notes.map((n, k) => ({ n, k, d: dia(n) })).filter((o) => accOf(o.n)).sort((a, b) => b.d - a.d).forEach((o) => {
+    let c = 0;
+    while ((used[c] || []).some((d) => Math.abs(d - o.d) < 6)) c++;
+    (used[c] = used[c] || []).push(o.d); cols[o.k] = c;
+  });
+  return { cols, n: used.length };
+}
+const GRACE_K = 0.7;
+/** Grace-note x offset left of the main note (clears the main note's accidentals). */
+const graceOff = (e) => { const ac = accCols(e.notes).n; return ac ? HEAD + ACC_GAP + ac * ACC_COL + 6 : 15; };
+/** Ink extents of an event around its x: how far it reaches left / right. */
+function extents(e) {
+  const ac = accCols(e.notes).n;
+  let left = ac ? HEAD + ACC_GAP + ac * ACC_COL - 1.5 : HEAD;
+  if (e.grace) left = Math.max(left, graceOff(e) + (accOf(e.grace) ? GRACE_K * (HEAD + ACC_GAP + ACC_W) : 4.2));
+  const right = e.d === 3 || e.d === 6 ? 13 : HEAD;
+  return { left, right };
+}
+/** Note name with a larger ♯/♭ (body fonts draw them tiny). */
+const nameSVG = (n, mode) => noteName(n, mode).replace(/[♯♭]/g, (c) => `<tspan class="nma">${c}</tspan>`);
+let measureCtx = null;
+function textW(str, px, fam) {
+  try {
+    measureCtx = measureCtx || document.createElement('canvas').getContext('2d');
+    measureCtx.font = `700 ${px}px ${fam}`;
+    return measureCtx.measureText(str).width;
+  } catch (err) { return str.length * px * 0.62; }
+}
+
+/**
+ * Horizontal layout. Slot spacing follows the rhythm (an eighth = SLOT, a held slot is narrower,
+ * like engraved music), then widens wherever accidentals or note-name labels of neighbouring notes would touch.
+ */
+function layout(ex, names, fam) {
+  const per = ex.per, pos = [], barX = [SV.L];
+  const prev = { rh: null, lh: null }; // last note event per hand: {x, right, lw}
+  const labelW = (e) => (names === 'off' ? 0 : Math.max(...e.notes.map((n) => textW(noteName(n, names), 12, fam) + (accOf(n) ? 4 : 0))));
+  ex.bars.forEach((bar, bi) => {
+    const onset = new Array(per).fill(false), at = { rh: [], lh: [] };
+    ['rh', 'lh'].forEach((h) => {
+      bar[h].forEach((e) => { onset[e.t] = true; at[h][e.t] = e; });
+      restsFor(bar[h], per).forEach((r) => { onset[r.t] = true; if (r.d === 1) at[h][r.t] = { rest: true }; });
+    });
+    const row = [];
+    for (let s = 0; s < per; s++) {
+      let x = s === 0 ? barX[bi] + SV.PAD : row[s - 1] + (onset[s] ? SV.SLOT : SV.SLOT * 0.6);
+      ['rh', 'lh'].forEach((h) => {
+        const e = at[h][s]; if (!e || e.rest) return;
+        const ext = extents(e), lw = labelW(e), p = prev[h];
+        if (s === 0) x = Math.max(x, barX[bi] + ext.left + 7);
+        if (p) x = Math.max(x, p.x + p.right + 4 + ext.left, lw && p.lw ? p.lx + (p.lw + lw) / 2 + 6 : 0);
+      });
+      row.push(x);
+      ['rh', 'lh'].forEach((h) => {
+        const e = at[h][s]; if (!e) return;
+        prev[h] = e.rest ? { x, right: 9, lw: prev[h] ? prev[h].lw : 0, lx: prev[h] && prev[h].lx } : { x, lx: x, right: extents(e).right, lw: labelW(e) };
+      });
+    }
+    pos.push(row);
+    barX.push(row[per - 1] + SV.SLOT + 5);
+  });
+  // slot == per maps to where the next slot would be (for centring rests)
+  const P = (bar, slot) => (slot >= per ? barX[bar + 1] - 5 : pos[bar][slot]);
+  return { P, barX };
+}
 
 /**
  * @param svg  <svg> element to draw into
@@ -44,12 +126,14 @@ const flat = (x, y) => `<text class="accd" x="${x - 20}" y="${y + 5}">♭</text>
 export function createStaff(svg, ex, opts = {}) {
   const per = ex.per;
   const names = opts.names || 'en';
-  const W = SV.L + ex.bars.length * SV.BW + 6;
+  const fam = (typeof getComputedStyle === 'function' && getComputedStyle(svg).getPropertyValue('--body').trim()) || 'sans-serif';
+  const { P, barX } = layout(ex, names, fam), xOf = P;
+  const W = barX[ex.bars.length] + 6;
   let o = `<rect class="band" x="0" y="4" width="26" height="${SV.H - 8}" rx="6"/>`;
   ['t', 'b'].forEach((st) => { for (let k = 0; k < 5; k++) { const y = STF[st].top + k * 12; o += `<line class="ln" x1="10" x2="${W - 6}" y1="${y}" y2="${y}"/>`; } });
   o += `<line class="bl" x1="10" x2="10" y1="${SV.tTop}" y2="${SV.bTop + 48}"/>`;
   for (let b = 1; b <= ex.bars.length; b++) {
-    const x = SV.L + b * SV.BW;
+    const x = barX[b];
     o += b < ex.bars.length
       ? `<line class="bl" x1="${x}" x2="${x}" y1="${SV.tTop}" y2="${SV.bTop + 48}"/>`
       : `<line class="bl" x1="${x - 6}" x2="${x - 6}" y1="${SV.tTop}" y2="${SV.bTop + 48}"/><rect class="ink" x="${x - 3}" y="${SV.tTop}" width="4" height="${SV.bTop + 48 - SV.tTop}"/>`;
@@ -58,17 +142,17 @@ export function createStaff(svg, ex, opts = {}) {
   o += `<text class="clef" x="14" y="${SV.bTop + 25}" font-size="44">\u{1D122}</text>`;
   ['t', 'b'].forEach((st) => { o += `<text class="ts" x="52" y="${STF[st].top + 21}">${ex.beats}</text><text class="ts" x="52" y="${STF[st].top + 45}">4</text>`; });
   ex.dyn.forEach((d, k) => {
-    const x = SV.L + d.bar * SV.BW + SV.PAD - 8, y = 186;
+    const x = P(d.bar, 0) - 8, y = 186;
     if (d.cresc) {
       const nx = ex.dyn[k + 1];
-      const x2 = SV.L + (nx ? nx.bar : ex.bars.length) * SV.BW - 12;
+      const x2 = barX[nx ? nx.bar : ex.bars.length] - 12;
       o += `<path class="ink-s" stroke-width="1.3" d="M${x2} ${y - 12} L${x + 4} ${y - 6} L${x2} ${y}"/>`;
     } else o += `<text class="dy" x="${x}" y="${y}">${d.mark}</text>`;
   });
   ex.bars.forEach((bar, bi) => {
     [['rh', 't', 'r'], ['lh', 'b', 'l']].forEach(([h, st, hc]) => {
       const evs = bar[h];
-      restsFor(evs, per).forEach((r) => { o += restSVG(xOf(bi, r.t) + (r.d === 4 ? SV.SLOT * 1.5 : r.d === 2 ? SV.SLOT * 0.5 : 0), st, r.d); });
+      restsFor(evs, per).forEach((r) => { o += restSVG(r.d === 4 ? (P(bi, r.t) + P(bi, r.t + 3)) / 2 : r.d === 2 ? (P(bi, r.t) + P(bi, r.t + 1)) / 2 : P(bi, r.t), st, r.d); });
       const groups = [];
       for (let k = 0; k < evs.length; k++) {
         const e = evs[k], n = evs[k + 1];
@@ -86,16 +170,17 @@ export function createStaff(svg, ex, opts = {}) {
           let s = `<g class="nt ${hc}" data-i="${i}">`;
           e.notes.forEach((n) => { s += ledgers(x, dia(n), st); });
           if (e.grace) { // small slashed eighth just before the main note
-            const gx = x - 15, gd = dia(e.grace), gy = yOf(gd, st);
+            const gx = x - graceOff(e), gd = dia(e.grace), gy = yOf(gd, st);
             s += `<g class="grace">${ledgers(gx, gd, st)}`;
-            if (e.grace.includes('#')) s += `<text class="accd" font-size="11" x="${gx - 14}" y="${gy + 4}">♯</text>`; else if (/^[A-G]b/.test(e.grace)) s += `<text class="accd" font-size="11" x="${gx - 13}" y="${gy + 4}">♭</text>`;
+            if (accOf(e.grace)) s += accSVG(accOf(e.grace), gx, gy, 0, GRACE_K);
             s += `<ellipse cx="${gx}" cy="${gy}" rx="4.2" ry="3.1" transform="rotate(-20 ${gx} ${gy})" fill="currentColor"/>`;
             s += `<line stroke="currentColor" stroke-width="1" x1="${gx + 3.8}" x2="${gx + 3.8}" y1="${gy}" y2="${gy - 20}"/><path fill="none" stroke="currentColor" stroke-width="1" d="M${gx + 3.8} ${gy - 20} q2 6 6 8"/>`;
             s += `<line stroke="currentColor" stroke-width="1" x1="${gx - 1}" x2="${gx + 9}" y1="${gy - 6}" y2="${gy - 15}"/></g>`;
           }
+          const ac = accCols(e.notes).cols;
           e.notes.forEach((n, k) => {
             const y = ys[k];
-            if (n.includes('#')) s += sharp(x, y); else if (/^[A-G]b/.test(n)) s += flat(x, y);
+            if (accOf(n)) s += accSVG(accOf(n), x, y, ac[k]);
             s += d >= 4
               ? `<ellipse cx="${x}" cy="${y}" rx="6.3" ry="4.4" transform="rotate(-20 ${x} ${y})" fill="none" stroke="currentColor" stroke-width="1.8"/>`
               : `<ellipse cx="${x}" cy="${y}" rx="6.3" ry="4.6" transform="rotate(-20 ${x} ${y})" fill="currentColor"/>`;
@@ -108,7 +193,7 @@ export function createStaff(svg, ex, opts = {}) {
           if (e.acc) { const y2 = up ? ay + 10 : ay - 10; s += `<path fill="none" stroke="currentColor" stroke-width="1.5" d="M${x - 6} ${y2 - 3.5} L${x + 6} ${y2} L${x - 6} ${y2 + 3.5}"/>`; }
           s += `<rect x="${x - 12}" y="${STF[st].top - 20}" width="24" height="90" fill="transparent"/></g>`;
           e.f.forEach((f, k) => { const y = h === 'rh' ? 32 - k * 12 : 286 - k * 11; s += `<text class="fg${e.sug ? ' sug' : ''}" x="${x - 3}" y="${y}">${f}</text>`; });
-          if (names !== 'off') e.notes.forEach((n, k) => { const y = h === 'rh' ? 166 - k * 12 : 314 - k * 11; s += `<text class="nm ${hc}" data-i="${i}" x="${x}" y="${y}">${noteName(n, names)}</text>`; });
+          if (names !== 'off') e.notes.forEach((n, k) => { const y = h === 'rh' ? 166 - k * 12 : 314 - k * 11; s += `<text class="nm ${hc}" data-i="${i}" x="${x}" y="${y}">${nameSVG(n, names)}</text>`; });
           o += s;
         });
         if (g.length === 2) { const y = up ? end : end - 5; o += `<rect class="ink" x="${sx[0]}" y="${y}" width="${sx[1] - sx[0]}" height="5"/>`; }
@@ -138,7 +223,7 @@ export function createStaff(svg, ex, opts = {}) {
       const n = midiToName(m), st = m >= 60 ? 't' : 'b', d = dia(n), y = yOf(d, st);
       const x = xOf(Math.floor(cursor / per), cursor % per) + SV.SLOT * 0.5 + 4;
       let g = ledgers(x, d, st);
-      if (n.includes('#')) g += sharp(x, y);
+      if (accOf(n)) g += accSVG(accOf(n), x, y);
       g += `<ellipse cx="${x}" cy="${y}" rx="6.3" ry="4.6" transform="rotate(-20 ${x} ${y})" fill="currentColor"/>`;
       g += `<text x="${x + 10}" y="${y - 8}">${noteName(n, names === 'off' ? 'en' : names)}</text>`;
       ghostEl.innerHTML = g; ghostEl.style.opacity = 1;

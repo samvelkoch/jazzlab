@@ -58,6 +58,17 @@ export function createKeyboard(el, range, opts = {}) {
       k.classList.remove('ok', 'meh', 'bad'); void k.offsetWidth; k.classList.add(cls);
       clearTimeout(k._ft); k._ft = setTimeout(() => k.classList.remove(cls), cls === 'bad' ? 450 : 300);
     },
-    down(m, isDown) { const k = keys[m]; if (k) k.classList.toggle('down', isDown); }
+    down(m, isDown) { const k = keys[m]; if (k) k.classList.toggle('down', isDown); },
+    /** Chord mode: colour keys. map: { midi: { cls: 'base'|'third'|'seventh'|'tension'|'bass'|'hit'|'wrong'|'miss', label } } */
+    mark(map) {
+      for (const m in keys) {
+        const k = keys[m];
+        k.className = k.className.replace(/\smk-[a-z]+\b/g, '');
+        k.querySelector('.badge').textContent = '';
+        const v = map[m];
+        if (v) { k.classList.add('mk-' + v.cls); k.querySelector('.badge').textContent = v.label || ''; }
+      }
+    },
+    has: (m) => !!keys[m]
   };
 }

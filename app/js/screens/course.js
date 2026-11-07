@@ -1,5 +1,5 @@
 // Course screen: steps of the course, today's card, progress.
-import { h, ICON, themeButton, langSwitch, midiChip } from '../ui.js';
+import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { store, progress, isDone, practiceSeconds } from '../store.js';
 
@@ -25,6 +25,7 @@ export async function renderCourse(root, { course, index, rerender }) {
   const header = h('header.top', null,
     h('div.brand', { role: 'img', 'aria-label': 'Jazzlab' },
       h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
+    navTabs('course'),
     h('div.grow'),
     midiChip(), langSwitch(rerender), themeButton());
 

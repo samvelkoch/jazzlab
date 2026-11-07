@@ -1,0 +1,96 @@
+{
+  "$format": "jazzlab-chords/1",
+  "about": {
+    "ru": "Аккорды и их символы: что значит B7sus, Cmaj7, цифры в скобках. Сначала поймёшь, потом найдёшь на клавишах, потом сыграешь в ритме.",
+    "en": "Chords and their symbols: what B7sus, Cmaj7 and numbers in parentheses mean. Understand it, find it on the keys, then play it in rhythm."
+  },
+  "examples": ["B7sus", "Cmaj7", "C7(b9)", "Dm7(11)", "F/A", "G13", "Am7b5", "Ebmaj7(#11)"],
+  "lessons": [
+    {
+      "id": "keys", "n": 0, "kind": "keys", "sym": "C D E",
+      "title": { "ru": "Клавиши", "en": "Key names" },
+      "sub": { "ru": "C D E F G A B, ♯ и ♭", "en": "C D E F G A B, ♯ and ♭" }
+    },
+    {
+      "id": "major", "n": 1, "sym": "C",
+      "title": { "ru": "Мажор", "en": "Major" },
+      "sub": { "ru": "1 · 3 · 5, светлое трезвучие", "en": "1 · 3 · 5, the bright triad" },
+      "rule": { "ru": "Одна буква = мажорное трезвучие. От корня 4 полутона вверх, потом ещё 3.", "en": "A letter alone = a major triad. 4 semitones up from the root, then 3 more." },
+      "sound": { "ru": "Светлый, устойчивый звук. Основа почти всех аккордов дальше.", "en": "Bright and stable. Almost every chord later is built on it." },
+      "practice": ["C", "F", "G", "D", "A", "E"],
+      "comp": { "bars": ["C", "F", "G", "C"], "rhythm": "4 r4 4 r4", "swing": false, "tempo": { "start": 60, "target": 90 } }
+    },
+    {
+      "id": "minor", "n": 2, "sym": "Cm", "compare": "C",
+      "title": { "ru": "Минор", "en": "Minor" },
+      "sub": { "ru": "1 · ♭3 · 5, буква m", "en": "1 · ♭3 · 5, the letter m" },
+      "rule": { "ru": "m = минор: средняя нота на полтона ниже, чем в мажоре. 3 полутона вверх, потом 4.", "en": "m = minor: the middle note a semitone lower than in major. 3 semitones up, then 4." },
+      "sound": { "ru": "Мягче и грустнее мажора. Сравни: C и Cm отличаются одной клавишей.", "en": "Softer, sadder. C and Cm differ by one key." },
+      "practice": ["Cm", "Dm", "Em", "Am", "Gm", "Fm"],
+      "comp": { "bars": ["Cm", "Fm", "Gm", "Cm"], "rhythm": "4 r4 4 4", "swing": false, "tempo": { "start": 60, "target": 90 } }
+    },
+    {
+      "id": "dom7", "n": 3, "sym": "C7", "compare": "C",
+      "title": { "ru": "Септаккорд", "en": "Seventh chord" },
+      "sub": { "ru": "+ ♭7, звук блюза", "en": "+ ♭7, the blues sound" },
+      "rule": { "ru": "Мажорное трезвучие + малая септима: ещё 3 полутона вверх. Это на тон ниже следующего C.", "en": "Major triad + minor seventh: 3 more semitones up, a whole step below the next C." },
+      "sound": { "ru": "Чуть «грязно» и тянет дальше. В блюзе все три аккорда такие: C7, F7, G7.", "en": "A bit gritty, it wants to move on. In the blues all three chords are like this: C7, F7, G7." },
+      "practice": ["C7", "F7", "G7", "Bb7", "D7", "A7"],
+      "comp": { "bars": ["C7", "F7", "C7", "G7"], "rhythm": "4. 8 r4 r4", "swing": true, "tempo": { "start": 60, "target": 100 } }
+    },
+    {
+      "id": "maj7", "n": 4, "sym": "Cmaj7", "compare": "C7",
+      "title": { "ru": "Большой мажорный", "en": "Major seventh" },
+      "sub": { "ru": "maj7: мягкий джаз", "en": "maj7: soft jazz" },
+      "rule": { "ru": "maj7 = большая септима: на полтона ниже следующего корня. Обозначают maj7, Δ, M7.", "en": "maj7 = major seventh: a semitone below the next root. Written maj7, Δ or M7." },
+      "sound": { "ru": "Мечтательно и спокойно. Сравни с C7: разница в одной клавише (B против B♭).", "en": "Dreamy and calm. Compare with C7: one key apart (B vs B♭)." },
+      "practice": ["Cmaj7", "Fmaj7", "Gmaj7", "Bbmaj7", "Dmaj7", "Ebmaj7"],
+      "comp": { "bars": ["Cmaj7", "Fmaj7", "Cmaj7", "Fmaj7"], "rhythm": "4. 8 r4 r4", "swing": true, "tempo": { "start": 60, "target": 100 } }
+    },
+    {
+      "id": "min7", "n": 5, "sym": "Cm7", "compare": "Cm",
+      "title": { "ru": "Минорный септ", "en": "Minor seventh" },
+      "sub": { "ru": "m7 = минор + ♭7", "en": "m7 = minor + ♭7" },
+      "rule": { "ru": "m7: минорное трезвучие и малая септима. Все шаги: 3, 4, 3 полутона.", "en": "m7: minor triad plus minor seventh. Steps of 3, 4, 3 semitones." },
+      "sound": { "ru": "Тёплый, «бархатный» минор. Самый частый аккорд в джазовых стандартах.", "en": "A warm, velvety minor. The most common chord in jazz standards." },
+      "practice": ["Cm7", "Dm7", "Em7", "Am7", "Gm7", "Fm7"],
+      "comp": { "bars": ["Dm7", "Em7", "Fm7", "Em7"], "rhythm": "r8 8 r4 r8 8 r4", "swing": true, "tempo": { "start": 60, "target": 100 } }
+    },
+    {
+      "id": "sus", "n": 6, "sym": "C7sus", "compare": "C7",
+      "title": { "ru": "sus, «подвешенный»", "en": "sus, “suspended”" },
+      "sub": { "ru": "кварта вместо терции", "en": "the fourth instead of the third" },
+      "rule": { "ru": "sus = sus4: средняя нота поднимается на полтона, до кварты. sus2: опускается до секунды.", "en": "sus = sus4: the middle note goes up a semitone, to the fourth. sus2: down to the second." },
+      "sound": { "ru": "Ни мажор, ни минор: висит в воздухе. Часто потом разрешается в обычный C7.", "en": "Neither major nor minor: it floats. Often resolves to a plain C7." },
+      "practice": ["C7sus", "F7sus", "G7sus", "B7sus", "Dsus2", "Asus4"],
+      "comp": { "bars": ["C7sus", "C7", "F7sus", "F7"], "rhythm": "4. 8 r4 r4", "swing": true, "tempo": { "start": 60, "target": 100 } }
+    },
+    {
+      "id": "ext", "n": 7, "sym": "C9", "compare": "C7",
+      "title": { "ru": "Добавки и скобки", "en": "Extensions and ( )" },
+      "sub": { "ru": "9 · 11 · 13, (♭9) (♯11)", "en": "9 · 11 · 13, (♭9) (♯11)" },
+      "rule": { "ru": "Числа после 7 — это ноты через октаву: 9 = 2, 11 = 4, 13 = 6. Скобки = краска сверху. ♭ и ♯ сдвигают её на полтона.", "en": "Numbers above 7 are notes an octave up: 9 = 2, 11 = 4, 13 = 6. Parentheses = colour on top; ♭ and ♯ move it a semitone." },
+      "sound": { "ru": "Богаче и «джазовее». Приём пианистов: левая рука играет корень, правая всё остальное, квинту можно пропустить.", "en": "Richer, jazzier. The pianist's trick: left hand plays the root, right hand the rest; the fifth can go." },
+      "practice": ["C9", "C7(b9)", "C7(#9)", "F9", "G13", "Cmaj7(#11)"],
+      "comp": { "bars": ["C9", "F9", "C9", "G13"], "rhythm": "4. 8 r4 r4", "swing": true, "tempo": { "start": 60, "target": 100 } }
+    },
+    {
+      "id": "slash", "n": 8, "sym": "F/A", "compare": "F",
+      "title": { "ru": "Бас через дробь", "en": "Slash chords" },
+      "sub": { "ru": "аккорд / нота в басу", "en": "chord / bass note" },
+      "rule": { "ru": "Дробь — не деление. Слева аккорд для правой руки, справа нота, которую левая играет в басу.", "en": "Not a fraction. Left of the slash: the chord for the right hand. Right of it: the bass note for the left hand." },
+      "sound": { "ru": "Тот же аккорд, но бас идёт плавной линией: F → F/A → B♭.", "en": "Same chord, but the bass moves smoothly: F → F/A → B♭." },
+      "practice": ["F/A", "C/E", "G/B", "C/G", "Bb/D", "D/F#"],
+      "comp": { "bars": ["F", "F/A", "Bb", "C/E"], "rhythm": "4 r4 4 r4", "swing": false, "tempo": { "start": 60, "target": 90 } }
+    },
+    {
+      "id": "twofive", "n": 9, "sym": "Dm7 G7 Cmaj7", "kind": "progression",
+      "title": { "ru": "ii – V – I", "en": "ii – V – I" },
+      "sub": { "ru": "первая джазовая цепочка", "en": "the first jazz progression" },
+      "rule": { "ru": "Три аккорда, на которых держится джаз: минорный септ на 2-й ступени, септаккорд на 5-й, большой мажорный на 1-й. В C: Dm7 → G7 → Cmaj7.", "en": "The three chords jazz runs on: minor seventh on degree 2, dominant seventh on 5, major seventh on 1. In C: Dm7 → G7 → Cmaj7." },
+      "sound": { "ru": "Напряжение и разрешение: G7 «тянет» домой, в Cmaj7.", "en": "Tension and release: G7 pulls you home to Cmaj7." },
+      "practice": ["Dm7", "G7", "Cmaj7", "Gm7", "C7", "Fmaj7"],
+      "comp": { "bars": ["Dm7", "G7", "Cmaj7", "Cmaj7"], "rhythm": "4. 8 r4 r4", "swing": true, "tempo": { "start": 60, "target": 100 } }
+    }
+  ]
+}

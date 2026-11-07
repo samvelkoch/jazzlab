@@ -24,7 +24,7 @@ const DICT = {
     midi: 'MIDI', midiConnect: 'Подключить пианино', midiNone: 'Пианино не подключено', midiUnsupported: 'Нет MIDI в браузере. На iPad открой сайт в MIDIWeb',
     midiDenied: 'Доступ к MIDI не разрешён', midiNotFound: 'Пианино не найдено: включи Bluetooth и нажми ещё раз',
     waitHint: 'Играй подсвеченные ноты: ноты ждут тебя', noMidiHint: 'Нажимай ноты на экране или подключи пианино',
-    tempoHint: 'Играй вместе с подсветкой', countInLabel: 'Отсчёт',
+    tempoHint: 'Играй вместе с подсветкой', countInLabel: 'Отсчёт', loopOn: 'По кругу (до «Стоп»)', gapBar: 'Пустой такт между кругами', again: 'Снова',
     wrongNote: 'не та нота', loopDone: 'круг пройден', allDone: 'Готово!', noErrors: 'без ошибок',
     early: 'рано', late: 'поздно', even: 'ровно', ms: 'мс', result: 'Итог', evenPct: 'ровно',
     stageDone: 'Этап пройден', bar: 'Такт', of: 'из', rest: 'пауза',
@@ -94,7 +94,8 @@ const DICT = {
     lkT_memory: 'По памяти', lkS_memory: 'В упражнении выбери «По памяти»: стан скрыт, играешь обеими руками без подсказки. Зачёт засчитывает лик и ставит его на повтор.',
     lkF_echo: 'Нота должна совпасть точно, в той же октаве. Ритм важнее: сначала поймай его.', lkF_link: 'Упражнение откроется на выбранном аккорде.',
     lkOpen: 'Открыть упражнение на {c}', lkCleanReps: 'чистые повторы', lkEchoGoal: '3 чистых повтора на каждом аккорде', lkEchoDone: 'Эхо пройдено на всех аккордах. Теперь «Пальцы» →',
-    lkAllChords: 'Ещё на других аккордах: {c}', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты'
+    lkAllChords: 'Ещё на других аккордах: {c}', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты',
+   navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -118,7 +119,7 @@ const DICT = {
     midi: 'MIDI', midiConnect: 'Connect piano', midiNone: 'Piano not connected', midiUnsupported: 'No MIDI in this browser. On iPad open the site in MIDIWeb',
     midiDenied: 'MIDI access denied', midiNotFound: 'Piano not found: turn on Bluetooth and tap again',
     waitHint: 'Play the highlighted notes: the score waits for you', noMidiHint: 'Tap notes on screen or connect your piano',
-    tempoHint: 'Play along with the highlight', countInLabel: 'Count-in',
+    tempoHint: 'Play along with the highlight', countInLabel: 'Count-in', loopOn: 'Loop (until Stop)', gapBar: 'Empty bar between loops', again: 'Again',
     wrongNote: 'wrong note', loopDone: 'loop complete', allDone: 'Done!', noErrors: 'no mistakes',
     early: 'early', late: 'late', even: 'on time', ms: 'ms', result: 'Result', evenPct: 'on time',
     stageDone: 'Stage complete', bar: 'Bar', of: 'of', rest: 'rest',
@@ -184,7 +185,8 @@ const DICT = {
     lkT_memory: 'By heart', lkS_memory: 'In the exercise pick “By heart”: the staff is hidden, both hands with no help. Passing it passes the lick and puts it on review.',
     lkF_echo: 'The note has to match exactly, same octave. Rhythm first: catch it before the notes.', lkF_link: 'The exercise opens on the chosen chord.',
     lkOpen: 'Open the exercise on {c}', lkCleanReps: 'clean repeats', lkEchoGoal: '3 clean repeats on every chord', lkEchoDone: 'Echo done on every chord. Now “Fingers” →',
-    lkAllChords: 'Now on the other chords: {c}', lkPassed: 'Lick learned', lkStartHint: 'Press Start: a 1-bar count-in, then 2 bars piano, 2 bars you'
+    lkAllChords: 'Now on the other chords: {c}', lkPassed: 'Lick learned', lkStartHint: 'Press Start: a 1-bar count-in, then 2 bars piano, 2 bars you',
+   navCourse: 'Course', navChords: 'Chords', sections: 'Sections'
   }
 };
 
