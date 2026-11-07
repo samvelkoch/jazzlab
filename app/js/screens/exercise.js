@@ -66,9 +66,10 @@ export function renderExercise(root, { ex, rerender }) {
   const counts = h('div.counts', { 'aria-hidden': 'true' }, ...Array.from({ length: per }, (_, k) => h('span' + (k % 2 ? '' : '.beat'), null, k % 2 ? '+' : String(k / 2 + 1))));
   const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svgEl.setAttribute('class', 'staff'); svgEl.setAttribute('role', 'img'); svgEl.setAttribute('aria-label', L(ex.title));
+  const wrapEl = h('div.staffwrap', null, svgEl);
   const staffPanel = h('section.panel.staffpanel', null,
     h('div.staffhead', null, barEl, counts, h('div.grow'), fbEl),
-    h('div.staffwrap', null, svgEl),
+    wrapEl,
     h('div.legend', null,
       h('span', null, h('i.dot.rh'), t('legendRh')), h('span', null, h('i.dot.lh'), t('legendLh')),
       h('span', null, h('i.dot.ok'), t('legendOk')), h('span', null, h('i.dot.meh'), t('legendMeh')), h('span', null, h('i.dot.bad'), t('legendBad')),
@@ -78,12 +79,23 @@ export function renderExercise(root, { ex, rerender }) {
 
   // Rhythm stage: only the exercise's rhythm pattern, on a loop (see rhythm-stage.js)
   let scr = null; // the screen, once built
+  const phoneMq = window.matchMedia('(max-width: 640px)');
+  /** Big pad on a phone: when the loop starts, scroll so the notation and the lane sit right above the pad (header scrolls away). */
+  function bringPanelUp() {
+    if (!scr || !phoneMq.matches || scr.dataset.padbig !== '1' || scr.dataset.stage !== 'rhythm') return;
+    const y = rs.els.panel.getBoundingClientRect().top + window.scrollY - 8;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  }
+  const applyPadBig = () => { if (scr) scr.dataset.padbig = rs.padBig() ? '1' : '0'; rs.paintPad(); };
   const rs = createRhythmStage(ex, {
     play1: (m, time, dur, v) => play1(m, time, dur, v),
     bpm: () => st.bpm, setBpm: (v) => setBpm(v), swing: () => st.swing, syl: () => settings.syl,
-    onPlaying: (on) => { if (scr) scr.classList.toggle('playing', on); paintPrimary(); },
+    onPlaying: (on) => { if (scr) scr.classList.toggle('playing', on); paintPrimary(); if (on) bringPanelUp(); },
     onMode: (m) => { if (scr) scr.dataset.rmode = m; },
-    onDone: () => complete('rhythm')
+    onDone: () => complete('rhythm'),
+    // "big tap pad" on a phone: sticky at the bottom of the screen (default on at <=640px)
+    padBig: () => (typeof settings.padBig === 'boolean' ? settings.padBig : phoneMq.matches),
+    setPadBig: (v) => { settings.padBig = v; saveSettings(); applyPadBig(); }
   });
 
   const handsSeg = seg([['rh', t('right')], ['lh', t('left')], ['both', t('both')]], st.hands, (v) => { st.hands = v; resetScores(); render(st.step); }, 'hands');
@@ -96,12 +108,18 @@ export function renderExercise(root, { ex, rerender }) {
     h('button', { type: 'button', 'aria-label': t('slower'), onclick: () => setBpm(st.bpm - 4) }, '−'), bpmOut,
     h('button', { type: 'button', 'aria-label': t('faster'), onclick: () => setBpm(st.bpm + 4) }, '+'));
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
+  swingSeg.classList.add('swing-seg');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: onPrimary });
-  const footer = h('footer.actions', null, handsSeg, h('div.pair', null, prevB, nextB), listenB, h('div.grow'), tempoBox, swingSeg, primary);
+  // .footsegs is display:contents on desktop (order is set in CSS); on a phone it is the scrollable first row
+  const footer = h('footer.actions.exfoot', null, h('div.footsegs', null, handsSeg, swingSeg), h('div.pair', null, prevB, nextB), listenB, h('div.grow'), tempoBox, primary);
 
   const screen = h('div.exscreen', null, header, h('main.ex', null, rs.els.rbar, staffPanel, kbPanel, rs.els.panel, rs.els.stats, rs.els.pad), footer);
   root.replaceChildren(screen);
-  scr = screen; screen.dataset.rmode = rs.mode();
+  scr = screen; screen.dataset.rmode = rs.mode(); applyPadBig();
+  // the sticky tap pad sits right above the footer: tell CSS how tall the footer is
+  const footRO = typeof ResizeObserver === 'function' ? new ResizeObserver(() => screen.style.setProperty('--foot-h', footer.offsetHeight + 'px')) : null;
+  if (footRO) footRO.observe(footer);
+  phoneMq.addEventListener('change', applyPadBig);
 
   // ---------- engines ----------
   let staff;
@@ -130,6 +148,18 @@ export function renderExercise(root, { ex, rerender }) {
     [...counts.children].forEach((c, k) => c.classList.toggle('cur', k === s.slot));
     kb.show({ rh: s.rh, lh: s.lh }, { rh: nextOnset(i, 'rh'), lh: nextOnset(i, 'lh') }, st.hands);
     staff.setCursor(i);
+    followCursor();
+  }
+  /** On a narrow screen the staff scrolls sideways: keep the cursor band in view (~35% from the left edge).
+   *  Playing = instant (smooth scrolling lags behind the beat), stepping / tapping a note = smooth. */
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function followCursor() {
+    const w = wrapEl;
+    if (w.scrollWidth <= w.clientWidth + 1) return; // the whole staff fits
+    const b = staff.bandRect(), r = w.getBoundingClientRect();
+    const x = b.left - r.left, vw = w.clientWidth; // band's left edge, relative to the visible part
+    if (x >= vw * 0.1 && b.right - r.left <= vw * 0.6) return; // comfortable zone: leave it, no jitter
+    w.scrollTo({ left: Math.max(0, w.scrollLeft + x - vw * 0.35), behavior: st.playing || calm.matches ? 'auto' : 'smooth' });
   }
   function fb(html) { fbEl.innerHTML = html; }
 
@@ -439,6 +469,8 @@ export function renderExercise(root, { ex, rerender }) {
   return () => {
     if (st.playing) stop();
     rs.stop();
+    if (footRO) footRO.disconnect();
+    phoneMq.removeEventListener('change', applyPadBig);
     offNote(); offState(); document.removeEventListener('keydown', onKey);
     header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup());
   };

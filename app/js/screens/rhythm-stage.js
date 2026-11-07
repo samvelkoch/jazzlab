@@ -43,7 +43,11 @@ export function createRhythmStage(ex, io) {
   const pHint = h('span.phint', null, t('practiceHint'));
   const history = h('div.loops', { 'aria-label': t('loopsW') });
   const loopNo = h('span.barno');
-  const rbar = h('div.rbar', null, modeSeg, lsteps, pHint, h('div.grow'), history, loopNo);
+  // phone: a big tap pad pinned to the bottom of the screen (so rhythm can be drilled with fingers, no piano)
+  const padBtn = h('button.padtoggle', { type: 'button', title: t('padBigHint'), onclick: () => io.setPadBig && io.setPadBig(!padOn()) }, h('i'), h('span', null, t('padBig')));
+  const padOn = () => (io.padBig ? !!io.padBig() : false);
+  const paintPad = () => padBtn.setAttribute('aria-pressed', String(padOn()));
+  const rbar = h('div.rbar', null, modeSeg, lsteps, pHint, h('div.grow'), history, loopNo, padBtn);
 
   const title = h('h2'), sub = h('span.sub'), fbEl = h('span.fb', { 'aria-live': 'polite' });
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -115,6 +119,7 @@ export function createRhythmStage(ex, io) {
     h('span.padicon', { html: ICON.hand }),
     h('span.padtext', null, h('b', null, t('tapHere')), h('span', null, t('countAloud'))));
   pad.addEventListener('pointerdown', (e) => { e.preventDefault(); tap(e.timeStamp); });
+  pad.addEventListener('contextmenu', (e) => e.preventDefault()); // a long press must not open a menu
 
   // ---------- painting ----------
   let recent = [], hist = [];
@@ -287,6 +292,7 @@ export function createRhythmStage(ex, io) {
     fb(`${res} · ${t('streakTo')} ${st.streak}/${ROUND}`);
   }
 
+  paintPad();
   buildLane(); paint(); fb(st.mode === 'learn' && st.lstep === 'listen' ? t('listenHint') : t('tapStart'));
   return {
     els: { rbar, panel, stats, pad },
@@ -296,6 +302,7 @@ export function createRhythmStage(ex, io) {
       start();
     },
     stop() { stop(); },
+    padBig: padOn, paintPad,
     playing: () => !!st.playing,
     input,
     tap,

@@ -1,18 +1,28 @@
 // Track screen (the home screen): "Today" with the one-tap session, the track's sections and items, stats.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
-import { t, L } from '../i18n.js';
-import { progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
+import { diagFmt } from './diag.js';
+import { t, L, plural } from '../i18n.js';
+import { store, progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
 const fmtTime = (sec) => { const m = Math.round(sec / 60); return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`; };
 const MAX_REVIEWS = 3, MAX_NEW = 2;
 
-/** Today's queue: reviews due (oldest first), then the next unfinished items in track order. */
+/** A check-up is due when there is none yet or the newest one is older than `item.every` days (default 30). */
+export function diagDue(item, now = new Date()) {
+  const last = store.get('diag', [])[0];
+  if (!last) return true;
+  return (now - new Date(last.date)) / 86400000 >= ((item && item.every) || 30);
+}
+
+/** Today's queue: a check-up when due, reviews due (oldest first), then the next unfinished items in track order.
+ *  A performance is a result, not a task: it is never offered as a fresh item. */
 export function todayQueue(model) {
   const prog = progress();
   const order = model.track.sections.flatMap((s) => s.items);
+  const diag = order.filter((id) => model.items[id].kind === 'diag' && diagDue(model.items[id])).slice(0, 1);
   const due = dueReviews().filter((id) => model.items[id]).slice(0, MAX_REVIEWS);
-  const fresh = order.filter((id) => !isDone(prog[id]) && !due.includes(id)).slice(0, MAX_NEW);
-  return { due, fresh, ids: [...due, ...fresh] };
+  const fresh = order.filter((id) => !isDone(prog[id]) && !due.includes(id) && !['perform', 'diag'].includes(model.items[id].kind)).slice(0, MAX_NEW);
+  return { diag, due, fresh, ids: [...diag, ...due, ...fresh] };
 }
 
 export async function renderTrack(root, { model, index, rerender }) {
@@ -22,10 +32,12 @@ export async function renderTrack(root, { model, index, rerender }) {
   const order = track.sections.flatMap((s) => s.items);
   const doneCount = order.filter((id) => isDone(prog[id])).length;
   const longCount = order.filter((id) => longTerm(rev[id])).length;
+  const diagList = store.get('diag', []), lastDiag = diagList[0] || null;
+  const diagId = order.find((id) => items[id].kind === 'diag');
   let cur = session();
   // a session whose items are all passed (and none due again) is over
   const due = new Set(dueReviews());
-  if (cur && cur.ids.every((id) => !items[id] || (isDone(prog[id]) && !due.has(id)))) { endSession(); cur = null; }
+  if (cur && cur.ids.every((id) => !items[id] || (isDone(prog[id]) && !due.has(id) && !q.diag.includes(id)))) { endSession(); cur = null; }
   const curNext = cur ? sessionNext(null) : null;
 
   const header = h('header.top', null,
@@ -43,6 +55,7 @@ export async function renderTrack(root, { model, index, rerender }) {
   const status = (id) => {
     const p = prog[id];
     if (q.due.includes(id)) return 'review';
+    if (q.diag.includes(id)) return 'now';
     if (isDone(p)) return 'done';
     if (q.fresh[0] === id) return 'now';
     return p ? 'meh' : 'none';
@@ -53,6 +66,8 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'ear' && typeof p.best === 'number') return `${Math.round(p.best * 100)}%`;
     if (it.kind === 'form' && p.choruses) return `${p.cleanChoruses || 0} ${t('fCleanOf')} ${p.choruses} · ${t('bestStreak')} ${p.bestStreak || 0}`;
     if (it.kind === 'lick' && p.echo && !isDone(p)) { const v = Object.entries(p.echo).map(([c, n]) => `${c} ${Math.min(n, 3)}/3`).join(' · '); return v ? `${t('lk_echo')}: ${v}` : ''; }
+    if (it.kind === 'perform' && p.runs) return `${p.runs} ${plural(p.runs, 'perfRecs')} · ${t('perfBest')} ${p.bestPct || 0}%`;
+    if (it.kind === 'diag' && lastDiag) return `${t('dgLastW')}: ${new Date(lastDiag.date).toLocaleDateString()}`;
     if (it.kind === 'pattern' && p.stages) { const n = ['rhythm', 'notes', 'tempo', 'memory'].filter((s) => p.stages[s]).length; return n ? `${t('stagesW')} ${n}/4` : ''; }
     return '';
   };
@@ -85,10 +100,28 @@ export async function renderTrack(root, { model, index, rerender }) {
     startBtn,
     cur && curNext ? h('button.btn.ghost', { type: 'button', onclick: () => { endSession(); rerender(); } }, t('endSession')) : null);
 
-  const stats = h('section.panel.stats', null,
+  const stats = h('section.panel.stats.two', null,
     h('div', null, h('b', null, String(doneCount), h('small', null, '/' + order.length)), h('span', null, t('itemsDone'))),
-    h('div', null, h('b', null, String(longCount)), h('span', null, t('longTermW'))),
     h('div', null, h('b', null, fmtTime(practiceSeconds())), h('span', null, t('practiceTime'))));
+
+  // ---- skills: the latest check-up plus what the track already counts ----
+  const lickIds = order.filter((id) => items[id].kind === 'lick');
+  const lickDone = lickIds.filter((id) => isDone(prog[id])).length;
+  const cleanRounds = order.filter((id) => items[id].kind === 'form').reduce((a, id) => a + ((prog[id] && prog[id].cleanChoruses) || 0), 0);
+  const num = (v) => typeof v === 'number';
+  const rhythmTxt = lastDiag && num(lastDiag.rhythmMs) ? [diagFmt.rhythm(lastDiag.rhythmMs), num(lastDiag.rhythmBias) ? diagFmt.bias(lastDiag.rhythmBias) : ''].filter(Boolean).join(' · ') : '—';
+  const row = (label, value) => h('div.skrow', null, h('span', null, label), h('b', null, value));
+  const skills = h('section.panel.skills', null,
+    h('div.row', null, h('b.skhead', null, t('skillsTitle')), h('div.grow'), lastDiag ? h('small.muted', null, `${t('skMeasured')} ${new Date(lastDiag.date).toLocaleDateString()}`) : null),
+    row(t('skRhythm'), rhythmTxt),
+    row(t('skNames'), lastDiag && num(lastDiag.nameMs) ? diagFmt.names(lastDiag.nameMs) : '—'),
+    row(t('skEar'), lastDiag && num(lastDiag.earAcc) ? diagFmt.pct(lastDiag.earAcc) : '—'),
+    row(t('skChords'), lastDiag && num(lastDiag.chordAcc) ? diagFmt.pct(lastDiag.chordAcc) : '—'),
+    !lastDiag && diagId ? h('a.sklink', { href: items[diagId].href }, t('skDoCheck') + ' →') : null,
+    row(t('skLicks'), `${lickDone}/${lickIds.length}`),
+    row(t('skChoruses'), String(cleanRounds)),
+    row(t('skRecs'), String(store.get('recordings', []).length)),
+    row(t('longTermW'), String(longCount)));
   const goal = h('section.panel.tip', null, h('b', null, t('trackGoal')), h('p', null, L(track.about)));
 
   root.replaceChildren(header,
@@ -96,5 +129,5 @@ export async function renderTrack(root, { model, index, rerender }) {
       h('div.coursemain', null,
         h('div.row', null, h('h1', null, L(track.title)), h('div.grow'), tabs),
         ...track.sections.map(section)),
-      h('aside.courseside', null, todayCard, stats, goal)));
+      h('aside.courseside', null, todayCard, skills, stats, goal)));
 }

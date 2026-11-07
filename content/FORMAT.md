@@ -120,3 +120,22 @@ and `comp` — the «В ритме» exercise: `bars` (one chord symbol per bar)
 `app/js/music/chord-ex.js` turns `comp` into a normal exercise (right hand: the chord, left hand: the root or the
 slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord symbols are parsed by
 `app/js/music/chords.js`. Check: `node tests/chords.test.mjs`.
+
+## Performance (`kind: "perform"`)
+
+`"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3"], "choruses": 3, "title", "about" }`
+opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), one ending bar (beat 1
+only). `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
+Every note played is recorded as `{ t, d, m, v }` (`t`, `d` in seconds from the first beat of chorus 1, `v` 0..1).
+Store: `recordings` = the last 10, newest first, `{ id, itemId, date, bpm, swing, choruses, notes, acc: { ok, meh, off,
+pct, avgMs } }` (`acc`: onsets against the swing-aware eighth grid, `app/js/music/recording.js`); progress keeps
+`runs` and `bestPct`. `recordingToMidi()` in `export.js` writes a recording as a `.mid`. Check: `node tests/recording.test.mjs`.
+
+## Check-up (`kind: "diag"`)
+
+`"diag": { "kind": "diag", "title", "about", "every": 30 }` (own section `diag`) opens `app/js/screens/diag.js`: four parts in a
+row with an intro card each: rhythm (4 count-in clicks + 16 taps at 80 bpm), note names (8), find the note (8, C4–C5 then
+G3–G5), chord quality (8: major / minor / dominant 7th). No pass and no review; the first run marks the item done, and
+«Сегодня» offers it again after `every` days (`diagDue()` in `track.js`). Store `diag` = newest first, `{ date, rhythmMs,
+rhythmBias (< 0 = early), nameMs, nameAcc, earAcc, chordAcc }` (`rhythmMs`/`rhythmBias` are `null` with fewer than 4 matched
+taps). The home «Навыки» card shows the newest entry next to lick vocabulary, clean choruses, recordings and long-term items.
