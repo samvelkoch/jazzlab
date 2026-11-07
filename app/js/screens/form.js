@@ -227,7 +227,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
 
   setBpm(st.bpm); paintPrimary(); paintHint(); paintStreak(); showKeys(0, 0);
   const saved = exProgress(itemId);
-  fb(saved.cleanChoruses ? `${t('fSoFar')}: ${saved.cleanChoruses} ${t('fCleanOf')} ${saved.choruses}` : t('fStart'));
+  fb(saved.cleanChoruses ? `${t('fSoFar')}: ${saved.cleanChoruses} ${t('fCleanOf')} ${saved.choruses}` : t('fStart').replace('{n}', NB));
   updateEx(itemId, (p) => p);
 
   return () => { if (st.playing) stop(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
