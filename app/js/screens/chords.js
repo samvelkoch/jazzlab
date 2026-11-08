@@ -36,7 +36,7 @@ const TX = {
     rh: 'Правая рука', lh: 'левая', fingers: 'пальцы', nextFind: 'Дальше: найди на клавишах', nextRhythm: 'Дальше: в ритме', nextAll: 'Во всех 12 тональностях',
     playTitle: 'Сыграй аккорд', play: 'Сыграй', anyVoicing: 'Октава и порядок нот не важны: засчитаю любое расположение.',
     waitChord: 'Жду аккорд', waitChordText: 'Нажми все ноты вместе. Можно с педалью.', almost: 'Почти', got: 'Есть! Это {s}',
-    notesRight: 'Верных нот: {a} из {b}', hintsOn: 'Подсказки: вкл', hintsOff: 'Подсказки: выкл', show: 'Показать ответ', skip: 'Пропустить', next: 'Следующий',
+    notesRight: 'Верных нот: {a} из {b}', hintsOn: 'Подсказки: вкл', hintsOff: 'Подсказки: выкл', hints: 'Подсказки', show: 'Показать ответ', skip: 'Пропустить', next: 'Следующий',
     doneOf: 'верно {a} из {b}', setDone: 'Набор пройден!', setDoneText: 'Все аккорды найдены. Можно повторить или идти дальше.', again: 'Ещё раз',
     mix: 'Смесь', mixSub: 'аккорды из пройденных шагов', allKeysOf: 'все 12 тональностей', setOf: 'набор',
     legendBase: '1 и 5: основа', legendThird: 'терция (вид)', legendSeventh: 'септима / секста', legendTension: 'краска', legendBass: 'бас',
@@ -68,7 +68,7 @@ const TX = {
     rh: 'Right hand', lh: 'left', fingers: 'fingers', nextFind: 'Next: find it on the keys', nextRhythm: 'Next: in rhythm', nextAll: 'In all 12 keys',
     playTitle: 'Play the chord', play: 'Play', anyVoicing: 'Octave and order don’t matter: any voicing counts.',
     waitChord: 'Waiting for a chord', waitChordText: 'Press all the notes together. Pedal is fine.', almost: 'Almost', got: 'Yes! That’s {s}',
-    notesRight: 'Right notes: {a} of {b}', hintsOn: 'Hints: on', hintsOff: 'Hints: off', show: 'Show the answer', skip: 'Skip', next: 'Next',
+    notesRight: 'Right notes: {a} of {b}', hintsOn: 'Hints: on', hintsOff: 'Hints: off', hints: 'Hints', show: 'Show the answer', skip: 'Skip', next: 'Next',
     doneOf: '{a} of {b} right', setDone: 'Set done!', setDoneText: 'You found every chord. Go again or move on.', again: 'Again',
     mix: 'Mix', mixSub: 'chords from the steps you did', allKeysOf: 'all 12 keys', setOf: 'set',
     legendBase: '1 and 5: base', legendThird: 'third (quality)', legendSeventh: 'seventh / sixth', legendTension: 'colour', legendBass: 'bass',
@@ -274,18 +274,23 @@ export function renderKeys(root) {
   const scoreEl = h('b');
   const namesBtn = h('button.btn', { type: 'button', onclick: () => { st.names = !st.names; kb.setNames(st.names ? 'en' : 'off'); namesBtn.textContent = st.names ? tr('hideNames') : tr('showNames'); } }, tr('showNames'));
   const lm = (a, b) => h('div.panel.lm', null, h('b', null, a), h('p', null, b));
+  // phone: the three landmark cards fold into one toggle, so the prompt and the keyboard fit one screen
+  const hintsBtn = h('button.btn.khints', { type: 'button', onclick: () => setHints(main.dataset.hints !== '1') }, tr('hints'));
   const kbEl = h('div');
+  const main = h('main.keys', null,
+    h('div.krow', null,
+      h('div.kask', null, h('span.meta', null, tr('pressKey')), h('div.row', null, big, ru), h('span.meta', null, tr('anyOctave'))),
+      h('div.grow'), fb),
+    h('div.lms', null, lm(tr('lm1'), tr('lm1t')), lm(tr('lm2'), tr('lm2t')), lm(tr('lm3'), tr('lm3t'))),
+    h('div.row.kfoot', null, h('span.meta', null, tr('today') + ': ', scoreEl, ' · ' + tr('noTimer')), h('div.grow'), hintsBtn, namesBtn),
+    h('section.panel.kbpanel.bigkb', null, kbEl));
+  const setHints = (on) => { main.dataset.hints = on ? '1' : '0'; hintsBtn.setAttribute('aria-pressed', String(on)); store.set('chordKeysHints', on); };
+  setHints(!!store.get('chordKeysHints', false));
   const screen = h('div.cscreen', null,
     header({ kicker: tr('chordsUpper'), title: tr('keysTitle'), mid: lvls }),
-    h('main.keys', null,
-      h('div.krow', null,
-        h('div.kask', null, h('span.meta', null, tr('pressKey')), h('div.row', null, big, ru), h('span.meta', null, tr('anyOctave'))),
-        h('div.grow'), fb),
-      h('div.lms', null, lm(tr('lm1'), tr('lm1t')), lm(tr('lm2'), tr('lm2t')), lm(tr('lm3'), tr('lm3t'))),
-      h('div.row.kfoot', null, h('span.meta', null, tr('today') + ': ', scoreEl, ' · ' + tr('noTimer')), h('div.grow'), namesBtn),
-      h('section.panel.kbpanel.bigkb', null, kbEl)));
+    main);
   root.replaceChildren(screen);
-  const kb = createKeyboard(kbEl, [48, 69], { names: 'off', onPress: (m) => press(m) });
+  const kb = createKeyboard(kbEl, [48, 69], { names: 'off', center: 60, onPress: (m) => press(m) });
 
   function setFb(kind, title, text) { fb.className = 'kfb ' + kind; fb.replaceChildren(h('b', null, title), text ? h('span', null, text) : ''); }
   function next() {

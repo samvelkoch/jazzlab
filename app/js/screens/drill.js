@@ -1,6 +1,6 @@
 // Drill screen: keyboard geography without a staff. A big prompt ("Play: Bb", "All F", "A fifth up from G",
 // "Play C7"), the piano (or the on-screen keyboard) answers, we count accuracy and time per task.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
@@ -60,6 +60,7 @@ export function renderDrill(root, { track, itemId, item, back }) {
   const footer = h('footer.actions', null, h('span.foothint', null, midiState().connected ? t('drillHintMidi') : t('drillHintScreen')), h('div.grow'), primary);
   const screen = h('div.exscreen.drillscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   audio.preloadPiano(LO, HI);
   const kb = createKeyboard(kbEl, [LO, HI - 2], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiState().connected) { input(m, true); } } });
@@ -172,5 +173,5 @@ export function renderDrill(root, { track, itemId, item, back }) {
   paintPrimary();
   updateEx(itemId, (p) => p);
 
-  return () => { offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { if (footRO) footRO.disconnect(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

@@ -4,7 +4,7 @@
 // #/t/<track>/<item>/fingers/all: its «by heart» passes the melody item and puts it on review).
 // Echo is passed with 3 clean repeats of every phrase. Scoring is the lick echo's: onsets in the timing window,
 // the same MIDI notes in the same order. Pickups are ignored: a phrase is exactly its bars.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
@@ -92,6 +92,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
   const footer = h('footer.actions', null, h('div.footsegs', null, beatSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.impscreen.lickscreen.melscreen', null, header, h('main.ex.imp', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   function seg(items, value, cb, label) {
     const w = h('div.seg', { role: 'group', 'aria-label': label ? t(label) : null });
@@ -365,6 +366,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
   updateEx(itemId, (p) => p);
 
   return () => {
+    if (footRO) footRO.disconnect();
     if (st.playing) stop();
     offNote(); document.removeEventListener('keydown', onKey);
     header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup());

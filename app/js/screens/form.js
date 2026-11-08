@@ -8,7 +8,7 @@
 // With a melody (item.melody, jazzlab-melody/1) you play the written tune, bar k of the melody over bar k of the form.
 // A clean chorus allows max(1, round(notes per chorus / 40)) slips (misses + wrong notes): 1 for root-and-fifth
 // (24 or 48 notes) and the licks, 2 for the boogie (96 eighths per chorus), so denser patterns are not stricter.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
@@ -87,6 +87,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const footer = h('footer.actions', null, h('div.footsegs', null, modeSeg, form.style === 'bossa' ? null : swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.formscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   function seg(items, value, cb, label) {
     const w = h('div.seg', { role: 'group', 'aria-label': label ? t(label) : null });
@@ -244,5 +245,5 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   fb(saved.cleanChoruses ? `${t('fSoFar')}: ${saved.cleanChoruses} ${t('fCleanOf')} ${saved.choruses}` : t('fStart').replace('{n}', NB));
   updateEx(itemId, (p) => p);
 
-  return () => { if (st.playing) stop(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { if (footRO) footRO.disconnect(); if (st.playing) stop(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

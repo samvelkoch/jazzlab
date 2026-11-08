@@ -1,5 +1,5 @@
 // Exercise screen: stages Rhythm (tap the rhythm on one key) → Notes (wait mode) → In tempo → By heart.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview } from '../store.js';
@@ -118,8 +118,7 @@ export function renderExercise(root, { ex, rerender }) {
   root.replaceChildren(screen);
   scr = screen; screen.dataset.rmode = rs.mode(); applyPadBig();
   // the sticky tap pad sits right above the footer: tell CSS how tall the footer is
-  const footRO = typeof ResizeObserver === 'function' ? new ResizeObserver(() => screen.style.setProperty('--foot-h', footer.offsetHeight + 'px')) : null;
-  if (footRO) footRO.observe(footer);
+  const footRO = trackFootH(screen, footer);
   phoneMq.addEventListener('change', applyPadBig);
 
   // ---------- engines ----------
