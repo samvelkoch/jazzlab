@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-call",
+  "title": { "ru": "Вопрос и ответ с бэндом", "en": "Call and response with the band" },
+  "about": { "ru": "Два такта бэнд задаёт вопрос короткой фразой, два такта ты отвечаешь своей. Слушай, о чём спросили: повтори кусочек, переверни, ответь ниже или выше. Пока бэнд играет, ты молчишь.", "en": "For two bars the band asks a short question, for two bars you answer with your own phrase. Listen to the question: repeat a bit of it, turn it around, answer lower or higher. While the band plays, you stay silent." },
+  "form": "blues-c", "pattern": "p2",
+  "palette": { "mode": "scale", "scale": "blues", "root": "C" },
+  "hand": { "lo": 60, "hi": 72 },
+  "phrasing": { "play": 2, "rest": 2 },
+  "call": true,
+  "targets": false,
+  "choruses": 1,
+  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "pitches": 3 }
+}

@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-scale",
+  "title": { "ru": "Блюзовая гамма: два такта играю, два молчу", "en": "Blues scale: two bars on, two bars off" },
+  "about": { "ru": "Бэнд играет блюз, ты играешь своё из шести нот блюзовой гаммы C. Два такта фраза, два такта тишина: пауза тоже музыка. Ноты аккорда подсвечены ярче.", "en": "The band plays the blues, you play your own lines from the six notes of the C blues scale. Two bars of phrase, two bars of silence: rests are music too. Chord tones are lit brighter." },
+  "form": "blues-c", "pattern": "p2",
+  "palette": { "mode": "scale", "scale": "blues", "root": "C" },
+  "hand": { "lo": 60, "hi": 72 },
+  "phrasing": { "play": 2, "rest": 2 },
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "pitches": 3 }
+}
