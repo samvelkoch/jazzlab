@@ -877,6 +877,11 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 .solohead .ok { color: var(--ok); } .solohead .muted { font-weight: 400; }
 .solostats { flex-wrap: wrap; }
 .solostats .dstat { min-width: 96px; text-align: center; }
+/* the palette's scale notes (not chord tones): a soft tint of --ext, dark labels; the chord tones keep their colours */
+.key.white.mk-pal { background: color-mix(in srgb, var(--ext) 28%, var(--ivory)); }
+.key.black.mk-pal { background: linear-gradient(color-mix(in srgb, var(--ext) 55%, var(--ebony-top)), color-mix(in srgb, var(--ext) 38%, var(--ebony)) 18%); }
+:root[data-theme="dark"] .key.white.mk-pal { background: color-mix(in srgb, var(--ext) 36%, var(--ivory)); }
+.key.white.mk-pal .lbl { color: color-mix(in srgb, var(--lbl) 62%, #000); } /* AA on the tint in every scheme */
 .soloscreen .key.far[class*=" mk-"] { opacity: .55; }
 @media (max-width: 640px) {
   .solopanel { overflow: visible; }

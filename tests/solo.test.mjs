@@ -104,9 +104,16 @@ assert.ok(Math.abs(s.inside - 2 / 3) < 1e-9, 'D -> C is a whole step: not an app
 s = scoreChorus([{ t: at(0, 0), m: 61 }, { t: at(0, 1), m: 62 }, { t: at(0, 2), m: 60 }], ctx(sScale));
 assert.equal(s.inside, 1 / 3, 'Db -> D: D is out too, so neither is inside');
 
-// grid: off by a third of an eighth is off the grid at 60 bpm (win = 0.225 s), 0.1 s is on it
+// grid: 1.5 × tight = 0.1125 s at 60 bpm: 0.1 s off is on the grid, 0.24 s is off it
 s = scoreChorus([{ t: at(0, 0, 0.1), m: 60 }, { t: at(0, 2, -0.1), m: 63 }, { t: at(0, 4, 0.24), m: 65 }, { t: at(0, 6), m: 67 }], ctx(sScale));
 assert.equal(s.grid, 0.75);
+s = scoreChorus([{ t: at(0, 0, 0.12), m: 60 }, { t: at(0, 2), m: 63 }], ctx(sScale));
+assert.equal(s.grid, 0.5, '0.12 s off is off the grid at 60 bpm');
+{ // 66 bpm: tight = 0.0727 s, the grid window ≈ 0.109 s; 150 ms off is not on the grid
+  const b66 = 60 / 66, c66 = { solo: sScale, bars: blues.bars, bpm: 66, swing: false };
+  s = scoreChorus([{ t: 0.15, m: 60 }, { t: b66 + 0.09, m: 63 }, { t: 2 * b66, m: 65 }], c66);
+  assert.ok(Math.abs(s.grid - 2 / 3) < 1e-9, 'at 66 bpm: 150 ms off is off the grid, 90 ms is on it');
+}
 // swing: the off-beat sits at 2/3 of the beat
 s = scoreChorus([{ t: 0, m: 60 }, { t: 2 / 3, m: 63 }, { t: 1, m: 65 }, { t: 1 + 2 / 3, m: 67 }], ctx(sScale, true));
 assert.equal(s.grid, 1, 'swung eighths are on the swing grid');

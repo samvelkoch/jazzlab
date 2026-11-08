@@ -353,9 +353,9 @@ Scoring (one chorus; notes `{ t, m }`, `t` in seconds from the chorus start; a n
 so a slightly early downbeat counts for the new bar):
 - **inside**: share of your notes (`you` bars) in the palette; a note outside followed within 1.25 eighths by a note a
   semitone away that is in the palette is an approach and counts.
-- **grid**: share of your notes within the form screen's acceptance window of the swing-aware eighth grid
-  (`tols(bpm).win` in `recording.js`: ±0.2 s at 66 bpm; `gridTol()` in `solo.js`).
-- **phrases**: runs of 3+ of your notes, a gap of more than a beat (+ the grid window) between onsets splits.
+- **grid**: share of your notes within 1.5 × the form screen's «ровно» window of the swing-aware eighth grid
+  (`1.5 × tols(bpm).tight` from `recording.js`: ±0.11 s at 66 bpm; `gridTol()` in `solo.js`).
+- **phrases**: runs of 3+ of your notes, a gap of more than a beat (+ the form's acceptance window `tols().win`) between onsets splits.
 - **rests**: `rest` and `band` bars that are empty (one note on their first eighth is allowed: a phrase's tail), of all
   such bars. Notes there count for nothing else.
 - **targets**: on each chord change (bar 0 is compared with the last bar: the form loops; a second chord on slot 4 is a

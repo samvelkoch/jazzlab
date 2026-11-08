@@ -8,8 +8,9 @@ import { scalePcs, scaleOf, pcOf } from './scales.js';
 
 export const PER = 8; // eighths per bar
 export const APPROACH_E8 = 1.25; // an approach resolves within this many eighths
-/** Grid tolerance: the form screen's acceptance window (tols().win: a hit there is "on time" or "near", not a miss). */
-export const gridTol = (bpm) => tols(bpm).win;
+/** Grid tolerance: 1.5 × the form screen's "even" window (tols().tight): ≈ 0.11 s at 66 bpm. tols().win (≈ 0.2 s) would let
+ *  random tapping score ≈ 77 % on a swing grid. */
+export const gridTol = (bpm) => 1.5 * tols(bpm).tight;
 
 const pcm = (m) => ((m % 12) + 12) % 12;
 
@@ -66,7 +67,7 @@ export function changesOf(bars) {
  *   perBar: [{ role, notes, clean, restOk, target }] }.
  */
 export function scoreChorus(notes, { solo, bars, bpm, swing }) {
-  const NB = bars.length, beat = 60 / bpm, e8 = beat / 2, tol = gridTol(bpm);
+  const NB = bars.length, beat = 60 / bpm, e8 = beat / 2, tol = gridTol(bpm), slack = tols(bpm).win;
   const ns = notes.slice().sort((a, b) => a.t - b.t).map((n) => {
     const gi = gridIndex(n.t, bpm, swing);
     const bar = Math.max(0, Math.min(NB - 1, Math.floor(gi / PER)));
@@ -83,9 +84,9 @@ export function scoreChorus(notes, { solo, bars, bpm, swing }) {
   const you = ns.filter((n) => n.role === 'you');
   const share = (f) => (you.length ? you.filter(f).length / you.length : 0);
   // phrases: a phrase has 3+ notes; a gap of more than a beat between onsets splits. Onsets a quarter apart (a line of
-  // quarter notes) stay together: the beat gets the grid tolerance, so timing slack does not cut a line in two.
+  // quarter notes) stay together: the beat gets the form's acceptance window (tols().win), so timing slack does not cut a line in two.
   let phrases = 0, run = 0;
-  you.forEach((n, i) => { run = i && n.t - you[i - 1].t <= beat + tol ? run + 1 : 1; if (run === 3) phrases++; });
+  you.forEach((n, i) => { run = i && n.t - you[i - 1].t <= beat + slack ? run + 1 : 1; if (run === 3) phrases++; });
   const byBar = bars.map((_, k) => ns.filter((n) => n.bar === k));
   const perBar = bars.map((_, k) => {
     const role = roleOf(solo, k), bn = byBar[k];

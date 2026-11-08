@@ -111,7 +111,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       if (pal.chordPcs.has(pc)) {
         const deg = pcm(pc - ch.pc), [cls, lab] = deg === 9 && ch.qual === 'dim7' ? ['seventh', '7'] : DEG[deg] || ['bass', ''];
         map[m] = { cls, label: m >= hand.lo && m <= hand.hi ? lab : '' };
-      } else if (pal.pcs.has(pc)) map[m] = { cls: 'tension' };
+      } else if (pal.pcs.has(pc)) map[m] = { cls: 'pal' }; // scale notes: a soft tint, the chord tones stand out
     }
     kb.mark(map, { reveal: false });
     // the palette line: from the scale root, chord tones stressed
