@@ -77,7 +77,7 @@ assert.deepEqual(words('C7 · F7 · G7 · C7'), ['C7']);
 assert.deepEqual(ids('II–V–I'), ['ii-v-i']);
 
 // every course step has a "what" line in both languages, and it explains its own terms
-assert.equal(course.steps.length, 6);
+assert.equal(course.steps.length, 11);
 for (const s of course.steps) {
   assert.ok(s.what && s.what.ru && s.what.en, `${s.id}: what`);
 }

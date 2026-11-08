@@ -120,6 +120,96 @@
         "s5-e15",
         "s5-imp"
       ]
+    },
+    {
+      "id": "s6",
+      "kind": "step",
+      "n": 6,
+      "title": {
+        "ru": "Блюзовая гамма",
+        "en": "The blues scale"
+      },
+      "what": {
+        "ru": "Шесть нот, из которых сделан блюз, и первый рифф на них. В конце синяя нота: Eb, который съезжает в E.",
+        "en": "The six notes the blues is made of, and a first riff on them. At the end, the blue note: an Eb sliding into E."
+      },
+      "items": [
+        "s6-e16",
+        "s6-e17",
+        "s6-imp"
+      ]
+    },
+    {
+      "id": "s7",
+      "kind": "step",
+      "n": 7,
+      "title": {
+        "ru": "II–V–I",
+        "en": "II–V–I"
+      },
+      "what": {
+        "ru": "Главный оборот джаза: Dm7, G7, Cmaj7. Левая играет шелл, правая терцию и септиму, потом линию по аккордам.",
+        "en": "Jazz’s main progression: Dm7, G7, Cmaj7. The left plays a shell, the right the third and seventh, then a line through the chords."
+      },
+      "items": [
+        "s7-e18",
+        "s7-e19",
+        "s7-imp"
+      ]
+    },
+    {
+      "id": "s8",
+      "kind": "step",
+      "n": 8,
+      "title": {
+        "ru": "Босса-нова",
+        "en": "Bossa nova"
+      },
+      "what": {
+        "ru": "Ровные восьмые без свинга. Левая учит ячейку баса боссы, правая ставит аккорды между долями.",
+        "en": "Straight eighths, no swing. The left learns the bossa bass cell, the right places chords between the beats."
+      },
+      "items": [
+        "s8-e20",
+        "s8-e21",
+        "s8-imp"
+      ]
+    },
+    {
+      "id": "s9",
+      "kind": "step",
+      "n": 9,
+      "title": {
+        "ru": "Вопрос и ответ",
+        "en": "Question and answer"
+      },
+      "what": {
+        "ru": "Руки разговаривают: правая спрашивает, левая отвечает, и звучат они по очереди.",
+        "en": "The hands talk: the right asks, the left answers, and they take turns."
+      },
+      "items": [
+        "s9-e22",
+        "s9-e23",
+        "s9-imp"
+      ]
+    },
+    {
+      "id": "s10",
+      "kind": "step",
+      "n": 10,
+      "title": {
+        "ru": "Оборот и минор",
+        "en": "Turnaround and minor"
+      },
+      "what": {
+        "ru": "Как заканчивается почти любой стандарт: оборот C, A7, Dm7, G7. И тот же II–V–I в миноре.",
+        "en": "How almost every standard ends: the turnaround C, A7, Dm7, G7. And the same II–V–I in minor."
+      },
+      "items": [
+        "s10-e24",
+        "s10-e25",
+        "s10-imp"
+      ]
     }
   ],
   "available": [
@@ -142,6 +232,21 @@
     "s5-e13",
     "s5-e14",
     "s5-e15",
-    "s5-imp"
+    "s5-imp",
+    "s6-e16",
+    "s6-e17",
+    "s6-imp",
+    "s7-e18",
+    "s7-e19",
+    "s7-imp",
+    "s8-e20",
+    "s8-e21",
+    "s8-imp",
+    "s9-e22",
+    "s9-e23",
+    "s9-imp",
+    "s10-e24",
+    "s10-e25",
+    "s10-imp"
   ]
 }
