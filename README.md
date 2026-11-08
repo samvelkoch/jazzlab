@@ -1,16 +1,18 @@
 # Jazzlab
 
-A self-contained jazz, blues and bossa nova piano course in the browser.
-Ear first, music in chunks, slow is fine. No account, no build step, no server: static files on GitHub Pages.
+A browser course in jazz piano and improvisation: from note names to your own solo over a form.
+Ear training, chords as hand shapes, left-hand groove, a vocabulary of phrases, whole tunes, scored improvisation,
+recorded performances and spaced review, in three styles (blues, bossa nova, standards) with a growing repertoire.
+Passing is by cleanliness, not tempo. No account, no build step, no server: static files on GitHub Pages.
 
 **Live:** https://samvelkoch.github.io/jazzlab/ · **How to use:** `#/help` in the app ·
 **Design:** [course](docs/specs/2026-11-07-jazz-course-design.md), [standard track](docs/specs/2026-11-07-standard-design.md), [improvisation](docs/specs/2026-11-08-improvisation-design.md)
 
 ## What is inside
 
-Three tracks, each leading to one tune played whole, both hands, with improvisation:
+Three tracks, one per style. Each builds the full skill set and carries its own repertoire:
 
-| Track | Tune(s) | Left hand | New skill |
+| Track | Repertoire so far | Left hand | New skill |
 |---|---|---|---|
 | Blues | 12-bar blues in C; St. Louis Blues, Tin Roof Blues | root–fifth, boogie, shell | swing, licks, question and answer |
 | Bossa nova | Blue Bossa (16 bars, C minor) | bossa cell, bass + chord | straight eighths, independence of hands, ii–V |
