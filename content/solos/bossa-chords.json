@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-chords",
+  "title": {"ru": "Blue Bossa: ноты аккорда на смене", "en": "Blue Bossa: chord tones on the change"},
+  "about": {"ru": "Целевая нота: на первой доле такта, где сменился аккорд, сыграй ноту нового аккорда. Палитра теперь меняется вместе с аккордом, его ноты подсвечены ярче. Фразы свободные, восьмые ровные.", "en": "Target note: on beat one of a bar where the chord changes, play a note of the new chord. The palette now changes with every chord, its chord tones lit brighter. Free phrasing, straight eighths."},
+  "form": "blue-bossa", "pattern": "b2",
+  "palette": {"mode": "chordscale"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 1,
+  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.6, "phrases": 4, "pitches": 3}
+}

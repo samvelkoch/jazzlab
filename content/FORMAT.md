@@ -373,3 +373,10 @@ one `solo` item a day (`freshItems()`). Check: `node tests/solo.test.mjs`.
 
 The blues track's `imp` section («Импровизация», after `rh`): `imp-b1` `blues-scale` (blues scale C, 2 on / 2 off),
 `imp-b2` `blues-call` (call and response), `imp-b3` `blues-chords` (chordscale, targets), `imp-b4` `blues-solo` (3 choruses).
+The bossa track's `imp` (after `rh`): `imp-bo1` `bossa-minor` (scales: C aeolian on bars 1–8 and 13–16, Db major on 9–12;
+2 on / 2 off), `imp-bo2` `bossa-call`, `imp-bo3` `bossa-chords` (chordscale, targets), `imp-bo4` `bossa-solo` (2 choruses);
+form `blue-bossa` (`style: "bossa"`: straight eighths, the bossa groove, no swing switch), pattern `b2`, hand 60–72.
+The std track's `imp` (after `tunes`): `imp-s1` `std-key` (scales: F major on bars 1–16 and 25–32, Bb major on 17–24),
+`imp-s2` `std-call`, `imp-s3` `std-chords` (chordscale, targets; two-chord bars switch the palette on slot 4), `imp-s4`
+`std-solo` (1 chorus); form `std-f`, pattern `s2`, swing, hand 60–74. Glossary: `improvisation`, `palette`, `target-note`;
+reference article `content/wiki/improvisation.json`.

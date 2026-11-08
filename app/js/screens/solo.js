@@ -54,7 +54,23 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
   });
   const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
-  const keepInView = (k) => { const c = cells[k]; if (NB <= 16 || !c) return; if (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, c.offsetTop - 8); };
+  // the current bar stays in view: inside a scrolling grid (32 bars, as form.js), then inside the panel (desktop) or the page
+  // (a phone: the panel grows, the keyboard sticks over the page above the footer, so a 16- or 32-bar grid runs under it)
+  const scrolls = (el) => el.scrollHeight > el.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(el).overflowY);
+  const keepInView = (k) => {
+    const c = cells[k]; if (!c) return;
+    if (scrolls(grid) && (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight)) grid.scrollTop = Math.max(0, c.offsetTop - 8);
+    const r = c.getBoundingClientRect(), inPanel = scrolls(panel);
+    let top, bottom;
+    if (inPanel) { const pr = panel.getBoundingClientRect(); top = pr.top; bottom = pr.bottom; }
+    else {
+      top = Math.max(0, header.getBoundingClientRect().bottom);
+      bottom = Math.min(innerHeight, footer.getBoundingClientRect().top, getComputedStyle(kbPanel).position === 'sticky' ? kbPanel.getBoundingClientRect().top : Infinity);
+    }
+    const dy = r.bottom > bottom ? r.bottom - bottom + 8 : r.top < top ? r.top - top - 8 : 0;
+    if (!dy) return;
+    if (inPanel) panel.scrollTop += dy; else window.scrollBy(0, dy);
+  };
   const board = h('div.soloboard');
   const summary = h('div.dsummary.perfsum');
   const sumActs = h('div.perfacts');
@@ -99,6 +115,19 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   kbEl.querySelectorAll('.key').forEach((k) => { const m = +k.dataset.m; if (m < hand.lo || m > hand.hi) k.classList.add('far'); });
   const nameOf = (m, pal) => { const ch = parseChord(pal.chord); return noteName(patSpell(m, pcm(m - ch.pc), ch, !!form.flats), names); };
   const DEG = { 0: ['base', '1'], 3: ['third', '3'], 4: ['third', '3'], 6: ['bass', '5'], 7: ['bass', '5'], 8: ['bass', '5'], 9: ['seventh', '6'], 10: ['seventh', '7'], 11: ['seventh', '7'] };
+  // a seven-note palette is spelt one letter per note from its root (A dorian: F♯, not G♭); otherwise nameOf per note
+  const LET = 'CDEFGAB', NAT = [0, 2, 4, 5, 7, 9, 11];
+  function scaleSpelling(pcs, pal) {
+    if (pcs.length !== 7 || pcs[0] !== pal.root) return null;
+    const ch = parseChord(pal.chord), start = LET.indexOf(patSpell(60 + pal.root, pcm(pal.root - ch.pc), ch, !!form.flats)[0]);
+    const out = [];
+    for (let i = 0; i < 7; i++) {
+      const l = LET[(start + i) % 7], alt = pcm(pcs[i] - NAT[LET.indexOf(l)]);
+      if (alt !== 0 && alt !== 1 && alt !== 11) return null;
+      out.push(noteName(l + (alt === 1 ? '#' : alt === 11 ? 'b' : '') + '4', names));
+    }
+    return out;
+  }
   let palKey = '';
   function paintPalette(bar, slot) {
     const pal = paletteAt(solo, bars, bar, slot), ch = parseChord(pal.chord);
@@ -116,8 +145,9 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     kb.mark(map, { reveal: false });
     // the palette line: from the scale root, chord tones stressed
     const pcs = [...pal.pcs].sort((a, b) => pcm(a - pal.root) - pcm(b - pal.root));
+    const spelt = scaleSpelling(pcs, pal);
     palEl.replaceChildren(h('b', null, `${t('soPalette')}:`), ' ',
-      ...pcs.flatMap((pc) => [h('span' + (pal.chordPcs.has(pc) ? '.ct' : ''), null, nameOf(60 + pc, pal)), ' ']),
+      ...pcs.flatMap((pc, i) => [h('span' + (pal.chordPcs.has(pc) ? '.ct' : ''), null, spelt ? spelt[i] : nameOf(60 + pc, pal)), ' ']),
       h('span.solochord', null, `· ${pal.chord}`));
     return pal;
   }

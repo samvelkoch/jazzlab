@@ -280,7 +280,8 @@ assert.equal(bt.items['perf-bossa'].melody, 'bossa-cm');
 const secIds = bt.sections.map((x) => x.id);
 assert.equal(secIds.indexOf('melody'), secIds.indexOf('form') + 1);
 assert.equal(secIds.indexOf('rh'), secIds.indexOf('melody') + 1);
-assert.equal(secIds.indexOf('ear'), secIds.indexOf('rh') + 1);
+assert.equal(secIds.indexOf('imp'), secIds.indexOf('rh') + 1, 'Improvisation right after the right hand');
+assert.equal(secIds.indexOf('ear'), secIds.indexOf('imp') + 1);
 console.log('ok: melody');
 
 // ---------- the standard: voice-led shell, 32-bar AABA form, the 32-bar tune ----------
@@ -410,7 +411,7 @@ console.log('ok: sharp thirds');
   assert.deepEqual(iivPairs(['Gm7 C7', 'Gm7 C7', 'Fmaj7']).map((p) => p.bars), [[1, 2]]);
   // the std track: the rh section, key-relative items, the ending
   const stt = read('content/tracks/std.json');
-  assert.deepEqual(stt.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'tunes', 'rh', 'ear', 'perf']);
+  assert.deepEqual(stt.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'tunes', 'imp', 'rh', 'ear', 'perf']);
   assert.deepEqual(stt.sections.find((x) => x.id === 'rh').items, ['lick-k1', 'lick-k2', 'lick-k3', 'form-rh-k1', 'form-rh-qa-std']);
   ['k1', 'k2', 'k3'].forEach((k) => assert.deepEqual(stt.items['lick-' + k], { kind: 'lick', lick: k, keys: ['F', 'Bb'], pattern: 's2' }));
   assert.equal(stt.items['form-rh-k1'].lickKey, 'k1'); assert.equal(stt.items['form-rh-k1'].hand, 'rh');
@@ -486,7 +487,7 @@ console.log('ok: sharp thirds');
   assert.equal(bb.ending, 'bossa-end');
   // the bossa track: the rh section, the lick items with their own chord set, the ending, the performance
   const bt2 = read('content/tracks/bossa.json');
-  assert.deepEqual(bt2.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'rh', 'ear', 'perf']);
+  assert.deepEqual(bt2.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'rh', 'imp', 'ear', 'perf']);
   assert.deepEqual(bt2.sections.find((x) => x.id === 'rh').items, ['lick-bl1', 'lick-bl2', 'lick-bl3', 'form-rh-bl1', 'form-rh-qa-bossa']);
   ['bl1', 'bl2', 'bl3'].forEach((l) => assert.deepEqual(bt2.items['lick-' + l], { kind: 'lick', lick: l, form: 'blue-bossa', pattern: 'b1', chords: ['Cm7', 'Fm7', 'G7'] }));
   bt2.items['lick-bl1'].chords.forEach((c) => assert.ok(bb.bars.flatMap(barChords).includes(c), c + ' is a chord of the form'));
@@ -549,7 +550,7 @@ console.log('ok: sharp thirds');
   // the std track: the tunes section, items, performances; ids unique across the three tracks
   const stt3 = read('content/tracks/std.json');
   const secs = stt3.sections.map((x) => x.id);
-  assert.equal(secs.indexOf('tunes'), secs.indexOf('melody') + 1); assert.equal(secs.indexOf('rh'), secs.indexOf('tunes') + 1);
+  assert.equal(secs.indexOf('tunes'), secs.indexOf('melody') + 1); assert.equal(secs.indexOf('imp'), secs.indexOf('tunes') + 1); assert.equal(secs.indexOf('rh'), secs.indexOf('imp') + 1);
   assert.deepEqual(stt3.sections.find((x) => x.id === 'tunes').items, ['mel-bbb', 'form-mel-bbb', 'mel-sgb', 'form-mel-sgb', 'mel-hsr', 'form-mel-hsr', 'mel-aim', 'form-mel-aim', 'mel-tft', 'form-mel-tft']);
   assert.deepEqual(stt3.items['mel-bbb'], { kind: 'melody', melody: 'bbb-g', pattern: 's1' });
   assert.deepEqual(stt3.items['mel-sgb'], { kind: 'melody', melody: 'sgb-f', pattern: 's1' });

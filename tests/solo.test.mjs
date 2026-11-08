@@ -193,6 +193,88 @@ assert.deepEqual([bc.palette.mode, bc.phrasing, bc.targets, bc.pass.targets, bc.
 const bs = read('content/solos/blues-solo.json');
 assert.deepEqual([bs.choruses, bs.targets, bs.pass.targets, bs.pass.phrases], [3, true, 0.5, 3]);
 
+// ---------- bossa and standard content (phase 2) ----------
+const stdF = read('content/forms/std-f.json');
+const bMinor = read('content/solos/bossa-minor.json');
+// bossa-minor: C aeolian on bars 0–7 and 12–15, Db major on 8–11 (0-based)
+bossa.bars.forEach((_, k) => {
+  const pp = paletteAt(bMinor, bossa.bars, k, 0);
+  const want = k >= 8 && k <= 11 ? ['major', 1] : ['aeolian', 0];
+  assert.deepEqual([pp.scale, pp.root], want, `bossa-minor bar ${k}`);
+});
+assert.deepEqual(sorted(paletteAt(bMinor, bossa.bars, 0, 0).pcs), [0, 2, 3, 5, 7, 8, 10], 'C aeolian over Cm7');
+assert.ok(!paletteAt(bMinor, bossa.bars, 7, 0).pcs.has(1) && paletteAt(bMinor, bossa.bars, 8, 0).pcs.has(1), 'Db appears at bar 9 (index 8)');
+assert.ok(paletteAt(bMinor, bossa.bars, 11, 0).pcs.has(1) && !paletteAt(bMinor, bossa.bars, 12, 0).pcs.has(1), 'and leaves at bar 13');
+assert.ok(paletteAt(bMinor, bossa.bars, 8, 0).pcs.has(6), 'Ebm7 (Gb) inside Db major');
+assert.ok(paletteAt(bMinor, bossa.bars, 15, 4).pcs.has(11), 'bar 16 slot 4: G7 adds its B to C aeolian');
+assert.equal(paletteAt(bMinor, bossa.bars, 15, 4).chord, 'G7');
+// std-key: F major on bars 0–15 and 24–31, Bb major on 16–23
+const sKey = read('content/solos/std-key.json');
+stdF.bars.forEach((_, k) => {
+  const pp = paletteAt(sKey, stdF.bars, k, 0);
+  assert.deepEqual([pp.scale, pp.root], k >= 16 && k <= 23 ? ['major', 10] : ['major', 5], `std-key bar ${k}`);
+});
+// a two-chord bar ("Gm7 C7", bar 2 = index 1): the chord and its tones switch at slot 4, the F-major scale stays
+const g3 = paletteAt(sKey, stdF.bars, 1, 3), c4 = paletteAt(sKey, stdF.bars, 1, 4);
+assert.deepEqual([g3.chord, c4.chord], ['Gm7', 'C7']);
+assert.deepEqual(sorted(g3.chordPcs), [2, 5, 7, 10]); assert.deepEqual(sorted(c4.chordPcs), [0, 4, 7, 10]);
+assert.deepEqual(sorted(g3.pcs), sorted(scalePcs('major', 'F'))); assert.deepEqual(sorted(c4.pcs), sorted(scalePcs('major', 'F')));
+// chordscale on the standard: Gm7 -> G dorian, C7 -> C mixolydian in the same bar; the change on slot 4 is a target
+const sChS = read('content/solos/std-chords.json');
+assert.deepEqual([paletteAt(sChS, stdF.bars, 1, 0).scale, paletteAt(sChS, stdF.bars, 1, 4).scale], ['dorian', 'mixolydian']);
+assert.ok(!paletteAt(sChS, stdF.bars, 1, 0).chordPcs.has(4) && paletteAt(sChS, stdF.bars, 1, 4).chordPcs.has(4), 'E becomes a chord tone with C7 (G dorian and C mixolydian share their notes)');
+assert.deepEqual(changesOf(stdF.bars).filter((c) => c.bar === 1), [{ bar: 1, slot: 0 }, { bar: 1, slot: 4 }]);
+assert.ok(!changesOf(stdF.bars).some((c) => c.bar === 0), 'Fmaj7 after the closing Fmaj7: no change');
+{ // E on beat 3 of "Gm7 C7" (slot 4) is a target note of C7; G there is not
+  // 60 bpm straight: an eighth 0.5 s, a bar 4 s (swing off to keep the slots simple)
+  const c = { solo: sChS, bars: stdF.bars, bpm: 60, swing: false };
+  let r = scoreChorus([{ t: 4, m: 67 }, { t: 4.5, m: 65 }, { t: 5, m: 62 }, { t: 6, m: 64 }], c);
+  assert.deepEqual(r.targets, { ok: 2, total: 2 }, 'G on Gm7 and E on C7');
+  r = scoreChorus([{ t: 4, m: 67 }, { t: 6, m: 62 }], c);
+  assert.deepEqual(r.targets, { ok: 1, total: 2 }, 'D on slot 4 is not a C7 tone');
+}
+// the 32-bar standard with 2 on / 2 off: eight rest pairs; with call: band, band, you, you
+assert.equal(stdF.bars.filter((_, k) => roleOf(sKey, k) === 'rest').length, 16);
+assert.deepEqual(stdF.bars.slice(0, 4).map((_, k) => roleOf(read('content/solos/std-call.json'), k)), ['band', 'band', 'you', 'you']);
+for (let i = 0; i < 20; i++) { // the band's call on the bossa and the standard stays in the hand and the palette
+  [[read('content/solos/bossa-call.json'), bossa.bars, [0, 4, 8, 12]], [read('content/solos/std-call.json'), stdF.bars, [0, 4, 16, 28]]].forEach(([so, bb, starts]) => {
+    const bar = starts[i % starts.length];
+    makeCall(so, bb, bar, rng).notes.forEach((n) => {
+      assert.ok(n.m >= so.hand.lo && n.m <= so.hand.hi, so.id + ': within the hand');
+      assert.ok(paletteAt(so, bb, bar + Math.floor(n.slot / 8), n.slot % 8).pcs.has(n.m % 12), so.id + ': a palette note');
+    });
+  });
+}
+// track wiring: bossa imp after rh, std imp after tunes
+const wire = (trackId, after, ids, sids, form, pattern, hi) => {
+  const tr = read(`content/tracks/${trackId}.json`), secs = tr.sections.map((x) => x.id);
+  assert.equal(secs[secs.indexOf(after) + 1], 'imp', `${trackId}: imp after ${after}`);
+  const sec = tr.sections.find((x) => x.id === 'imp');
+  assert.ok(sec.title.ru === 'Импровизация' && sec.title.en === 'Improvisation');
+  assert.deepEqual(sec.items, ids);
+  ids.forEach((id, i) => {
+    assert.deepEqual(tr.items[id], { kind: 'solo', solo: sids[i] });
+    const so = read(`content/solos/${sids[i]}.json`);
+    assert.equal(so.$format, 'jazzlab-solo/1'); assert.equal(so.id, sids[i]);
+    assert.ok(so.title.ru && so.title.en && so.about.ru && so.about.en, sids[i] + ': title and about in ru and en');
+    assert.deepEqual([so.form, so.pattern], [form, pattern]);
+    assert.deepEqual(so.hand, { lo: 60, hi });
+    read(`content/forms/${so.form}.json`); read(`content/patterns/${so.pattern}.json`);
+  });
+};
+wire('bossa', 'rh', ['imp-bo1', 'imp-bo2', 'imp-bo3', 'imp-bo4'], ['bossa-minor', 'bossa-call', 'bossa-chords', 'bossa-solo'], 'blue-bossa', 'b2', 72);
+wire('std', 'tunes', ['imp-s1', 'imp-s2', 'imp-s3', 'imp-s4'], ['std-key', 'std-call', 'std-chords', 'std-solo'], 'std-f', 's2', 74);
+// thresholds and modes as the blues equivalents
+const like = { 'bossa-minor': 'blues-scale', 'bossa-call': 'blues-call', 'bossa-chords': 'blues-chords', 'bossa-solo': 'blues-solo', 'std-key': 'blues-scale', 'std-call': 'blues-call', 'std-chords': 'blues-chords', 'std-solo': 'blues-solo' };
+Object.entries(like).forEach(([id, b]) => {
+  const so = read(`content/solos/${id}.json`), bl = read(`content/solos/${b}.json`);
+  assert.deepEqual(so.pass, bl.pass, id + ': pass as ' + b);
+  assert.deepEqual([so.call, so.targets, so.phrasing], [bl.call, bl.targets, bl.phrasing], id + ': call / targets / phrasing as ' + b);
+  assert.equal(so.palette.mode, bl.palette.mode === 'scale' ? 'scales' : 'chordscale', id + ': palette mode');
+});
+assert.deepEqual(['bossa-solo', 'std-solo'].map((id) => read(`content/solos/${id}.json`).choruses), [2, 1]);
+assert.equal(read('content/forms/blue-bossa.json').style, 'bossa', 'the bossa form: straight, the bossa groove (the screen hides swing)');
+
 // the day queue: at most one solo among the fresh items
 const its = { a: { kind: 'form' }, s1: { kind: 'solo' }, s2: { kind: 'solo' }, b: { kind: 'lick' } };
 assert.deepEqual(freshItems(['s1', 's2', 'a', 'b'], its, () => false, 3), ['s1', 'a', 'b'], 'one solo a day');

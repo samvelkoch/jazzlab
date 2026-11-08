@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-solo",
+  "title": {"ru": "Blue Bossa: соло на два круга", "en": "Blue Bossa: a two-chorus solo"},
+  "about": {"ru": "Импровизация на два круга подряд, без остановки. Палитра идёт за аккордами, на сменах ищи целевые ноты. Начни просто, ко второму кругу добавь и не забывай про паузы.", "en": "Improvisation over two choruses in a row, no stopping. The palette follows the chords; on the changes, aim for target notes. Start simple, build up by the second chorus and leave some space."},
+  "form": "blue-bossa", "pattern": "b2",
+  "palette": {"mode": "chordscale"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 2,
+  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.5, "phrases": 3, "pitches": 3}
+}

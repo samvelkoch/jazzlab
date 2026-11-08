@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-solo",
+  "title": {"ru": "Стандарт: соло на весь круг", "en": "The standard: a solo over the whole form"},
+  "about": {"ru": "Импровизация без остановки: палитра идёт за аккордами, на сменах целевые ноты, между фразами паузы. Один круг AABA, 32 такта: всё, чему научился, сразу.", "en": "Improvisation with no stopping: the palette follows the chords, target notes on the changes, rests between phrases. One AABA chorus, 32 bars: everything you have learned, at once."},
+  "form": "std-f", "pattern": "s2",
+  "palette": {"mode": "chordscale"},
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 1,
+  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.5, "phrases": 3, "pitches": 3}
+}

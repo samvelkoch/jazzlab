@@ -1,0 +1,18 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-call",
+  "title": {"ru": "Стандарт: вопрос и ответ с бэндом", "en": "The standard: call and response with the band"},
+  "about": {"ru": "Палитра та же: фа мажор, на бридже (такты 17–24) си-бемоль мажор. Два такта бэнд задаёт вопрос, два такта ты отвечаешь своей фразой. 32 такта: сетка прокручивается сама.", "en": "The same palette: F major, B-flat major on the bridge (bars 17–24). For two bars the band asks a question, for two bars you answer with your own phrase. 32 bars: the grid scrolls by itself."},
+  "form": "std-f", "pattern": "s2",
+  "palette": { "mode": "scales", "parts": [
+    {"bars": [0, 15], "scale": "major", "root": "F"},
+    {"bars": [16, 23], "scale": "major", "root": "Bb"},
+    {"bars": [24, 31], "scale": "major", "root": "F"}
+  ] },
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": {"play": 2, "rest": 2},
+  "call": true,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "pitches": 3}
+}
