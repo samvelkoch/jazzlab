@@ -22,7 +22,8 @@ Every track has the same sections: Keyboard (drills), Left hand (patterns), Form
 Right hand (licks), Ear, Tune (melodies learned by echo), Improvisation, Performance (recorded), Check-up.
 A one-tap session builds the day from due reviews, the next new item and a chorus of the form.
 
-Plus: the original **Riffs** course (15 book exercises with a rhythm stage and a small improvisation), the **Chords** mode
+Plus: the **Riffs** course (25 short exercises in 10 steps, each with a rhythm stage and a small improvisation: steps 1–5 from
+the book, steps 6–10 original: blues scale, ii–V–I, bossa, question and answer, turnaround), the **Chords** mode
 (decoder for any chord symbol, key names, chord lessons and practice), a **glossary** (every professional term is underlined and
 explained where it appears) and a **Reference** (short articles on styles, concepts, tunes and people, with sources).
 
