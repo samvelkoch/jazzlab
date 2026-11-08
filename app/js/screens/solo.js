@@ -328,7 +328,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   function finishChorus(c) {
     const r = run, s = scoreChorus(chorusNotes(r, c), ctxOf(r));
     r.scores[c] = s;
-    s.perBar.forEach((b, k) => markBar(k, b));
+    if (c === r.choruses - 1) s.perBar.forEach((b, k) => markBar(k, b)); // the next chorus has already cleared the grid
     if (CH > 1) board.prepend(boardRow(`${t('soChorusBoard')} ${c + 1}`, s));
     else board.replaceChildren(boardRow(`${t('soChorusBoard')} 1`, s));
   }
