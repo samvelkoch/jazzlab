@@ -28,7 +28,8 @@ export async function renderCourse(root, { course, index, rerender }) {
       h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
     navTabs('course'),
     h('div.grow'),
-    midiChip(), langSwitch(rerender), themeButton());
+    midiChip(), langSwitch(rerender),
+    h('a.iconbtn.helpbtn', { href: '#/help', 'aria-label': t('helpTitle'), title: t('helpTitle'), html: ICON.help }), themeButton());
 
   const tabs = h('div.seg.big', { role: 'tablist', 'aria-label': t('courses') },
     ...index.courses.map((c) => h(c.ready ? 'a' : 'button', {

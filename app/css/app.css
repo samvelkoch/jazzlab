@@ -144,7 +144,7 @@ h1 { font: 700 24px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
 
 /* ---------- header ---------- */
 header.top { display: flex; align-items: center; gap: 12px; padding: 12px max(20px, env(safe-area-inset-right)) 12px max(20px, env(safe-area-inset-left));
-  background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: nowrap; min-width: 0; }
+  background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: nowrap; min-width: 0; position: relative; }
 header.top > * { flex: none; }
 header.top > .titles { flex: 0 1 auto; min-width: 80px; }
 header.top > .grow { flex: 1 1 0; min-width: 0; }
@@ -1017,7 +1017,7 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   header.top:has(.brand) > .brand { order: 1; }
   header.top:has(.brand) > .grow { order: 2; }
   header.top:has(.brand) > .chip { order: 3; }
-  header.top:has(.brand) > .settings { order: 4; }
+  header.top:has(.brand) > .iconbtn, header.top:has(.brand) > .settings { order: 4; }
   header.top:has(.brand) > .navtabs { order: 5; flex: 1 1 60%; min-width: 0; }
   header.top:has(.brand) > .navtabs a { flex: 1 1 0; justify-content: center; }
   header.top:has(.brand) > .seg:not(.navtabs) { order: 6; }
@@ -1064,12 +1064,29 @@ main.wikimain { flex: 1; display: flex; flex-direction: column; gap: 22px; paddi
 .wikichips { display: flex; flex-wrap: wrap; gap: 8px; }
 .wikichips .chip { text-decoration: none; }
 .wikisources { margin-top: 18px; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+/* "How to use": the card on top of the reference index, and the screen itself (reuses .wikiart) */
+.helpcard { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-radius: 18px; border: 1px solid var(--accent); background: var(--sub); color: var(--fg); text-decoration: none; }
+.helpcard:hover { background: var(--panel); }
+.helpcard .wikicardtext { padding: 0; }
+.helpq { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); font: 700 22px var(--display); }
+.helpart { max-width: 70ch; }
+.helptoc { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 8px; }
+.helpsec { scroll-margin-top: 16px; }
+.helpsec h2 { font: 500 22px/1.25 var(--display); margin: 22px 0 6px; }
+.helpbtn { color: var(--muted); }
+.helpbtn:hover { color: var(--fg); border-color: var(--muted); }
+.midinote { position: absolute; z-index: 30; top: calc(100% + 8px); right: max(20px, env(safe-area-inset-right)); max-width: min(340px, calc(100vw - 24px)); padding: 12px 16px;
+  border-radius: 14px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); box-shadow: 0 12px 32px rgba(0,0,0,.18); font-size: 14px; line-height: 1.45; }
+.midinote a { display: inline-block; margin-top: 4px; font-weight: 700; color: var(--accent); }
 @media (max-width: 1000px) { .wiki { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) {
   main.wikimain { padding: 16px 16px 32px; gap: 18px; }
   .wiki { grid-template-columns: 1fr; }
   .wikiart { font-size: 15px; }
   .wikiart .wikilead { font-size: 17px; }
+  .helpcard { padding: 14px 16px; gap: 12px; }
+  .helpsec h2 { font-size: 20px; }
+  .helptoc .chip { max-width: 100%; }
   header.top:has(.brand) > .navtabs a { flex: 1 1 auto; padding: 0 4px; font-size: 14px; }
 }
 
