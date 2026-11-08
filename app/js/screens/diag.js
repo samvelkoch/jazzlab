@@ -5,7 +5,7 @@
 //   Chords  8 chords (major / minor / dominant 7th), answered with buttons    -> chordAcc
 // The result is saved to store 'diag' (newest first) and compared with the previous and the first one.
 // No pass, no review: the item is "done" after the first check-up and comes back to "Today" after `every` days.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, updateEx, markActive, idle } from '../store.js';
@@ -84,6 +84,7 @@ export function renderDiag(root, { track, itemId, item, back }) {
   const footer = h('footer.actions', null, h('span.foothint', null, t('dgHint')), h('div.grow'), replayBtn, primary);
   const screen = h('div.exscreen.drillscreen.diagscreen', { 'data-input': 'none' }, header, h('main.ex', null, panel, kbPanel, padPanel, ansPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   audio.preloadPiano(LO, HI);
   const kb = createKeyboard(kbEl, [LO, HI - 2], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.6, 0.55); input(m); } });
@@ -350,5 +351,5 @@ export function renderDiag(root, { track, itemId, item, back }) {
 
   showIdle();
 
-  return () => { clearTimers(); if (st.phase === 'run' && PARTS[st.part] === 'rhythm') audio.hush(); idle(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { if (footRO) footRO.disconnect(); clearTimers(); if (st.phase === 'run' && PARTS[st.part] === 'rhythm') audio.hush(); idle(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

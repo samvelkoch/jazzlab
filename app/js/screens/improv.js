@@ -1,6 +1,6 @@
 // Improvisation screen (per step, after the book): one rhythm at a time, 3–4 given notes, a 2-bar accompaniment loop.
 // Stages: Rhythm (tap the chosen rhythm, bar on / bar off) → Echo (the piano plays a phrase, you repeat it) → Own (your phrase, then a bar of rest).
-import { h, ICON, themeButton, midiChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, trackFootH } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { toMidi, noteName } from '../music/notes.js';
@@ -74,6 +74,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
   const footer = h('footer.actions', null, h('div.footsegs', null, swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.impscreen', null, header, h('main.ex.imp', null, h('div.improw', null, panel, aside), kbPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   function seg(items, value, cb, label) {
     const w = h('div.seg', { role: 'group', 'aria-label': label ? t(label) : null });
@@ -374,6 +375,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
   updateEx(id, (p) => p);
 
   return () => {
+    if (footRO) footRO.disconnect();
     if (st.playing) stop();
     offNote(); document.removeEventListener('keydown', onKey);
     header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup());

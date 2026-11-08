@@ -1,6 +1,6 @@
 // Ear game "Find the note": a note sounds, the learner finds it on the keys. The range grows over the rounds
 // (a fifth from C4, an octave, two octaves). Rounds are ok (first try), meh (found, few slips or a replay) or miss.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
@@ -45,6 +45,7 @@ export function renderEar(root, { track, itemId, item, back }) {
   const footer = h('footer.actions', null, h('span.foothint', null, midiState().connected ? t('earHintMidi') : t('earHintScreen')), h('div.grow'), replayBtn, primary);
   const screen = h('div.exscreen.drillscreen.earscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   audio.preloadPiano(LO, HI);
   const kb = createKeyboard(kbEl, [LO, HI - 2], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.8, 0.55); input(m); } });
@@ -149,5 +150,5 @@ export function renderEar(root, { track, itemId, item, back }) {
   paintPrimary();
   updateEx(itemId, (p) => p);
 
-  return () => { clearTimers(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { if (footRO) footRO.disconnect(); clearTimers(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

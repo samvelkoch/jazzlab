@@ -4,7 +4,7 @@
 // recorded as { t, d, m, v } (seconds from the first beat of chorus 1). After the run: a summary (notes, choruses,
 // rhythm accuracy against the eighth-note grid), playback over the drums, a MIDI download. No pass, no review:
 // a performance is a result, not an exercise. The last 10 recordings live in store 'recordings'.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
 import { store, updateEx, markActive, idle } from '../store.js';
 import { noteName, midiToName, toMidi } from '../music/notes.js';
@@ -81,6 +81,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   const footer = h('footer.actions', null, form.style === 'bossa' ? null : swingSeg, beatSeg, chorusBox, tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.formscreen.perfscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
+  const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   function seg(items, value, cb, label) {
     const w = h('div.seg', { role: 'group', 'aria-label': label ? t(label) : null });
@@ -300,5 +301,5 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   setBpm(st.bpm); setChoruses(st.choruses); paintPrimary(); paintHint(); paintSummary(); paintList();
   fb(current ? '' : startText());
 
-  return () => { if (st.mode === 'run') finish(false); else if (st.mode) halt(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { if (footRO) footRO.disconnect(); if (st.mode === 'run') finish(false); else if (st.mode) halt(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

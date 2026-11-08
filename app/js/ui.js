@@ -96,6 +96,16 @@ export function navTabs(active) {
   return h('nav.seg.big.navtabs', { 'aria-label': t('sections') }, a('course', '#/', t('navCourse')), a('chords', '#/chords', t('navChords')), a('wiki', '#/wiki', t('wikiTab')));
 }
 
+/** Phone layout: the keyboard panel / tap pad stick right above the footer, so CSS needs the footer height (--foot-h). */
+export function trackFootH(screen, footer) {
+  const set = () => { if (footer.offsetHeight) screen.style.setProperty('--foot-h', footer.offsetHeight + 'px'); };
+  set(); // the screen is already in the DOM: measure now, then follow size changes
+  if (typeof ResizeObserver !== 'function') return null;
+  const ro = new ResizeObserver(set);
+  ro.observe(footer);
+  return ro;
+}
+
 const VIRTUAL = /midiweb|session|сеть|network|iac|virtual/i;
 
 /** MIDI status chip; tapping it connects (and opens MIDIWeb's Bluetooth dialog on iPad). */

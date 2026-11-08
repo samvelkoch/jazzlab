@@ -1,5 +1,5 @@
 // Exercise screen: stages Rhythm (tap the rhythm on one key) → Notes (wait mode) → In tempo → By heart.
-import { h, ICON, themeButton, midiChip, sessionChip } from '../ui.js';
+import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview } from '../store.js';
@@ -87,6 +87,21 @@ export function renderExercise(root, { ex, rerender }) {
     const y = rs.els.panel.getBoundingClientRect().top + window.scrollY - 8;
     window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
   }
+  /** Notes stage on a phone: scroll so the staff panel sits at the top of the screen (the header scrolls away) and the
+   *  whole staff is above the sticky keyboard. On a new bar only if the staff is not fully visible, once per bar. */
+  let staffBar = -1, staffForce = false;
+  function bringStaffUp(force) {
+    if (!scr || !phoneMq.matches || st.stage !== 'notes') return;
+    const sp = staffPanel.getBoundingClientRect(), wb = wrapEl.getBoundingClientRect(), kp = kbPanel.getBoundingClientRect();
+    if (!force && staffPanel.firstElementChild.getBoundingClientRect().top >= 0 && wb.bottom <= kp.top) return;
+    let d = sp.top - 8; // panel top 8px from the screen top...
+    // ...or a bit more if the staff still reaches under the keyboard (only the panel's own top padding may go off screen)
+    const head = staffPanel.firstElementChild.getBoundingClientRect().top - d;
+    d += Math.max(0, Math.min(wb.bottom - d - kp.top + 2, head));
+    const y = window.scrollY + d;
+    if (Math.abs(d) < 2) return;
+    window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
   const applyPadBig = () => { if (scr) scr.dataset.padbig = rs.padBig() ? '1' : '0'; rs.paintPad(); };
   const rs = createRhythmStage(ex, {
     play1: (m, time, dur, v) => play1(m, time, dur, v),
@@ -118,8 +133,7 @@ export function renderExercise(root, { ex, rerender }) {
   root.replaceChildren(screen);
   scr = screen; screen.dataset.rmode = rs.mode(); applyPadBig();
   // the sticky tap pad sits right above the footer: tell CSS how tall the footer is
-  const footRO = typeof ResizeObserver === 'function' ? new ResizeObserver(() => screen.style.setProperty('--foot-h', footer.offsetHeight + 'px')) : null;
-  if (footRO) footRO.observe(footer);
+  const footRO = trackFootH(screen, footer);
   phoneMq.addEventListener('change', applyPadBig);
 
   // ---------- engines ----------
@@ -150,6 +164,7 @@ export function renderExercise(root, { ex, rerender }) {
     kb.show({ rh: s.rh, lh: s.lh }, { rh: nextOnset(i, 'rh'), lh: nextOnset(i, 'lh') }, st.hands);
     staff.setCursor(i);
     followCursor();
+    if (staffForce || s.bar !== staffBar) { bringStaffUp(staffForce); staffBar = s.bar; staffForce = false; }
   }
   /** On a narrow screen the staff scrolls sideways: keep the cursor band in view (~35% from the left edge).
    *  Playing = instant (smooth scrolling lags behind the beat), stepping / tapping a note = smooth. */
@@ -194,7 +209,7 @@ export function renderExercise(root, { ex, rerender }) {
     if (id === 'rhythm') { rs.refresh(); return; }
     const tip = id !== 'rhythm' && !prog.stages.rhythm && !ex.doneId && !ex.byEar ? `<b>${t('rhythmFirst')}</b> · ` : '';
     fb(tip + (id === 'rhythm' ? t('tapStart') : id === 'notes' ? (midiOn() ? t('waitHint') : t('noMidiHint')) : t('tempoHint')));
-    if (id === 'notes') toPlayable();
+    if (id === 'notes') { toPlayable(); staffForce = true; }
     render(st.step);
   }
   function paintPrimary() {
