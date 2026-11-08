@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-solo",
+  "title": { "ru": "Соло на три круга", "en": "A three-chorus solo" },
+  "about": { "ru": "Три круга подряд, без остановки. Начни просто, к третьему кругу добавь. Фразы, паузы и целевые ноты на смене аккорда: всё, чему научился, сразу.", "en": "Three choruses in a row, no stopping. Start simple, build up by the third. Phrases, rests and target notes on the changes: everything you have learned, at once." },
+  "form": "blues-c", "pattern": "p2",
+  "palette": { "mode": "chordscale" },
+  "hand": { "lo": 60, "hi": 72 },
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 3,
+  "pass": { "inside": 0.85, "grid": 0.7, "targets": 0.5, "phrases": 3, "pitches": 3 }
+}

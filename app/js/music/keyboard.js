@@ -136,8 +136,9 @@ export function createKeyboard(el, range, opts = {}) {
       clearTimeout(k._ft); k._ft = setTimeout(() => k.classList.remove(cls), cls === 'bad' ? 450 : 300);
     },
     down(m, isDown) { const k = keys[m]; if (k) k.classList.toggle('down', isDown); },
-    /** Chord mode: colour keys. map: { midi: { cls: 'base'|'third'|'seventh'|'tension'|'bass'|'hit'|'wrong'|'miss', label } } */
-    mark(map) {
+    /** Chord mode: colour keys. map: { midi: { cls: 'base'|'third'|'seventh'|'tension'|'bass'|'hit'|'wrong'|'miss', label } }
+     *  opts.reveal === false: do not scroll to the marked keys (the solo palette marks every octave). */
+    mark(map, opts = {}) {
       for (const m in keys) {
         const k = keys[m];
         k.className = k.className.replace(/\smk-[a-z]+\b/g, '');
@@ -146,7 +147,7 @@ export function createKeyboard(el, range, opts = {}) {
         if (v) { k.classList.add('mk-' + v.cls); k.querySelector('.badge').textContent = v.label || ''; }
       }
       const ms = Object.keys(map).filter((m) => map[m]).map(Number);
-      if (ms.length) reveal(ms);
+      if (ms.length && opts.reveal !== false) reveal(ms);
     },
     reveal,
     has: (m) => !!keys[m]

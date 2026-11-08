@@ -321,3 +321,55 @@ G3–G5), chord quality (8: major / minor / dominant 7th). No pass and no review
 «Сегодня» offers it again after `every` days (`diagDue()` in `track.js`). Store `diag` = newest first, `{ date, rhythmMs,
 rhythmBias (< 0 = early), nameMs, nameAcc, earAcc, chordAcc }` (`rhythmMs`/`rhythmBias` are `null` with fewer than 4 matched
 taps). The home «Навыки» card shows the newest entry next to lick vocabulary, clean choruses, recordings and long-term items.
+
+# Solos (`jazzlab-solo/1`)
+
+Improvisation: `content/solos/<id>.json`, opened by a track item `"imp-b1": { "kind": "solo", "solo": "blues-scale", "title"?, "about"? }`
+(title and about default to the solo's) on `app/js/screens/solo.js`. Design: `docs/specs/2026-11-08-improvisation-design.md`.
+The band plays the whole form (`pattern` = its left hand, drums or a click); you play your own right hand. Nothing is compared
+with a reference; each chorus is scored by `scoreChorus()` in `app/js/music/solo.js` from the notes recorded in it.
+
+```jsonc
+{
+  "$format": "jazzlab-solo/1", "id": "blues-scale", "title": {…}, "about": {…},
+  "form": "blues-c", "pattern": "p2",
+  "palette": { "mode": "scale", "scale": "blues", "root": "C" },
+  //  or { "mode": "scales", "parts": [{ "bars": [0, 15], "scale": "major", "root": "F" }, …] }  (bars inclusive, 0-based)
+  //  or { "mode": "chordscale" }  m7 dorian, 7 / 9 mixolydian, maj7 / 6 / triad major, m7b5 locrian, dim7 dim, m aeolian
+  "hand": { "lo": 60, "hi": 72 },          // the hand position: keyboard [lo-5, hi+7], palette brighter inside
+  "phrasing": { "play": 2, "rest": 2 },    // bars, repeated over the form; null = free (no rest bars)
+  "call": false,                           // true: the band plays the `play` bars of each cell, you answer in the `rest` bars
+  "targets": false,                        // true: score target notes on chord changes
+  "choruses": 1,                           // choruses in one run; the run passes as a whole
+  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "targets": 0.6, "pitches": 3 }
+}
+```
+
+Scales (`app/js/music/scales.js`): `blues` 0 3 5 6 7 10, `minor-pent`, `major-pent`, `major`, `dorian`, `mixolydian`,
+`aeolian`, `locrian`, `dim` (0 2 3 5 6 8 9 11). The palette of a bar / slot (`paletteAt`) is the scale plus the tones of the
+chord at that slot (`chordAt`: a second chord from slot 4). Bar roles (`roleOf`): `you`, `rest`, `band` (with `call`).
+
+Scoring (one chorus; notes `{ t, m }`, `t` in seconds from the chorus start; a note belongs to the bar of its nearest eighth,
+so a slightly early downbeat counts for the new bar):
+- **inside**: share of your notes (`you` bars) in the palette; a note outside followed within 1.25 eighths by a note a
+  semitone away that is in the palette is an approach and counts.
+- **grid**: share of your notes within 1.5 × the form screen's «ровно» window of the swing-aware eighth grid
+  (`1.5 × tols(bpm).tight` from `recording.js`: ±0.11 s at 66 bpm; `gridTol()` in `solo.js`).
+- **phrases**: runs of 3+ of your notes, a gap of more than a beat (+ the form's acceptance window `tols().win`) between onsets splits.
+- **rests**: `rest` and `band` bars that are empty (one note on their first eighth is allowed: a phrase's tail), of all
+  such bars. Notes there count for nothing else.
+- **targets**: on each chord change (bar 0 is compared with the last bar: the form loops; a second chord on slot 4 is a
+  change at slot 4), in a `you` bar, the first note on the first beat of the new chord must be a chord tone. A change with no
+  note on that beat is not counted.
+- **pitches**: distinct MIDI notes played in your bars.
+A run of several choruses: mean inside / grid / phrases, summed rests / targets, the fewest pitches of any chorus. `passed()`
+checks only the thresholds present; a ratio with no data passes. The cells get ✓ (clean bar), − (rest broken), ◇ / ◆ (target
+hit / missed) after each bar; a board after each chorus and after the run. Passing sets `stages.done` and schedules a review;
+a failed run of a due item sends it back to day 1. Progress keeps `runs` and `best: { inside, grid, phrases, pitches, rests, targets }`.
+
+Every run is recorded like a performance: store `recordings`, `kind: "solo"`, plus `band` (the band's call notes, for the
+playback) and `score`; the last 10 solo recordings are kept apart from the last 10 performances. The day queue takes at most
+one `solo` item a day (`freshItems()`). Check: `node tests/solo.test.mjs`.
+
+The blues track's `imp` section («Импровизация», after `rh`): `imp-b1` `blues-scale` (blues scale C, 2 on / 2 off),
+`imp-b2` `blues-call` (call and response), `imp-b3` `blues-chords` (chordscale, targets), `imp-b4` `blues-solo` (3 choruses).

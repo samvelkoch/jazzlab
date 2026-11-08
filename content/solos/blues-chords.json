@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-chords",
+  "title": { "ru": "Ноты аккорда на смене", "en": "Chord tones on the change" },
+  "about": { "ru": "Теперь палитра меняется с аккордом. Главное место: первая доля такта, где аккорд сменился. Попади туда в ноту нового аккорда, это целевая нота, и соло зазвучит по гармонии.", "en": "Now the palette changes with the chord. The key spot: beat one of a bar where the chord changes. Land there on a note of the new chord, a target note, and the solo follows the harmony." },
+  "form": "blues-c", "pattern": "p2",
+  "palette": { "mode": "chordscale" },
+  "hand": { "lo": 60, "hi": 72 },
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 1,
+  "pass": { "inside": 0.85, "grid": 0.7, "targets": 0.6, "phrases": 4, "pitches": 3 }
+}

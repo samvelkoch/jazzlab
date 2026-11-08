@@ -855,6 +855,42 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   .perfacts .btn span { display: inline; }
 }
 
+/* ---------- solo (improvisation) ---------- */
+.solopanel { overflow: auto; }
+.soloscreen .fgrid { flex: none; grid-auto-rows: 64px; }
+.soloscreen .fgrid.long { grid-auto-rows: 48px; max-height: 40dvh; }
+.soloscreen .kb { height: clamp(100px, 18dvh, 170px); }
+.frole { font-size: 11px; font-weight: 700; text-align: center; color: var(--muted); text-transform: lowercase; }
+.fcell[data-role="you"] .frole { color: var(--rh); }
+.fcell[data-role="band"] .frole { color: var(--lh); }
+.fcell[data-role="rest"], .fcell[data-role="band"] { border-style: dashed; }
+.fmark { position: absolute; top: 4px; right: 8px; font-size: 13px; font-weight: 800; color: var(--muted); }
+.fmark.ok { color: var(--ok); } .fmark.meh { color: var(--meh); } .fmark.bad { color: var(--bad); }
+.solopal { font-size: 15px; color: var(--muted); line-height: 1.5; }
+.solopal b { color: var(--fg); margin-right: 4px; }
+.solopal .ct { color: var(--accent); font-weight: 800; }
+.solopal .solochord { margin-left: 4px; }
+.soloboard { display: flex; flex-direction: column; gap: 10px; }
+.soloboard:empty { display: none; }
+.soloround { display: flex; flex-direction: column; gap: 6px; }
+.solohead { font-size: 14px; }
+.solohead .ok { color: var(--ok); } .solohead .muted { font-weight: 400; }
+.solostats { flex-wrap: wrap; }
+.solostats .dstat { min-width: 96px; text-align: center; }
+/* the palette's scale notes (not chord tones): a soft tint of --ext, dark labels; the chord tones keep their colours */
+.key.white.mk-pal { background: color-mix(in srgb, var(--ext) 28%, var(--ivory)); }
+.key.black.mk-pal { background: linear-gradient(color-mix(in srgb, var(--ext) 55%, var(--ebony-top)), color-mix(in srgb, var(--ext) 38%, var(--ebony)) 18%); }
+:root[data-theme="dark"] .key.white.mk-pal { background: color-mix(in srgb, var(--ext) 36%, var(--ivory)); }
+.key.white.mk-pal .lbl { color: color-mix(in srgb, var(--lbl) 62%, #000); } /* AA on the tint in every scheme */
+.soloscreen .key.far[class*=" mk-"] { opacity: .55; }
+@media (max-width: 640px) {
+  .solopanel { overflow: visible; }
+  .soloscreen .fgrid, .soloscreen .fgrid.long { grid-auto-rows: minmax(58px, auto); max-height: none; }
+  .soloscreen .fchord { font-size: 16px; }
+  .fmark { top: 2px; right: 5px; font-size: 11px; }
+  .solostats .dstat { min-width: 0; flex: 1 1 40%; }
+}
+
 /* ---------- check-up (diag) and the Skills card ---------- */
 .diagscreen .kbpanel, .diagscreen .padpanel, .diagscreen .anspanel { display: none; }
 .diagscreen[data-input="keys"] .kbpanel { display: block; }
