@@ -5,8 +5,8 @@
     "en": "How to use Jazzlab"
   },
   "intro": {
-    "ru": "Jazzlab — курс джазового, блюзового и босса-нова фортепиано в браузере. Принципы: слух раньше нот, музыка учится кусками, темп не главное. Цель курса — сыграть целиком три пьесы в трёх стилях, обеими руками, с импровизацией, без нот перед глазами.",
-    "en": "Jazzlab is a browser course in jazz, blues and bossa nova piano. Principles: ear before notation, music learned in chunks, tempo is not the point. The goal is to play three complete tunes in three styles, both hands, with improvisation, without sheet music."
+    "ru": "Jazzlab — курс джазового фортепиано и импровизации в браузере. Он ведёт от названий нот до собственного соло над формой: слух, аккорды как формы ладони, грув левой руки, словарь фраз, целые пьесы, импровизация с разбором, выступление с записью. Три стиля — блюз, босса-нова, стандарты — дают три разных языка, а репертуар внутри каждого растёт. Принципы: слух раньше нот, музыка учится кусками, зачёт за чистоту, а не за темп, выученное возвращается на повтор.",
+    "en": "Jazzlab is a browser course in jazz piano and improvisation. It leads from note names to your own solo over a form: ear, chords as hand shapes, left-hand groove, a vocabulary of phrases, whole tunes, improvisation with feedback, recorded performances. Three styles, blues, bossa nova and standards, are three different languages, and the repertoire inside each keeps growing. Principles: ear before notation, music learned in chunks, passing by cleanliness rather than tempo, and everything learned comes back for review."
   },
   "sections": [
     {
@@ -38,8 +38,8 @@
       },
       "body": [
         {
-          "ru": "Каждая дорожка ведёт к одной пьесе и разбита на разделы. «Клавиатура»: названия нот и аккорды как формы ладони. «Левая рука»: паттерн, который держит грув. «Форма»: вся пьеса по кругу под барабаны, сначала одна левая. «Правая рука»: лики, короткие фразы словаря, по два такта. «Слух»: найти услышанную ноту на клавишах. «Пьеса»: мелодия настоящей вещи по две фразы. «Импровизация»: своё над формой. «Выступление»: три круга целиком с записью. «Замер»: раз в месяц, точка отсчёта.",
-          "en": "Every track leads to one tune and is split into sections. Keyboard: note names and chords as hand shapes. Left hand: the pattern that keeps the groove. Form: the whole tune on a loop with drums, left hand alone first. Right hand: licks, two-bar phrases of the vocabulary. Ear: find a heard note on the keys. Tune: the melody of a real piece, two bars at a time. Improvisation: your own lines over the form. Performance: three full choruses, recorded. Check-up: once a month, a baseline."
+          "ru": "Каждая дорожка — один стиль, разбитый на разделы; пьесы в ней накапливаются. «Клавиатура»: названия нот и аккорды как формы ладони. «Левая рука»: паттерн, который держит грув. «Форма»: вся пьеса по кругу под барабаны, сначала одна левая. «Правая рука»: лики, короткие фразы словаря, по два такта. «Слух»: найти услышанную ноту на клавишах. «Пьеса»: мелодия настоящей вещи по две фразы. «Импровизация»: своё над формой. «Выступление»: три круга целиком с записью. «Замер»: раз в месяц, точка отсчёта.",
+          "en": "Each track is one style, split into sections; tunes accumulate inside it. Keyboard: note names and chords as hand shapes. Left hand: the pattern that keeps the groove. Form: the whole tune on a loop with drums, left hand alone first. Right hand: licks, two-bar phrases of the vocabulary. Ear: find a heard note on the keys. Tune: the melody of a real piece, two bars at a time. Improvisation: your own lines over the form. Performance: three full choruses, recorded. Check-up: once a month, a baseline."
         },
         {
           "ru": "Названия разделов и шагов профессиональные нарочно, но каждый термин подчёркнут: нажми на слово, появится объяснение, а у многих ссылка «Подробнее в справочнике».",
