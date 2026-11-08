@@ -425,7 +425,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     if (e.type === 'on') { kb.down(e.note, true); input(e.note, audio.toAudioTime(e.ts), (e.vel || 80) / 127); }
     else { kb.down(e.note, false); release(e.note, audio.toAudioTime(e.ts)); }
   });
-  const onKey = (e) => { if (e.code === 'Space' && !e.target.closest('input,select,textarea,summary')) { e.preventDefault(); toggle(); } };
+  const onKey = (e) => { if (e.code === 'Space' && !(e.target.closest && e.target.closest('input,select,textarea,summary'))) { e.preventDefault(); toggle(); } };
   document.addEventListener('keydown', onKey);
 
   setBpm(st.bpm); paintPrimary(); paintHint(); paintChorus(0); paintPalette(0, 0); paintSummary(); paintList();
