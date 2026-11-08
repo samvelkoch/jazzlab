@@ -62,5 +62,20 @@ for (const [mel, id] of Object.entries(index.tunes || {})) {
   assert.ok(arts[id] && arts[id].kind === 'tune', `tunes: ${mel} -> tune article ${id}`);
 }
 
+// help (content/help.json): shape, both languages, unique ids
+const help = read(join(root, 'content/help.json'));
+assert.equal(help.$format, 'jazzlab-help/1', 'help: $format');
+both(help.title, 'help.title'); both(help.intro, 'help.intro');
+assert.ok(Array.isArray(help.sections) && help.sections.length, 'help: sections');
+const helpIds = new Set();
+help.sections.forEach((s, i) => {
+  const w = `help.sections[${i}]`;
+  assert.ok(typeof s.id === 'string' && /^[a-z0-9-]+$/.test(s.id), `${w}.id`);
+  assert.ok(!helpIds.has(s.id), `${w}: duplicate id ${s.id}`); helpIds.add(s.id);
+  both(s.title, `${w}.title`);
+  assert.ok(Array.isArray(s.body) && s.body.length, `${w}.body non-empty`);
+  s.body.forEach((p, k) => both(p, `${w}.body[${k}]`));
+});
+
 const imgs = Object.values(arts).filter((a) => a.image).length;
-console.log(`wiki: ok ${files.length} articles (${imgs} with images), ${Object.keys(index.tunes || {}).length} tunes mapped`);
+console.log(`wiki: ok ${help.sections.length} help sections, ${files.length} articles (${imgs} with images), ${Object.keys(index.tunes || {}).length} tunes mapped`);

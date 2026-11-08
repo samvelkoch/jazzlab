@@ -4,6 +4,7 @@
 // Content: content/wiki/index.json (groups, tunes map) + content/wiki/<id>.json, loaded on demand and cached.
 import { h, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { helpData, firstSentence } from './help.js';
 
 const base = new URL('../../../content/wiki/', import.meta.url);
 let indexCache = null;
@@ -60,9 +61,14 @@ export async function renderWikiIndex(root, { rerender }) {
   const card = (a) => h('a.wikicard', { href: `#/wiki/${a.id}` },
     a.image ? figure(a.image, 'wikithumb') : null,
     h('span.wikicardtext', null, h('b', null, L(a.title)), h('span', null, L(a.lead))));
+  const help = await helpData().catch(() => null); // the card is optional: no help.json, no card
+  const helpCard = help ? h('a.helpcard', { href: '#/help' },
+    h('span.helpq', { 'aria-hidden': 'true' }, '?'),
+    h('span.wikicardtext', null, h('b', null, t('helpTitle')), h('span', null, firstSentence(L(help.intro))))) : null;
   root.replaceChildren(header(rerender),
     h('main.wikimain', null,
       h('div.wikihead', null, h('span.kicker', null, t('wikiUpper')), h('h1', null, t('wikiTab')), h('p.muted', null, t('wikiIntro'))),
+      helpCard,
       ...index.groups.map((g) => h('section.wikigroup', null,
         h('h2', null, L(g.title)),
         h('div.wiki', null, ...g.ids.filter((id) => byId[id]).map((id) => card(byId[id])))))));
