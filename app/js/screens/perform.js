@@ -241,7 +241,9 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
     if (!notes.length) { fb(t('perfEmpty')); return; }
     const acc = rhythmAccuracy(notes, r);
     const rec = { id: Date.now().toString(36), itemId, date: new Date().toISOString(), bpm: r.bpm, swing: r.swing, choruses: done, ending: natural ? r.endBars : 0, notes, acc };
-    store.set('recordings', [rec, ...store.get('recordings', [])].slice(0, MAX_RECS));
+    // the last 10 performances; solo recordings (kind 'solo', screens/solo.js) are kept apart and never pushed out
+    const all = store.get('recordings', []);
+    store.set('recordings', [rec, ...all.filter((r) => r.kind !== 'solo')].slice(0, MAX_RECS).concat(all.filter((r) => r.kind === 'solo')));
     updateEx(itemId, (p) => ({ ...p, runs: (p.runs || 0) + 1, bestPct: Math.max(p.bestPct || 0, acc.pct) }));
     current = rec; paintSummary(); paintList(); fb(t('perfSaved'));
   }

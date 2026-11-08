@@ -82,9 +82,10 @@ export function scoreChorus(notes, { solo, bars, bpm, swing }) {
   });
   const you = ns.filter((n) => n.role === 'you');
   const share = (f) => (you.length ? you.filter(f).length / you.length : 0);
-  // phrases: a gap of a beat or more between onsets splits; a phrase has 3+ notes
+  // phrases: a phrase has 3+ notes; a gap of more than a beat between onsets splits. Onsets a quarter apart (a line of
+  // quarter notes) stay together: the beat gets the grid tolerance, so timing slack does not cut a line in two.
   let phrases = 0, run = 0;
-  you.forEach((n, i) => { run = i && n.t - you[i - 1].t < beat - 1e-9 ? run + 1 : 1; if (run === 3) phrases++; });
+  you.forEach((n, i) => { run = i && n.t - you[i - 1].t <= beat + tol ? run + 1 : 1; if (run === 3) phrases++; });
   const byBar = bars.map((_, k) => ns.filter((n) => n.bar === k));
   const perBar = bars.map((_, k) => {
     const role = roleOf(solo, k), bn = byBar[k];

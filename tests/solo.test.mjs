@@ -81,6 +81,10 @@ assert.ok(passed(s, sScale.pass), 'the clean chorus passes blues-scale');
 // a phrase split by a gap of a beat: 2 + 2 notes = no phrase
 s = scoreChorus([{ t: at(0, 0), m: 60 }, { t: at(0, 1), m: 63 }, { t: at(0, 4), m: 65 }, { t: at(0, 5), m: 67 }], ctx(sScale));
 assert.equal(s.phrases, 0, 'two 2-note groups');
+s = scoreChorus([0, 2, 4, 6].map((sl, i) => ({ t: at(0, sl, i % 2 ? 0.08 : -0.08), m: 60 + 3 * (i % 2) })), ctx(sScale));
+assert.equal(s.phrases, 1, 'a line of quarter notes (a little uneven) is one phrase');
+s = scoreChorus([{ t: at(0, 0), m: 60 }, { t: at(0, 1), m: 63 }, { t: at(0, 4), m: 65 }, { t: at(0, 5), m: 67 }, { t: at(1, 0), m: 63 }, { t: at(1, 1), m: 60 }], ctx(sScale));
+assert.equal(s.phrases, 0, 'a quarter rest after an eighth splits (onsets 1.5 beats apart)');
 // a note on the first eighth of a rest bar is a tail; a second note breaks the rest
 s = scoreChorus([...phrase(0), { t: at(1, 7), m: 60 }, { t: at(2, 0), m: 60 }], ctx(sScale));
 assert.equal(s.perBar[2].restOk, true, 'one note on slot 0 of a rest bar is a tail');
