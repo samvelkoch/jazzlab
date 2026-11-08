@@ -182,6 +182,15 @@ export function renderChordsHub(root, { data, rerender }) {
 // =====================================================================
 // Decoder: what does a symbol mean
 // =====================================================================
+const phoneMq = typeof matchMedia === 'function' ? matchMedia('(max-width: 640px)') : null;
+/** Phone: after a key press, keep the feedback box clear of the sticky keyboard (only when its text changed). */
+function keepInView(el, before) {
+  if (!phoneMq || !phoneMq.matches || !el.isConnected || el.textContent === before) return;
+  const p = el.closest('main') && el.closest('main').querySelector('.kbpanel');
+  el.style.scrollMarginBottom = ((p && !p.hidden ? p.offsetHeight : 0) + 12) + 'px';
+  el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
 export function renderDecoder(root, { sym, data }) {
   const inp = h('input.symin', { type: 'text', value: sym, autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': tr('symLabel'), enterkeyhint: 'go' });
   const form = h('form.symform.small', { onsubmit: (e) => { e.preventDefault(); show(inp.value); inp.blur(); } }, inp, h('button.btn.accent', { type: 'submit' }, tr('decode')));
@@ -250,7 +259,8 @@ export function renderDecoder(root, { sym, data }) {
   const off = onNote((e) => {
     if (e.type === 'on') held.add(e.note); else held.delete(e.note);
     if (kb) kb.down(e.note, e.type === 'on');
-    markActive(); paintStatus();
+    const was = status.textContent;
+    markActive(); paintStatus(); keepInView(status, was);
   });
   show(sym);
   return () => { clearTimeout(timer); off(); hushAll(); cleanupChips(screen); };
@@ -300,6 +310,11 @@ export function renderKeys(root) {
     setFb('', tr('waitKey'), tr('waitKeyText'));
   }
   function press(m) {
+    const was = fb.textContent;
+    pressFb(m);
+    keepInView(fb, was);
+  }
+  function pressFb(m) {
     playNotes([m], { dur: 0.7 });
     const pc = m % 12;
     if (pc === st.target[0]) {
@@ -467,6 +482,11 @@ export function renderPractice(root, { setId, data }) {
     kb.mark({});
   }
   function evaluate() {
+    const was = fb.textContent;
+    evaluateNow();
+    keepInView(fb, was);
+  }
+  function evaluateNow() {
     if (!ch || st.won) { paintKb(); return; }
     const r = checkChord(ch, notes());
     if (r.ok) {
