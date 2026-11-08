@@ -882,6 +882,7 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   .solopanel { overflow: visible; }
   .soloscreen .fgrid, .soloscreen .fgrid.long { grid-auto-rows: minmax(58px, auto); max-height: none; }
   .soloscreen .fchord { font-size: 16px; }
+  .fmark { top: 2px; right: 5px; font-size: 11px; }
   .solostats .dstat { min-width: 0; flex: 1 1 40%; }
 }
 

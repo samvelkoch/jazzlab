@@ -131,7 +131,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   function paintPrimary() { primary.innerHTML = run ? ICON.stop + `<span>${t('stop')}</span>` : ICON.play + `<span>${t('play')}</span>`; }
   function paintHint() { footHint.textContent = st.mode === 'listen' ? t('soListenHint') : midiOn() ? t('soPlayHint') : t('soPlayHintScreen'); }
   function paintChorus(k) { chorusEl.textContent = `${t('chorusW')} ${k + 1}${CH > 1 ? ` / ${CH}` : ''}`; }
-  const startText = () => (CH > 1 ? t('soStartN').replace('{n}', CH) : solo.call ? t('soStartCall') : t('soStart'));
+  const startText = () => (CH > 1 ? t('soStartN').replace('{n}', CH) : solo.call ? t('soStartCall') : !solo.phrasing ? t('soStartFree') : t('soStart'));
 
   // ---------- transport: a run (play / listen) or the playback of a recording ----------
   let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, lastOut = null;
