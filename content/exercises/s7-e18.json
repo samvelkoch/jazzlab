@@ -1,0 +1,250 @@
+{
+  "$format": "jazzlab-exercise/1",
+  "id": "s7-e18",
+  "course": "jazz-rhythms",
+  "step": 7,
+  "number": 18,
+  "title": {
+    "ru": "II–V–I: чарльстон",
+    "en": "II–V–I: the Charleston"
+  },
+  "about": {
+    "ru": "Главный оборот джаза в C: Dm7, G7, Cmaj7. Левая играет корень, правая две ноты: терцию и септиму. Ритм чарльстона: долгий удар на «раз», короткий на «и» после двух.",
+    "en": "Jazz’s main progression in C: Dm7, G7, Cmaj7. The left plays the root, the right two notes: the third and the seventh. The Charleston rhythm: a long hit on “one”, a short one on the “and” of two."
+  },
+  "time": [
+    4,
+    4
+  ],
+  "tempo": {
+    "start": 60,
+    "target": 100
+  },
+  "swing": true,
+  "rhythm": "4. 8 r2",
+  "dyn": [
+    {
+      "bar": 0,
+      "mark": "mf",
+      "level": 0.7
+    }
+  ],
+  "bars": [
+    {
+      "rh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "F4",
+            "C5"
+          ],
+          "f": [
+            1,
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "F4",
+            "C5"
+          ],
+          "f": [
+            1,
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "D3"
+          ],
+          "f": [
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "D3"
+          ],
+          "f": [
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ]
+    },
+    {
+      "rh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "F4",
+            "B4"
+          ],
+          "f": [
+            1,
+            4
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "F4",
+            "B4"
+          ],
+          "f": [
+            1,
+            4
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "G2"
+          ],
+          "f": [
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "G2"
+          ],
+          "f": [
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ]
+    },
+    {
+      "rh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "E4",
+            "B4"
+          ],
+          "f": [
+            1,
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "E4",
+            "B4"
+          ],
+          "f": [
+            1,
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "C3"
+          ],
+          "f": [
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "C3"
+          ],
+          "f": [
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ]
+    },
+    {
+      "rh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "E4",
+            "B4"
+          ],
+          "f": [
+            1,
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "E4",
+            "B4"
+          ],
+          "f": [
+            1,
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 0,
+          "d": 3,
+          "n": [
+            "C3"
+          ],
+          "f": [
+            5
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "C3"
+          ],
+          "f": [
+            5
+          ],
+          "stac": true,
+          "sug": true
+        }
+      ]
+    }
+  ]
+}

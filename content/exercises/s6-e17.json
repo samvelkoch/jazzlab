@@ -1,0 +1,279 @@
+{
+  "$format": "jazzlab-exercise/1",
+  "id": "s6-e17",
+  "course": "jazz-rhythms",
+  "step": 6,
+  "number": 17,
+  "title": {
+    "ru": "Блюзовый рифф и синяя нота",
+    "en": "Blues riff and the blue note"
+  },
+  "about": {
+    "ru": "Рифф из блюзовой гаммы три раза, левая коротко отвечает на «и» после четвёртой доли. В конце синяя нота: форшлаг Eb в E.",
+    "en": "A blues-scale riff three times; the left answers short on the “and” of four. At the end, the blue note: an Eb grace into E."
+  },
+  "time": [
+    4,
+    4
+  ],
+  "tempo": {
+    "start": 60,
+    "target": 100
+  },
+  "swing": true,
+  "rhythm": "r8 8 8 8 4 r8 8",
+  "dyn": [
+    {
+      "bar": 0,
+      "mark": "mp",
+      "level": 0.55
+    }
+  ],
+  "bars": [
+    {
+      "rh": [
+        {
+          "t": 1,
+          "n": [
+            "G4"
+          ],
+          "f": [
+            1
+          ],
+          "sug": true
+        },
+        {
+          "t": 2,
+          "n": [
+            "Bb4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "C5"
+          ],
+          "f": [
+            3
+          ],
+          "sug": true
+        },
+        {
+          "t": 4,
+          "d": 2,
+          "n": [
+            "Bb4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 7,
+          "n": [
+            "C3",
+            "Bb3"
+          ],
+          "f": [
+            5,
+            1
+          ],
+          "acc": true,
+          "stac": true,
+          "sug": true
+        }
+      ]
+    },
+    {
+      "rh": [
+        {
+          "t": 1,
+          "n": [
+            "G4"
+          ],
+          "f": [
+            1
+          ],
+          "sug": true
+        },
+        {
+          "t": 2,
+          "n": [
+            "Bb4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "C5"
+          ],
+          "f": [
+            3
+          ],
+          "sug": true
+        },
+        {
+          "t": 4,
+          "d": 2,
+          "n": [
+            "Bb4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 7,
+          "n": [
+            "C3",
+            "Bb3"
+          ],
+          "f": [
+            5,
+            1
+          ],
+          "acc": true,
+          "stac": true,
+          "sug": true
+        }
+      ]
+    },
+    {
+      "rh": [
+        {
+          "t": 1,
+          "n": [
+            "G4"
+          ],
+          "f": [
+            1
+          ],
+          "sug": true
+        },
+        {
+          "t": 2,
+          "n": [
+            "Bb4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "C5"
+          ],
+          "f": [
+            3
+          ],
+          "sug": true
+        },
+        {
+          "t": 4,
+          "d": 2,
+          "n": [
+            "Bb4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 7,
+          "n": [
+            "F2",
+            "Eb3"
+          ],
+          "f": [
+            5,
+            1
+          ],
+          "acc": true,
+          "stac": true,
+          "sug": true
+        }
+      ]
+    },
+    {
+      "rh": [
+        {
+          "t": 1,
+          "n": [
+            "G4"
+          ],
+          "f": [
+            4
+          ],
+          "sug": true
+        },
+        {
+          "t": 2,
+          "n": [
+            "F#4"
+          ],
+          "f": [
+            3
+          ],
+          "sug": true
+        },
+        {
+          "t": 3,
+          "n": [
+            "F4"
+          ],
+          "f": [
+            2
+          ],
+          "sug": true
+        },
+        {
+          "t": 4,
+          "d": 2,
+          "n": [
+            "E4"
+          ],
+          "f": [
+            1
+          ],
+          "grace": "Eb4",
+          "sug": true
+        }
+      ],
+      "lh": [
+        {
+          "t": 7,
+          "n": [
+            "C3",
+            "Bb3"
+          ],
+          "f": [
+            5,
+            1
+          ],
+          "acc": true,
+          "stac": true,
+          "sug": true
+        }
+      ]
+    }
+  ]
+}
