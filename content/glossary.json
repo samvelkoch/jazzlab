@@ -311,7 +311,8 @@
       "short": {
         "ru": "Нота-подъезд на полтона снизу или сверху к главной: G# → A. Мимоходом коснулся соседней клавиши и пришёл куда надо.",
         "en": "A lead-in note one half-step below or above the target: G# → A. You touch the neighbouring key in passing and arrive where you meant to."
-      }
+      },
+      "wiki": "improvisation"
     },
     {
       "id": "blues-scale",
@@ -769,6 +770,61 @@
         "ru": "Тоника это «дом» мелодии, нота, где она хочет остановиться. Тональность называют по ней: в C все дороги ведут к C.",
         "en": "The tonic is the “home” of a tune, the note where it wants to rest. The key is named after it: in C, all roads lead to C."
       }
+    },
+    {
+      "id": "improvisation",
+      "match": [
+        "импровиз",
+        "improvisation",
+        "improvise",
+        "improvising",
+        "improvised"
+      ],
+      "title": {
+        "ru": "Импровизация",
+        "en": "Improvisation"
+      },
+      "short": {
+        "ru": "Музыка, которую сочиняешь прямо во время игры. В джазе солист играет свои фразы поверх формы, которую по кругу ведёт бэнд.",
+        "en": "Music you make up while you play. In jazz the soloist plays their own phrases over the form that the band keeps going round."
+      },
+      "wiki": "improvisation"
+    },
+    {
+      "id": "palette",
+      "match": [
+        "палитр",
+        "palette"
+      ],
+      "title": {
+        "ru": "Палитра",
+        "en": "Palette"
+      },
+      "short": {
+        "ru": "Наше слово в приложении: ноты, которые подходят текущему такту. Это гамма плюс ноты аккорда; ноты аккорда на клавиатуре подсвечены ярче.",
+        "en": "Our word in the app: the notes that fit the current bar. It is a scale plus the chord tones; the chord tones are lit brighter on the keyboard."
+      },
+      "wiki": "improvisation"
+    },
+    {
+      "id": "target-note",
+      "match": [
+        "целевая нот",
+        "целевую нот",
+        "целевые нот",
+        "целевой нот",
+        "целевых нот",
+        "target note"
+      ],
+      "title": {
+        "ru": "Целевая нота",
+        "en": "Target note"
+      },
+      "short": {
+        "ru": "Нота аккорда на первой доле такта, где аккорд сменился. Попал в неё, и слышно, что соло идёт за гармонией.",
+        "en": "A chord tone on beat one of a bar where the chord changes. Land on it and you can hear the solo follow the harmony."
+      },
+      "wiki": "improvisation"
     }
   ]
 }

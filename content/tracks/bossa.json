@@ -30,6 +30,11 @@
       "items": ["lick-bl1", "lick-bl2", "lick-bl3", "form-rh-bl1", "form-rh-qa-bossa"]
     },
     {
+      "id": "imp", "title": { "ru": "Импровизация", "en": "Improvisation" },
+      "about": { "ru": "Бэнд играет Blue Bossa, ты играешь своё ровными восьмыми. Сначала до минор с заходом в Db мажор, потом ноты каждого аккорда и целевые ноты на смене. Всё записывается.", "en": "The band plays Blue Bossa, you play your own lines in straight eighths. First C minor with the trip to D-flat major, then the notes of each chord and target notes on the changes. Everything is recorded." },
+      "items": ["imp-bo1", "imp-bo2", "imp-bo3", "imp-bo4"]
+    },
+    {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
       "about": { "ru": "Две-три минуты в день. Слух растёт от повторов.", "en": "Two or three minutes a day. The ear grows with repetition." },
       "items": ["ear-find-bossa"]
@@ -76,6 +81,10 @@
       "title": { "ru": "Blue Bossa: вопрос и ответ", "en": "Blue Bossa: question and answer" },
       "about": { "ru": "Вопрос на тактах 1, 5, 9, 13, ответ на 3, 7, 11, 15. Лад подстраивается под аккорд сам.", "en": "The question on bars 1, 5, 9, 13, the answer on 3, 7, 11, 15. The scale fits itself to the chord." }
     },
+    "imp-bo1": { "kind": "solo", "solo": "bossa-minor" },
+    "imp-bo2": { "kind": "solo", "solo": "bossa-call" },
+    "imp-bo3": { "kind": "solo", "solo": "bossa-chords" },
+    "imp-bo4": { "kind": "solo", "solo": "bossa-solo" },
     "ear-find-bossa": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала рядом с C4, потом шире, потом через три октавы.", "en": "I play a note, you find it on the keys. Close to C4 first, then wider, then across three octaves." },

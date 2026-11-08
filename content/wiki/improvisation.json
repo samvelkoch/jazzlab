@@ -1,0 +1,83 @@
+{
+  "$format": "jazzlab-wiki/1",
+  "id": "improvisation",
+  "kind": "concept",
+  "title": {
+    "ru": "Импровизация",
+    "en": "Improvisation"
+  },
+  "lead": {
+    "ru": "Мелодия, которую солист сочиняет прямо во время игры, поверх аккордов, которые играет бэнд.",
+    "en": "A melody the soloist makes up on the spot, over the chords the band is playing."
+  },
+  "body": {
+    "ru": [
+      "В джазе импровизация не игра «что попало». Бэнд по кругу играет форму пьесы: 12 тактов блюза, 16 тактов Blue Bossa, 32 такта стандарта. Солист на каждом круге сочиняет новую мелодию, которая ложится на эти аккорды.",
+      "Чтобы не гадать, какие ноты взять, музыканты думают гаммами: каждому аккорду соответствует набор нот. Например, над C7 подходит миксолидийский лад от C. В приложении такой набор называется палитрой: гамма плюс ноты аккорда, и ноты аккорда подсвечены ярче. Сначала палитра одна на всю форму, потом своя у каждого аккорда.",
+      "Целевые ноты: на смене аккорда соло приходит в ноту нового аккорда, и слух сразу узнаёт гармонию. К целевой ноте часто подходят соседней клавишей на полтона выше или ниже, это подход.",
+      "Вопрос и ответ: одна фраза спрашивает, другая отвечает, как в разговоре. Паузы тоже часть соло: в первых занятиях приложение просит два такта играть и два молчать, чтобы фразы дышали и было слышно бэнд."
+    ],
+    "en": [
+      "In jazz, improvising is not playing just anything. The band plays the tune's form round and round: 12 bars of blues, 16 bars of Blue Bossa, 32 bars of a standard. On each chorus the soloist makes up a new melody that fits those chords.",
+      "To avoid guessing which notes to play, musicians think in scales: each chord suggests a set of notes. Over C7, for example, the C mixolydian mode fits. The app calls such a set a palette: a scale plus the chord tones, with the chord tones lit brighter. At first one palette covers the whole form, later each chord has its own.",
+      "Target notes: on a chord change the solo lands on a note of the new chord, and the ear hears the harmony at once. A target note is often approached from the neighbouring key a half-step above or below: an approach note.",
+      "Call and response: one phrase asks, another answers, as in a conversation. Rests are part of a solo too: the first lessons in the app ask you to play two bars and stay silent for two, so the phrases breathe and you can hear the band."
+    ]
+  },
+  "facts": [
+    {
+      "ru": "Умение «целиться» в ноты аккорда приписывают Чарли Паркеру: он строил соло из гамм и арпеджио аккордов пьесы.",
+      "en": "Targeting chord tones is credited to Charlie Parker, who built his solos from the scales and arpeggios of the tune's chords."
+    },
+    {
+      "ru": "В бибопе аккорды часто меняются дважды за такт, как «Gm7 C7» в нашем стандарте.",
+      "en": "In bebop the chords often change twice a bar, like \"Gm7 C7\" in our standard."
+    },
+    {
+      "ru": "Педагог Джейми Аберсолд много лет бесплатно раздаёт свой «Джазовый справочник»; есть и русское издание.",
+      "en": "The teacher Jamey Aebersold has given away his Jazz Handbook for free for years; there is a Russian edition too."
+    }
+  ],
+  "links": [
+    {
+      "title": {
+        "ru": "Википедия: Импровизация (музыка)",
+        "en": "Wikipedia (Russian): improvisation in music"
+      },
+      "url": "https://ru.wikipedia.org/wiki/%D0%98%D0%BC%D0%BF%D1%80%D0%BE%D0%B2%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_(%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0)"
+    },
+    {
+      "title": {
+        "ru": "Википедия (англ.): Jazz improvisation",
+        "en": "Wikipedia: Jazz improvisation"
+      },
+      "url": "https://en.wikipedia.org/wiki/Jazz_improvisation"
+    },
+    {
+      "title": {
+        "ru": "Википедия (англ.): аккорд и гамма (chord-scale system)",
+        "en": "Wikipedia: Chord-scale system"
+      },
+      "url": "https://en.wikipedia.org/wiki/Chord-scale_system"
+    },
+    {
+      "title": {
+        "ru": "Бесплатный «Джазовый справочник» Джейми Аберсолда (есть на русском)",
+        "en": "Free Jamey Aebersold Jazz Handbook"
+      },
+      "url": "https://www.jazzbooks.com/jazz/FQBK"
+    }
+  ],
+  "related": [
+    "call-and-response",
+    "blues-scale",
+    "ii-v-i",
+    "twelve-bar-blues"
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Jazz_improvisation",
+    "https://en.wikipedia.org/wiki/Chord-scale_system",
+    "https://ru.wikipedia.org/wiki/%D0%98%D0%BC%D0%BF%D1%80%D0%BE%D0%B2%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_(%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0)",
+    "https://www.jazzbooks.com/jazz/FQBK"
+  ]
+}

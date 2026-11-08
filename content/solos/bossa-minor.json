@@ -1,0 +1,18 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-minor",
+  "title": {"ru": "Blue Bossa в до миноре: два такта играю, два молчу", "en": "Blue Bossa in C minor: two bars on, two bars off"},
+  "about": {"ru": "Импровизация на Blue Bossa. Палитра, то есть ноты, которые годятся для такта: до минор на всей форме, кроме четырёх тактов в Db мажоре (такты 9–12). Два такта фраза, два такта тишина. Восьмые ровные, без свинга.", "en": "Improvisation over Blue Bossa. The palette, the notes that fit the bar: C minor over the whole form, except four bars in D-flat major (bars 9–12). Two bars of phrase, two bars of silence. Straight eighths, no swing."},
+  "form": "blue-bossa", "pattern": "b2",
+  "palette": { "mode": "scales", "parts": [
+    {"bars": [0, 7], "scale": "aeolian", "root": "C"},
+    {"bars": [8, 11], "scale": "major", "root": "Db"},
+    {"bars": [12, 15], "scale": "aeolian", "root": "C"}
+  ] },
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 2, "rest": 2},
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "pitches": 3}
+}

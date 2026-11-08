@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-chords",
+  "title": {"ru": "Стандарт: импровизация по аккордам", "en": "The standard: improvising on the chords"},
+  "about": {"ru": "Целевые ноты на смене аккорда. Палитра идёт за аккордом, а в тактах с двумя аккордами («Gm7 C7») меняется посередине, на третьей доле. Это импровизация по аккордам, а не по одной гамме.", "en": "Target notes on the chord changes. The palette follows the chord, and in bars with two chords (\"Gm7 C7\") it changes halfway, on beat three. This is improvisation on the chords, not on one scale."},
+  "form": "std-f", "pattern": "s2",
+  "palette": {"mode": "chordscale"},
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 1,
+  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.6, "phrases": 4, "pitches": 3}
+}

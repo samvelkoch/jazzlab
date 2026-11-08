@@ -1,0 +1,18 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-key",
+  "title": {"ru": "Стандарт: фа мажор, бридж в Bb", "en": "The standard: F major, the bridge in B-flat"},
+  "about": {"ru": "Импровизация на стандарте в F. Палитра: фа мажор в тактах 1–16 и 25–32, си-бемоль мажор на бридже (такты 17–24). Два такта фраза, два такта тишина. Свинг.", "en": "Improvisation over the standard in F. The palette: F major in bars 1–16 and 25–32, B-flat major on the bridge (bars 17–24). Two bars of phrase, two bars of silence. Swing."},
+  "form": "std-f", "pattern": "s2",
+  "palette": { "mode": "scales", "parts": [
+    {"bars": [0, 15], "scale": "major", "root": "F"},
+    {"bars": [16, 23], "scale": "major", "root": "Bb"},
+    {"bars": [24, 31], "scale": "major", "root": "F"}
+  ] },
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": {"play": 2, "rest": 2},
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "pitches": 3}
+}
