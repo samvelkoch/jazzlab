@@ -1,74 +1,152 @@
 {
   "$format": "jazzlab-help/1",
-  "title": { "ru": "Как пользоваться", "en": "How to use Jazzlab" },
+  "title": {
+    "ru": "Как пользоваться",
+    "en": "How to use Jazzlab"
+  },
   "intro": {
-    "ru": "Jazzlab учит играть джаз, блюз и босса-нову на фортепиано взрослого самоучку: слух раньше нот, музыка кусками, медленно это нормально. Цель: сесть и сыграть для своих три вещи в трёх стилях, с импровизацией, без нот перед глазами.",
-    "en": "Jazzlab teaches jazz, blues and bossa nova piano to a self-taught adult: ear before notation, music in chunks, slow is fine. The goal: sit down and play three tunes in three styles for your family, with improvisation, no sheet music."
+    "ru": "Jazzlab — курс джазового, блюзового и босса-нова фортепиано в браузере. Принципы: слух раньше нот, музыка учится кусками, темп не главное. Цель курса — сыграть целиком три пьесы в трёх стилях, обеими руками, с импровизацией, без нот перед глазами.",
+    "en": "Jazzlab is a browser course in jazz, blues and bossa nova piano. Principles: ear before notation, music learned in chunks, tempo is not the point. The goal is to play three complete tunes in three styles, both hands, with improvisation, without sheet music."
   },
   "sections": [
     {
       "id": "start",
-      "title": { "ru": "С чего начать", "en": "Where to start" },
+      "title": {
+        "ru": "С чего начать",
+        "en": "Where to start"
+      },
       "body": [
-        { "ru": "Открой дорожку «Блюз» и нажми «Начать»: приложение само соберёт занятие на сегодня из повторов, следующего нового предмета и круга формы. Предметы идут подряд, любой можно пропустить. Хватает 10–20 минут в день.", "en": "Open the Blues track and tap Start: the app builds today's session from reviews, the next new item and a chorus of the form. Items run back to back; skip any of them. Ten to twenty minutes a day is enough." },
-        { "ru": "Если хочешь выбирать сам, листай разделы дорожки ниже и открывай карточки. Зелёная метка значит зачтено, серая «повтор» значит пора сыграть ещё раз по памяти.", "en": "If you prefer to choose, scroll the track's sections and open the cards. A green mark means passed; a grey “review” mark means it is time to play it again from memory." },
-        { "ru": "Босса-нова и стандарты открыты сразу, но порядок «блюз, потом босса, потом стандарт» не случаен: каждая дорожка опирается на предыдущую.", "en": "Bossa nova and the standards are open from day one, but the order blues, then bossa, then standard is deliberate: each track builds on the one before." }
+        {
+          "ru": "Открой дорожку «Блюз» и нажми «Начать»: приложение соберёт занятие на сегодня из повторов, следующего нового предмета и круга формы. Предметы идут подряд, любой можно пропустить. Достаточно 10–20 минут в день.",
+          "en": "Open the Blues track and tap Start: the app builds today's session from reviews, the next new item and a chorus of the form. Items run back to back; any can be skipped. Ten to twenty minutes a day is enough."
+        },
+        {
+          "ru": "Если хочешь выбирать сам, листай разделы дорожки ниже и открывай карточки. Зелёная метка значит зачтено, серая «повтор» значит пора сыграть ещё раз по памяти.",
+          "en": "If you prefer to choose, scroll the track's sections and open the cards. A green mark means passed; a grey “review” mark means it is time to play it again from memory."
+        },
+        {
+          "ru": "Босса-нова и стандарты открыты сразу, но порядок «блюз, потом босса, потом стандарт» не случаен: каждая дорожка опирается на предыдущую.",
+          "en": "Bossa nova and the standards are open from day one, but the order blues, then bossa, then standard is deliberate: each track builds on the one before."
+        }
       ]
     },
     {
       "id": "track",
-      "title": { "ru": "Как устроена дорожка", "en": "How a track is built" },
+      "title": {
+        "ru": "Как устроена дорожка",
+        "en": "How a track is built"
+      },
       "body": [
-        { "ru": "Каждая дорожка ведёт к одной пьесе и разбита на разделы. «Клавиатура»: названия нот и аккорды как формы ладони. «Левая рука»: паттерн, который держит грув. «Форма»: вся пьеса по кругу под барабаны, сначала одна левая. «Правая рука»: лики, короткие фразы словаря, по два такта. «Слух»: найти услышанную ноту на клавишах. «Пьеса»: мелодия настоящей вещи по две фразы. «Импровизация»: своё над формой. «Выступление»: три круга целиком с записью. «Замер»: раз в месяц, точка отсчёта.", "en": "Every track leads to one tune and is split into sections. Keyboard: note names and chords as hand shapes. Left hand: the pattern that keeps the groove. Form: the whole tune on a loop with drums, left hand alone first. Right hand: licks, two-bar phrases of the vocabulary. Ear: find a heard note on the keys. Tune: the melody of a real piece, two bars at a time. Improvisation: your own lines over the form. Performance: three full choruses, recorded. Check-up: once a month, a baseline." },
-        { "ru": "Названия разделов и шагов профессиональные нарочно, но каждый термин подчёркнут: нажми на слово, появится объяснение, а у многих ссылка «Подробнее в справочнике».", "en": "Section and step names are the professional ones on purpose, but every term is underlined: tap the word for a plain explanation, often with a link to the Reference." }
+        {
+          "ru": "Каждая дорожка ведёт к одной пьесе и разбита на разделы. «Клавиатура»: названия нот и аккорды как формы ладони. «Левая рука»: паттерн, который держит грув. «Форма»: вся пьеса по кругу под барабаны, сначала одна левая. «Правая рука»: лики, короткие фразы словаря, по два такта. «Слух»: найти услышанную ноту на клавишах. «Пьеса»: мелодия настоящей вещи по две фразы. «Импровизация»: своё над формой. «Выступление»: три круга целиком с записью. «Замер»: раз в месяц, точка отсчёта.",
+          "en": "Every track leads to one tune and is split into sections. Keyboard: note names and chords as hand shapes. Left hand: the pattern that keeps the groove. Form: the whole tune on a loop with drums, left hand alone first. Right hand: licks, two-bar phrases of the vocabulary. Ear: find a heard note on the keys. Tune: the melody of a real piece, two bars at a time. Improvisation: your own lines over the form. Performance: three full choruses, recorded. Check-up: once a month, a baseline."
+        },
+        {
+          "ru": "Названия разделов и шагов профессиональные нарочно, но каждый термин подчёркнут: нажми на слово, появится объяснение, а у многих ссылка «Подробнее в справочнике».",
+          "en": "Section and step names are the professional ones on purpose, but every term is underlined: tap the word for a plain explanation, often with a link to the Reference."
+        }
       ]
     },
     {
       "id": "exercise",
-      "title": { "ru": "Как устроено упражнение", "en": "How an exercise works" },
+      "title": {
+        "ru": "Как устроено упражнение",
+        "en": "How an exercise works"
+      },
       "body": [
-        { "ru": "Лики и мелодии идут этапами: «Эхо» (приложение играет, ты повторяешь), «Пальцы» (ноты ждут нажатия, на клавишах подсвечены пальцы), «По памяти». Паттерны левой: «Ритм» (простучи), «Ноты», «В темпе», «По памяти». Этап зачтён, когда сыграно чисто, а не быстро: темп это отдельная необязательная шкала.", "en": "Licks and melodies go in stages: Echo (the app plays, you repeat), Fingers (the notes wait for you, fingering shown on the keys), By heart. Left-hand patterns: Rhythm (tap it), Notes, In tempo, By heart. A stage passes when it is clean, not fast: tempo is a separate, optional scale." },
-        { "ru": "Внизу экрана: какую руку играешь («Правая», «Левая», «Обе»; зачёт только в режиме «Обе»), ровные восьмые или свинг, барабаны или метроном, темп, кнопка «Старт». Пробел тоже запускает и останавливает.", "en": "At the bottom: which hand you play (Right, Left, Both; only Both counts for a pass), straight or swing eighths, drums or metronome, tempo and Start. The space bar starts and stops too." },
-        { "ru": "Форма засчитывает круг чистым, если промахов не больше одного на сорок нот; три чистых круга подряд дают зачёт. Импровизация оценивает не «те ли ноты», а четыре вещи: в ладу, в сетке, фразы и паузы, целевые ноты на смене аккорда.", "en": "The form counts a chorus as clean with at most one slip per forty notes; three clean choruses in a row pass. Improvisation does not check for “the right notes” but for four things: inside the palette, on the grid, phrases and rests, target notes on chord changes." }
+        {
+          "ru": "Лики и мелодии идут этапами: «Эхо» (приложение играет, ты повторяешь), «Пальцы» (ноты ждут нажатия, на клавишах подсвечены пальцы), «По памяти». Паттерны левой: «Ритм» (простучи), «Ноты», «В темпе», «По памяти». Этап зачтён, когда сыграно чисто, а не быстро: темп это отдельная необязательная шкала.",
+          "en": "Licks and melodies go in stages: Echo (the app plays, you repeat), Fingers (the notes wait for you, fingering shown on the keys), By heart. Left-hand patterns: Rhythm (tap it), Notes, In tempo, By heart. A stage passes when it is clean, not fast: tempo is a separate, optional scale."
+        },
+        {
+          "ru": "Внизу экрана: какую руку играешь («Правая», «Левая», «Обе»; зачёт только в режиме «Обе»), ровные восьмые или свинг, барабаны или метроном, темп, кнопка «Старт». Пробел тоже запускает и останавливает.",
+          "en": "At the bottom: which hand you play (Right, Left, Both; only Both counts for a pass), straight or swing eighths, drums or metronome, tempo and Start. The space bar starts and stops too."
+        },
+        {
+          "ru": "Форма засчитывает круг чистым, если промахов не больше одного на сорок нот; три чистых круга подряд дают зачёт. Импровизация оценивает не «те ли ноты», а четыре вещи: в ладу, в сетке, фразы и паузы, целевые ноты на смене аккорда.",
+          "en": "The form counts a chorus as clean with at most one slip per forty notes; three clean choruses in a row pass. Improvisation does not check for “the right notes” but for four things: inside the palette, on the grid, phrases and rests, target notes on chord changes."
+        }
       ]
     },
     {
       "id": "review",
-      "title": { "ru": "Повторы", "en": "Reviews" },
+      "title": {
+        "ru": "Повторы",
+        "en": "Reviews"
+      },
       "body": [
-        { "ru": "Всё зачтённое возвращается на повтор через 1, 3, 7, 14 и 30 дней. Повтор это игра по памяти без подсказок. Получилось, интервал растёт; не получилось, назад к одному дню. «К повтору сегодня» всегда первое в занятии: так выученное не теряется.", "en": "Everything passed comes back for review after 1, 3, 7, 14 and 30 days. A review is playing from memory, no hints. Success grows the interval; a miss sends it back to one day. Due reviews always open the session, so what you learned stays learned." }
+        {
+          "ru": "Всё зачтённое возвращается на повтор через 1, 3, 7, 14 и 30 дней. Повтор это игра по памяти без подсказок. Получилось, интервал растёт; не получилось, назад к одному дню. «К повтору сегодня» всегда первое в занятии: так выученное не теряется.",
+          "en": "Everything passed comes back for review after 1, 3, 7, 14 and 30 days. A review is playing from memory, no hints. Success grows the interval; a miss sends it back to one day. Due reviews always open the session, so what you learned stays learned."
+        }
       ]
     },
     {
       "id": "piano",
-      "title": { "ru": "Подключить пианино", "en": "Connecting a piano" },
+      "title": {
+        "ru": "Подключить пианино",
+        "en": "Connecting a piano"
+      },
       "body": [
-        { "ru": "Без пианино всё работает с экранной клавиатуры: на телефоне она листается, по краям кнопки октав, нужные ноты подсвечены. Но зачёты по ритму имеют смысл только на настоящих клавишах.", "en": "Without a piano everything works from the on-screen keyboard: on a phone it scrolls, with octave buttons at the edges and the needed notes lit. But rhythm scoring only means something on real keys." },
-        { "ru": "Компьютер: подключи цифровое пианино по USB или Bluetooth MIDI и открой сайт в Chrome, Edge или Opera, потом нажми «Подключить пианино» в шапке. Safari на Mac без расширений MIDI не умеет.", "en": "Computer: connect the digital piano over USB or Bluetooth MIDI and open the site in Chrome, Edge or Opera, then tap “Connect piano” in the header. Safari on the Mac has no Web MIDI without an extension." },
-        { "ru": "iPad и iPhone: Safari на ноябрь 2026 года не поддерживает Web MIDI. Поставь из App Store бесплатный браузер MIDIWeb Browser (iPadOS 17.6 и новее), открой в нём сайт, подключи пианино по USB или Bluetooth и нажми «Подключить пианино». Приложение умеет открыть из этой кнопки системное окно Bluetooth MIDI.", "en": "iPad and iPhone: as of November 2026 Safari does not support Web MIDI. Install the free MIDIWeb Browser from the App Store (iPadOS 17.6 or later), open the site in it, connect the piano over USB or Bluetooth and tap “Connect piano”. From that button the app can open the system Bluetooth MIDI dialog." },
-        { "ru": "Android: Chrome поддерживает Web MIDI, подключи по USB через переходник или по Bluetooth MIDI.", "en": "Android: Chrome supports Web MIDI; connect over USB with an adapter or over Bluetooth MIDI." },
-        { "ru": "Bluetooth добавляет задержку в десятки миллисекунд. Если нажатия стабильно считаются «поздно», попробуй USB. Звук можно слушать через само пианино: приложение отправляет на него ноты бэнда и подсказок.", "en": "Bluetooth adds tens of milliseconds of latency. If your notes are consistently scored “late”, try USB. You can hear everything through the piano itself: the app sends the band and the hints to it." }
+        {
+          "ru": "Без пианино всё работает с экранной клавиатуры: на телефоне она листается, по краям кнопки октав, нужные ноты подсвечены. Но зачёты по ритму имеют смысл только на настоящих клавишах.",
+          "en": "Without a piano everything works from the on-screen keyboard: on a phone it scrolls, with octave buttons at the edges and the needed notes lit. But rhythm scoring only means something on real keys."
+        },
+        {
+          "ru": "Компьютер: подключи цифровое пианино по USB или Bluetooth MIDI и открой сайт в Chrome, Edge или Opera, потом нажми «Подключить пианино» в шапке. Safari на Mac без расширений MIDI не умеет.",
+          "en": "Computer: connect the digital piano over USB or Bluetooth MIDI and open the site in Chrome, Edge or Opera, then tap “Connect piano” in the header. Safari on the Mac has no Web MIDI without an extension."
+        },
+        {
+          "ru": "iPad и iPhone: Safari на ноябрь 2026 года не поддерживает Web MIDI. Поставь из App Store бесплатный браузер MIDIWeb Browser (iPadOS 17.6 и новее), открой в нём сайт, подключи пианино по USB или Bluetooth и нажми «Подключить пианино». Приложение умеет открыть из этой кнопки системное окно Bluetooth MIDI.",
+          "en": "iPad and iPhone: as of November 2026 Safari does not support Web MIDI. Install the free MIDIWeb Browser from the App Store (iPadOS 17.6 or later), open the site in it, connect the piano over USB or Bluetooth and tap “Connect piano”. From that button the app can open the system Bluetooth MIDI dialog."
+        },
+        {
+          "ru": "Android: Chrome поддерживает Web MIDI, подключи по USB через переходник или по Bluetooth MIDI.",
+          "en": "Android: Chrome supports Web MIDI; connect over USB with an adapter or over Bluetooth MIDI."
+        },
+        {
+          "ru": "Bluetooth добавляет задержку в десятки миллисекунд. Если нажатия стабильно считаются «поздно», попробуй USB. Звук можно слушать через само пианино: приложение отправляет на него ноты бэнда и подсказок.",
+          "en": "Bluetooth adds tens of milliseconds of latency. If your notes are consistently scored “late”, try USB. You can hear everything through the piano itself: the app sends the band and the hints to it."
+        }
       ]
     },
     {
       "id": "phone",
-      "title": { "ru": "На телефоне", "en": "On a phone" },
+      "title": {
+        "ru": "На телефоне",
+        "en": "On a phone"
+      },
       "body": [
-        { "ru": "Всё приложение работает на телефоне: клавиатура прилипает к низу экрана, задание всегда над ней, нотный стан поднимается сам. Нотные этапы и 32-тактовые формы удобнее на планшете или компьютере рядом с инструментом.", "en": "The whole app works on a phone: the keyboard sticks to the bottom, the task stays above it, the staff scrolls into view by itself. Notation stages and 32-bar forms are more comfortable on a tablet or a computer next to the instrument." }
+        {
+          "ru": "Всё приложение работает на телефоне: клавиатура прилипает к низу экрана, задание всегда над ней, нотный стан поднимается сам. Нотные этапы и 32-тактовые формы удобнее на планшете или компьютере рядом с инструментом.",
+          "en": "The whole app works on a phone: the keyboard sticks to the bottom, the task stays above it, the staff scrolls into view by itself. Notation stages and 32-bar forms are more comfortable on a tablet or a computer next to the instrument."
+        }
       ]
     },
     {
       "id": "data",
-      "title": { "ru": "Где хранится прогресс", "en": "Where your progress lives" },
+      "title": {
+        "ru": "Где хранится прогресс",
+        "en": "Where your progress lives"
+      },
       "body": [
-        { "ru": "Аккаунта нет. Прогресс, повторы, записи выступлений и настройки хранятся в этом браузере на этом устройстве. Другой браузер или устройство начнёт с нуля; очистка данных сайта сотрёт всё. Записи выступлений и соло можно скачать как MIDI, упражнения экспортируются в MusicXML и MIDI.", "en": "There is no account. Progress, reviews, recordings and settings live in this browser on this device. Another browser or device starts from scratch; clearing site data erases everything. Performance and solo recordings download as MIDI; exercises export to MusicXML and MIDI." }
+        {
+          "ru": "Аккаунта нет. Прогресс, повторы, записи выступлений и настройки хранятся в этом браузере на этом устройстве. Другой браузер или устройство начнёт с нуля; очистка данных сайта сотрёт всё. Записи выступлений и соло можно скачать как MIDI, упражнения экспортируются в MusicXML и MIDI.",
+          "en": "There is no account. Progress, reviews, recordings and settings live in this browser on this device. Another browser or device starts from scratch; clearing site data erases everything. Performance and solo recordings download as MIDI; exercises export to MusicXML and MIDI."
+        }
       ]
     },
     {
       "id": "honest",
-      "title": { "ru": "Чего приложение не умеет", "en": "What the app cannot do" },
+      "title": {
+        "ru": "Чего приложение не умеет",
+        "en": "What the app cannot do"
+      },
       "body": [
-        { "ru": "Оно слышит ноты и время, но не красоту: фраза может быть «в ладу и в сетке» и всё равно скучной, это решаешь ты и те, кому играешь. Окна допуска подобраны по здравому смыслу, а не по сотням учеников: если зачёт кажется слишком строгим или слишком щедрым, скажи об этом автору.", "en": "It hears notes and timing, not beauty: a phrase can be inside and on the grid and still dull; you and your listeners decide that. The tolerance windows come from common sense, not from hundreds of learners: if a pass feels too strict or too generous, tell the author." }
+        {
+          "ru": "Приложение слышит ноты и время, но не оценивает музыкальность: фраза может быть в ладу и в сетке и при этом не звучать. Окна допуска подобраны по здравому смыслу, а не на большой выборке учеников; если зачёт кажется слишком строгим или слишком мягким, это повод сообщить через GitHub репозитория.",
+          "en": "The app hears notes and timing but does not judge musicality: a phrase can be inside and on the grid and still not sing. Tolerance windows come from common sense, not from a large sample of learners; if a pass feels too strict or too lenient, report it through the GitHub repository."
+        }
       ]
     }
   ]

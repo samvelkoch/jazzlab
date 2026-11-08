@@ -1,6 +1,6 @@
 # Jazzlab
 
-A self-contained jazz, blues and bossa nova piano course for a self-taught adult, in the browser.
+A self-contained jazz, blues and bossa nova piano course in the browser.
 Ear first, music in chunks, slow is fine. No account, no build step, no server: static files on GitHub Pages.
 
 **Live:** https://samvelkoch.github.io/jazzlab/ · **How to use:** `#/help` in the app ·
