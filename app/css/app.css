@@ -691,6 +691,27 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 
 /* ---------- ear ---------- */
 .earscreen:not(.playing) .earreplay { display: none; }
+/* relative ear games: the answer buttons sit between the prompt card and the keys, everything on one screen */
+.earrel .drillpanel { flex: 0 1 auto; }
+.earrel .dcard { flex: 1 1 auto; min-height: 96px; padding: 10px 16px; }
+.earrel .dprompt { font-size: clamp(36px, 7dvh, 64px); }
+.earrel.playing .dabout { display: none; }
+.earans { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 10px; }
+.earbtn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 68px; padding: 6px 8px; border: 2px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--fg); cursor: pointer; box-shadow: var(--shadow); }
+.earbtn b { font: 700 clamp(20px, 3.4dvh, 28px)/1.1 var(--display); }
+.earbtn span { font-size: 12px; color: var(--muted); font-weight: 600; text-align: center; }
+.earbtn:hover:not(:disabled) { border-color: var(--accent); }
+.earbtn:disabled { cursor: default; opacity: .6; }
+.earbtn.bad { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); opacity: 1; }
+.earbtn.ok { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); opacity: 1; }
+.erpills { display: flex; gap: 8px; }
+.erpills i { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line); font: 700 15px var(--display); font-style: normal; color: var(--muted); }
+.erpills i.on { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+@media (max-width: 640px) {
+  .earans.many { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .earbtn { min-height: 56px; }
+  .earbtn span { display: none; }
+}
 /* ---------- chords mode ---------- */
 :root { --ext: #7c3aed; --ext-soft: #ece4fb; --bassc: #6b7280; }
 :root[data-theme="dark"] { --ext: #b393f7; --ext-soft: #2e2346; --bassc: #a8b0bd; }

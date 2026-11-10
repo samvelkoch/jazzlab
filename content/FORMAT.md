@@ -78,6 +78,13 @@ An `ear` item is the «Find the note» game: `"kind": "ear", "rounds": 12, "rang
 meh (≤ 2 wrong keys or a replay) or miss (3+ wrong keys; the 4th reveals the answer). Accuracy = (ok + 0.5 · meh) / rounds,
 stored as `best` (a number 0..1). Passing sets `stages.done` and schedules a review.
 
+An `ear` item with a `game` is a relative-ear level: `"kind": "ear", "game": "hilo" | "interval" | "quality" | "prog", "level": 1, "rounds": 12, "pass": { "acc": 0.8 }`
+(screen `app/js/screens/ear-rel.js`; the pure logic, levels and question generation are in `app/js/music/ear-games.js`, tests in `tests/ear.test.mjs`).
+The `level` (1-based) picks the set from `LEVELS`: `hilo` 1 wide gaps → 2 down to a semitone → 3 + «same»; `interval` 1 m3/M3 → 2 + P4, P5 →
+3 + m7, M7, P8 → 4 all twelve → 5 descending (basic set) → 6 descending (all) → 7 harmonic (basic set); `quality` 1 maj/min → 2 maj7/m7/7 → 3 + m7b5;
+`prog` 1 ii–V–I major or minor → 2 which of three chords is the V7. Grading, progress, review: as «Find the note» (a button answer is meh with one
+slip, miss with two; on the keys, up to two slips are meh). Relative-ear item ids end with the track suffix (`ear-iv2`, `ear-iv2-bossa`, `ear-iv2-std`).
+
 Item screens are `#/t/<track>/<item>`. Item ids are store keys (progress, reviews), so they must be unique across
 all tracks (the bossa ear game is `ear-find-bossa`, not `ear-find`). Each track has its own one-tap session
 (store `session` for the blues, `session:<track>` for the others). A track is listed in `content/index.json`
