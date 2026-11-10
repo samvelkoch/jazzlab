@@ -1,0 +1,19 @@
+{
+  "$format": "jazzlab-form/1",
+  "id": "ipanema-f",
+  "title": { "ru": "The Girl from Ipanema: гармония", "en": "The Girl from Ipanema: the changes" },
+  "about": { "ru": "Гармония пьесы Jobim, упрощённая: 40 тактов AABA в фа мажоре, бридж уходит в Gb. Мелодии здесь нет, её слушай в записи (Getz / Gilberto, 1964) и подбирай на слух.", "en": "Jobim's changes, simplified: 40 bars AABA in F major, the bridge goes to G-flat. The tune is not here: listen to the recording (Getz / Gilberto, 1964) and find it by ear." },
+  "tempo": 66,
+  "swing": false,
+  "style": "bossa",
+  
+  "bars": [
+    "Fmaj7", "Fmaj7", "G7", "G7", "Gm7", "Gb7", "Fmaj7", "Gb7",
+    "Fmaj7", "Fmaj7", "G7", "G7", "Gm7", "Gb7", "Fmaj7", "Fmaj7",
+    "Gbmaj7", "Gbmaj7", "B7", "B7", "F#m7", "F#m7", "D7", "D7",
+    "Gm7", "Gm7", "Eb7", "Eb7", "Am7", "D7", "Gm7", "C7",
+    "Fmaj7", "Fmaj7", "G7", "G7", "Gm7", "Gb7", "Fmaj7", "Gb7"
+  ],
+  "practice": ["Fmaj7", "G7", "Gm7", "Gb7"],
+  "patterns": ["b1", "b2"]
+}

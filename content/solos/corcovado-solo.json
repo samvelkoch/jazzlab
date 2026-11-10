@@ -1,0 +1,14 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "corcovado-solo",
+  "title": {"ru": "Corcovado: соло на гармонию", "en": "Corcovado: a solo over the changes"},
+  "about": {"ru": "Бэнд играет гармонию Jobim, ты играешь своё ровными восьмыми. Палитра идёт за аккордами, на сменах ищи ноту нового аккорда. Мелодию пьесы можно цитировать, если подобрал её на слух.", "en": "The band plays Jobim's changes, you play your own lines in straight eighths. The palette follows the chords; on the changes, aim for a note of the new chord. Quote the tune if you have found it by ear."},
+  "form": "corcovado-c", "pattern": "b2",
+  "palette": {"mode": "chordscale"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": null,
+  "call": false,
+  "targets": true,
+  "choruses": 1,
+  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.5, "cover": 0.4, "phrases": 3, "pitches": 3}
+}

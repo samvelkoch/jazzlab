@@ -6,7 +6,9 @@
   "path": [
     "d-chords-cm", "ear-find-bossa", "pat-b1", "form-b1", "d-chords-db", "pat-c1", "form-c1", "mel-bossa", "form-mel", "lick-bl1",
     "form-rh-bl1", "imp-bo1", "pat-b2", "form-b2", "pat-c2", "form-c2", "pat-c3", "form-c3", "form-2h-bossa", "lick-bl2", "imp-bo2", "lick-bl3",
-    "form-rh-qa-bossa", "imp-bo3", "end-bossa", "perf-bossa", "imp-bo4"
+    "form-rh-qa-bossa", "imp-bo3", "end-bossa", "perf-bossa", "imp-bo4",
+    "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa",
+    "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"
   ],
   "sections": [
     {
@@ -53,6 +55,11 @@
       "id": "perf", "title": { "ru": "Выступление", "en": "Performance" },
       "about": { "ru": "Вся пьеса под барабаны. Это не упражнение, а результат: запись остаётся, её можно послушать и сохранить.", "en": "The whole tune over drums. Not an exercise but a result: the recording stays, you can listen to it and save it." },
       "items": ["perf-bossa"]
+    },
+    {
+      "id": "jobim", "title": { "ru": "Jobim: бразильская босса", "en": "Jobim: Brazilian bossa" },
+      "about": {"ru": "Blue Bossa это латин-джаз стандарт. Здесь гармония двух пьес Jobim, бразильская босса-нова. Мелодий в приложении нет (авторские права): слушай записи и подбирай на слух. Гармония упрощена.", "en": "Blue Bossa is a Latin jazz standard. Here are the changes of two Jobim tunes, Brazilian bossa nova. The tunes are not in the app (copyright): listen to the recordings and find them by ear. The changes are simplified."},
+      "items": ["d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa", "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"]
     }
   ],
   "items": {
@@ -127,6 +134,14 @@
       "kind": "perform", "form": "blue-bossa", "pattern": "b1", "licks": ["bl1", "bl3"], "melody": "bossa-cm", "choruses": 2,
       "title": { "ru": "Blue Bossa, два круга", "en": "Blue Bossa, two choruses" },
       "about": { "ru": "Левая держит ячейку, правая играет мелодию: первый круг как написано, второй можно чуть по-своему. Запись остаётся.", "en": "The left hand holds the cell, the right hand plays the tune: the first chorus as written, the second a little your own way. The recording stays." }
-    }
+    },
+    "d-chords-ipa": {"kind": "drill", "title": {"ru": "Аккорды Ipanema", "en": "Ipanema chords"}, "about": {"ru": "Fmaj7, G7, Gm7, Gb7: начало пьесы, Gb7 скользит на полтона вниз в Fmaj7. Потом аккорды бриджа.", "en": "Fmaj7, G7, Gm7, Gb7: the opening, Gb7 sliding down a half step into Fmaj7. Then the bridge chords."}, "tasks": [{"type": "chord", "chords": ["Fmaj7", "G7", "Gm7", "Gb7"], "n": 8}, {"type": "chord", "chords": ["Gbmaj7", "B7", "F#m7", "D7", "Eb7", "Am7"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
+    "form-ipa": {"kind": "form", "form": "ipanema-f", "pattern": "b2", "title": {"ru": "Ipanema на басу", "en": "Ipanema, bass only"}, "about": {"ru": "Все 40 тактов гармонии Jobim, левая держит ячейку боссы. Мелодию слушай в записи и подпевай.", "en": "All 40 bars of Jobim's changes, the left hand holding the bossa cell. Listen to the tune on a recording and sing along."}},
+    "form-ipa-c1": {"kind": "form", "form": "ipanema-f", "pattern": "c1", "hand": "both", "title": {"ru": "Ipanema: аккорды с басом", "en": "Ipanema: chords with the bass"}, "about": {"ru": "Левая бас, правая аккорд на те же доли. Так звучит аккомпанемент под мелодию: включи запись и играй вместе.", "en": "Left hand the bass, right hand a chord on the same beats. This is the accompaniment under the tune: put on a recording and play along."}},
+    "imp-ipa": {"kind": "solo", "solo": "ipanema-solo"},
+    "d-chords-cor": {"kind": "drill", "title": {"ru": "Аккорды Corcovado", "en": "Corcovado chords"}, "about": {"ru": "D7, Abdim7, Gm7, C7: начало пьесы, уменьшённый аккорд ведёт вниз по полутонам. Потом остальные.", "en": "D7, Abdim7, Gm7, C7: the opening, the diminished chord leading down by half steps. Then the rest."}, "tasks": [{"type": "chord", "chords": ["D7", "Abdim7", "Gm7", "C7"], "n": 8}, {"type": "chord", "chords": ["Fmaj7", "Fm7", "Bb7", "Em7", "A7", "C6"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
+    "form-cor": {"kind": "form", "form": "corcovado-c", "pattern": "b1", "title": {"ru": "Corcovado на басу", "en": "Corcovado, bass only"}, "about": {"ru": "Все 32 такта, левая держит ячейку. Пьеса тихая: играй мягко.", "en": "All 32 bars, the left hand holding the cell. A quiet tune: play softly."}},
+    "form-cor-c2": {"kind": "form", "form": "corcovado-c", "pattern": "c2", "hand": "both", "title": {"ru": "Corcovado: аккорды между басом", "en": "Corcovado: chords between the bass"}, "about": {"ru": "Левая бас, правая аккорд между нотами баса. Тихо и мягко, как в записи.", "en": "Left hand the bass, right hand a chord between the bass notes. Quiet and soft, like the recording."}},
+    "imp-cor": {"kind": "solo", "solo": "corcovado-solo"}
   }
 }

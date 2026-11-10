@@ -1,0 +1,18 @@
+{
+  "$format": "jazzlab-form/1",
+  "id": "corcovado-c",
+  "title": { "ru": "Corcovado: гармония", "en": "Corcovado: the changes" },
+  "about": { "ru": "Гармония пьесы Jobim, упрощённая: 32 такта в до мажоре. Начинается не с тоники, а с D7 (в оригинале с басом A), через уменьшённый аккорд спускается к Gm7 C7 Fmaj7. Мелодии здесь нет, её слушай в записи и подбирай на слух.", "en": "Jobim's changes, simplified: 32 bars in C major. It starts not on the tonic but on D7 (over an A bass in the original) and slides through a diminished chord to Gm7 C7 Fmaj7. The tune is not here: listen to a recording and find it by ear." },
+  "tempo": 63,
+  "swing": false,
+  "style": "bossa",
+  
+  "bars": [
+    "D7", "D7", "Abdim7", "Abdim7", "Gm7", "C7", "Fmaj7", "Fmaj7",
+    "Fm7", "Bb7", "Em7", "A7", "D7", "D7", "Dm7", "G7",
+    "D7", "D7", "Abdim7", "Abdim7", "Gm7", "C7", "Fmaj7", "Fmaj7",
+    "Fm7", "Bb7", "Em7", "A7", "Dm7", "G7", "C6", "C6"
+  ],
+  "practice": ["D7", "Abdim7", "Gm7", "C7"],
+  "patterns": ["b1", "b2"]
+}
