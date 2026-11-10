@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-anticipation",
+  "title": {"ru": "Блюз: заход на «и» четвёртой доли", "en": "Blues: anticipation on the «and» of 4"},
+  "about": {"ru": "Сначала простучи ритм: три четверти и нота на «и» четвёртой доли, чуть раньше следующей единицы. Потом играй его нотами блюзовой гаммы. Два такта играешь, два молчишь.", "en": "First tap the rhythm: three quarter notes and a note on the «and» of 4, just before the next downbeat. Then play it with notes of the blues scale. Two bars on, two bars off."},
+  "form": "blues-c",
+  "pattern": "p2",
+  "palette": {"mode": "scale", "scale": "blues", "root": "C"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": "anticipation",
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

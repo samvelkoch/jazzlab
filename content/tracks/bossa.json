@@ -6,9 +6,9 @@
   "path": [
     "d-chords-cm", "ear-find-bossa", "ear-hl1-bossa", "pat-b1", "form-b1", "ear-iv1-bossa", "d-chords-db", "pat-c1",
     "form-c1", "mel-bossa", "form-mel", "ear-q1-bossa", "lick-bl1", "ear-q2-bossa", "form-rh-bl1", "imp-bo1", "ear-iv2-bossa",
-    "pat-b2", "form-b2", "ear-hl2-bossa", "pat-c2", "form-c2", "pat-c3", "form-c3", "form-2h-bossa", "lick-bl2",
-    "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "ear-pr1-bossa", "form-rh-qa-bossa", "imp-bo3", "ear-q3-bossa",
-    "end-bossa", "ear-iv5-bossa", "perf-bossa", "ear-pr2-bossa", "imp-bo4",
+    "pat-b2", "form-b2", "ear-hl2-bossa", "imp-bo1r", "pat-c2", "form-c2", "pat-c3", "form-c3", "form-2h-bossa", "lick-bl2",
+    "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "imp-bo2a", "ear-pr1-bossa", "form-rh-qa-bossa", "imp-bo3", "ear-q3-bossa", "imp-bo2e",
+    "end-bossa", "ear-iv5-bossa", "perf-bossa", "ear-pr2-bossa", "imp-bo3v", "imp-bo4",
     "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa",
     "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"
   ],
@@ -46,7 +46,7 @@
     {
       "id": "imp", "title": { "ru": "Импровизация", "en": "Improvisation" },
       "about": { "ru": "Бэнд играет Blue Bossa, ты играешь своё ровными восьмыми. Сначала до минор с заходом в Db мажор, потом ноты каждого аккорда и целевые ноты на смене. Всё записывается.", "en": "The band plays Blue Bossa, you play your own lines in straight eighths. First C minor with the trip to D-flat major, then the notes of each chord and target notes on the changes. Everything is recorded." },
-      "items": ["imp-bo1", "imp-bo2", "imp-bo3", "imp-bo4"]
+      "items": ["imp-bo1", "imp-bo1r", "imp-bo2", "imp-bo2a", "imp-bo2e", "imp-bo3", "imp-bo3v", "imp-bo4"]
     },
     {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
@@ -127,6 +127,10 @@
     "imp-bo2": { "kind": "solo", "solo": "bossa-call" },
     "imp-bo3": { "kind": "solo", "solo": "bossa-chords" },
     "imp-bo4": { "kind": "solo", "solo": "bossa-solo" },
+    "imp-bo1r": { "kind": "solo", "solo": "bossa-start-and" },
+    "imp-bo2a": { "kind": "solo", "solo": "bossa-anticipation" },
+    "imp-bo2e": { "kind": "solo", "solo": "bossa-echo" },
+    "imp-bo3v": { "kind": "solo", "solo": "bossa-vary" },
     "ear-find-bossa": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала рядом с C4, потом шире, потом через три октавы.", "en": "I play a note, you find it on the keys. Close to C4 first, then wider, then across three octaves." },

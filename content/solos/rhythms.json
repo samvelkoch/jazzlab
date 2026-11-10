@@ -1,0 +1,51 @@
+{
+  "$format": "jazzlab-rhythms/1",
+  "cells": {
+    "even": {
+      "title": { "ru": "Ровные восьмые", "en": "Even eighths" },
+      "about": { "ru": "Восемь ударов на такт без остановок: 1 и 2 и 3 и 4 и.", "en": "Eight hits to the bar, no stops: 1 and 2 and 3 and 4 and." },
+      "rhythm": "8 8 8 8 8 8 8 8"
+    },
+    "eighth-rest": {
+      "title": { "ru": "Две восьмые и пауза", "en": "Two eighths and a rest" },
+      "about": { "ru": "Две быстрые ноты, пауза на долю: 1 и, пауза, 3 и, пауза.", "en": "Two quick notes, a beat of rest: 1 and, rest, 3 and, rest." },
+      "rhythm": "8 8 r4 8 8 r4"
+    },
+    "anticipation": {
+      "title": { "ru": "Заход на «и» четвёртой доли", "en": "Anticipation on the «and» of 4" },
+      "about": { "ru": "Последняя нота такта приходит на «и» четвёртой доли, чуть раньше следующей единицы: 1, 2, 3, и-четыре.", "en": "The last note comes on the «and» of 4, just before the next downbeat: 1, 2, 3, and-of-4." },
+      "rhythm": "4 4 4 r8 8"
+    },
+    "start-and": {
+      "title": { "ru": "Начало с «и» первой доли", "en": "Start on the «and» of 1" },
+      "about": { "ru": "На единице пауза, фраза начинается с «и» и идёт восьмыми.", "en": "A rest on 1; the phrase starts on the «and» and runs in eighths." },
+      "rhythm": "r8 8 8 8 8 8 r4"
+    },
+    "start-two": {
+      "title": { "ru": "Начало со второй доли", "en": "Start on beat 2" },
+      "about": { "ru": "Первая доля молчит, фраза входит на двойке.", "en": "Beat 1 is silent; the phrase comes in on 2." },
+      "rhythm": "r4 8 8 8 8 r4"
+    },
+    "charleston": {
+      "title": { "ru": "Чарльстон", "en": "Charleston" },
+      "about": { "ru": "Длинная нота на единице и короткая на «и» двойки: раз-(два)-и, потом пауза.", "en": "A long note on 1 and a short one on the «and» of 2: one-(two)-and, then rest." },
+      "rhythm": "4. 4 r4."
+    },
+    "repeated": {
+      "title": { "ru": "Ячейка, сыгранная дважды", "en": "A cell played twice" },
+      "about": { "ru": "Одна и та же короткая ячейка «ти-ти-та» два раза в такте: 1 и 2, 3 и 4.", "en": "The same short «ti-ti-ta» cell twice in the bar: 1 and 2, 3 and 4." },
+      "rhythm": "8 8 4 8 8 4"
+    },
+    "beat3": {
+      "title": { "ru": "Фраза с третьей доли", "en": "A phrase from beat 3" },
+      "about": { "ru": "Первая половина такта молчит, фраза входит на тройке.", "en": "The first half of the bar is silent; the phrase comes in on 3." },
+      "rhythm": "r2 8 8 4"
+    },
+    "ask-answer": {
+      "title": { "ru": "Такт-вопрос и такт-ответ", "en": "A question bar and an answer bar" },
+      "bars": 2,
+      "about": { "ru": "Два такта: первый начинается с единицы, второй входит на тройке.", "en": "Two bars: the first starts on 1, the second comes in on 3." },
+      "rhythm": "8 8 4 r2 r2 8 8 4"
+    }
+  }
+}
