@@ -4,11 +4,12 @@
   "title": { "ru": "Блюз", "en": "Blues" },
   "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
   "path": [
-    "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "lick-l1", "form-rh-l1", "imp-b1", "d-fifths", "lick-l2",
-    "lick-l3", "form-rh-l3", "form-2h-l1", "d-chords", "pat-p1q", "form-p1q", "lick-l4", "form-rh-l4", "lick-l5",
-    "form-rh-qa", "imp-b2", "d-all", "pat-p2", "form-p2", "mel-stl", "form-mel-stl", "lick-l6", "form-rh-l6",
-    "form-2h-qa", "imp-b3", "d-chords-ta", "pat-ta", "form-ta", "pat-p3", "form-p3", "end-blues", "lick-l7",
-    "perf-blues", "imp-b4", "mel-tinroof", "form-mel-tinroof"
+    "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "ear-hl1", "lick-l1", "form-rh-l1", "imp-b1", "d-fifths",
+    "ear-iv1", "lick-l2", "lick-l3", "form-rh-l3", "form-2h-l1", "d-chords", "ear-hl2", "pat-p1q", "form-p1q",
+    "lick-l4", "ear-iv2", "form-rh-l4", "lick-l5", "form-rh-qa", "imp-b2", "d-all", "ear-q1", "pat-p2", "form-p2",
+    "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "form-rh-l6", "form-2h-qa", "imp-b3", "d-chords-ta", "ear-q2",
+    "pat-ta", "form-ta", "pat-p3", "form-p3", "end-blues", "ear-iv5", "lick-l7", "perf-blues", "imp-b4",
+    "mel-tinroof", "form-mel-tinroof"
   ],
   "sections": [
     {
@@ -39,7 +40,7 @@
     {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
       "about": { "ru": "Две-три минуты в день. Слух это навык, он растёт от повторов.", "en": "Two or three minutes a day. The ear is a skill; it grows with repetition." },
-      "items": ["ear-find"]
+      "items": ["ear-find", "ear-hl1", "ear-iv1", "ear-hl2", "ear-iv2", "ear-q1", "ear-iv3", "ear-q2", "ear-iv5"]
     },
     {
       "id": "tune", "title": { "ru": "Пьеса", "en": "The tune" },
@@ -110,6 +111,14 @@
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала в пределах квинты от C4, потом октавы, потом двух.", "en": "I play a note, you find it on the keys. Within a fifth of C4 first, then an octave, then two." },
       "rounds": 12, "ranges": [[60, 67], [60, 72], [55, 79]], "pass": { "acc": 0.8 }
     },
+    "ear-hl1": { "kind": "ear", "game": "hilo", "level": 1, "title": { "ru": "Выше или ниже", "en": "Higher or lower" }, "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }, "rounds": 12, "pass": { "acc": 0.8 }},
+    "ear-iv1": { "kind": "ear", "game": "interval", "level": 1, "title": { "ru": "Интервалы: малая и большая терция", "en": "Intervals: minor or major third" }, "about": { "ru": "Две ноты вверх: малая терция (3 полутона, грустная) или большая (4, светлая)? Назови интервал или сыграй вторую ноту.", "en": "Two notes going up: a minor third (3 semitones, sad) or a major third (4, bright)? Name it or play the second note." }, "rounds": 12, "pass": { "acc": 0.8 }},
+    "ear-hl2": { "kind": "ear", "game": "hilo", "level": 2, "title": { "ru": "Выше или ниже: тоньше", "en": "Higher or lower: finer" }, "about": { "ru": "Тот же вопрос, но расстояние сужается до полутона.", "en": "The same question, but the gap narrows down to a semitone." }, "rounds": 12, "pass": { "acc": 0.8 }},
+    "ear-iv2": { "kind": "ear", "game": "interval", "level": 2, "title": { "ru": "Интервалы: кварта и квинта", "en": "Intervals: fourth and fifth" }, "about": { "ru": "К терциям добавились чистая кварта и квинта: твёрдые, «пустые» интервалы.", "en": "The perfect fourth and fifth join the thirds: the firm, hollow intervals." }, "rounds": 12, "pass": { "acc": 0.8 }},
+    "ear-q1": { "kind": "ear", "game": "quality", "level": 1, "title": { "ru": "Аккорд: мажор или минор", "en": "Chord: major or minor" }, "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }, "rounds": 12, "pass": { "acc": 0.8 }},
+    "ear-iv3": { "kind": "ear", "game": "interval", "level": 3, "title": { "ru": "Интервалы: септимы и октава", "en": "Intervals: sevenths and the octave" }, "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }, "rounds": 12, "pass": { "acc": 0.75 }},
+    "ear-q2": { "kind": "ear", "game": "quality", "level": 2, "title": { "ru": "Аккорд: maj7, m7 или 7", "en": "Chord: maj7, m7 or 7" }, "about": { "ru": "Четыре ноты. Maj7 светлый и мечтательный, m7 мягкий, доминантный 7 просит разрешения.", "en": "Four notes. Maj7 is bright and dreamy, m7 is mellow, the dominant 7 wants to resolve." }, "rounds": 12, "pass": { "acc": 0.75 }},
+    "ear-iv5": { "kind": "ear", "game": "interval", "level": 5, "title": { "ru": "Интервалы вниз", "en": "Intervals going down" }, "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }, "rounds": 12, "pass": { "acc": 0.75 }},
     "lick-l1": { "kind": "lick", "lick": "l1", "form": "blues-c", "pattern": "p1" },
     "lick-l2": { "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1" },
     "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1" },
