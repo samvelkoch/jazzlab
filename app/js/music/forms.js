@@ -89,14 +89,16 @@ const evFingers = (e) => (Array.isArray(e.f) ? e.f : e.f ? [e.f] : []);
  */
 export function patternExercise(pattern, bars, opts = {}) {
   const ev = pattern.events;
+  const comp = pattern.comp || null; // a comping pattern: the right hand plays chords over the left-hand bass (see compBar)
   const lead = pattern.voicing === 'lead';
   let prev = opts.prev || null; // a voice-led pattern: the shell pair of the previous bar
-  const out = bars.map((name) => {
+  const out = bars.map((name, bi) => {
+    const crh = comp ? compBar(pattern, name, bi).map((e) => ({ t: e.t, d: e.d, n: e.names, f: e.f, stac: false, sug: false })) : [];
     if (lead) {
       // one event per pattern event, its notes from patternBar (low → high, fingers by pitch)
       const pb = patternBar(pattern, name, { prev }); prev = pb.pair;
       return {
-        rh: [],
+        rh: crh,
         lh: ev.map((e, i) => {
           const notes = pb.filter((x) => x.ev === i).sort((a, b) => a.m - b.m);
           return { t: e.t, d: e.d || 1, n: notes.map((x) => patSpell(x.m, x.deg, parseChord(x.chord), !!opts.flats)), f: notes.map((x) => x.f).filter(Boolean), stac: !!e.stac, sug: false };
@@ -105,7 +107,7 @@ export function patternExercise(pattern, bars, opts = {}) {
       };
     }
     return {
-      rh: [],
+      rh: crh,
       lh: ev.map((e) => {
         const chord = parseChord(chordAt(name, e.t)), root = lhRoot(chord);
         return { t: e.t, d: e.d || 1, n: evDegs(e).map((g0) => { const g = fitDeg(g0, chord); return patSpell(root + g, g, chord, !!opts.flats); }), f: evFingers(e), stac: !!e.stac, sug: false };
@@ -122,11 +124,39 @@ export function patternExercise(pattern, bars, opts = {}) {
     time: [4, 4],
     tempo: { start: opts.tempo || pattern.tempo || 60, target: opts.tempo || pattern.tempo || 60 },
     swing: opts.swing !== undefined ? !!opts.swing : !!pattern.swing,
-    rhythm: pattern.rhythm || null,
+    // a comping pattern drills the right-hand rhythm (a 2-bar rhythm line: rhythmBars = 2); the bass rhythm is already known
+    rhythm: comp ? comp.rhythm : pattern.rhythm || null,
+    ...(comp && (comp.bars || 1) > 1 ? { rhythmBars: comp.bars } : {}),
     dyn: [{ bar: 0, mark: 'mf', level: 0.75 }],
     bars: out,
     passAnyTempo: true, kicker: opts.kicker || null, back: opts.back || '#/'
   };
+}
+
+// ---------- right-hand comping (pattern.comp) ----------
+// comp = { rhythm, bars: 1 | 2, events: [{ t, d, bar? }], voicings: { Cm7: { n: ['Eb4','G4','Bb4'], f: [1,3,5] } } }.
+// The voicing of each chord is written out (voice-led by hand, see FORMAT.md); the events only say when it sounds.
+// A comp of 2 bars repeats every 2 bars of the form (bar k of the form takes comp bar k % 2).
+
+/**
+ * Right-hand comping notes of one form bar (bi = its index in the sequence): [{ t, d, names, f, notes: [{ m, name, f }], chord }].
+ * A two-chord bar takes the chord at each event's slot. Throws when a chord has no voicing.
+ */
+export function compBar(pattern, barName, bi = 0) {
+  const c = pattern.comp;
+  if (!c) return [];
+  const cb = bi % (c.bars || 1);
+  return c.events.filter((e) => (e.bar || 0) === cb).map((e) => {
+    const chord = chordAt(barName, e.t), v = c.voicings[chord];
+    if (!v) throw new Error(`Pattern ${pattern.id}: no comping voicing for ${chord}`);
+    const notes = v.n.map((name, k) => ({ m: toMidi(name), name, f: (v.f || [])[k] || 0 }));
+    return { t: e.t, d: e.d || 1, names: v.n.slice(), f: notes.map((x) => x.f).filter(Boolean), notes, chord };
+  }).sort((a, b) => a.t - b.t);
+}
+
+/** compBar over a sequence of bars, one note per entry like patternBar: [{ t, d, m, f, name, chord }] per bar. */
+export function compBars(pattern, bars) {
+  return bars.map((name, bi) => compBar(pattern, name, bi).flatMap((e) => e.notes.map((x) => ({ t: e.t, d: e.d, m: x.m, f: x.f, name: x.name, chord: e.chord, stac: false }))));
 }
 
 // ---------- voice leading (pattern "voicing": "lead") ----------

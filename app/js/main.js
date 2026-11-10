@@ -20,6 +20,7 @@ import { renderImprov } from './screens/improv.js';
 import { renderTrack } from './screens/track.js';
 import { renderDrill } from './screens/drill.js';
 import { renderEar } from './screens/ear.js';
+import { renderEarRel } from './screens/ear-rel.js';
 import { renderForm } from './screens/form.js';
 import { renderLick } from './screens/lick.js';
 import { renderMelody } from './screens/melody.js';
@@ -88,7 +89,7 @@ async function trackModel(id) {
     const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'melody' ? melodies[it.melody] : it.kind === 'solo' ? solos[it.solo] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
     const title = it.title ? L(it.title) : src ? L(src.title) : iid;
     const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : it.kind === 'form' && it.lickKey ? L(licks[it.lickKey].about) : src ? L(src.about) : '';
-    items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}` };
+    items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}`, ...(it.kind === 'pattern' && src && src.comp ? { labelKind: 'comp' } : {}) }; // a comping pattern is not a left-hand item
   });
   models[id] = { track, forms, patterns, licks, melodies, solos, exercises, items };
   return models[id];
@@ -204,6 +205,7 @@ async function route() {
       const back = mti[1] === 'blues' ? '#/' : `#/track/${mti[1]}`;
       document.title = `${item.title} · Jazzlab`;
       if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
+      else if (item.kind === 'ear' && item.game) cleanup = renderEarRel(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'ear') cleanup = renderEar(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'form') cleanup = renderForm(root, { track: model.track, itemId: item.id, item, form: model.forms[item.form], pattern: model.patterns[item.pattern], lick: item.lick ? model.licks[item.lick] : null, licks: Array.isArray(item.licks) ? item.licks.map((l) => model.licks[l]).filter(Boolean) : null, keyLicks: item.lickKey ? [model.licks[item.lickKey]].filter(Boolean) : Array.isArray(item.licksKey) ? item.licksKey.map((l) => model.licks[l]).filter(Boolean) : null, melody: item.melody ? model.melodies[item.melody] || null : null, back });
       else if (item.kind === 'melody') {
@@ -241,7 +243,7 @@ async function route() {
         const seq = item.over === 'bars' ? form.bars : form.practice || form.bars;
         const ex = normalize(patternExercise(pattern, seq, {
           id: item.id, course: mti[1], swing: form.style === 'bossa' ? false : form.swing, flats: !!form.flats, back, title: item.title, about: item.about || null,
-          kicker: `${L(model.track.title).toUpperCase()} · ${t('kind_pattern').toUpperCase()} · ${item.over === 'bars' ? L(form.title) : seq.join(' ')}`
+          kicker: `${L(model.track.title).toUpperCase()} · ${t(pattern.comp ? 'kind_comp' : 'kind_pattern').toUpperCase()} · ${item.over === 'bars' ? L(form.title) : seq.join(' ')}`
         }));
         cleanup = renderExercise(root, { ex, rerender });
       } else message(t('notFound'));

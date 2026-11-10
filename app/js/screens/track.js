@@ -100,7 +100,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     const badge = { done: it.kind === 'perform' ? t('recordedW') : t('done'), now: t('now'), review: t('reviewW'), meh: t('inProgress'), none: '' }[s];
     const art = wikiOf(it);
     const card = h('a.item' + (art ? '.haswiki' : ''), { href: it.href, 'data-status': s },
-      h('span.kicker', null, kindLabel(it.kind)),
+      h('span.kicker', null, kindLabel(it.labelKind || it.kind)),
       h('span.itemtitle', null, markTerms(it.title, undefined, 'span')),
       h('span.itemmeta', null, meta(id) || (r && !q.due.includes(id) ? `${t('nextReview')} ${new Date(r.due).toLocaleDateString()}` : markTerms(it.about || '', undefined, 'span'))),
       badge ? h('span.badge.' + (s === 'review' ? 'now' : s), null, badge) : null);
@@ -113,7 +113,7 @@ export async function renderTrack(root, { model, index, rerender }) {
 
   // ---- today ----
   const todayList = h('div.todaylist', null, ...q.ids.map((id, k) => h('a.todayitem', { href: items[id].href },
-    h('b', null, String(k + 1)), h('span', null, items[id].title), h('small', null, q.due.includes(id) ? t('reviewW') : kindLabel(items[id].kind)))));
+    h('b', null, String(k + 1)), h('span', null, items[id].title), h('small', null, q.due.includes(id) ? t('reviewW') : kindLabel(items[id].labelKind || items[id].kind)))));
   const startBtn = q.ids.length ? h('a.btn.accent.xl', {
     href: (curNext && items[curNext.id] ? items[curNext.id].href : items[q.ids[0]].href),
     html: ICON.play + `<span>${cur && curNext ? t('continueSession') : t('startSession')}</span>`,

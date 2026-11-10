@@ -2,7 +2,7 @@
   "$format": "jazzlab-pattern/1",
   "id": "b2",
   "title": { "ru": "Бас боссы с ходом", "en": "Bossa bass with a move" },
-  "about": { "ru": "Корень на «1», квинта на «и» второй, снова корень на «4». Самая частая левая в боссе.", "en": "The root on 1, the fifth on the «and» of 2, the root again on 4. The most common bossa left hand." },
+  "about": { "ru": "Корень на «1», квинта на «и» второй, снова корень на «4». Один из самых частых вариантов левой в боссе.", "en": "The root on 1, the fifth on the «and» of 2, the root again on 4. One of the most common bossa left hands." },
   "tempo": 60,
   "swing": false,
   "rhythm": "4. 4. 4",

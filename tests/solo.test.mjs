@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { SCALES, scalePcs, scaleOf } from '../app/js/music/scales.js';
-import { paletteAt, scoreChorus, passed, checks, combine, makeCall, roleOf, changesOf, slotAt, gridIndex } from '../app/js/music/solo.js';
+import { paletteAt, scoreChorus, passed, checks, combine, coverage, makeCall, roleOf, changesOf, slotAt, gridIndex } from '../app/js/music/solo.js';
 import { freshItems } from '../app/js/queue.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -73,7 +73,7 @@ assert.equal(s.inside, 1); assert.equal(s.grid, 1);
 assert.equal(s.phrases, 3, 'three phrases of 4 notes');
 assert.deepEqual(s.rests, { ok: 6, total: 6 });
 assert.equal(s.pitches, 4); assert.equal(s.notes, 12);
-assert.deepEqual(s.targets, { ok: 0, total: 0 }, 'blues-scale has no targets');
+assert.deepEqual(s.targets, { ok: 0, total: 0, changes: 0 }, 'blues-scale has no targets');
 assert.equal(s.perBar[0].clean, true); assert.equal(s.perBar[1].clean, false, 'an empty play bar is not clean');
 assert.equal(s.perBar[2].restOk, true); assert.equal(s.perBar[0].restOk, null);
 assert.ok(passed(s, sScale.pass), 'the clean chorus passes blues-scale');
@@ -120,19 +120,26 @@ assert.equal(s.grid, 1, 'swung eighths are on the swing grid');
 
 // targets: bar 4 is F7 after C7 (0-based)
 const sChords = read('content/solos/blues-chords.json');
+const tg = (x) => ({ ok: x.targets.ok, total: x.targets.total });
+const youChanges = changesOf(blues.bars).filter((c) => roleOf(sChords, c.bar) === 'you').length;
 s = scoreChorus([{ t: at(3, 4), m: 64 }, { t: at(3, 5), m: 67 }, { t: at(3, 6), m: 70 }, { t: at(4, 0), m: 69 }, { t: at(4, 1), m: 65 }], ctx(sChords));
-assert.deepEqual(s.targets, { ok: 1, total: 1 }, 'A on beat 1 of F7: a target note');
+assert.deepEqual(tg(s), { ok: 1, total: 1 }, 'A on beat 1 of F7: a target note');
 assert.equal(s.perBar[4].target, true);
 s = scoreChorus([{ t: at(3, 4), m: 64 }, { t: at(3, 5), m: 67 }, { t: at(4, 0), m: 67 }, { t: at(4, 2), m: 69 }], ctx(sChords));
-assert.deepEqual(s.targets, { ok: 0, total: 1 }, 'G on beat 1 of F7 (a 9th, not a chord tone): a miss');
+assert.deepEqual(tg(s), { ok: 0, total: 1 }, 'G on beat 1 of F7 (a 9th, not a chord tone): a miss');
 assert.equal(s.perBar[4].target, false);
 s = scoreChorus([{ t: at(4, 1, 0.02), m: 69 }], ctx(sChords));
-assert.deepEqual(s.targets, { ok: 1, total: 1 }, 'the and of one is still the first beat');
+assert.deepEqual(tg(s), { ok: 1, total: 1 }, 'the and of one is still the first beat');
 s = scoreChorus([{ t: at(4, 2), m: 67 }], ctx(sChords));
-assert.deepEqual(s.targets, { ok: 0, total: 0 }, 'nothing on beat 1: no data');
+assert.deepEqual(tg(s), { ok: 0, total: 0 }, 'nothing on beat 1: not a wrong note');
 s = scoreChorus([{ t: at(4, 0, -0.03), m: 69 }], ctx(sChords));
-assert.deepEqual(s.targets, { ok: 1, total: 1 }, 'a slightly early downbeat counts for the new bar');
+assert.deepEqual(tg(s), { ok: 1, total: 1 }, 'a slightly early downbeat counts for the new bar');
 assert.equal(s.perBar[3].notes, 0);
+
+s = scoreChorus([{ t: at(4, 2), m: 67 }], ctx(sChords));
+assert.equal(s.targets.changes, youChanges, 'every change in your bars is counted for coverage');
+assert.equal(coverage(s.targets), 0, 'a silent change is not covered');
+assert.equal(checks(s, { cover: 0.5 }).cover, false, 'silence on every change does not meet coverage');
 
 // ---------- thresholds ----------
 const base = { inside: 0.9, grid: 0.8, phrases: 3, rests: { ok: 5, total: 6 }, targets: { ok: 3, total: 4 }, pitches: 5 };
@@ -144,6 +151,9 @@ assert.equal(passed({ ...base, phrases: 2 }, pass), false);
 assert.equal(passed({ ...base, rests: { ok: 4, total: 6 } }, pass), false, '4/6 < 0.8');
 assert.equal(passed({ ...base, targets: { ok: 2, total: 4 } }, pass), false);
 assert.equal(passed({ ...base, targets: { ok: 0, total: 0 } }, pass), true, 'no target data passes');
+assert.equal(passed({ ...base, targets: { ok: 0, total: 0, changes: 8 } }, { ...pass, cover: 0.5 }), false, 'all changes silent: coverage fails');
+assert.equal(passed({ ...base, targets: { ok: 3, total: 4, changes: 8 } }, { ...pass, cover: 0.5 }), true, '4 of 8 changes covered, 3 right');
+assert.equal(passed({ ...base, targets: { ok: 3, total: 3, changes: 8 } }, { ...pass, cover: 0.5 }), false, '3 of 8 covered < 0.5');
 assert.equal(passed({ ...base, rests: { ok: 0, total: 0 } }, pass), true, 'free phrasing: no rest bars');
 assert.equal(passed({ ...base, pitches: 2 }, pass), false);
 assert.equal(passed({ ...base, inside: 0.2 }, { phrases: 3 }), true, 'only the thresholds given are checked');
@@ -151,6 +161,7 @@ assert.deepEqual(checks({ ...base, grid: 0.5 }, pass), { inside: true, grid: fal
 const run = combine([{ ...base, inside: 1, phrases: 4, pitches: 6 }, { ...base, inside: 0.8, phrases: 2, pitches: 3 }]);
 assert.ok(Math.abs(run.inside - 0.9) < 1e-9); assert.equal(run.phrases, 3); assert.equal(run.pitches, 3);
 assert.deepEqual(run.rests, { ok: 10, total: 12 }); assert.equal(run.choruses, 2);
+assert.deepEqual(combine([{ ...base, targets: { ok: 1, total: 2, changes: 4 } }, { ...base, targets: { ok: 2, total: 3, changes: 4 } }]).targets, { ok: 3, total: 5, changes: 8 });
 
 // ---------- the band's call ----------
 let seed = 7; const rng = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
@@ -229,9 +240,9 @@ assert.ok(!changesOf(stdF.bars).some((c) => c.bar === 0), 'Fmaj7 after the closi
   // 60 bpm straight: an eighth 0.5 s, a bar 4 s (swing off to keep the slots simple)
   const c = { solo: sChS, bars: stdF.bars, bpm: 60, swing: false };
   let r = scoreChorus([{ t: 4, m: 67 }, { t: 4.5, m: 65 }, { t: 5, m: 62 }, { t: 6, m: 64 }], c);
-  assert.deepEqual(r.targets, { ok: 2, total: 2 }, 'G on Gm7 and E on C7');
+  assert.deepEqual({ ok: r.targets.ok, total: r.targets.total }, { ok: 2, total: 2 }, 'G on Gm7 and E on C7');
   r = scoreChorus([{ t: 4, m: 67 }, { t: 6, m: 62 }], c);
-  assert.deepEqual(r.targets, { ok: 1, total: 2 }, 'D on slot 4 is not a C7 tone');
+  assert.deepEqual({ ok: r.targets.ok, total: r.targets.total }, { ok: 1, total: 2 }, 'D on slot 4 is not a C7 tone');
 }
 // the 32-bar standard with 2 on / 2 off: eight rest pairs; with call: band, band, you, you
 assert.equal(stdF.bars.filter((_, k) => roleOf(sKey, k) === 'rest').length, 16);
