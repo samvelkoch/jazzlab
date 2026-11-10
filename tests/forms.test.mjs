@@ -127,7 +127,7 @@ const qa = blues.items['form-rh-qa'];
 assert.deepEqual(qa.licks, ['l5', 'l4']);
 assert.equal(read('content/licks/l5.json').role, 'question');
 assert.equal(read('content/licks/l4.json').role, 'answer');
-assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa']);
+assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'form-2h-l1', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa', 'form-2h-qa']);
 Object.values(blues.items).forEach((it) => { if (it.lick) read(`content/licks/${it.lick}.json`); (it.licks || []).forEach((l) => read(`content/licks/${l}.json`)); });
 
 // p3 «Корень и шелл»: root on 1 and 3, third + seventh together on 2 and 4
@@ -591,12 +591,16 @@ console.log('ok: sharp thirds');
   // today's queue: at most one melody and one form-with-melody among the fresh items, the earliest in section order
   {
     const its = { a: { kind: 'drill' }, m1: { kind: 'melody' }, f1: { kind: 'form', melody: 'x' }, m2: { kind: 'melody' }, f2: { kind: 'form', melody: 'y' }, g: { kind: 'form' }, p: { kind: 'perform' }, d: { kind: 'diag' } };
-    const ord = ['p', 'd', 'm1', 'f1', 'm2', 'f2', 'g', 'a'];
+    const ord = ['d', 'm1', 'f1', 'm2', 'f2', 'g', 'a', 'p'];
     assert.deepEqual(freshItems(ord, its, () => false, 2), ['m1', 'f1'], 'a melody and its form, the later tunes wait');
     assert.deepEqual(freshItems(ord, its, () => false, 5), ['m1', 'f1', 'g', 'a'], 'm2 / f2 never join');
     assert.deepEqual(freshItems(ord, its, (id) => id === 'm1', 3), ['f1', 'm2', 'g'], 'a done melody frees the slot for the next one');
     assert.deepEqual(freshItems(ord, its, (id) => ['m1', 'f1', 'g'].includes(id), 2), ['m2', 'f2']);
     assert.deepEqual(freshItems(['m1', 'm2', 'f1', 'f2', 'a'], its, () => false, 2), ['m1', 'f1'], 'order of the section decides');
+    // a performance waits until everything before it is done (a check-up does not count)
+    const allButP = (id) => id !== 'p';
+    assert.deepEqual(freshItems(ord, its, allButP, 2), ['p'], 'everything before it done: the performance is offered');
+    assert.deepEqual(freshItems(ord, its, (id) => allButP(id) || id === 'p', 2), [], 'recorded: done');
   }
   const all3 = [...Object.keys(blt.items), ...Object.keys(bt.items), ...Object.keys(stt3.items)];
   assert.equal(new Set(all3).size, all3.length, 'item ids are unique across blues, bossa and std');

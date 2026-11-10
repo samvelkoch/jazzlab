@@ -3,6 +3,13 @@
   "id": "blues",
   "title": { "ru": "Блюз", "en": "Blues" },
   "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
+  "path": [
+    "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "lick-l1", "form-rh-l1", "imp-b1", "d-fifths", "lick-l2",
+    "lick-l3", "form-rh-l3", "form-2h-l1", "d-chords", "pat-p1q", "form-p1q", "lick-l4", "form-rh-l4", "lick-l5",
+    "form-rh-qa", "imp-b2", "d-all", "pat-p2", "form-p2", "mel-stl", "form-mel-stl", "lick-l6", "form-rh-l6",
+    "form-2h-qa", "imp-b3", "d-chords-ta", "pat-ta", "form-ta", "pat-p3", "form-p3", "end-blues", "lick-l7",
+    "perf-blues", "imp-b4", "mel-tinroof", "form-mel-tinroof"
+  ],
   "sections": [
     {
       "id": "keys", "title": { "ru": "Клавиатура", "en": "The keyboard" },
@@ -22,7 +29,7 @@
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
       "about": { "ru": "Фразы на слух. Сначала повтори за пианино, потом пальцы, потом над всей формой. В конце вопрос и ответ.", "en": "Phrases by ear. Repeat after the piano, then fingers, then over the whole form. At the end, question and answer." },
-      "items": ["lick-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3", "lick-l4", "lick-l5", "lick-l6", "lick-l7", "form-rh-l4", "form-rh-l6", "form-rh-qa"]
+      "items": ["lick-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3", "form-2h-l1", "lick-l4", "lick-l5", "lick-l6", "lick-l7", "form-rh-l4", "form-rh-l6", "form-rh-qa", "form-2h-qa"]
     },
     {
       "id": "imp", "title": { "ru": "Импровизация", "en": "Improvisation" },
@@ -108,6 +115,11 @@
     "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1" },
     "form-rh-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1", "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" } },
     "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } },
+    "form-2h-l1": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "both", "lick": "l1",
+      "title": { "ru": "Блюз двумя руками: ответ", "en": "Blues, both hands: the answer" },
+      "about": { "ru": "Левая: корень и квинта. Правая: «Ответ» на каждой паре тактов. Бэнд молчит, играют только барабаны: это уже твой блюз. Три чистых круга подряд.", "en": "Left: root and fifth. Right: the «Answer» on every pair of bars. The band is silent, only drums play: this is your blues now. Three clean choruses in a row." }
+    },
     "lick-l4": { "kind": "lick", "lick": "l4", "form": "blues-c", "pattern": "p1" },
     "lick-l5": { "kind": "lick", "lick": "l5", "form": "blues-c", "pattern": "p1" },
     "lick-l6": { "kind": "lick", "lick": "l6", "form": "blues-c", "pattern": "p1" },
@@ -118,6 +130,11 @@
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"],
       "title": { "ru": "Блюз: вопрос и ответ", "en": "Blues: question and answer" },
       "about": { "ru": "Вопрос на нечётных парах тактов, ответ на чётных. Так разговаривает блюз.", "en": "A question on bars 1, 5, 9, an answer on 3, 7, 11. That is how the blues talks." }
+    },
+    "form-2h-qa": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "both", "licks": ["l5", "l4"],
+      "title": { "ru": "Блюз двумя руками: вопрос и ответ", "en": "Blues, both hands: question and answer" },
+      "about": { "ru": "Левая: корень и квинта. Правая: вопрос на тактах 1, 5, 9, ответ на 3, 7, 11. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "Left: root and fifth. Right: a question on bars 1, 5, 9, an answer on 3, 7, 11. The band is silent, only drums play. Three clean choruses in a row." }
     },
     "imp-b1": { "kind": "solo", "solo": "blues-scale" },
     "imp-b2": { "kind": "solo", "solo": "blues-call" },

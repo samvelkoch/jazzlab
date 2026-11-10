@@ -1,14 +1,18 @@
 // Track screen (the home screen): "Today" with the one-tap session, the track's sections and items, stats.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { diagFmt } from './diag.js';
-import { freshItems } from '../queue.js';
+import { freshItems, learningOrder, budgetLimits, BUDGETS, DEFAULT_BUDGET } from '../queue.js';
 import { t, L, plural } from '../i18n.js';
 import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
 import { store, progress, itemDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
 const fmtTime = (sec) => { const m = Math.round(sec / 60); return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`; };
-const MAX_REVIEWS = 3, MAX_NEW = 2;
+const budgetOf = () => { const b = store.get('settings', {}).budget; return BUDGETS[b] ? b : DEFAULT_BUDGET; };
+// the other tracks' raw JSON (item ids only), fetched once for the «due in other tracks» lines
+const tracksBase = new URL('../../../content/tracks/', import.meta.url);
+const otherTracks = {};
+const trackJson = (id) => (otherTracks[id] = otherTracks[id] || fetch(new URL(`${id}.json`, tracksBase)).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }));
 
 /** A check-up is due when there is none yet or the newest one is older than `item.every` days (default 30). */
 export function diagDue(item, now = new Date()) {
@@ -17,15 +21,17 @@ export function diagDue(item, now = new Date()) {
   return (now - new Date(last.date)) / 86400000 >= ((item && item.every) || 30);
 }
 
-/** Today's queue: a check-up when due, reviews due (oldest first), then the next unfinished items in track order.
- *  A performance is a result, not a task: it is never offered as a fresh item. */
-export function todayQueue(model) {
+/** Today's queue: a check-up when due, reviews due (oldest first), then the next unfinished items in learning order
+ *  (the track's `path`, else its sections). `limits` = { reviews, fresh } from the session budget (default 20 min).
+ *  A performance is offered only once everything before it in the path is done (see freshItems). */
+export function todayQueue(model, limits = budgetLimits(DEFAULT_BUDGET)) {
   const prog = progress();
-  const order = model.track.sections.flatMap((s) => s.items);
-  const diag = order.filter((id) => model.items[id].kind === 'diag' && diagDue(model.items[id])).slice(0, 1);
-  const due = dueReviews().filter((id) => model.items[id]).slice(0, MAX_REVIEWS);
+  const order = learningOrder(model.track);
+  const diag = model.track.sections.flatMap((s) => s.items).filter((id) => model.items[id].kind === 'diag' && diagDue(model.items[id])).slice(0, 1);
+  const due = dueReviews().filter((id) => model.items[id]).slice(0, limits.reviews);
+  const done = (id) => itemDone(model.items[id], prog[id]);
   // at most one melody and one form-with-melody (the earliest in order): a track of many tunes must not stack them in one session
-  const fresh = freshItems(order, model.items, (id) => itemDone(model.items[id], prog[id]) || due.includes(id), MAX_NEW);
+  const fresh = freshItems(order, model.items, (id) => done(id) || due.includes(id), limits.fresh, done);
   return { diag, due, fresh, ids: [...diag, ...due, ...fresh] };
 }
 
@@ -36,7 +42,8 @@ export async function renderTrack(root, { model, index, rerender }) {
   const melPhrases = (id) => { const m = melodies[items[id].melody], echo = (prog[id] && prog[id].echo) || {}; const n = m ? m.phrases.length : 0; return [m ? m.phrases.filter((_, i) => (echo[i] || 0) >= 3).length : 0, n]; };
   const prog = progress(), rev = reviews();
   const done = (id) => itemDone(items[id], prog[id]); // a pattern needs «by heart» (see store.js)
-  const q = todayQueue(model);
+  const budget = budgetOf();
+  const q = todayQueue(model, budgetLimits(budget));
   const order = track.sections.flatMap((s) => s.items);
   const doneCount = order.filter(done).length;
   const longCount = order.filter((id) => longTerm(rev[id])).length;
@@ -89,7 +96,7 @@ export async function renderTrack(root, { model, index, rerender }) {
   const itemCard = (id) => {
     const it = items[id], s = status(id);
     const r = rev[id];
-    const badge = { done: t('done'), now: t('now'), review: t('reviewW'), meh: t('inProgress'), none: '' }[s];
+    const badge = { done: it.kind === 'perform' ? t('recordedW') : t('done'), now: t('now'), review: t('reviewW'), meh: t('inProgress'), none: '' }[s];
     const art = wikiOf(it);
     const card = h('a.item' + (art ? '.haswiki' : ''), { href: it.href, 'data-status': s },
       h('span.kicker', null, kindLabel(it.kind)),
@@ -111,9 +118,26 @@ export async function renderTrack(root, { model, index, rerender }) {
     html: ICON.play + `<span>${cur && curNext ? t('continueSession') : t('startSession')}</span>`,
     onclick: () => { if (!(cur && curNext)) startSession(q.ids, track.id); }
   }) : null;
+  // the session budget: 10 / 20 / 40 minutes sets how many reviews and new items the list takes (a running session keeps its queue)
+  const budgetSeg = h('div.seg.budget', { role: 'group', 'aria-label': t('budgetW') },
+    ...Object.keys(BUDGETS).map((b) => h('button', { type: 'button', 'aria-pressed': String(+b === budget), onclick: () => {
+      if (+b === budget) return;
+      store.set('settings', { ...store.get('settings', {}), budget: +b }); rerender();
+    } }, `${b} ${t('min')}`)));
+  // reviews due in the other ready tracks: one line each, filled in when their track files arrive (silent on failure)
+  const others = h('div.todayothers', { hidden: true });
+  const dueAll = dueReviews();
+  const otherIds = dueAll.length ? index.courses.filter((c) => c.kind === 'track' && c.ready && c.id !== track.id) : [];
+  Promise.all(otherIds.map((c) => trackJson(c.id).then((tj) => ({ c, n: dueAll.filter((id) => tj.items && tj.items[id]).length })).catch(() => null))).then((rows) => {
+    const lines = rows.filter((r) => r && r.n > 0).map(({ c, n }) => h('a.todayother', { href: c.id === 'blues' ? '#/' : `#/track/${c.id}` },
+      `${t('dueElsewhere')}: ${L(c.title)} · ${n} →`));
+    if (!lines.length || !others.isConnected) return;
+    others.replaceChildren(...lines); others.hidden = false;
+  }).catch(() => {});
   const todayCard = h('section.hero', null,
-    h('span.kicker', null, t('today')),
+    h('div.row.herohead', null, h('span.kicker', null, t('today')), h('div.grow'), budgetSeg),
     q.ids.length ? todayList : h('span.herotitle', null, t('nothingToday')),
+    others,
     startBtn,
     cur && curNext ? h('button.btn.ghost', { type: 'button', onclick: () => { endSession(track.id); rerender(); } }, t('endSession')) : null);
 

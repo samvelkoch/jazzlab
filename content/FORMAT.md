@@ -50,11 +50,12 @@ Check: `node tests/export.test.mjs`.
 # Tracks (`jazzlab-track/1`)
 
 `content/tracks/<id>.json`. A track is sections of items; the home screen renders it and builds today's session
-(reviews due, then the next unfinished items).
+(reviews due, then the next unfinished items in the learning order: `path`, see below).
 
 ```jsonc
 {
   "$format": "jazzlab-track/1", "id": "blues", "title": {…}, "about": {…},
+  "path": ["d-white", "ear-find", "pat-p1", "form-p1", …],              // optional: the learning order (see below)
   "sections": [ { "id": "keys", "title": {…}, "about": {…}, "items": ["d-white", "pat-p1", "form-p1"] } ],
   "items": {
     "d-white": { "kind": "drill", "title": {…}, "about": {…},
@@ -112,7 +113,23 @@ voice-led shell (`fitDeg`: G gets F#, not F). The sharp-key form's exercises are
 The blues track's `tune` section has two blues choruses: St. Louis Blues (`stl-c`, over `blues-c`) and Tin Roof Blues (`tinroof-c`,
 its own 12-bar form with plain triads C, F and A7 / D7; `mel-tinroof`, `form-mel-tinroof`, p1 / p2 / p3).
 The home «Сегодня» queue takes at most one `melody` item and one `form` item with a `melody` among the fresh items (the earliest of
-each in section order; `freshItems()` in `app/js/queue.js`), so many tunes do not stack in one session.
+each in learning order; `freshItems()` in `app/js/queue.js`), so many tunes do not stack in one session.
+
+**Learning order (`path`).** Sections are the display grouping only. The optional top-level `"path": [itemId, …]` is the
+order in which fresh items are offered (ear first, the whole form in week one, foundation drills alongside the track, every
+stage ending with the form); without it the flattened sections are the order. On the home screen the cards stay grouped by
+section; only the «сейчас» badge and the «Сегодня» list follow the path. Rules (`node tests/tracks.test.mjs` checks them for
+every track): every `path` id exists in `items` and in some section, no duplicates, and every section item that is not a
+`diag` appears in `path` exactly once. Fresh-item rules (`freshItems()`): a `diag` is never a fresh item (the check-up comes
+first on its own when due); at most one `melody`, one form with a `melody` and one `solo` a day; a `perform` item is offered
+only once every path item before it is done, and for the queue it is done once it has a recorded run (`progress[id].runs >= 1`,
+`itemDone()` in `store.js`; its card then says «записано» instead of «пройдено»).
+
+**Session budget.** The «Сегодня» card has a 10 · 20 · 40 min switch (`settings.budget`, default 20): 10 → up to 3 reviews +
+1 new item, 20 → up to 4 reviews + 2 new, 40 → up to 6 reviews + 3 new (`BUDGETS` in `queue.js`; `todayQueue(model, limits)`
+in `track.js`). Changing it re-renders the list; a running one-tap session keeps its queue until it ends. Under the list,
+one line per other ready track with reviews due today («Ещё к повтору: Босса-нова · 2 →», linking to that track's home); the
+other tracks' raw JSON is fetched for their item ids, and the line stays hidden if a fetch fails.
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)
 
@@ -217,6 +234,15 @@ Track items that use licks:
   first bar. The bar labels say «вопрос» / «ответ» (from each lick's `role`). The about comes from the item's `about`.
   Scoring and passing are the same as with one lick.
   `"form-rh-qa": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"], "title", "about" }`
+- `kind: "form"` with `hand: "both"`: the same right-hand options as `hand: "rh"` (`lick`, `licks`, `lickKey` / `licksKey`,
+  `melody`), but you play the left-hand `pattern` AND the right-hand part. The app plays only the drums (or the click);
+  both hands sound as a guide in Listen mode or without MIDI. Expected notes = both hands merged per bar (a same pitch on the
+  same eighth counts once); a clean chorus allows max(1, round(notes of both hands per chorus / 40)) slips; three clean
+  choruses in a row pass, a due review fails as with `rh`. The keyboard spans both hands and shows each hand's current and next
+  keys; the bar cells keep the right-hand label; the header chip says «Две руки · …». Without right-hand material the item
+  falls back to the left hand alone.
+  `"form-2h-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "both", "lick": "l1", "title", "about" }`
+  (also `form-2h-qa` with `licks: ["l5", "l4"]`, `form-2h-bossa` and `form-2h-std` with the tune).
 
 ## Key-relative licks (`prog` + `keys`)
 
@@ -307,7 +333,7 @@ slash bass), so it gets the Rhythm → Notes → In tempo stages for free. Chord
 `"perf-blues": { "kind": "perform", "form": "blues-c", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "choruses": 3, "title", "about" }`
 (optional `melody`: a melody id, shown as a reminder linking to its `melody` item; `licks` may be key-relative) opens `app/js/screens/perform.js`: count-in, `choruses` × the form with drums only (or a click), then the form's
 `ending`: the drums keep the groove through every ending bar but the last, which gets beat 1 only (blues-end: 2 bars).
-A form without `ending` gets one ending bar, beat 1 only. The reminders link to the track's `exercise` item for the ending. `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed.
+A form without `ending` gets one ending bar, beat 1 only. The reminders link to the track's `exercise` item for the ending. `pattern` and `licks` are shown as reminders only; nothing is scored against them and the item is never passed (for today's queue and the track card it counts as done after one recorded run; it is offered once every item before it in the track's `path` is done).
 Every note played is recorded as `{ t, d, m, v }` (`t`, `d` in seconds from the first beat of chorus 1, `v` 0..1).
 Recording runs to the end of the ending. Store: `recordings` = the last 10, newest first, `{ id, itemId, date, bpm, swing,
 choruses, ending (bars recorded after the choruses; 0 when stopped early), notes, acc: { ok, meh, off, pct, avgMs } }` (`acc`: onsets against the swing-aware eighth grid, `app/js/music/recording.js`); progress keeps

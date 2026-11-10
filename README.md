@@ -32,6 +32,8 @@ explained where it appears) and a **Reference** (short articles on styles, conce
 - **Echo → Fingers → By heart** for licks and melodies; **Rhythm → Notes → In tempo → By heart** for patterns and book exercises.
 - **Passing is by cleanliness, not tempo.** Tempo is a separate optional scale. A clean chorus of the form allows one slip per 40 notes; three clean choruses in a row pass.
 - **Spaced review:** 1 / 3 / 7 / 14 / 30 days, played from memory; a miss resets to one day. Due reviews open every session.
+- **One-tap session by budget:** 10 / 20 / 40 minutes (3 / 4 / 6 reviews + 1 / 2 / 3 new items). New items follow each track's learning order (`path`: ear first, the whole form in week one, drills alongside), not the section order; reviews due in other tracks are listed under the day's queue.
+- **Both hands over the form:** after the right-hand form steps, a scored step where you play the left-hand pattern and the lick or tune together, with drums only.
 - **Improvisation** scores four things instead of "the right notes": inside the palette (scale or chord tones, approach notes allowed), on the eighth grid, phrases and rests, target notes on chord changes. Four steps per track: scale with rests, call and response with the band, chord tones on the change, a full solo. Every run is recorded.
 - **Keyboard input:** Web MIDI (USB or Bluetooth) or the on-screen keyboard (scrollable on phones). The app can play the band and the hints through the connected piano.
 - **Recordings** of performances and solos download as MIDI; exercises export to MusicXML and MIDI.
@@ -61,7 +63,7 @@ content/                  all learning content as JSON, documented in content/FO
   tracks/  forms/  patterns/  licks/  melodies/  solos/  exercises/  courses/  chords/  wiki/  glossary.json  help.json
 scripts/import_tune.py    MusicXML / MXL lead sheet → melody + form JSON (repeats, pickups, chord symbols)
 docs/specs/               design documents
-tests/*.test.mjs          plain node tests (forms, solo, exercise, chords, glossary, wiki, theme, recording, export, store)
+tests/*.test.mjs          plain node tests (forms, solo, exercise, chords, glossary, wiki, theme, recording, export, store, tracks)
 guide/                    the original one-page keyboard guide
 ```
 
