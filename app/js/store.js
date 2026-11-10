@@ -26,6 +26,10 @@ export function updateEx(id, fn) {
   store.set('lastExercise', id);
 }
 export const isDone = (p) => !!(p && p.stages && (p.stages.tempo || p.stages.done));
+/** Done-ness of a track item (the track screen and today's queue). A left-hand pattern is passed only «by heart»:
+ *  that is where its spaced review starts, so stopping at «in tempo» would leave it off review for good.
+ *  Every other kind (and the Riffs course, which keeps isDone) passes as before. */
+export const itemDone = (item, p) => (item && item.kind === 'pattern' ? !!(p && p.stages && p.stages.memory) : isDone(p));
 
 // ---- practice time (seconds), counted only while actually playing ----
 let lastActive = 0, pending = 0, flushT = 0;

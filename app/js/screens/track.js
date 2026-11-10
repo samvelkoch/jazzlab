@@ -5,7 +5,7 @@ import { freshItems } from '../queue.js';
 import { t, L, plural } from '../i18n.js';
 import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
-import { store, progress, isDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
+import { store, progress, itemDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
 const fmtTime = (sec) => { const m = Math.round(sec / 60); return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`; };
 const MAX_REVIEWS = 3, MAX_NEW = 2;
@@ -25,7 +25,7 @@ export function todayQueue(model) {
   const diag = order.filter((id) => model.items[id].kind === 'diag' && diagDue(model.items[id])).slice(0, 1);
   const due = dueReviews().filter((id) => model.items[id]).slice(0, MAX_REVIEWS);
   // at most one melody and one form-with-melody (the earliest in order): a track of many tunes must not stack them in one session
-  const fresh = freshItems(order, model.items, (id) => isDone(prog[id]) || due.includes(id), MAX_NEW);
+  const fresh = freshItems(order, model.items, (id) => itemDone(model.items[id], prog[id]) || due.includes(id), MAX_NEW);
   return { diag, due, fresh, ids: [...diag, ...due, ...fresh] };
 }
 
@@ -35,16 +35,17 @@ export async function renderTrack(root, { model, index, rerender }) {
   // a melody item's phrases with 3+ clean echo repeats: [learned, total]
   const melPhrases = (id) => { const m = melodies[items[id].melody], echo = (prog[id] && prog[id].echo) || {}; const n = m ? m.phrases.length : 0; return [m ? m.phrases.filter((_, i) => (echo[i] || 0) >= 3).length : 0, n]; };
   const prog = progress(), rev = reviews();
+  const done = (id) => itemDone(items[id], prog[id]); // a pattern needs «by heart» (see store.js)
   const q = todayQueue(model);
   const order = track.sections.flatMap((s) => s.items);
-  const doneCount = order.filter((id) => isDone(prog[id])).length;
+  const doneCount = order.filter(done).length;
   const longCount = order.filter((id) => longTerm(rev[id])).length;
   const diagList = store.get('diag', []), lastDiag = diagList[0] || null;
   const diagId = order.find((id) => items[id].kind === 'diag');
   let cur = session(track.id);
   // a session whose items are all passed (and none due again) is over
   const due = new Set(dueReviews());
-  if (cur && cur.ids.every((id) => !items[id] || (isDone(prog[id]) && !due.has(id) && !q.diag.includes(id)))) { endSession(track.id); cur = null; }
+  if (cur && cur.ids.every((id) => !items[id] || (done(id) && !due.has(id) && !q.diag.includes(id)))) { endSession(track.id); cur = null; }
   const curNext = cur ? sessionNext(null, track.id) : null;
 
   const header = h('header.top', null,
@@ -64,7 +65,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     const p = prog[id];
     if (q.due.includes(id)) return 'review';
     if (q.diag.includes(id)) return 'now';
-    if (isDone(p)) return 'done';
+    if (done(id)) return 'done';
     if (q.fresh[0] === id) return 'now';
     return p || (items[id].kind === 'exercise' && prog[items[id].ex]) ? 'meh' : 'none';
   };
@@ -73,13 +74,13 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'drill' && p.best) return `${Math.round(p.best.acc * 100)}% · ${(p.best.avgMs / 1000).toFixed(1)} ${t('sec')}`;
     if (it.kind === 'ear' && typeof p.best === 'number') return `${Math.round(p.best * 100)}%`;
     if (it.kind === 'form' && p.choruses) return `${p.cleanChoruses || 0} ${t('fCleanOf')} ${p.choruses} · ${t('bestStreak')} ${p.bestStreak || 0}`;
-    if (it.kind === 'lick' && p.echo && !isDone(p)) { const v = Object.entries(p.echo).map(([c, n]) => `${c} ${Math.min(n, 3)}/3`).join(' · '); return v ? `${t('lk_echo')}: ${v}` : ''; }
-    if (it.kind === 'melody' && !isDone(p)) { const [n, total] = melPhrases(id); return p.echo ? t('melEchoMeta').replace('{n}', n).replace('{m}', total) : ''; }
+    if (it.kind === 'lick' && p.echo && !done(id)) { const v = Object.entries(p.echo).map(([c, n]) => `${c} ${Math.min(n, 3)}/3`).join(' · '); return v ? `${t('lk_echo')}: ${v}` : ''; }
+    if (it.kind === 'melody' && !done(id)) { const [n, total] = melPhrases(id); return p.echo ? t('melEchoMeta').replace('{n}', n).replace('{m}', total) : ''; }
     if (it.kind === 'perform' && p.runs) return `${p.runs} ${plural(p.runs, 'perfRecs')} · ${t('perfBest')} ${p.bestPct || 0}%`;
     if (it.kind === 'diag' && lastDiag) return `${t('dgLastW')}: ${new Date(lastDiag.date).toLocaleDateString()}`;
     if (it.kind === 'pattern' && p.stages) { const n = ['rhythm', 'notes', 'tempo', 'memory'].filter((s) => p.stages[s]).length; return n ? `${t('stagesW')} ${n}/4` : ''; }
     // an exercise item keeps its stages under the exercise id (the item only gets `done`); no rhythm stage here
-    if (it.kind === 'exercise' && !isDone(p)) { const e = prog[it.ex]; const n = e && e.stages ? ['notes', 'tempo', 'memory'].filter((s) => e.stages[s]).length : 0; return n ? `${t('stagesW')} ${n}/3` : ''; }
+    if (it.kind === 'exercise' && !done(id)) { const e = prog[it.ex]; const n = e && e.stages ? ['notes', 'tempo', 'memory'].filter((s) => e.stages[s]).length : 0; return n ? `${t('stagesW')} ${n}/3` : ''; }
     return '';
   };
   // a melody item links to its tune's article in the reference (a sibling link: anchors cannot nest)
@@ -98,7 +99,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     return art ? h('div.itemwrap', null, card, h('a.wikilink', { href: `#/wiki/${art}` }, t('aboutTune'))) : card;
   };
   const section = (sec) => h('section.tsection', null,
-    h('div.row', null, h('h2', null, markTerms(L(sec.title))), h('div.grow'), h('span.meta', null, `${sec.items.filter((id) => isDone(prog[id])).length}/${sec.items.length}`)),
+    h('div.row', null, h('h2', null, markTerms(L(sec.title))), h('div.grow'), h('span.meta', null, `${sec.items.filter(done).length}/${sec.items.length}`)),
     h('p.muted', null, markTerms(L(sec.about))),
     h('div.items', null, ...sec.items.map(itemCard)));
 
@@ -122,7 +123,7 @@ export async function renderTrack(root, { model, index, rerender }) {
 
   // ---- skills: the latest check-up plus what the track already counts ----
   const lickIds = order.filter((id) => items[id].kind === 'lick');
-  const lickDone = lickIds.filter((id) => isDone(prog[id])).length;
+  const lickDone = lickIds.filter(done).length;
   const melIds = order.filter((id) => items[id].kind === 'melody');
   const melSum = melIds.map(melPhrases).reduce((a, [n, m]) => [a[0] + n, a[1] + m], [0, 0]);
   const cleanRounds = order.filter((id) => items[id].kind === 'form').reduce((a, id) => a + ((prog[id] && prog[id].cleanChoruses) || 0), 0);
