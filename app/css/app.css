@@ -1173,6 +1173,7 @@ main.wikimain { flex: 1; display: flex; flex-direction: column; gap: 22px; paddi
 .datapanel { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
 .datapanel > .muted { font-size: 13px; line-height: 1.4; }
 .databtns { flex-wrap: wrap; gap: 8px; }
+.databtns .btn span { display: inline; } /* the phone rule hides icon-button labels; these need theirs */
 .databtns .btn { flex: 1 1 130px; min-height: 42px; padding: 0 12px; font-size: 14px; }
 .dataconfirm { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 14px; background: var(--sub); font-size: 14px; line-height: 1.4; }
 .dataconfirm p { margin: 0; }
