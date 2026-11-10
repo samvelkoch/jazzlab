@@ -7,7 +7,7 @@
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
 import { markTerms } from '../glossary.js';
-import { store, updateEx, exProgress, markActive, idle } from '../store.js';
+import { store, updateEx, exProgress, markActive, idle, reviews } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { melodyNotes, patternBars } from '../music/forms.js';
@@ -23,10 +23,12 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
   const names = settings.names === 'off' ? 'en' : settings.names;
   const phrases = melody.phrases;
   const saved = exProgress(itemId);
+  const due = !!(reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date());
   const clean = phrases.map((_, i) => (saved.echo && saved.echo[i]) || 0);
   const firstOpen = clean.findIndex((n) => n < CLEAN_TO_PASS);
   const st = {
-    stage: store.get('melStage:' + itemId, 'echo'),
+    // a due review opens on «By heart»: its big button leads straight into the from-memory exercise
+    stage: due ? 'memory' : store.get('melStage:' + itemId, 'echo'),
     phrase: firstOpen >= 0 ? firstOpen : 0,
     bpm: store.get('tempo:' + itemId, melody.tempo || form.tempo || 66),
     swing: !!melody.swing && form.style !== 'bossa', // the tune's feel: a bossa is straight, a standard swings
@@ -184,14 +186,16 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     paintCounts();
   }
   function startHint() { return t('mlStartHint').replace(/\{n\}/g, `${nb} ${plural(nb, 'mlBarsW')}`); }
-  function setStage(sid) {
+  /** keep = do not remember the stage (the first paint: a due review opens on «By heart» only for this visit) */
+  function setStage(sid, keep) {
     if (st.playing) stop();
-    st.stage = sid; store.set('melStage:' + itemId, sid);
+    st.stage = sid; if (!keep) store.set('melStage:' + itemId, sid);
     screen.dataset.lstage = sid;
     title.textContent = t('lkT_' + sid); sub.textContent = t('mlS_' + sid);
     footHint.textContent = sid === 'echo' ? t('lkF_echo') : sid === 'fingers' ? t('mlF_link') : '';
     paintStages(); paintCycle(-1, 0); paintPrimary(); paintPhrase();
     if (sid === 'echo') fb(echoDone() ? `<span class="ok">${ICON.check} ${t('mlEchoDone')}</span>` : startHint());
+    else if (due && sid === 'memory') fb(`<b>${t('reviewDueHint')} ↓</b>`);
     else fb(exProgress(itemId).stages.done ? `<span class="ok">${ICON.check} ${t('mlPassed')}</span>` : '');
   }
   function setPhrase(i) {
@@ -224,7 +228,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     bpmOut.innerHTML = `♩ ${st.bpm}`;
     store.set('tempo:' + itemId, st.bpm);
   }
-  function fb(html) { fbEl.innerHTML = html; }
+  function fb(html) { fbEl.innerHTML = html; if (st.playing) bringRollUp(); } // a longer result line pushes the roll down
 
   // ---------- sound ----------
   function play1(m, time, dur, v) {
@@ -239,9 +243,18 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
   let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], barSt = null, lastResult = '';
   const eighthOff = () => { const beat = 60 / st.bpm; return st.swing ? beat * 2 / 3 : beat / 2; }; // the offbeat's offset in the beat
   const enqueue = (x) => { queue.push(x); queue.sort((a, b) => a.t - b.t); };
+  /** Phone: the keyboard sticks above the footer and covers the lower part of the screen. On Start, scroll just enough
+   *  for the whole roll to sit above it, but never past the feedback line (count-in, "your turn", the result). */
+  const phoneMq = window.matchMedia('(max-width: 640px)');
+  function bringRollUp() {
+    if (!phoneMq.matches) return;
+    const r = roll.getBoundingClientRect(), kp = kbPanel.getBoundingClientRect(), top = fbEl.getBoundingClientRect().top;
+    const d = Math.min(r.bottom - kp.top + 8, top - 8);
+    if (d > 2) window.scrollTo({ top: window.scrollY + d, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
   function play() {
     if (!audio.ensureAudio() || st.playing) return;
-    st.playing = true; screen.classList.add('playing'); paintPrimary();
+    st.playing = true; screen.classList.add('playing'); paintPrimary(); bringRollUp();
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); }
     t0 += 4 * beat; beatTime = t0; g = 0;
@@ -362,7 +375,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
 
   setBpm(st.bpm);
   buildRoll(); paintKeys(); paintPhrase();
-  setStage(st.stage);
+  setStage(st.stage, true);
   updateEx(itemId, (p) => p);
 
   return () => {

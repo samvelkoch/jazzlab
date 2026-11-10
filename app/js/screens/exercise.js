@@ -2,7 +2,7 @@
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
-import { store, exProgress, updateEx, markActive, idle, scheduleReview } from '../store.js';
+import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { buildSteps, dynAt, midiRange } from '../music/exercise.js';
 import { toMidi, midiToName, noteName } from '../music/notes.js';
 import { createStaff } from '../music/staff.js';
@@ -19,10 +19,15 @@ export function renderExercise(root, { ex, rerender }) {
   const steps = buildSteps(ex);
   const N = steps.length, per = ex.per;
   const saved = exProgress(ex.id);
+  // the id on spaced review: the track item for a generated lick / melody exercise or an `exercise` item, else the exercise
+  const rid = ex.doneId || ex.id;
+  // as form.js: a due item is judged by this visit's first full both-hands attempt «by heart» (cleared once judged)
+  let wasDue = !!(reviews()[rid] && new Date(reviews()[rid].due) <= new Date());
   const settings = { met: true, count: true, loop: true, gap: true, names: 'en', guideSnd: false, pianoSnd: true, syl: 'food', ...store.get('settings', {}) };
   const st = {
-    // lick and melody exercises are learned by ear first (the Echo stage), so they open on the notes
-    stage: !saved.stages.rhythm && !ex.doneId && !ex.byEar ? 'rhythm' : !saved.stages.notes ? 'notes' : 'tempo',
+    // a due review opens on the from-memory check; lick and melody exercises are learned by ear first (the Echo stage),
+    // so they open on the notes
+    stage: wasDue ? 'memory' : !saved.stages.rhythm && !ex.doneId && !ex.byEar ? 'rhythm' : !saved.stages.notes ? 'notes' : 'tempo',
     step: 0, hands: 'both',
     bpm: store.get('tempo:' + ex.id, ex.tempo.start),
     swing: ex.swing,
@@ -60,7 +65,7 @@ export function renderExercise(root, { ex, rerender }) {
       h('span.kicker', null, ex.kicker ? L(ex.kicker) : `${t('stepUpper')} ${ex.step} · ${t('exerciseUpper')} ${ex.number}`),
       h('span.title', null, markTerms(L(ex.title)))),
     h('div.grow'), stages, h('div.grow'),
-    sessionChip(ex.id), midiChip(), settingsPanel, themeButton());
+    sessionChip(rid), midiChip(), settingsPanel, themeButton());
 
   const fbEl = h('span.fb', { 'aria-live': 'polite' });
   const barEl = h('span.barno');
@@ -126,7 +131,7 @@ export function renderExercise(root, { ex, rerender }) {
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
   swingSeg.classList.add('swing-seg');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: onPrimary });
-  // .footsegs is display:contents on desktop (order is set in CSS); on a phone it is the scrollable first row
+  // .footsegs is display:contents on desktop (order is set in CSS); on a phone it is the first row, wrapping
   const footer = h('footer.actions.exfoot', null, h('div.footsegs', null, handsSeg, swingSeg), h('div.pair', null, prevB, nextB), listenB, h('div.grow'), tempoBox, primary);
 
   const screen = h('div.exscreen', null, header, h('main.ex', null, rs.els.rbar, staffPanel, kbPanel, rs.els.panel, rs.els.stats, rs.els.pad), footer);
@@ -312,13 +317,17 @@ export function renderExercise(root, { ex, rerender }) {
     if (pct >= PASS && st.hands === 'both') {
       passes.clean++;
       updateEx(ex.id, (q) => ({ ...q, bestTempo: Math.max(q.bestTempo || 0, st.bpm) }));
-      // a clean pass completes the stage once (at any tempo, or at the target when passAnyTempo is off)...
-      if ((ex.passAnyTempo || st.bpm >= ex.tempo.target) && !exProgress(ex.id).stages[st.stage]) {
-        markStage(st.stage); paintStages(); html = `<span class="ok">${ICON.check} ${t('stageDone')}</span> · ` + html;
+      // a clean pass completes the stage once (at any tempo, or at the target when passAnyTempo is off); every clean
+      // pass «by heart» also counts for review (scheduleReview ignores one before the due date, so a due item clears)
+      const first = !exProgress(ex.id).stages[st.stage];
+      if ((ex.passAnyTempo || st.bpm >= ex.tempo.target) && (first || st.stage === 'memory')) {
+        const msg = markStage(st.stage) || (first ? `<span class="ok">${ICON.check} ${t('stageDone')}</span>` : '');
+        if (first) paintStages();
+        if (msg) html = msg + ' · ' + html;
       }
       // ...and below the target the +4 bpm nudge is still offered (a suggestion when passAnyTempo is on)
       if (st.bpm < ex.tempo.target) { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
-    }
+    } else if (st.hands === 'both') memoryFailed();
     passes.last = html; fb(html);
   }
   function tick() {
@@ -436,24 +445,35 @@ export function renderExercise(root, { ex, rerender }) {
         // below the target the +4 bpm nudge is still offered (a suggestion when it passes anyway)
         if (st.bpm < ex.tempo.target) { setBpm(Math.min(ex.tempo.target, st.bpm + 4)); html += ` · ♩ → ${st.bpm}`; }
         if (passed) { fb(html); complete(st.stage); return; }
-      }
+      } else if (fullRun && st.hands === 'both') memoryFailed();
     } else if (msg) html += ' · ' + msg;
     fb(html);
   }
-  /** Store the stage as passed (plus the review side effects of "by heart"); no UI, so it is safe mid-loop. */
+  /** Store the stage as passed (plus the review side effects of "by heart"); no UI, so it is safe mid-loop.
+   *  Returns the "review passed" message when this pass cleared a due review, else ''. */
   function markStage(stage) {
     updateEx(ex.id, (p) => ({ ...p, stages: { ...p.stages, [stage]: true } }));
-    if (stage === 'memory' && ex.doneId) {
-      // a generated lick exercise: "by heart" passes the lick item itself (and only it goes on review)
-      updateEx(ex.doneId, (p) => ({ ...p, stages: { ...p.stages, done: true } }));
-      scheduleReview(ex.doneId, true);
-    } else if (stage === 'memory') scheduleReview(ex.id, true); // "by heart" is the gate for spaced review
+    if (stage !== 'memory') return '';
+    // a generated lick exercise: "by heart" passes the lick item itself (and only it goes on review)
+    if (ex.doneId) updateEx(ex.doneId, (p) => ({ ...p, stages: { ...p.stages, done: true } }));
+    const r = scheduleReview(rid, true); // "by heart" is the gate for spaced review
+    if (!wasDue) return ''; // a pass before the due date is practice: the schedule stays (and no message)
+    wasDue = false;
+    return `<span class="ok">${ICON.check} ${t('reviewPassedIn').replace('{n}', r.interval)}</span>`;
+  }
+  /** A judged both-hands attempt «by heart» that was not clean: a due review goes back to day 1, once per visit. */
+  function memoryFailed() {
+    if (st.stage !== 'memory' || !wasDue) return;
+    wasDue = false;
+    scheduleReview(rid, false);
   }
   function complete(stage) {
     const summary = fbEl.innerHTML;
-    markStage(stage);
+    const first = !exProgress(ex.id).stages[stage];
+    // "stage done" only the first time for «by heart» (a repeat there is practice or a review); other stages as before
+    const msg = markStage(stage) || (first || stage !== 'memory' ? `<span class="ok">${ICON.check} ${t('stageDone')}</span>` : '');
     setStage(st.stage); // repaint stage marks
-    fb(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · ${summary}` + (stage === 'rhythm' ? ` · <b>${t('nowNotes')} →</b>` : ''));
+    fb((msg ? `${msg} · ` : '') + summary + (stage === 'rhythm' ? ` · <b>${t('nowNotes')} →</b>` : ''));
     if (stage === 'rhythm') rs.say(`<span class="ok">${ICON.check} ${t('stageDone')}</span> · <b>${t('nowNotes')} →</b>`);
   }
 
