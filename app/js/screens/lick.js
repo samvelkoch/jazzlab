@@ -178,9 +178,10 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
     openBtn.innerHTML = ICON.note + `<span>${t(tk('lkOpen')).replace('{c}', st.chord)}</span>`;
     paintCounts();
   }
-  function setStage(sid) {
+  /** keep = do not remember the stage (the first paint: a due review opens on «By heart» only for this visit) */
+  function setStage(sid, keep) {
     if (st.playing) stop();
-    st.stage = sid; store.set('lickStage:' + itemId, sid);
+    st.stage = sid; if (!keep) store.set('lickStage:' + itemId, sid);
     screen.dataset.lstage = sid;
     title.textContent = t('lkT_' + sid); sub.textContent = t('lkS_' + sid);
     footHint.textContent = sid === 'echo' ? t('lkF_echo') : t('lkF_link');
@@ -217,7 +218,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
     bpmOut.innerHTML = `♩ ${st.bpm}`;
     store.set('tempo:' + itemId, st.bpm);
   }
-  function fb(html) { fbEl.innerHTML = html; }
+  function fb(html) { fbEl.innerHTML = html; if (st.playing) bringRollUp(); } // a longer result line pushes the roll down
 
   // ---------- sound ----------
   function play1(m, time, dur, v) {
@@ -367,7 +368,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
 
   setBpm(st.bpm);
   buildRoll(); paintKeys(); paintChord();
-  setStage(st.stage);
+  setStage(st.stage, true);
   updateEx(itemId, (p) => p);
 
   return () => {

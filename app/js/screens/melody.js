@@ -186,9 +186,10 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     paintCounts();
   }
   function startHint() { return t('mlStartHint').replace(/\{n\}/g, `${nb} ${plural(nb, 'mlBarsW')}`); }
-  function setStage(sid) {
+  /** keep = do not remember the stage (the first paint: a due review opens on «By heart» only for this visit) */
+  function setStage(sid, keep) {
     if (st.playing) stop();
-    st.stage = sid; store.set('melStage:' + itemId, sid);
+    st.stage = sid; if (!keep) store.set('melStage:' + itemId, sid);
     screen.dataset.lstage = sid;
     title.textContent = t('lkT_' + sid); sub.textContent = t('mlS_' + sid);
     footHint.textContent = sid === 'echo' ? t('lkF_echo') : sid === 'fingers' ? t('mlF_link') : '';
@@ -227,7 +228,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
     bpmOut.innerHTML = `♩ ${st.bpm}`;
     store.set('tempo:' + itemId, st.bpm);
   }
-  function fb(html) { fbEl.innerHTML = html; }
+  function fb(html) { fbEl.innerHTML = html; if (st.playing) bringRollUp(); } // a longer result line pushes the roll down
 
   // ---------- sound ----------
   function play1(m, time, dur, v) {
@@ -374,7 +375,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
 
   setBpm(st.bpm);
   buildRoll(); paintKeys(); paintPhrase();
-  setStage(st.stage);
+  setStage(st.stage, true);
   updateEx(itemId, (p) => p);
 
   return () => {

@@ -131,7 +131,7 @@ export function renderExercise(root, { ex, rerender }) {
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
   swingSeg.classList.add('swing-seg');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: onPrimary });
-  // .footsegs is display:contents on desktop (order is set in CSS); on a phone it is the scrollable first row
+  // .footsegs is display:contents on desktop (order is set in CSS); on a phone it is the first row, wrapping
   const footer = h('footer.actions.exfoot', null, h('div.footsegs', null, handsSeg, swingSeg), h('div.pair', null, prevB, nextB), listenB, h('div.grow'), tempoBox, primary);
 
   const screen = h('div.exscreen', null, header, h('main.ex', null, rs.els.rbar, staffPanel, kbPanel, rs.els.panel, rs.els.stats, rs.els.pad), footer);

@@ -972,7 +972,7 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   .exscreen .stages::-webkit-scrollbar { display: none; }
   .exscreen .stages button { flex: 1 0 auto; min-width: 0; min-height: 38px; padding: 0 8px; font-size: 13.5px; }
 
-  /* footer: row 1 = segmented controls (scrollable) [+ prev/next/listen on the notes stage]; row 2 = tempo stepper + primary button */
+  /* footer: row 1 = segmented controls (wrapping) [+ prev/next/listen on the notes stage]; row 2 = tempo stepper + primary button */
   footer.actions { gap: 8px; padding: 8px max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
   footer.actions { margin-top: auto; }
   footer.actions > * { order: 3; }
