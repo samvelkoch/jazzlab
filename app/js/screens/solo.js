@@ -7,6 +7,7 @@
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
 import { markTerms } from '../glossary.js';
+import { decorateFunctions } from '../fnlabels.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -54,6 +55,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
   });
   const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
+  decorateFunctions(cells, bars);
   // the current bar stays in view: inside a scrolling grid (32 bars, as form.js), then inside the panel (desktop) or the page
   // (a phone: the panel grows, the keyboard sticks over the page above the footer, so a 16- or 32-bar grid runs under it)
   const scrolls = (el) => el.scrollHeight > el.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(el).overflowY);
