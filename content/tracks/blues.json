@@ -5,10 +5,10 @@
   "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
   "path": [
     "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "ear-hl1", "lick-l1", "form-rh-l1", "imp-b1", "d-fifths",
-    "ear-iv1", "lick-l2", "lick-l3", "form-rh-l3", "form-2h-l1", "d-chords", "ear-hl2", "pat-p1q", "form-p1q",
-    "lick-l4", "ear-iv2", "form-rh-l4", "lick-l5", "form-rh-qa", "imp-b2", "d-all", "ear-q1", "pat-p2", "form-p2",
+    "ear-iv1", "lick-l2", "lick-l3", "form-rh-l3", "form-2h-l1", "imp-b1r", "d-chords", "ear-hl2", "pat-p1q", "form-p1q",
+    "lick-l4", "ear-iv2", "form-rh-l4", "lick-l5", "form-rh-qa", "imp-b2", "d-all", "imp-b2e", "ear-q1", "pat-p2", "form-p2", "imp-b2r",
     "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "form-rh-l6", "form-2h-qa", "imp-b3", "d-chords-ta", "ear-q2",
-    "pat-ta", "form-ta", "pat-p3", "form-p3", "end-blues", "ear-iv5", "lick-l7", "perf-blues", "imp-b4",
+    "pat-ta", "form-ta", "imp-b3r", "pat-p3", "form-p3", "end-blues", "ear-iv5", "imp-b3v", "lick-l7", "perf-blues", "imp-b4",
     "mel-tinroof", "form-mel-tinroof"
   ],
   "sections": [
@@ -35,7 +35,7 @@
     {
       "id": "imp", "title": { "ru": "Импровизация", "en": "Improvisation" },
       "about": { "ru": "Бэнд играет форму, ты играешь своё. Приложение не сравнивает с эталоном, а смотрит: в ладу, в сетке, фразы с паузами, ноты аккорда на смене. Всё записывается.", "en": "The band plays the form, you play your own lines. No reference to copy: the app looks at what you play: in the scale, on the grid, phrases with rests, chord tones on the changes. Everything is recorded." },
-      "items": ["imp-b1", "imp-b2", "imp-b3", "imp-b4"]
+      "items": ["imp-b1", "imp-b1r", "imp-b2", "imp-b2e", "imp-b2r", "imp-b3", "imp-b3r", "imp-b3v", "imp-b4"]
     },
     {
       "id": "ear", "title": { "ru": "Слух", "en": "Ear" },
@@ -149,6 +149,11 @@
     "imp-b2": { "kind": "solo", "solo": "blues-call" },
     "imp-b3": { "kind": "solo", "solo": "blues-chords" },
     "imp-b4": { "kind": "solo", "solo": "blues-solo" },
+    "imp-b1r": { "kind": "solo", "solo": "blues-eighths" },
+    "imp-b2e": { "kind": "solo", "solo": "blues-echo" },
+    "imp-b2r": { "kind": "solo", "solo": "blues-charleston" },
+    "imp-b3r": { "kind": "solo", "solo": "blues-anticipation" },
+    "imp-b3v": { "kind": "solo", "solo": "blues-vary" },
     "mel-stl": { "kind": "melody", "melody": "stl-c", "pattern": "p1" },
     "form-mel-stl": {
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "melody": "stl-c",

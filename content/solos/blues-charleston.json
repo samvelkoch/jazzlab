@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-charleston",
+  "title": {"ru": "Блюз: чарльстон", "en": "Blues: the Charleston rhythm"},
+  "about": {"ru": "Сначала простучи ритм на одной клавише: длинная нота на единице, короткая на «и» двойки, потом пауза. Потом играй его нотами блюзовой гаммы в двух тактах, два следующих молчи.", "en": "First tap the rhythm on one key: a long note on 1, a short one on the «and» of 2, then a rest. Then play it with notes of the blues scale for two bars, and stay silent for the next two."},
+  "form": "blues-c",
+  "pattern": "p2",
+  "palette": {"mode": "scale", "scale": "blues", "root": "C"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": "charleston",
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

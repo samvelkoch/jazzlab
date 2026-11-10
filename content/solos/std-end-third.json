@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-end-third",
+  "title": {"ru": "Стандарт: закончи фразу на терции", "en": "The standard: end the phrase on the 3rd"},
+  "about": {"ru": "Играй фразы с паузами, а последнюю ноту каждой фразы ставь на терцию аккорда (на подсвеченную «3»). Терция сразу говорит, какой это аккорд.", "en": "Play phrases with rests, and put the last note of each phrase on the third of the chord (the lit «3»). The third tells you which chord it is."},
+  "form": "std-f",
+  "pattern": "s2",
+  "palette": {"mode": "chordscale"},
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": {"play": 2, "rest": 2},
+  "call": false,
+  "endOn": "third",
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.85, "grid": 0.7, "phrases": 3, "rests": 0.8, "ends": 0.6, "pitches": 3}
+}

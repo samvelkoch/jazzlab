@@ -1,0 +1,15 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-answer",
+  "title": {"ru": "Стандарт: ответ, который слышно", "en": "The standard: an answer you can hear"},
+  "about": {"ru": "Бэнд задаёт вопрос двумя тактами, ты отвечаешь так, чтобы ответ был на него похож: тот же ритм, или начни или закончи на ноте вопроса, или повтори его рисунок вверх-вниз.", "en": "The band asks a two-bar question; answer so that it clearly relates: the same rhythm, or start or end on a note of the question, or repeat its up-down shape."},
+  "form": "std-f",
+  "pattern": "s2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 15], "scale": "major", "root": "F"}, {"bars": [16, 23], "scale": "major", "root": "Bb"}, {"bars": [24, 31], "scale": "major", "root": "F"}]},
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": {"play": 2, "rest": 2},
+  "call": true,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "motif": 0.5, "pitches": 3}
+}

@@ -5,9 +5,9 @@
   "about": { "ru": "Цель дорожки: 32-тактовый стандарт целиком. Левая ведёт аккорды голосоведением, правая мелодию, потом свои фразы по II–V–I.", "en": "Goal: a whole 32-bar standard. The left hand leads the chords with voice leading, the right hand carries the tune, then your own phrases over II–V–I." },
   "path": [
     "d-chords-f", "ear-find-std", "ear-hl1-std", "pat-s1", "form-s1", "ear-iv1-std", "mel-std", "form-mel-std",
-    "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "lick-k1", "form-rh-k1", "ear-iv2-std", "pat-s2", "form-s2",
-    "ear-hl2-std", "form-2h-std", "imp-s2", "ear-pr1-std", "lick-k2", "lick-k3", "ear-iv3-std", "form-rh-qa-std",
-    "pat-s2-form", "ear-hl3-std", "imp-s3", "end-std", "ear-pr2-std", "perf-std", "ear-q3-std", "imp-s4",
+    "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "lick-k1", "form-rh-k1", "imp-s1r", "ear-iv2-std", "pat-s2", "form-s2",
+    "ear-hl2-std", "form-2h-std", "imp-s2", "ear-pr1-std", "imp-s2m", "lick-k2", "lick-k3", "ear-iv3-std", "form-rh-qa-std", "imp-s2q",
+    "pat-s2-form", "ear-hl3-std", "imp-s3", "end-std", "imp-s3e", "ear-pr2-std", "perf-std", "ear-q3-std", "imp-s4",
     "ear-iv4-std", "mel-bbb", "form-mel-bbb", "perf-bbb", "ear-iv5-std", "mel-sgb", "form-mel-sgb", "perf-sgb",
     "ear-iv6-std", "mel-hsr", "form-mel-hsr", "perf-hsr", "mel-aim", "form-mel-aim", "perf-aim", "ear-iv7-std",
     "mel-tft", "form-mel-tft", "perf-tft"
@@ -41,7 +41,7 @@
     {
       "id": "imp", "title": { "ru": "Импровизация", "en": "Improvisation" },
       "about": { "ru": "Бэнд играет 32 такта AABA со свингом, ты играешь своё. Сначала фа мажор с бриджем в Bb, потом импровизация по аккордам: палитра меняется даже посреди такта. Всё записывается.", "en": "The band plays 32 bars of AABA with swing, you play your own lines. First F major with the bridge in B-flat, then improvising on the chords: the palette changes even mid-bar. Everything is recorded." },
-      "items": ["imp-s1", "imp-s2", "imp-s3", "imp-s4"]
+      "items": ["imp-s1", "imp-s1r", "imp-s2", "imp-s2m", "imp-s2q", "imp-s3", "imp-s3e", "imp-s4"]
     },
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
@@ -140,6 +140,10 @@
     "imp-s2": { "kind": "solo", "solo": "std-call" },
     "imp-s3": { "kind": "solo", "solo": "std-chords" },
     "imp-s4": { "kind": "solo", "solo": "std-solo" },
+    "imp-s1r": { "kind": "solo", "solo": "std-displaced" },
+    "imp-s2m": { "kind": "solo", "solo": "std-answer" },
+    "imp-s2q": { "kind": "solo", "solo": "std-ask" },
+    "imp-s3e": { "kind": "solo", "solo": "std-end-third" },
     "ear-find-std": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
       "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Сначала рядом с C4, потом шире, потом через три октавы.", "en": "I play a note, you find it on the keys. Close to C4 first, then wider, then across three octaves." },

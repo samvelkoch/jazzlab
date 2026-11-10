@@ -4,14 +4,18 @@
 // from the notes recorded in that chorus. Live feedback on every key is instant. A run is solo.choruses choruses;
 // the run passes when every threshold of solo.pass is met (mean over the choruses). Each run is recorded like a
 // performance (store 'recordings', kind 'solo'), with listen back / MIDI download / delete.
+// With solo.rhythm (rhythm cells) the screen starts with a tap step: the cell in notation, tapped on one key (any key), then
+// the solo; the solo run is scored for `rhythm` too. With solo.call + solo.motif the band plays a one-bar motif to repeat / vary.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
 import { markTerms } from '../glossary.js';
+import { decorateFunctions } from '../fnlabels.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { patternBars, parseChord, patSpell } from '../music/forms.js';
-import { paletteAt, scoreChorus, combine, checks, passed, coverage, makeCall, roleOf, gridIndex, PER, APPROACH_E8 } from '../music/solo.js';
+import { paletteAt, scoreChorus, combine, checks, passed, coverage, makeCall, makeMotif, resolveCells, roleOf, gridIndex, gridTol, PER, APPROACH_E8 } from '../music/solo.js';
+import { renderRhythmNotation } from '../music/rhythmnote.js';
 import { gridDev, tols, rhythmAccuracy } from '../music/recording.js';
 import { groove } from '../music/drums.js';
 import { recordingToMidi } from '../music/export.js';
@@ -23,14 +27,18 @@ const TAP_DUR = 0.3;
 const r3 = (x) => Math.round(x * 1000) / 1000;
 const pcm = (m) => ((m % 12) + 12) % 12;
 
-export function renderSolo(root, { track, itemId, item, solo, form, pattern, back }) {
+export function renderSolo(root, { track, itemId, item, solo, form, pattern, rhythms, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
   const names = settings.names === 'off' ? 'en' : settings.names;
   const bars = form.bars, NB = bars.length;
   const lhNotes = patternBars(pattern, bars); // the band's left hand, bar by bar
   const hand = { lo: 60, hi: 72, ...(solo.hand || {}) };
   const CH = Math.max(1, solo.choruses || 1);
-  const st = { mode: 'play', bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing && form.style !== 'bossa' };
+  const cells = resolveCells(solo, rhythms); // rhythm cells (none: [])
+  const tapped = () => new Set(exProgress(itemId).tapped || []);
+  const allTapped = () => cells.every((c) => tapped().has(c.id));
+  let cellNo = Math.max(0, cells.findIndex((c) => !tapped().has(c.id)));
+  const st = { mode: cells.length && !allTapped() ? 'tap' : 'play', bpm: store.get('tempo:' + itemId, form.tempo || 66), swing: !!form.swing && form.style !== 'bossa' };
   let wasDue = !!(reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date());
   const midiOn = () => midiState().connected;
   const myRecs = () => store.get('recordings', []).filter((r) => r.itemId === itemId);
@@ -46,19 +54,20 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   const palEl = h('div.solopal');
   const roleWord = { you: t('soYou'), rest: t('soRest'), band: t('soBand') };
   const marks = [];
-  const cells = bars.map((c, k) => {
+  const barEls = bars.map((c, k) => {
     const role = roleOf(solo, k), mk = h('span.fmark');
     marks.push(mk);
     return h('div.fcell', { 'data-bar': k, 'data-role': role }, h('span.fno', null, String(k + 1)), mk, h('b.fchord', null, c),
       h('small.frole', null, roleWord[role]),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
   });
-  const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
+  const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...barEls);
+  decorateFunctions(barEls, bars);
   // the current bar stays in view: inside a scrolling grid (32 bars, as form.js), then inside the panel (desktop) or the page
   // (a phone: the panel grows, the keyboard sticks over the page above the footer, so a 16- or 32-bar grid runs under it)
   const scrolls = (el) => el.scrollHeight > el.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(el).overflowY);
   const keepInView = (k) => {
-    const c = cells[k]; if (!c) return;
+    const c = barEls[k]; if (!c) return;
     if (scrolls(grid) && (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight)) grid.scrollTop = Math.max(0, c.offsetTop - 8);
     const r = c.getBoundingClientRect(), inPanel = scrolls(panel);
     let top, bottom;
@@ -71,13 +80,28 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     if (!dy) return;
     if (inPanel) panel.scrollTop += dy; else window.scrollBy(0, dy);
   };
+  // the rhythm cell: chips, notation, status
+  const rhySvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const rhyChips = h('div.seg.rhychips');
+  const rhyAbout = h('span.rhyabout.muted');
+  const rhyBox = cells.length ? h('div.solorhythm', null, h('div.rhyhead', null, h('b', null, t('soRhythm') + ':'), rhyChips, rhyAbout), rhySvg) : null;
+  let rhyNote = null;
+  function paintRhythm() {
+    if (!rhyBox) return;
+    const c = cells[cellNo], done = tapped();
+    rhyNote = renderRhythmNotation(rhySvg, c.events, c.per, PER);
+    rhyChips.replaceChildren(...cells.map((x, i) => h('button', { type: 'button', 'aria-pressed': String(i === cellNo), onclick: () => { if (tap || run) return; cellNo = i; paintRhythm(); } }, `${L(x.title)}${done.has(x.id) ? ' ✓' : ''}`)));
+    rhyChips.style.display = cells.length > 1 ? '' : 'none';
+    rhyAbout.textContent = (cells.length > 1 ? L(c.about) : `${L(c.title)}. ${L(c.about)}`);
+    rhyBox.dataset.mode = st.mode;
+  }
   const board = h('div.soloboard');
   const summary = h('div.dsummary.perfsum');
   const sumActs = h('div.perfacts');
   const list = h('div.perflist');
   const panel = h('section.panel.formpanel.solopanel', null,
     h('div.staffhead', null, chorusEl, h('div.grow'), fbEl),
-    palEl, grid, board,
+    palEl, rhyBox, grid, board,
     h('p.muted.dabout', null, markTerms(L(item.about || solo.about))),
     summary, sumActs, list);
   const kbEl = h('div');
@@ -86,7 +110,14 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   const tempoBox = h('div.stepper', null,
     h('button', { type: 'button', 'aria-label': t('slower'), onclick: () => setBpm(st.bpm - 4) }, '−'), bpmOut,
     h('button', { type: 'button', 'aria-label': t('faster'), onclick: () => setBpm(st.bpm + 4) }, '+'));
-  const modeSeg = seg([['play', t('fPlay')], ['listen', t('fListen')]], st.mode, (v) => { if (run) halt(); st.mode = v; paintHint(); }, 'rMode');
+  const modeSeg = seg([...(cells.length ? [['tap', t('soTapMode')]] : []), ['play', t('fPlay')], ['listen', t('fListen')]], st.mode, (v) => setMode(v), 'rMode');
+  function setMode(v) {
+    if (run) halt(); stopTap();
+    st.mode = v;
+    modeSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+    paintHint(); paintPrimary(); paintRhythm();
+    fb(startText());
+  }
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
   const beatSeg = seg([['drums', t('drums')], ['click', t('metronome')]], settings.impBeat, (v) => { settings.impBeat = v; store.set('settings', { ...store.get('settings', {}), impBeat: v }); }, 'backing');
   const footHint = h('span.foothint');
@@ -158,10 +189,10 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   }
   const fb = (html) => { fbEl.innerHTML = html; };
   function setBpm(v) { if (run) return; st.bpm = Math.max(40, Math.min(160, Math.round(v))); bpmOut.innerHTML = `♩ ${st.bpm}`; store.set('tempo:' + itemId, st.bpm); }
-  function paintPrimary() { primary.innerHTML = run ? ICON.stop + `<span>${t('stop')}</span>` : ICON.play + `<span>${t('play')}</span>`; }
-  function paintHint() { footHint.textContent = st.mode === 'listen' ? t('soListenHint') : midiOn() ? t('soPlayHint') : t('soPlayHintScreen'); }
+  function paintPrimary() { primary.innerHTML = run || tap ? ICON.stop + `<span>${t('stop')}</span>` : ICON.play + `<span>${t('play')}</span>`; }
+  function paintHint() { footHint.textContent = st.mode === 'tap' ? t('soTapHint') : st.mode === 'listen' ? t('soListenHint') : midiOn() ? t('soPlayHint') : t('soPlayHintScreen'); }
   function paintChorus(k) { chorusEl.textContent = `${t('chorusW')} ${k + 1}${CH > 1 ? ` / ${CH}` : ''}`; }
-  const startText = () => (CH > 1 ? t('soStartN').replace('{n}', CH) : solo.call ? t('soStartCall') : !solo.phrasing ? t('soStartFree') : t('soStart'));
+  const startText = () => (st.mode === 'tap' ? t('soStartTap') : solo.motif ? t(solo.motif === 'repeat' ? 'soStartRepeat' : 'soStartVary') : solo.endOn ? t('soStartEnds') : cells.length ? t('soStartRhythm') : CH > 1 ? t('soStartN').replace('{n}', CH) : solo.call ? t('soStartCall') : !solo.phrasing ? t('soStartFree') : t('soStart'));
 
   // ---------- transport: a run (play / listen) or the playback of a recording ----------
   let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, lastOut = null;
@@ -174,7 +205,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   function begin(r) {
     run = r; g = 0; beatTime = r.t0; lastOut = null;
     screen.classList.add('playing'); paintPrimary();
-    cells.forEach((c) => c.classList.remove('cur'));
+    barEls.forEach((c) => c.classList.remove('cur'));
     clearMarks();
     // the end: chorus boards, then the finish one beat after the last chorus
     for (let c = 0; c < r.choruses; c++) queue.push({ t: r.t0 + (c + 1) * r.chorusLen + 0.3, chorusEnd: c });
@@ -183,6 +214,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   }
   function start() {
     if (run || !audio.ensureAudio()) return;
+    if (st.mode === 'play' && cells.length && !allTapped()) { setMode('tap'); fb(`<span class="meh">${t('soTapFirst')}</span>`); return; }
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); }
     t0 += 4 * beat;
@@ -217,7 +249,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       lhNotes[bar].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(r.beat * 0.5, 0.25) : r.beat * e.d / 2 * 0.9, 0.35));
       // the band's call: a new phrase on the first bar of each band stretch
       if (r.kind !== 'play' && slot === 0 && roleOf(solo, bar) === 'band' && (bar === 0 || roleOf(solo, bar - 1) !== 'band')) {
-        makeCall(solo, bars, bar, Math.random).notes.forEach((n) => {
+        (solo.motif ? makeMotif : makeCall)(solo, bars, bar, Math.random).notes.forEach((n) => {
           const gg = g + n.slot, at = timeOfG(r, gg), d = Math.max(0.12, r.swingOff * n.len * 0.95);
           r.bandQ.push({ g: gg, m: n.m, d });
           r.calls.push({ t: r3(at - r.t0), d: r3(d), m: n.m, v: 0.55 });
@@ -253,7 +285,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     if (!run) return;
     if (q.ci !== undefined) fb(`${t('countInLabel')}: <b>${q.ci}</b>`);
     else if (q.barStart !== undefined) {
-      cells.forEach((c, k) => { c.classList.toggle('cur', k === q.barStart); if (k !== q.barStart) c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); });
+      barEls.forEach((c, k) => { c.classList.toggle('cur', k === q.barStart); if (k !== q.barStart) c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); });
       if (q.barStart >= 0) {
         keepInView(q.barStart); paintChorus(q.chorus);
         if (q.barStart === 0 && q.chorus > 0) clearMarks();
@@ -261,7 +293,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       }
     } else if (q.g !== undefined) {
       const slot = q.g % PER, bar = Math.floor(q.g / PER) % NB;
-      cells[bar].querySelectorAll('.fbeats i').forEach((i, b) => i.classList.toggle('on', b <= slot >> 1));
+      barEls[bar].querySelectorAll('.fbeats i').forEach((i, b) => i.classList.toggle('on', b <= slot >> 1));
       if (slot === 0 || slot === 4) paintPalette(bar, slot);
       if (run.kind === 'run') markActive();
     } else if (q.barEnd !== undefined) { if (run.kind === 'run') paintBar(q.barEnd, q.chorus); }
@@ -275,15 +307,92 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     screen.classList.remove('playing');
     if (was) { audio.hush(); silence(); }
     playDown.forEach((m) => kb.down(m, false)); playDown.clear();
-    cells.forEach((c) => { c.classList.remove('cur'); c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); });
+    barEls.forEach((c) => { c.classList.remove('cur'); c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); });
     idle(); paintPrimary(); paintChorus(0); paintPalette(0, 0);
     if (was && was.kind === 'play') { fb(''); paintList(); }
   }
-  function toggle() { if (run && run.kind === 'run') finish(false); else if (run) halt(); else start(); }
+  function toggle() {
+    if (st.mode === 'tap' && !run) { if (tap) stopTap(); else startTap(); return; }
+    if (run && run.kind === 'run') finish(false); else if (run) halt(); else start();
+  }
+
+  // ---------- tap step: the cell's rhythm on one key (any key), before the notes ----------
+  // The app plays the cell twice (a note on each onset), then you tap it (4 rounds; 3 for a two-bar cell) over a click.
+  // A round is clean when the taps are on the eighth grid and are exactly the cell's onsets; all but one round clean = done.
+  let tap = null;
+  function startTap() {
+    if (tap || run || !audio.ensureAudio()) return;
+    const c = cells[cellNo], beat = 60 / st.bpm, swingOff = st.swing ? beat * 2 / 3 : beat / 2;
+    const LREPS = 2, TREPS = c.nbars === 1 ? 4 : 3, reps = LREPS + TREPS, total = reps * c.per;
+    let t0 = audio.now() + 0.12;
+    const ci = []; for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); ci.push({ t: t0 + k * beat, k: k + 1 }); }
+    t0 += 4 * beat;
+    const at = (gg) => t0 + Math.floor(gg / 2) * beat + (gg % 2 ? swingOff : 0);
+    const onset = new Set(c.events.filter((e) => !e.rest).map((e) => e.t)), key = Math.round((hand.lo + hand.hi) / 2);
+    for (let gg = 0; gg < total; gg++) {
+      if (gg % 2 === 0) audio.click(at(gg), gg % PER === 0);
+      if (gg < LREPS * c.per && onset.has(gg % c.per)) play1(key, at(gg), beat * 0.4, 0.5);
+    }
+    tap = { c, t0, beat, bpm: st.bpm, swing: st.swing, LREPS, TREPS, reps, total, taps: [], ci, endAt: at(total) + 0.25, key };
+    paintPrimary(); screen.classList.add('playing');
+    tap.timer = setInterval(tapTick, 40);
+    fb(`${t('countInLabel')}: <b>1</b>`);
+  }
+  function tapTick() {
+    if (!tap) return;
+    const now = audio.now(), r = tap;
+    if (now < r.t0) { const k = r.ci.filter((x) => x.t <= now).length; fb(`${t('countInLabel')}: <b>${Math.max(1, k)}</b>`); return; }
+    if (now >= r.endAt) { tapDone(); return; }
+    const gg = Math.max(0, Math.floor(slotAt0(now - r.t0, r)));
+    const rep = Math.floor(gg / r.c.per);
+    if (rhyNote) rhyNote.now(rep < r.reps ? gg % r.c.per : -1);
+    const w = rep < r.LREPS ? t('soTapListen') : t('soTapYou');
+    const label = `<b class="${rep < r.LREPS ? 'meh' : 'ok'}">${w}</b> ${Math.min(rep + 1, r.reps) - (rep < r.LREPS ? 0 : r.LREPS)} / ${rep < r.LREPS ? r.LREPS : r.TREPS}`;
+    if (tap.label !== label) { tap.label = label; fb(label); }
+  }
+  const slotAt0 = (tt, r) => { const w = Math.floor(tt / r.beat), f = tt / r.beat - w, sw = r.swing ? 2 / 3 : 0.5; return 2 * w + (f < sw ? f / sw : 1 + (f - sw) / (1 - sw)); };
+  function tapInput(m, T) {
+    const r = tap, tt = T - r.t0;
+    if (tt < -tols(r.bpm).win) return;
+    const gi = gridIndex(tt, r.bpm, r.swing), rep = Math.floor(gi / r.c.per);
+    const dev = Math.abs(gridDev(tt, r.bpm, r.swing)), onGrid = dev <= gridTol(r.bpm);
+    r.taps.push({ rep, slot: gi - rep * r.c.per, onGrid });
+    if (rep < r.LREPS || rep >= r.reps) { kb.flash(m, 'meh'); return; }
+    const hit = onGrid && r.c.events.some((e) => !e.rest && e.t === gi - rep * r.c.per);
+    kb.flash(m, hit ? 'ok' : 'bad');
+  }
+  function tapDone() {
+    const r = tap; if (!r) return;
+    const onset = new Set(r.c.events.filter((e) => !e.rest).map((e) => e.t));
+    let clean = 0;
+    for (let k = r.LREPS; k < r.reps; k++) {
+      const tp = r.taps.filter((x) => x.rep === k), sl = new Set(tp.map((x) => x.slot));
+      if (tp.every((x) => x.onGrid) && sl.size === onset.size && [...sl].every((x) => onset.has(x))) clean++;
+    }
+    stopTap();
+    const ok = clean >= r.TREPS - 1;
+    if (ok) {
+      updateEx(itemId, (p) => ({ ...p, tapped: [...new Set([...(p.tapped || []), r.c.id])] }));
+      const next = cells.findIndex((c) => !tapped().has(c.id));
+      if (next >= 0) cellNo = next;
+      paintRhythm();
+      if (allTapped()) { fb(`<span class="ok">${t('soTapDone')}</span> ${clean} / ${r.TREPS}`); setTimeout(() => { if (!run && !tap && st.mode === 'tap') setMode('play'); }, 1400); }
+      else fb(`<span class="ok">${t('soTapOne')}</span> ${clean} / ${r.TREPS}`);
+    } else fb(`<span class="meh">${t('soTapAgain')}</span> ${clean} / ${r.TREPS}`);
+  }
+  function stopTap() {
+    if (!tap) return;
+    clearInterval(tap.timer); const was = tap; tap = null;
+    audio.hush(); silence();
+    screen.classList.remove('playing');
+    if (rhyNote) rhyNote.now(-1);
+    paintPrimary(); void was;
+  }
 
   // ---------- input: record, instant feedback ----------
   function input(m, T, v, dur) {
     markActive();
+    if (tap) { tapInput(m, T); return; }
     const r = run;
     if (!r || r.kind !== 'run') return;
     const tt = T - r.t0, { win, tight } = tols(r.bpm);
@@ -317,27 +426,29 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   }
 
   // ---------- scoring ----------
+  const chorusCalls = (r, c) => r.calls.filter((n) => Math.floor(gridIndex(n.t, r.bpm, r.swing) / (NB * PER)) === c).map((n) => ({ t: n.t - c * r.chorusLen, m: n.m }));
   const chorusNotes = (r, c) => {
     const span = NB * PER;
     return r.notes.filter((n) => Math.floor(gridIndex(n.t, r.bpm, r.swing) / span) === c || (c === 0 && gridIndex(n.t, r.bpm, r.swing) < 0))
       .map((n) => ({ t: n.t - c * r.chorusLen, m: n.m }));
   };
-  const ctxOf = (r) => ({ solo, bars, bpm: r.bpm, swing: r.swing });
-  function clearMarks() { cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad')); marks.forEach((mk) => { mk.textContent = ''; mk.className = 'fmark'; }); }
+  const ctxOf = (r, c) => ({ solo, bars, bpm: r.bpm, swing: r.swing, cells, calls: solo.call ? chorusCalls(r, c) : null });
+  function clearMarks() { barEls.forEach((c) => c.classList.remove('ok', 'meh', 'bad')); marks.forEach((mk) => { mk.textContent = ''; mk.className = 'fmark'; }); }
   function markBar(k, b) {
     const sym = [];
     let cls = '';
     if (b.role === 'you') {
       if (b.clean) { sym.push('✓'); cls = 'ok'; }
+      if (b.rhy === true) sym.push('♪'); else if (b.rhy === false) { sym.push('♩?'); cls = cls || 'meh'; }
       if (b.target === true) sym.push('◇'); else if (b.target === false) { sym.push('◆'); cls = cls || 'meh'; }
     } else if (b.restOk === false) { sym.push('−'); cls = 'bad'; }
     marks[k].textContent = sym.join(' ');
     marks[k].className = 'fmark' + (cls ? ' ' + cls : '');
-    cells[k].classList.remove('ok', 'meh', 'bad');
-    if (cls) cells[k].classList.add(cls);
+    barEls[k].classList.remove('ok', 'meh', 'bad');
+    if (cls) barEls[k].classList.add(cls);
   }
   function paintBar(bar, chorus) { // after each bar: score the chorus so far, mark this bar
-    const r = run, s = scoreChorus(chorusNotes(r, chorus).filter((n) => gridIndex(n.t, r.bpm, r.swing) < (bar + 1) * PER), ctxOf(r));
+    const r = run, s = scoreChorus(chorusNotes(r, chorus).filter((n) => gridIndex(n.t, r.bpm, r.swing) < (bar + 1) * PER), ctxOf(r, chorus));
     markBar(bar, s.perBar[bar]);
   }
   const pct = (x) => `${Math.round(x * 100)}%`;
@@ -353,11 +464,14 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
         stat(ph, t('soMPhrases'), 'phrases', pass.phrases),
         solo.phrasing ? stat(fmtR(s.rests), t('soMRests'), 'rests', pass.rests != null ? pct(pass.rests) : null) : null,
         solo.targets ? stat(fmtR(s.targets), t('soMTargets'), 'targets', pass.targets != null ? pct(pass.targets) : null) : null,
+        cells.length ? stat(fmtR(s.rhythm), t('soMRhythm'), 'rhythm', pass.rhythm != null ? pct(pass.rhythm) : null) : null,
+        solo.call && (solo.motif || pass.motif != null) ? stat(fmtR(s.motif), t(solo.motif === 'repeat' ? 'soMMotifRep' : solo.motif === 'vary' ? 'soMMotifVar' : 'soMMotif'), 'motif', pass.motif != null ? pct(pass.motif) : null) : null,
+        solo.endOn ? stat(fmtR(s.ends), t(solo.endOn === 'root' ? 'soMEndsRoot' : 'soMEndsThird'), 'ends', pass.ends != null ? pct(pass.ends) : null) : null,
         solo.targets && s.targets.changes != null ? stat(`${s.targets.total}/${s.targets.changes}`, t('soMCover'), 'cover', pass.cover != null ? pct(pass.cover) : null) : null,
         stat(s.pitches, t('soMPitches'), 'pitches', pass.pitches)));
   }
   function finishChorus(c) {
-    const r = run, s = scoreChorus(chorusNotes(r, c), ctxOf(r));
+    const r = run, s = scoreChorus(chorusNotes(r, c), ctxOf(r, c));
     r.scores[c] = s;
     if (c === r.choruses - 1) s.perBar.forEach((b, k) => markBar(k, b)); // the next chorus has already cleared the grid
     if (CH > 1) board.prepend(boardRow(`${t('soChorusBoard')} ${c + 1}`, s));
@@ -374,7 +488,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     const limit = done * r.chorusLen + tols(r.bpm).win;
     const notes = r.notes.filter((n) => n.t < limit).map((n) => ({ t: r3(n.t), d: r3(n.d), m: n.m, v: n.v }));
     if (!notes.length) { fb(t('perfEmpty')); return; }
-    for (let c = 0; c < done; c++) if (!r.scores[c]) r.scores[c] = scoreChorus(chorusNotes(r, c), ctxOf(r));
+    for (let c = 0; c < done; c++) if (!r.scores[c]) r.scores[c] = scoreChorus(chorusNotes(r, c), ctxOf(r, c));
     const total = combine(r.scores.slice(0, done));
     const ok = natural && passed(total, solo.pass || {});
     // the run's board (a run of one chorus: its chorus board is the run)
@@ -383,7 +497,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       const first = !exProgress(itemId).stages.done;
       updateEx(itemId, (p) => {
         const b = p.best || {}, rr = (x) => (x.total ? x.ok / x.total : null), mx = (a, v) => (v == null ? a : Math.max(a || 0, v));
-        return { ...p, runs: (p.runs || 0) + 1, best: { inside: mx(b.inside, total.inside), grid: mx(b.grid, total.grid), phrases: mx(b.phrases, total.phrases), pitches: mx(b.pitches, total.pitches), rests: mx(b.rests, rr(total.rests)), targets: mx(b.targets, rr(total.targets)), cover: total.targets.changes ? mx(b.cover, coverage(total.targets)) : b.cover } };
+        return { ...p, runs: (p.runs || 0) + 1, best: { inside: mx(b.inside, total.inside), grid: mx(b.grid, total.grid), phrases: mx(b.phrases, total.phrases), pitches: mx(b.pitches, total.pitches), rests: mx(b.rests, rr(total.rests)), targets: mx(b.targets, rr(total.targets)), cover: total.targets.changes ? mx(b.cover, coverage(total.targets)) : b.cover, rhythm: mx(b.rhythm, rr(total.rhythm)), motif: mx(b.motif, rr(total.motif)), ends: mx(b.ends, rr(total.ends)) } };
       });
       if (ok) {
         updateEx(itemId, (p) => ({ ...p, stages: { ...p.stages, done: true } }));
@@ -399,7 +513,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
     const acc = rhythmAccuracy(notes, r);
     const rec = { id: Date.now().toString(36), itemId, kind: 'solo', date: new Date().toISOString(), bpm: r.bpm, swing: r.swing, choruses: done, ending: 0, notes,
       band: r.calls.filter((n) => n.t < done * r.chorusLen), acc,
-      score: { inside: r3(total.inside), grid: r3(total.grid), phrases: r3(total.phrases), rests: total.rests, targets: total.targets, pitches: total.pitches, passed: ok } };
+      score: { inside: r3(total.inside), grid: r3(total.grid), phrases: r3(total.phrases), rests: total.rests, targets: total.targets, rhythm: total.rhythm, motif: total.motif, ends: total.ends, pitches: total.pitches, passed: ok } };
     const all = store.get('recordings', []);
     const solos = [rec, ...all.filter((x) => x.kind === 'solo')].slice(0, MAX_RECS);
     store.set('recordings', [...solos, ...all.filter((x) => x.kind !== 'solo')].sort((a, b) => (a.date < b.date ? 1 : -1)));
@@ -459,11 +573,11 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
   const onKey = (e) => { if (e.code === 'Space' && !(e.target.closest && e.target.closest('input,select,textarea,summary'))) { e.preventDefault(); toggle(); } };
   document.addEventListener('keydown', onKey);
 
-  setBpm(st.bpm); paintPrimary(); paintHint(); paintChorus(0); paintPalette(0, 0); paintSummary(); paintList();
+  setBpm(st.bpm); paintPrimary(); paintHint(); paintRhythm(); paintChorus(0); paintPalette(0, 0); paintSummary(); paintList();
   kb.reveal([hand.lo, hand.hi], false, true);
   const saved = exProgress(itemId);
-  fb(saved.runs && saved.best ? `${saved.runs} ${plural(saved.runs, 'soRunsW')} · ${t('soBestW')} ${t('soMInside')} ${pct(saved.best.inside || 0)}` : startText());
+  fb(st.mode === 'tap' ? startText() : saved.runs && saved.best ? `${saved.runs} ${plural(saved.runs, 'soRunsW')} · ${t('soBestW')} ${t('soMInside')} ${pct(saved.best.inside || 0)}` : startText());
   updateEx(itemId, (p) => p);
 
-  return () => { if (footRO) footRO.disconnect(); if (run && run.kind === 'run') finish(false); else if (run) halt(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { stopTap(); if (footRO) footRO.disconnect(); if (run && run.kind === 'run') finish(false); else if (run) halt(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

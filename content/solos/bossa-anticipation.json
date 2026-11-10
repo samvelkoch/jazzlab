@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-anticipation",
+  "title": {"ru": "Blue Bossa: заход на «и» четвёртой доли", "en": "Blue Bossa: anticipation on the «and» of 4"},
+  "about": {"ru": "Сначала простучи ритм: либо «две восьмые и пауза», либо три четверти и нота на «и» четвёртой доли. Потом играй его нотами. Ровные восьмые, без свинга.", "en": "First tap the rhythm: either «two eighths and a rest», or three quarter notes and a note on the «and» of 4. Then play it with notes. Straight eighths, no swing."},
+  "form": "blue-bossa",
+  "pattern": "b2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 7], "scale": "aeolian", "root": "C"}, {"bars": [8, 11], "scale": "major", "root": "Db"}, {"bars": [12, 15], "scale": "aeolian", "root": "C"}]},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": ["eighth-rest", "anticipation"],
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

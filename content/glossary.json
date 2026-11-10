@@ -591,8 +591,8 @@
         "en": "II–V–I (cadence)"
       },
       "short": {
-        "ru": "Три аккорда подряд, самый частый ход в джазе. Сначала напряжение, потом ещё сильнее, потом облегчение: «пришли домой».",
-        "en": "Three chords in a row, the most common move in jazz. First tension, then more of it, then relief: “we are home”."
+        "ru": "ii готовит, V создаёт напряжение, I разрешает его: «пришли домой». Это самый частый ход в джазе.",
+        "en": "The ii prepares, the V builds tension, the I resolves it: “we are home”. The most common move in jazz."
       },
       "wiki": "ii-v-i"
     },
@@ -839,6 +839,85 @@
       "short": {
         "ru": "Аккомпанемент аккордами: пока звучит бас или мелодия, ты ритмично берёшь аккорды. Важно не какие ноты, а где именно в такте ты их ставишь.",
         "en": "Accompanying with chords: while the bass or the tune sounds, you play chords in a rhythm. What matters is not which notes, but where in the bar you put them."
+      }
+    },
+    {
+      "id": "dominant",
+      "match": [
+        "доминант",
+        "dominant"
+      ],
+      "title": {
+        "ru": "Доминанта",
+        "en": "Dominant"
+      },
+      "short": {
+        "ru": "V-я ступень, обычно аккорд с септимой (G7). Он тянет к «домашнему» аккорду на квинту ниже (G7 → C): напряжение, которое просит разрешения.",
+        "en": "The fifth degree, usually a 7th chord (G7). It pulls to the “home” chord a fifth below (G7 → C): tension that asks to be resolved."
+      }
+    },
+    {
+      "id": "tritone-sub",
+      "match": [
+        "тритонов",
+        "tritone sub",
+        "tritone-sub"
+      ],
+      "title": {
+        "ru": "Тритоновая замена",
+        "en": "Tritone substitution"
+      },
+      "short": {
+        "ru": "Вместо V играют аккорд на тритон от него: вместо G7 — Db7. Он тоже тянет в C, но на полтона вниз, и бас идёт хроматикой. Как в «Ипанеме»: Gb7 → Fmaj7.",
+        "en": "Instead of the V you play the chord a tritone away: Db7 in place of G7. It also pulls to C, but down by a half-step, so the bass moves chromatically. In Ipanema: Gb7 → Fmaj7."
+      }
+    },
+    {
+      "id": "sec-dom",
+      "match": [
+        "вторичная доминант",
+        "вторичной доминант",
+        "secondary dominant"
+      ],
+      "title": {
+        "ru": "Вторичная доминанта",
+        "en": "Secondary dominant"
+      },
+      "short": {
+        "ru": "Доминанта не к «дому», а к другому аккорду тональности: D7 тянет к Gm. На миг тот аккорд становится «домом». V/ii читается «V от ii».",
+        "en": "A dominant that pulls not to “home” but to another chord of the key: D7 pulls to Gm. For a moment that chord becomes “home”. V/ii reads “the V of ii”."
+      }
+    },
+    {
+      "id": "passing-dim",
+      "match": [
+        "проходящий уменьш",
+        "проходящий аккорд",
+        "passing diminished",
+        "passing chord"
+      ],
+      "title": {
+        "ru": "Проходящий уменьшённый",
+        "en": "Passing diminished"
+      },
+      "short": {
+        "ru": "Уменьшённый аккорд-мостик: его корень на полтона от следующего аккорда, и он тянет туда. Звучит как короткая ступенька между двумя аккордами.",
+        "en": "A diminished chord used as a bridge: its root is a half-step from the next chord and it leans into it. It sounds like a short step between two chords."
+      }
+    },
+    {
+      "id": "blues-fn",
+      "match": [
+        "ступени блюза",
+        "blues degrees"
+      ],
+      "title": {
+        "ru": "I, IV, V в блюзе",
+        "en": "I, IV, V in the blues"
+      },
+      "short": {
+        "ru": "Блюз строится на трёх аккордах: I — «дом», IV — шаг в сторону, V — напряжение перед возвратом. Услышишь их порядок, и форма запомнится.",
+        "en": "The blues uses three chords: I is home, IV is a step away, V is tension before the return. Hear their order and the form sticks."
       }
     }
   ]

@@ -72,6 +72,7 @@ async function trackModel(id) {
   const solos = {};
   await Promise.all([...solIds].map(async (s) => { solos[s] = await get(`solos/${s}.json`); }));
   Object.values(solos).forEach((so) => { if (so.form) formIds.add(so.form); if (so.pattern) patIds.add(so.pattern); });
+  const rhythms = Object.values(solos).some((so) => so.rhythm) ? await get('solos/rhythms.json') : null; // the rhythm cells of solos
   Object.values(track.items).forEach((it) => { if (it.form) formIds.add(it.form); if (it.pattern) patIds.add(it.pattern); if (it.lick) lickIds.add(it.lick); if (it.lickKey) lickIds.add(it.lickKey); [it.licks, it.licksKey].forEach((ls) => { if (Array.isArray(ls)) ls.forEach((l) => lickIds.add(l)); }); });
   const forms = {}, patterns = {}, licks = {};
   await Promise.all([
@@ -91,7 +92,7 @@ async function trackModel(id) {
     const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : it.kind === 'form' && it.lickKey ? L(licks[it.lickKey].about) : src ? L(src.about) : '';
     items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}`, ...(it.kind === 'pattern' && src && src.comp ? { labelKind: 'comp' } : {}) }; // a comping pattern is not a left-hand item
   });
-  models[id] = { track, forms, patterns, licks, melodies, solos, exercises, items };
+  models[id] = { track, forms, patterns, licks, melodies, solos, rhythms, exercises, items };
   return models[id];
 }
 
@@ -217,7 +218,7 @@ async function route() {
         const solo = model.solos[item.solo];
         const form = solo && model.forms[solo.form], pattern = solo && model.patterns[solo.pattern];
         if (!solo || !form || !pattern) { message(t('notFound')); return; }
-        cleanup = renderSolo(root, { track: model.track, itemId: item.id, item, solo, form, pattern, back });
+        cleanup = renderSolo(root, { track: model.track, itemId: item.id, item, solo, form, pattern, rhythms: model.rhythms, back });
       }
       else if (item.kind === 'lick') cleanup = renderLick(root, { track: model.track, itemId: item.id, item, lick: model.licks[item.lick], pattern: model.patterns[item.pattern], form: model.forms[item.form], back });
       else if (item.kind === 'perform') {

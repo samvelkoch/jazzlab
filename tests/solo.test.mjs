@@ -186,7 +186,7 @@ const track = read('content/tracks/blues.json');
 const sec = track.sections.map((x) => x.id);
 assert.equal(sec[sec.indexOf('rh') + 1], 'imp', 'Improvisation right after the right hand');
 const imp = track.sections.find((x) => x.id === 'imp');
-assert.deepEqual(imp.items, ['imp-b1', 'imp-b2', 'imp-b3', 'imp-b4']);
+assert.deepEqual(imp.items.filter((x) => /^imp-b[1-4]$/.test(x)), ['imp-b1', 'imp-b2', 'imp-b3', 'imp-b4'], 'the first four in order (rhythm / motif items in between: tests/motif.test.mjs)');
 const want = { 'imp-b1': 'blues-scale', 'imp-b2': 'blues-call', 'imp-b3': 'blues-chords', 'imp-b4': 'blues-solo' };
 Object.entries(want).forEach(([id, sid]) => {
   assert.deepEqual([track.items[id].kind, track.items[id].solo], ['solo', sid]);
@@ -262,7 +262,7 @@ const wire = (trackId, after, ids, sids, form, pattern, hi) => {
   assert.equal(secs[secs.indexOf(after) + 1], 'imp', `${trackId}: imp after ${after}`);
   const sec = tr.sections.find((x) => x.id === 'imp');
   assert.ok(sec.title.ru === 'Импровизация' && sec.title.en === 'Improvisation');
-  assert.deepEqual(sec.items, ids);
+  assert.deepEqual(sec.items.filter((x) => ids.includes(x)), ids);
   ids.forEach((id, i) => {
     assert.deepEqual(tr.items[id], { kind: 'solo', solo: sids[i] });
     const so = read(`content/solos/${sids[i]}.json`);

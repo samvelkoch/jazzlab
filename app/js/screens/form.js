@@ -22,6 +22,7 @@ import { patternBars, compBars, lickBars, melodyBarNotes, rhRoot, parseChord, pa
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
+import { decorateFunctions } from '../fnlabels.js';
 import { createTally, chorusBarAt } from '../music/tally.js';
 
 const PER = 8;
@@ -78,6 +79,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));
   });
   const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
+  decorateFunctions(cells, bars); // ii · V · I under the chords, a bracket over each ii–V–I
   // a long form scrolls inside its grid: keep the current bar visible
   const keepInView = (k) => { const c = cells[k]; if (NB <= 16 || !c) return; if (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, c.offsetTop - 8); };
   const panel = h('section.panel.formpanel', null,
