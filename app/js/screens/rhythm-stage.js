@@ -129,7 +129,7 @@ export function createRhythmStage(ex, io) {
     modeSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === st.mode)));
     const key = st.mode === 'learn' ? st.lstep : 'practice';
     title.textContent = t('rt_' + key);
-    sub.textContent = t('rs_' + key) + (ex.swing && key !== 'practice' ? ' ' + t('swingHint') : '');
+    sub.textContent = t(key === 'listen' && ex.rhythmBars > 1 ? 'rs_listen2' : 'rs_' + key) + (ex.swing && key !== 'practice' ? ' ' + t('swingHint') : '');
     paintRuns(); paintLadder(); paintGauge(); paintHistory();
   }
   function paintHistory() {
