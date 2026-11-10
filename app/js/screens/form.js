@@ -188,14 +188,20 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     raf = requestAnimationFrame(tick);
   }
   function stop() {
-    // a bar that is already over but not yet judged (its barEnd waits one beat + 0.3 s): judge it now with what was played,
-    // so stopping right after the last note of a chorus still counts that chorus
-    if (st.playing && st.mode === 'play') {
+    // Stop right after the last note of a chorus still counts that chorus: a bar already over but not yet judged (its
+    // barEnd waits one beat + 0.3 s), and the bar in progress once its last note is due, are judged now with what was played
+    if (st.playing && st.mode === 'play' && run) {
       const now = audio.now();
-      queue.filter((q) => q.barEnd !== undefined && q.end <= now).forEach((q) => {
-        exp = exp.filter((x) => { if (x.chorus === q.chorus && x.bar === q.barEnd && !x.hit) { tally.add(x.chorus, x.bar, 'miss'); return false; } return true; });
-        finishBar(q.barEnd, q.chorus);
-      });
+      const judge = (chorus, bar) => {
+        exp = exp.filter((x) => { if (x.chorus !== chorus || x.bar !== bar) return true; if (!x.hit) tally.add(chorus, bar, 'miss'); return false; });
+        finishBar(bar, chorus);
+      };
+      queue.filter((q) => q.barEnd !== undefined && q.end <= now).forEach((q) => judge(q.chorus, q.barEnd));
+      const p = posAt(now);
+      if (p >= 0) {
+        const at = chorusBarAt(p, NB, PER), lastSlot = Math.max(-1, ...barNotes[at.bar].map((e) => e.t));
+        if (Math.floor(p) % PER >= lastSlot) judge(at.chorus, at.bar);
+      }
     }
     clearInterval(timer); cancelAnimationFrame(raf); queue = [];
     const was = st.playing; st.playing = false; run = null; exp = [];
