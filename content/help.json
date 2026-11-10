@@ -105,8 +105,8 @@
           "en": "Android: Chrome supports Web MIDI; connect over USB with an adapter or over Bluetooth MIDI."
         },
         {
-          "ru": "Bluetooth добавляет задержку в десятки миллисекунд. Если нажатия стабильно считаются «поздно», попробуй USB. Звук можно слушать через само пианино: приложение отправляет на него ноты бэнда и подсказок.",
-          "en": "Bluetooth adds tens of milliseconds of latency. If your notes are consistently scored “late”, try USB. You can hear everything through the piano itself: the app sends the band and the hints to it."
+          "ru": "Bluetooth добавляет задержку в десятки миллисекунд, и тогда все нажатия стабильно считаются «поздно». Поправка в меню «Оформление» (значок солнца или луны в шапке), раздел «Синхронизация»: шаг 5 мс, плюс значит «мои ноты приходят позже на столько». Проще всего пройти проверку навыков: если ритм в ней стабильно поздний больше чем на 25 мс, в итоге появится кнопка «Поправить на N мс». Поправка действует на все экраны. Можно и подключиться по USB: там задержки почти нет. Звук можно слушать через само пианино: приложение отправляет на него ноты бэнда и подсказок.",
+          "en": "Bluetooth adds tens of milliseconds of latency, and then every note is consistently scored “late”. The correction is in the Appearance menu (the sun or moon icon in the header), under Timing: 5 ms steps, plus means “my notes arrive this much late”. The easiest way is the skills check-up: if its rhythm reads consistently late by more than 25 ms, the result offers a button “Apply correction of N ms”. The offset applies to every screen. Or connect over USB, which has almost no latency. You can hear everything through the piano itself: the app sends the band and the hints to it."
         }
       ]
     },
@@ -131,8 +131,16 @@
       },
       "body": [
         {
-          "ru": "Аккаунта нет. Прогресс, повторы, записи выступлений и настройки хранятся в этом браузере на этом устройстве. Другой браузер или устройство начнёт с нуля; очистка данных сайта сотрёт всё. Записи выступлений и соло можно скачать как MIDI, упражнения экспортируются в MusicXML и MIDI.",
-          "en": "There is no account. Progress, reviews, recordings and settings live in this browser on this device. Another browser or device starts from scratch; clearing site data erases everything. Performance and solo recordings download as MIDI; exercises export to MusicXML and MIDI."
+          "ru": "Аккаунта нет. Прогресс, повторы, история занятий, записи выступлений и настройки хранятся в этом браузере на этом устройстве. Другой браузер или устройство их не видит, а очистка данных сайта сотрёт всё, включая расписание повторов. Записи выступлений и соло можно скачать как MIDI, упражнения экспортируются в MusicXML и MIDI.",
+          "en": "There is no account. Progress, reviews, practice history, recordings and settings live in this browser on this device. Another browser or device does not see them, and clearing site data erases everything, the review schedule included. Performance and solo recordings download as MIDI; exercises export to MusicXML and MIDI."
+        },
+        {
+          "ru": "Резервная копия: внизу правой колонки на главной есть блок «Данные». «Сохранить прогресс» скачивает один файл jazzlab-progress-ГГГГ-ММ-ДД.json со всем сразу; на iPad вместо скачивания может открыться меню «Поделиться», там выбери «Сохранить в Файлы». «Загрузить из файла» показывает, от какого числа файл и сколько в нём прогресса и повторов, и после подтверждения заменяет всё на этом устройстве данными из файла. Так прогресс переносится между iPad и компьютером: сохрани на одном, загрузи на другом. Сохраняй копию время от времени.",
+          "en": "Backup: at the bottom of the right column on the home screen there is a Data block. “Export progress” downloads one file, jazzlab-progress-YYYY-MM-DD.json, with everything in it; on an iPad a share menu may open instead of a download, choose “Save to Files” there. “Import progress” shows the file's date and how much progress and how many reviews it holds and, once you confirm, replaces everything on this device with the file. This is how progress moves between an iPad and a computer: export on one, import on the other. Export a copy now and then."
+        },
+        {
+          "ru": "История: панель «Последние 14 дней» на главной показывает минуты за инструментом по дням (сегодня выделено), а строка под ней — итог за 7 дней: минуты, дни с занятиями, пройденные элементы, повторы удачные и нет. День начинается в 4 утра, как у повторов. Хранятся последние 400 дней.",
+          "en": "History: the “Last 14 days” panel on the home screen shows minutes at the piano per day (today highlighted), and the line under it sums up the last 7 days: minutes, days practised, items passed, reviews passed and failed. A day starts at 4 a.m., like the reviews. The last 400 days are kept."
         }
       ]
     },

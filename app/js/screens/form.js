@@ -13,13 +13,14 @@
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
-import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
+import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews, logDay } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { patternBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords, iivPairs, lickOverKey } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
+import { createTally, chorusBarAt } from '../music/tally.js';
 
 const PER = 8;
 const CLEAN_TO_PASS = 3; // clean choruses in a row
@@ -133,7 +134,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
 
   // ---------- transport ----------
   let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null;
-  let exp = [], barSt = [], chSt = null;
+  let exp = [], tally = null; // tally: hits / misses / wrong notes per chorus and per bar of that chorus (music/tally.js)
   const swingOff = () => { const beat = 60 / st.bpm; return st.swing ? beat * 2 / 3 : beat / 2; };
   const tols = () => { const e8 = 60 / st.bpm / 2; return { win: Math.min(Math.max(e8 * 0.45, 0.09), 0.25), tight: Math.min(Math.max(e8 * 0.16, 0.035), 0.075) }; };
   function play() {
@@ -144,7 +145,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); }
     t0 += 4 * beat; beatTime = t0; g = 0; run = { t0, beat, swing: st.swing };
-    exp = []; barSt = []; chSt = { miss: 0, bad: 0, ok: 0, meh: 0 };
+    exp = []; tally = createTally(NB);
     timer = setInterval(schedule, 25); schedule(); raf = requestAnimationFrame(tick);
   }
   function schedule() {
@@ -163,7 +164,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
         if (st.mode === 'play') exp.push({ t: time, m: e.m, bar, chorus, hit: false });
       });
       if (slot === 0) queue.push({ t: time, barStart: bar, chorus });
-      if (slot === PER - 1) queue.push({ t: time + beat + 0.3, barEnd: bar, chorus });
+      if (slot === PER - 1) queue.push({ t: time + beat + 0.3, barEnd: bar, chorus, end: beatTime + beat });
       queue.push({ t: time, g });
       if (slot % 2) beatTime += beat;
       g++;
@@ -187,6 +188,15 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     raf = requestAnimationFrame(tick);
   }
   function stop() {
+    // a bar that is already over but not yet judged (its barEnd waits one beat + 0.3 s): judge it now with what was played,
+    // so stopping right after the last note of a chorus still counts that chorus
+    if (st.playing && st.mode === 'play') {
+      const now = audio.now();
+      queue.filter((q) => q.barEnd !== undefined && q.end <= now).forEach((q) => {
+        exp = exp.filter((x) => { if (x.chorus === q.chorus && x.bar === q.barEnd && !x.hit) { tally.add(x.chorus, x.bar, 'miss'); return false; } return true; });
+        finishBar(q.barEnd, q.chorus);
+      });
+    }
     clearInterval(timer); cancelAnimationFrame(raf); queue = [];
     const was = st.playing; st.playing = false; run = null; exp = [];
     screen.classList.remove('playing');
@@ -196,7 +206,6 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   }
 
   // ---------- scoring ----------
-  const bs = (bar) => (barSt[bar] = barSt[bar] || { ok: 0, meh: 0, miss: 0, bad: 0 });
   function input(m, ts) {
     markActive();
     if (!st.playing || st.mode !== 'play') return;
@@ -205,29 +214,28 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     for (const x of exp) { if (x.hit || x.m !== m) continue; const dt = T - x.t; if (Math.abs(dt) <= win && (!best || Math.abs(dt) < Math.abs(T - best.t))) best = x; }
     if (!best) {
       if (!exp.length || T < exp[0].t - win) return; // before the first note: ignore
-      const bar = Math.floor(Math.max(0, posAt(T)) / PER) % NB;
-      bs(bar).bad++; chSt.bad++; kb.flash(m, 'bad'); fb(`<span class="bad">${t('wrongNote')}: ${noteName(midiToName(m), names)}</span>`); return;
+      const at = chorusBarAt(posAt(T), NB, PER); // a wrong note belongs to the chorus and bar of its position
+      tally.add(at.chorus, at.bar, 'bad'); kb.flash(m, 'bad'); fb(`<span class="bad">${t('wrongNote')}: ${noteName(midiToName(m), names)}</span>`); return;
     }
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';
-    bs(best.bar)[cls]++; chSt[cls]++;
+    tally.add(best.chorus, best.bar, cls);
     kb.flash(m, cls);
     fb(cls === 'ok' ? `<span class="ok">${t('even')}</span>` : `<span class="meh">${dt < 0 ? t('early') : t('late')} ${Math.round(Math.abs(dt) * 1000)} ${t('ms')}</span>`);
   }
   function expire(now) {
     const { win } = tols();
-    while (exp.length && (exp[0].hit || exp[0].t + win < now)) { const x = exp.shift(); if (!x.hit) { bs(x.bar).miss++; chSt.miss++; } }
+    while (exp.length && (exp[0].hit || exp[0].t + win < now)) { const x = exp.shift(); if (!x.hit) tally.add(x.chorus, x.bar, 'miss'); }
   }
   function finishBar(bar, chorus) {
-    const s = bs(bar);
+    const s = tally.takeBar(chorus, bar);
     const cls = s.miss + s.bad === 0 ? 'ok' : s.ok + s.meh >= s.miss ? 'meh' : 'bad';
     if (st.mode === 'play') cells[bar].classList.add(cls);
-    barSt[bar] = null;
     if (bar === NB - 1) finishChorus(chorus);
   }
   function finishChorus(chorus) {
     st.choruses = chorus + 1;
-    const s = chSt; chSt = { miss: 0, bad: 0, ok: 0, meh: 0 };
+    const s = tally.takeChorus(chorus); // only this chorus's notes, even if the next one has begun
     if (st.mode !== 'play') { paintStreak(); return; }
     const total = s.ok + s.meh + s.miss, slips = s.miss + s.bad, clean = slips <= maxSlips && total > 0;
     st.streak = clean ? st.streak + 1 : 0;
@@ -235,6 +243,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     const pct = total ? Math.round((s.ok / total) * 100) : 0;
     let html = `${t('chorusW')} ${chorus + 1}: ` + (clean ? `<span class="ok">${t('cleanW')} ✓</span>` : `<span class="bad">${slips} ${t('slipsW')}</span>`) + ` · ${pct}% ${t('evenPct')}`;
     updateEx(itemId, (p) => ({ ...p, choruses: (p.choruses || 0) + 1, cleanChoruses: (p.cleanChoruses || 0) + (clean ? 1 : 0), bestStreak: Math.max(p.bestStreak || 0, st.streak), bestTempo: clean ? Math.max(p.bestTempo || 0, st.bpm) : p.bestTempo || 0 }));
+    logDay({ choruses: 1, cleanChoruses: clean ? 1 : 0 });
     if (st.streak >= CLEAN_TO_PASS) {
       const first = !exProgress(itemId).stages.done;
       updateEx(itemId, (p) => ({ ...p, stages: { ...p.stages, done: true } }));

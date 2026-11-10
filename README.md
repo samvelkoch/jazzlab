@@ -37,6 +37,10 @@ explained where it appears) and a **Reference** (short articles on styles, conce
 - **Improvisation** scores four things instead of "the right notes": inside the palette (scale or chord tones, approach notes allowed), on the eighth grid, phrases and rests, target notes on chord changes. Four steps per track: scale with rests, call and response with the band, chord tones on the change, a full solo. Every run is recorded.
 - **Keyboard input:** Web MIDI (USB or Bluetooth) or the on-screen keyboard (scrollable on phones). The app can play the band and the hints through the connected piano.
 - **Recordings** of performances and solos download as MIDI; exercises export to MusicXML and MIDI.
+- **History by day** (store key `days`, local date, a day starts at 04:00 like reviews, last 400 days): practice seconds, first passes, reviews passed / failed, choruses and clean choruses. The home screen shows the last 14 days as a bar chart and the last 7 as numbers; the Today card shows today's numbers once nothing is left.
+- **Backup:** "Export progress" (home screen, Data block) saves every `jazzlab:*` key into `jazzlab-progress-YYYY-MM-DD.json` (`jazzlab-backup/1`; the share sheet on touch devices when it takes files); "Import progress" validates the file, shows its date and counts against the current ones and, once confirmed, replaces all `jazzlab:*` keys. Moves progress between the iPad and a desktop.
+- **Timing offset** (`settings.latencyMs`, −50…+200 ms, in the appearance popover every screen has): a constant input delay such as Bluetooth MIDI, subtracted from every input time in `audio.toAudioTime`. The check-up offers "Apply correction of N ms" when its rhythm test is consistently late or early by more than 25 ms.
+- **Service worker** (`sw.js`, https and localhost only): network first with revalidation for the page, `app/js/`, `app/css/` and `content/`, so a browser never mixes modules of two deploys; the cached copy is used only offline. No precache list, nothing to bump. Samples and fonts are left to the browser.
 - **Themes:** five jazz palettes (Bossa, Studio, Club, Blue Note, Vinyl), light and dark, all WCAG-checked by a test.
 - Russian and English UI.
 
@@ -57,13 +61,16 @@ index.html, app/          the app (vanilla JS ES modules, no bundler)
   app/js/music/           chords, forms (patterns, licks, melodies, voice leading), scales, solo scoring,
                           staff (SVG), keyboard, audio (synth + Salamander samples), drums, midi, recording, export
   app/js/store.js         progress, spaced review, sessions      app/js/queue.js   the day's fresh items
+  app/js/days.js          history by day                          app/js/backup.js  export / import of all progress
+  app/js/timing.js        timing offset (latency) and its check-up suggestion
+sw.js                     service worker (network first for code and content, offline fallback)
   app/js/glossary*.js     term matching and popovers              app/js/theme.js   palettes
   app/css/app.css         all styles, 5 schemes × light/dark, phone rules
 content/                  all learning content as JSON, documented in content/FORMAT.md
   tracks/  forms/  patterns/  licks/  melodies/  solos/  exercises/  courses/  chords/  wiki/  glossary.json  help.json
 scripts/import_tune.py    MusicXML / MXL lead sheet → melody + form JSON (repeats, pickups, chord symbols)
 docs/specs/               design documents
-tests/*.test.mjs          plain node tests (forms, solo, exercise, chords, glossary, wiki, theme, recording, export, store, tracks)
+tests/*.test.mjs          plain node tests (forms, solo, exercise, chords, glossary, wiki, theme, recording, export, store, tracks, history)
 guide/                    the original one-page keyboard guide
 ```
 

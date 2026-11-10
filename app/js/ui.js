@@ -2,7 +2,8 @@
 import { t, getLang, setLang } from './i18n.js';
 import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './theme.js';
 import { midiState, onMidiState, connect } from './music/midi.js';
-import { session, sessionNext, sessionAdvance, endSession } from './store.js';
+import { session, sessionNext, sessionAdvance, endSession, latencyMs, setLatencyMs } from './store.js';
+import { LATENCY } from './timing.js';
 
 // Item screens register how to link to an item id and which track they belong to (set by main.js once the track is loaded).
 let linkOf = () => null, linkTrack = null;
@@ -64,7 +65,7 @@ export const ICON = {
   note: svg('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>', 18, 'stroke-width="2.2"')
 };
 
-/** Appearance popover: light / dark + colour scheme. */
+/** Appearance popover: light / dark + colour scheme, and the timing offset (every screen has this popover). */
 export function themeButton(onChange) {
   const sum = h('summary.iconbtn', { 'aria-label': t('theme'), title: t('theme') });
   const mode = h('div.seg', { role: 'group', 'aria-label': t('theme') });
@@ -82,8 +83,20 @@ export function themeButton(onChange) {
     onclick: () => { if (currentTheme() !== v) toggleTheme(); paint(); if (onChange) onChange(); } }, label)));
   Object.keys(SCHEMES).forEach((v) => schemes.append(h('button', { type: 'button', 'data-v': v,
     onclick: () => { setScheme(v); paint(); if (onChange) onChange(); } }, h('span.sw3', null, h('i'), h('i'), h('i')), t('scheme_' + v))));
-  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), h('div.popsec', null, h('span.pophead', null, t('colors')), schemes)));
-  paint();
+  // timing offset: «my notes arrive late by N ms» (Bluetooth MIDI); subtracted from every input time (audio.toAudioTime)
+  const latOut = h('output.latout', { 'aria-live': 'polite' });
+  const paintLat = () => { const v = latencyMs(); latOut.textContent = `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v)} ${t('ms')}`; };
+  const latStep = (dv) => { setLatencyMs(latencyMs() + dv); paintLat(); };
+  const timing = h('div.popsec', null, h('span.pophead', null, t('timingW')),
+    h('div.row.latrow', null,
+      h('div.stepper', { role: 'group', 'aria-label': t('latencyW') },
+        h('button', { type: 'button', 'aria-label': t('latLess'), onclick: () => latStep(-LATENCY.step) }, '−'), latOut,
+        h('button', { type: 'button', 'aria-label': t('latMore'), onclick: () => latStep(LATENCY.step) }, '+')),
+      h('button.btn.latreset', { type: 'button', onclick: () => { setLatencyMs(0); paintLat(); } }, t('latReset'))),
+    h('small.pophint', null, t('latHint')));
+  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), h('div.popsec', null, h('span.pophead', null, t('colors')), schemes), timing));
+  d.addEventListener('toggle', () => { if (d.open) paintLat(); }); // the check-up may have changed it meanwhile
+  paint(); paintLat();
   return d;
 }
 
