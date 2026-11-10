@@ -20,7 +20,7 @@ const LISTEN_LOOPS = 2;
  * @param io      { play1(m, time, dur, vel), bpm(), setBpm(v), swing(), onPlaying(bool), onMode(mode), onDone() }
  */
 export function createRhythmStage(ex, io) {
-  const per = ex.per;
+  const bar = ex.per, per = bar * (ex.rhythmBars || 1); // a comping rhythm may span 2 bars (the bossa clave): the loop is then 2 bars long
   const pattern = parsePattern(ex.rhythm || fallbackPattern(ex));
   const lang = getLang();
   const patStr = ex.rhythm || fallbackPattern(ex);
@@ -51,7 +51,7 @@ export function createRhythmStage(ex, io) {
 
   const title = h('h2'), sub = h('span.sub'), fbEl = h('span.fb', { 'aria-live': 'polite' });
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  const notation = renderRhythmNotation(svg, pattern, per);
+  const notation = renderRhythmNotation(svg, pattern, per, bar);
   const patBox = h('div.patbox', null, h('span.patlabel', null, t('patternW')), svg);
 
   // lane: one bar, note bars sized by duration, syllables, ball, your taps
@@ -65,8 +65,8 @@ export function createRhythmStage(ex, io) {
     lane.dataset.mode = st.mode === 'learn' ? 'learn' : 'loop';
     const kids = [h('div.tline')];
     for (let k = 0; k < per; k += 2) {
-      kids.push(h('div.bline' + (k === 0 ? '.bar' : ''), { style: `left:${pct(k)}%` }));
-      kids.push(h('div.bnum', { style: `left:${pct(k)}%`, 'data-slot': k }, String(k / 2 + 1)));
+      kids.push(h('div.bline' + (k % bar === 0 ? '.bar' : ''), { style: `left:${pct(k)}%` }));
+      kids.push(h('div.bnum', { style: `left:${pct(k)}%`, 'data-slot': k }, String((k % bar) / 2 + 1)));
       kids.push(h('div.bnum.and', { style: `left:${pct(k + 1)}%`, 'data-slot': k + 1 }, '+'));
     }
     rh.rests.forEach((x) => kids.push(h('div.lrest', { style: `left:${pct(x.slot)}%;width:calc(${pct(x.len || 1)}% - 8px)` }, syl ? x.syl : '')));
@@ -129,7 +129,7 @@ export function createRhythmStage(ex, io) {
     modeSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === st.mode)));
     const key = st.mode === 'learn' ? st.lstep : 'practice';
     title.textContent = t('rt_' + key);
-    sub.textContent = t('rs_' + key) + (ex.swing && key !== 'practice' ? ' ' + t('swingHint') : '');
+    sub.textContent = t(key === 'listen' && ex.rhythmBars > 1 ? 'rs_listen2' : 'rs_' + key) + (ex.swing && key !== 'practice' ? ' ' + t('swingHint') : '');
     paintRuns(); paintLadder(); paintGauge(); paintHistory();
   }
   function paintHistory() {
