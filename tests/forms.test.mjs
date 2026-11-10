@@ -487,7 +487,7 @@ console.log('ok: sharp thirds');
   assert.equal(bb.ending, 'bossa-end');
   // the bossa track: the rh section, the lick items with their own chord set, the ending, the performance
   const bt2 = read('content/tracks/bossa.json');
-  assert.deepEqual(bt2.sections.map((x) => x.id), ['keys', 'lh', 'form', 'melody', 'rh', 'imp', 'ear', 'perf']);
+  assert.deepEqual(bt2.sections.map((x) => x.id), ['keys', 'lh', 'comp', 'form', 'melody', 'rh', 'imp', 'ear', 'perf']);
   assert.deepEqual(bt2.sections.find((x) => x.id === 'rh').items, ['lick-bl1', 'lick-bl2', 'lick-bl3', 'form-rh-bl1', 'form-rh-qa-bossa']);
   ['bl1', 'bl2', 'bl3'].forEach((l) => assert.deepEqual(bt2.items['lick-' + l], { kind: 'lick', lick: l, form: 'blue-bossa', pattern: 'b1', chords: ['Cm7', 'Fm7', 'G7'] }));
   bt2.items['lick-bl1'].chords.forEach((c) => assert.ok(bb.bars.flatMap(barChords).includes(c), c + ' is a chord of the form'));

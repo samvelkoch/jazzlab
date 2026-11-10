@@ -8,6 +8,8 @@
 // With a melody (item.melody, jazzlab-melody/1) you play the written tune, bar k of the melody over bar k of the form.
 // Both hands (item.hand === 'both', same right-hand options as 'rh'): you play the left-hand pattern AND the right-hand part,
 // the app plays only the drums / metronome (and both hands as a guide in Listen mode or without MIDI); both hands are scored.
+// A comping pattern (pattern.comp, item.hand === 'both', no tune or lick): the left hand is the pattern's bass, the right hand
+// its voice-led chords (compBars), both yours and both scored.
 // A clean chorus allows max(1, round(notes per chorus / 40)) slips (misses + wrong notes): 1 for root-and-fifth
 // (24 or 48 notes) and the licks, 2 for the boogie (96 eighths per chorus), so denser patterns are not stricter.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
@@ -16,7 +18,7 @@ import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews, logDay } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
-import { patternBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords, iivPairs, lickOverKey } from '../music/forms.js';
+import { patternBars, compBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords, iivPairs, lickOverKey } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
@@ -40,12 +42,14 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const kl = rhPart && !mel && Array.isArray(keyLicks) && keyLicks.length && keyLicks.every((l) => l && l.prog) ? keyLicks : null;
   const kPairs = kl ? iivPairs(bars).map((p, i) => ({ ...p, lick: kl[i % kl.length] })) : [];
   const kAt = Object.fromEntries(kPairs.map((p) => [p.bars[0], p])); // first bar of a pair -> the pair
-  const rh = rhPart && (!!rhLicks || !!mel || !!kl);
+  const comp = rhPart && !!pattern.comp && !rhLicks && !mel && !kl; // right-hand chords from the pattern itself
+  const rh = rhPart && (!!rhLicks || !!mel || !!kl || comp);
   const two = rh && item.hand === 'both'; // both hands are yours: no band left hand
   const lickAt = (k) => rhLicks[(k / 2) % rhLicks.length]; // the lick starting on bar k (k even)
   // each lick over its pair of bars, in the key of the pair's first chord
   const rhNotes = rh ? bars.map(() => []) : null;
-  if (mel) bars.forEach((_, k) => { rhNotes[k] = melodyBarNotes(mel, k); });
+  if (comp) compBars(pattern, bars).forEach((b, k) => { rhNotes[k] = b; });
+  else if (mel) bars.forEach((_, k) => { rhNotes[k] = melodyBarNotes(mel, k); });
   else if (kl) kPairs.forEach((p) => { lickOverKey(p.lick, p.key).bars.forEach((b, j) => { if (p.bars[0] + j < NB) rhNotes[p.bars[0] + j] = b.rh; }); });
   else if (rh) for (let k = 0; k < NB; k += 2) { const [b1, b2] = lickBars(lickAt(k), bars[k]); rhNotes[k] = b1; if (k + 1 < NB) rhNotes[k + 1] = b2; }
   const kWord = (p) => (kl.length < 2 ? t('phraseW') : p.lick.role === 'question' ? t('questionW') : p.lick.role === 'answer' ? t('answerW') : t('phraseW'));
@@ -62,13 +66,13 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const header = h('header.top', null,
     h('a.iconbtn', { href: back, 'aria-label': t('back'), title: t('back'), html: ICON.back }),
     h('div.titles', null, h('span.kicker', null, `${L(track.title).toUpperCase()} · ${t('formUpper')}`), h('span.title', null, L(item.title || form.title))),
-    h('div.grow'), sessionChip(itemId), h('span.chordchip', null, (two ? t('bothHandsChip') + ' · ' : '') + (mel ? L(mel.title) : kl ? (kl.length > 1 ? t('qaChip') : L(kl[0].title)) : rh ? (pair ? t('qaChip') : L(rhLicks[0].title)) : L(pattern.title))), midiChip(), themeButton());
+    h('div.grow'), sessionChip(itemId), h('span.chordchip', null, (two ? t('bothHandsChip') + ' · ' : '') + (comp ? L(pattern.title) : mel ? L(mel.title) : kl ? (kl.length > 1 ? t('qaChip') : L(kl[0].title)) : rh ? (pair ? t('qaChip') : L(rhLicks[0].title)) : L(pattern.title))), midiChip(), themeButton());
   const fbEl = h('span.fb', { 'aria-live': 'polite' });
   const chorusEl = h('span.barno'), streakEl = h('div.loops', { 'aria-label': t('cleanChoruses') });
   const cells = bars.map((c, k) => {
     const lh = rh ? rhNotes[k] : lhNotes[k]; // the cell label shows the right-hand part when there is one
     const uniq = [...new Map(lh.map((e) => [e.m, e])).values()].sort((a, b) => a.m - b.m);
-    const label = mel ? (lh.length ? noteName(lh[0].name, names) : '—') : kl ? (kAt[k] ? `${kWord(kAt[k])} · ${kAt[k].key}` : '') : rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName((() => { const ch = parseChord(barChords(c)[0]); return patSpell(rhRoot(ch), 0, ch, !!form.flats); })(), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
+    const label = comp ? [...new Set(lh.map((e) => e.name))].map((n) => noteName(n, names)).join(' · ') : mel ? (lh.length ? noteName(lh[0].name, names) : '—') : kl ? (kAt[k] ? `${kWord(kAt[k])} · ${kAt[k].key}` : '') : rh ? (k % 2 === 0 ? `${lickWord(k)} · ${noteName((() => { const ch = parseChord(barChords(c)[0]); return patSpell(rhRoot(ch), 0, ch, !!form.flats); })(), names)}` : '') : uniq.map((e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || c), !!form.flats), names)).join(' · ');
     return h('div.fcell', { 'data-bar': k }, h('span.fno', null, String(k + 1)), h('b.fchord', null, c),
       h('small.fnotes' + (rh ? '.rh' : ''), null, label),
       h('div.fbeats', null, ...Array.from({ length: 4 }, () => h('i'))));

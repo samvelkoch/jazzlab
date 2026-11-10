@@ -825,6 +825,21 @@
         "en": "A chord tone on beat one of a bar where the chord changes. Land on it and you can hear the solo follow the harmony."
       },
       "wiki": "improvisation"
+    },
+    {
+      "id": "comping",
+      "match": [
+        "компинг",
+        "comping"
+      ],
+      "title": {
+        "ru": "Компинг",
+        "en": "Comping"
+      },
+      "short": {
+        "ru": "Аккомпанемент аккордами: пока звучит бас или мелодия, ты ритмично берёшь аккорды. Важно не какие ноты, а где именно в такте ты их ставишь.",
+        "en": "Accompanying with chords: while the bass or the tune sounds, you play chords in a rhythm. What matters is not which notes, but where in the bar you put them."
+      }
     }
   ]
 }

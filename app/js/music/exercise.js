@@ -34,7 +34,7 @@ export function normalize(raw) {
     title: raw.title, about: raw.about || null,
     beats, per, bars, dyn,
     tempo: { start: (raw.tempo && raw.tempo.start) || 60, target: (raw.tempo && raw.tempo.target) || 90 },
-    swing: !!raw.swing, rhythm: raw.rhythm || null,
+    swing: !!raw.swing, rhythm: raw.rhythm || null, rhythmBars: raw.rhythmBars || 1, // rhythmBars: the rhythm line spans this many bars (a 2-bar comping rhythm)
     export: raw.export || {},
     // every exercise passes by cleanliness at any tempo (tempo.target is only a goal); `passAnyTempo: false` restores the old gate
     // custom header + back link are for generated exercises (left-hand patterns over a form)

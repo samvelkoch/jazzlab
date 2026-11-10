@@ -4,8 +4,8 @@
   "title": { "ru": "Босса-нова", "en": "Bossa nova" },
   "about": { "ru": "Цель дорожки: Blue Bossa целиком, левая держит ячейку боссы, правая ведёт мелодию. Ровные восьмые, не спеша.", "en": "Goal: the whole of Blue Bossa, the left hand holding the bossa cell, the right hand carrying the melody. Even eighths, no hurry." },
   "path": [
-    "d-chords-cm", "ear-find-bossa", "pat-b1", "form-b1", "mel-bossa", "form-mel", "d-chords-db", "lick-bl1",
-    "form-rh-bl1", "imp-bo1", "pat-b2", "form-b2", "form-2h-bossa", "lick-bl2", "imp-bo2", "lick-bl3",
+    "d-chords-cm", "ear-find-bossa", "pat-b1", "form-b1", "d-chords-db", "pat-c1", "form-c1", "mel-bossa", "form-mel", "lick-bl1",
+    "form-rh-bl1", "imp-bo1", "pat-b2", "form-b2", "pat-c2", "form-c2", "pat-c3", "form-c3", "form-2h-bossa", "lick-bl2", "imp-bo2", "lick-bl3",
     "form-rh-qa-bossa", "imp-bo3", "end-bossa", "perf-bossa", "imp-bo4"
   ],
   "sections": [
@@ -18,6 +18,11 @@
       "id": "lh", "title": { "ru": "Левая рука", "en": "Left hand" },
       "about": { "ru": "Ячейка боссы: корень и квинта, ровно, без свинга. Учится на четырёх тактах Cm7 · Fm7 · Dm7b5 · G7.", "en": "The bossa cell: root and fifth, even, no swing. Learned over four bars Cm7 · Fm7 · Dm7b5 · G7." },
       "items": ["pat-b1", "pat-b2"]
+    },
+    {
+      "id": "comp", "title": { "ru": "Аккомпанемент", "en": "Comping" },
+      "about": { "ru": "Компинг: правая играет аккорды над басом левой. Сначала вместе с басом, потом между его нот, потом по клаве, как щелчок на ободе у барабанов. Аккорды из трёх нот, от одного к другому почти не двигаясь.", "en": "Comping: the right hand plays chords over the left-hand bass. First together with the bass, then between its notes, then on the clave, like the rim click in the drums. Three-note chords that hardly move from one to the next." },
+      "items": ["pat-c1", "form-c1", "pat-c2", "form-c2", "pat-c3", "form-c3"]
     },
     {
       "id": "form", "title": { "ru": "Форма", "en": "The form" },
@@ -67,6 +72,24 @@
     "pat-b2": { "kind": "pattern", "pattern": "b2", "form": "blue-bossa" },
     "form-b1": { "kind": "form", "form": "blue-bossa", "pattern": "b1", "title": { "ru": "Blue Bossa на басу", "en": "Blue Bossa, bass only" } },
     "form-b2": { "kind": "form", "form": "blue-bossa", "pattern": "b2", "title": { "ru": "Blue Bossa с ходом", "en": "Blue Bossa with the move" } },
+    "pat-c1": { "kind": "pattern", "pattern": "c1", "form": "blue-bossa" },
+    "pat-c2": { "kind": "pattern", "pattern": "c2", "form": "blue-bossa" },
+    "pat-c3": { "kind": "pattern", "pattern": "c3", "form": "blue-bossa" },
+    "form-c1": {
+      "kind": "form", "form": "blue-bossa", "pattern": "c1", "hand": "both",
+      "title": { "ru": "Blue Bossa: аккорды с басом", "en": "Blue Bossa: chords with the bass" },
+      "about": { "ru": "Левая играет бас, правая аккорд на те же доли. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "The left hand plays the bass, the right hand a chord on the same beats. The band is silent, only drums play. Three clean choruses in a row." }
+    },
+    "form-c2": {
+      "kind": "form", "form": "blue-bossa", "pattern": "c2", "hand": "both",
+      "title": { "ru": "Blue Bossa: аккорды между басом", "en": "Blue Bossa: chords between the bass" },
+      "about": { "ru": "Бас с ходом в левой, аккорды между его нот в правой. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "The bass with the move in the left hand, chords between its notes in the right. The band is silent, only drums play. Three clean choruses in a row." }
+    },
+    "form-c3": {
+      "kind": "form", "form": "blue-bossa", "pattern": "c3", "hand": "both",
+      "title": { "ru": "Blue Bossa: аккорды по клаве", "en": "Blue Bossa: chords on the clave" },
+      "about": { "ru": "Бас с ходом в левой, аккорды по щелчку на ободе в правой. Слушай его в барабанах. Три чистых круга подряд.", "en": "The bass with the move in the left hand, chords on the rim click in the right. Listen for it in the drums. Three clean choruses in a row." }
+    },
     "mel-bossa": { "kind": "melody", "melody": "bossa-cm", "pattern": "b1" },
     "form-mel": {
       "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "melody": "bossa-cm",

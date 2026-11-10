@@ -84,7 +84,9 @@ all tracks (the bossa ear game is `ear-find-bossa`, not `ear-find`). Each track 
 (`"kind": "track"`, `"ready": true` shows it in the home tabs, opened at `#/track/<id>`; the blues is `#/`).
 
 The bossa track (`content/tracks/bossa.json`): chord drills of Blue Bossa (`d-chords-cm`, `d-chords-db`), the patterns
-`pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), the melody section (`mel-bossa`, the
+`pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), the comping section (`comp`, right-hand chords over the
+bass, see «Right-hand comping»: `pat-c1` / `form-c1` after `form-b1` (`d-chords-db` now comes before them, the form uses all seven
+chords), `pat-c2` / `form-c2` and `pat-c3` / `form-c3` after `form-b2`), the melody section (`mel-bossa`, the
 tune `bossa-cm` by echo, and `form-mel`, the tune over the b1 bass on the form screen), the right hand (`rh`: the dorian
 licks `lick-bl1`..`lick-bl3` echoed over `"chords": ["Cm7", "Fm7", "G7"]`, `form-rh-bl1` = bl1 on every odd bar of the form,
 `form-rh-qa-bossa` = bl2 / bl1 taking turns), `ear-find-bossa`, the ending `end-bossa` (`bossa-end`, also the form's
@@ -174,6 +176,33 @@ pass as `prev` to the next bar); `patternBars(pattern, bars)` threads it over a 
 over its bars. The form, performance and melody screens build the left hand with `patternBars()` in form order. (The lick
 screen plays one chord at a time and uses the first-pair rule.) Known overlap: D7's root D3 sits above the C3 of its shell.
 The form screen allows max(1, round(notes per chorus / 40)) slips in a clean chorus: 1 for p1 / p1q, 2 for p2.
+
+## Right-hand comping (`comp` in a pattern)
+
+A pattern may carry a `comp` block: a right-hand part of chords over the left-hand bass in `events` (`c1`, `c2`, `c3`, the bossa
+comping steps). Backward compatible: a pattern without `comp` is left-hand only, as before.
+
+```jsonc
+"comp": {
+  "rhythm": "r4 4. 4.",              // the right-hand rhythm; the Rhythm stage of the exercise drills THIS, not the bass
+  "bars": 1,                         // 1 | 2: the comp repeats every `bars` form bars (bar k takes comp bar k % bars)
+  "events": [ { "t": 2, "d": 3 }, { "t": 5, "d": 3 } ],  // when the chord sounds; "bar": 0|1 picks the comp bar (bars: 2)
+  "voicings": { "Cm7": { "n": ["Eb4", "G4", "Bb4"], "f": [1, 3, 5] }, … }  // written out per chord, flats as in the form
+}
+```
+
+- The voicings are not computed: each chord of the form has its notes (and fingers) in the file, hand-voice-led so every voice
+  moves by at most a major third around the whole loop (the 3rd and 7th of each chord plus the 5th or root, C4..D5). A chord without
+  a voicing throws. A two-chord bar takes the voicing of the chord at each event's slot.
+- `patternExercise()` gives the right hand (`rh`) the chords and the left hand the bass; the exercise's `rhythm` is `comp.rhythm`.
+  With `comp.bars: 2` the exercise gets `rhythmBars: 2`: the Rhythm stage then loops a two-bar rhythm line (`rhythm` written as two
+  bars in a row, `"4. 4. 4 r4 4. 4."`; the notation draws a barline, counting restarts at 1).
+- `compBar(pattern, barName, i)` / `compBars(pattern, bars)` in `forms.js` return the right-hand notes (MIDI + names) per form bar.
+- A form item with `"hand": "both"` and a pattern with `comp` (and no `melody` or lick) is the whole-form loop: bass + chords, both
+  hands scored (a chord = several expected notes at one slot), the app plays only the drums.
+- The bossa set: `c1` «Аккорды вместе с басом» (bass `b1`; chords on 1 and the «and» of 2, `"4. 4. r4"`), `c2` «Аккорды между
+  басом» (bass `b2`; chords on 2 and the «and» of 3, held: `"r4 4. 4."`) and `c3` «Аккорды по клаве» (bass `b2`; two bars that follow
+  the rim-click clave of `drums.js`: bar A slots 0, 3, 6, bar B slots 2, 5). The three files carry the same voicings.
 
 # Licks (`jazzlab-lick/1`)
 

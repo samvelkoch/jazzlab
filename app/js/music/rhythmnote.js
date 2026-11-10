@@ -5,7 +5,8 @@ import { parsePattern, lenToken } from './rhythm.js';
 const NS = 'http://www.w3.org/2000/svg';
 export const NOTE_X0 = 30, NOTE_W = 940; // same 3% / 94% inset as the lane
 
-export function renderRhythmNotation(svg, events, per = 8) {
+// per = slots drawn (a 2-bar rhythm: 16), bar = slots in one bar (barlines and the counting restart there)
+export function renderRhythmNotation(svg, events, per = 8, bar = per) {
   const W = 1000, H = 138, LINE = 64, STEM = 22;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svg.setAttribute('class', 'rnote');
@@ -13,7 +14,7 @@ export function renderRhythmNotation(svg, events, per = 8) {
   const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.append(e); return e; };
   const xs = (slot) => NOTE_X0 + (slot / per) * NOTE_W + 26; // head position inside its slot
   el('line', { x1: 0, x2: W, y1: LINE, y2: LINE, class: 'staffline' });
-  el('text', { x: 10, y: LINE - 6, class: 'tsig' }).textContent = String(per / 2);
+  el('text', { x: 10, y: LINE - 6, class: 'tsig' }).textContent = String(bar / 2);
   el('text', { x: 10, y: LINE + 22, class: 'tsig' }).textContent = '4';
   const groups = new Map();
   const isBeamed = (e, k) => {
@@ -58,9 +59,10 @@ export function renderRhythmNotation(svg, events, per = 8) {
       el('path', { d: `M${x + 9.5} ${LINE - STEM - 30} c2 12 16 14 12 30 c0 -10 -8 -14 -12 -16`, class: 'fill' }, g);
     }
   });
+  for (let s = bar; s < per; s += bar) el('line', { x1: xs(s) - 14, x2: xs(s) - 14, y1: LINE - 26, y2: LINE + 26, class: 'stem' }); // barlines
   for (let s = 0; s < per; s++) {
     const t = el('text', { x: xs(s), y: H - 10, class: 'count' + (s % 2 ? '' : ' beat') });
-    t.textContent = s % 2 ? '+' : String(s / 2 + 1);
+    t.textContent = s % 2 ? '+' : String((s % bar) / 2 + 1);
     t.dataset.slot = s;
   }
   return {
