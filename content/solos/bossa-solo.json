@@ -10,5 +10,5 @@
   "call": false,
   "targets": true,
   "choruses": 2,
-  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.5, "phrases": 3, "pitches": 3}
+  "pass": {"inside": 0.85, "grid": 0.7, "targets": 0.5, "cover": 0.4, "phrases": 3, "pitches": 3}
 }

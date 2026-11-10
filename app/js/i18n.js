@@ -122,7 +122,7 @@ const DICT = {
     // solo (improvisation)
     kind_solo: 'Соло', soloUpper: 'СОЛО', soYou: 'ты', soRest: 'пауза', soBand: 'бэнд', soPalette: 'Ноты',
     soInside: 'в ладу', soApproach: 'подход', soOut: 'мимо', soRestBar: 'пауза: здесь молчим', soBandBar: 'бэнд спрашивает: слушай',
-    soMInside: 'в ладу', soMGrid: 'в сетке', soMPhrases: 'фраз', soMRests: 'пауз', soMTargets: 'целевых', soMPitches: 'разных нот',
+    soMInside: 'в ладу', soMGrid: 'в сетке', soMPhrases: 'фраз', soMRests: 'пауз', soMTargets: 'целевых', soMCover: 'смен сыграно', soMPitches: 'разных нот',
     soChorusBoard: 'Круг', soRunBoard: 'Запуск', soPassed: 'Зачёт!', soPassedAgain: 'Повтор зачтён', soNotYet: 'Пока без зачёта: серое ниже порога',
     soStart: 'Нажми «Старт»: отсчёт 1 такт, потом форма. Играй своё в тактах «ты», в тактах «пауза» молчи.',
     soStartCall: 'Нажми «Старт»: отсчёт 1 такт, потом форма. Бэнд задаёт вопрос, ты отвечаешь в тактах «ты».',
@@ -285,7 +285,7 @@ const DICT = {
     // solo (improvisation)
     kind_solo: 'Solo', soloUpper: 'SOLO', soYou: 'you', soRest: 'rest', soBand: 'band', soPalette: 'Notes',
     soInside: 'inside', soApproach: 'approach', soOut: 'outside', soRestBar: 'rest: stay silent here', soBandBar: 'the band asks: listen',
-    soMInside: 'inside', soMGrid: 'on the grid', soMPhrases: 'phrases', soMRests: 'rests', soMTargets: 'targets', soMPitches: 'different notes',
+    soMInside: 'inside', soMGrid: 'on the grid', soMPhrases: 'phrases', soMRests: 'rests', soMTargets: 'targets', soMCover: 'changes played', soMPitches: 'different notes',
     soChorusBoard: 'Chorus', soRunBoard: 'Run', soPassed: 'Passed!', soPassedAgain: 'Review passed', soNotYet: 'Not passed yet: grey is below the bar',
     soStart: 'Press Start: a 1-bar count-in, then the form. Play your own lines in the «you» bars, stay silent in the «rest» bars.',
     soStartCall: 'Press Start: a 1-bar count-in, then the form. The band asks, you answer in the «you» bars.',

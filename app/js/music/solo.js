@@ -63,7 +63,7 @@ export function changesOf(bars) {
  * Score one chorus. notes = [{ t (s from the chorus start), m }], ctx = { solo, bars, bpm, swing }.
  * Only the learner's ('you') bars count for inside, grid, phrases, pitches and targets; notes in 'rest' and 'band' bars
  * count against rests only (a rest bar is clean when empty, or with one note on its first eighth: a phrase's tail).
- * Returns { inside, grid (0..1), phrases, rests: { ok, total }, targets: { ok, total }, pitches, notes,
+ * Returns { inside, grid (0..1), phrases, rests: { ok, total }, targets: { ok, total, changes }, pitches, notes,
  *   perBar: [{ role, notes, clean, restOk, target }] }.
  */
 export function scoreChorus(notes, { solo, bars, bpm, swing }) {
@@ -98,11 +98,14 @@ export function scoreChorus(notes, { solo, bars, bpm, swing }) {
     };
   });
   const rests = { ok: perBar.filter((b) => b.restOk === true).length, total: perBar.filter((b) => b.restOk !== null).length };
-  const targets = { ok: 0, total: 0 };
+  // targets: ok / total = accuracy (a chord tone among the changes played on), changes = every change in your bars,
+  // so total / changes = coverage (a change left silent is not a wrong note, but it does not count as done either).
+  const targets = { ok: 0, total: 0, changes: 0 };
   if (solo.targets) changesOf(bars).forEach(({ bar, slot }) => {
     if (perBar[bar].role !== 'you') return;
+    targets.changes++;
     const first = byBar[bar].find((n) => n.slot === slot || n.slot === slot + 1); // the first note on the first beat of the chord
-    if (!first) return; // no data: not counted
+    if (!first) return; // silent change: counts against coverage only
     const ok = first.pal.chordPcs.has(pcm(first.m));
     targets.total++; if (ok) targets.ok++;
     perBar[bar].target = perBar[bar].target === false ? false : ok;
@@ -119,7 +122,11 @@ export function combine(scores) {
   if (!scores.length) return null;
   if (scores.length === 1) return { ...scores[0], choruses: 1 };
   const mean = (k) => scores.reduce((a, s) => a + s[k], 0) / scores.length;
-  const sum = (k) => scores.reduce((a, s) => ({ ok: a.ok + s[k].ok, total: a.total + s[k].total }), { ok: 0, total: 0 });
+  const sum = (k) => scores.reduce((a, s) => {
+    const o = { ok: a.ok + s[k].ok, total: a.total + s[k].total };
+    if (s[k].changes != null) o.changes = (a.changes || 0) + s[k].changes;
+    return o;
+  }, { ok: 0, total: 0 });
   return {
     inside: mean('inside'), grid: mean('grid'), phrases: mean('phrases'), rests: sum('rests'), targets: sum('targets'),
     pitches: Math.min(...scores.map((s) => s.pitches)), notes: scores.reduce((a, s) => a + s.notes, 0), choruses: scores.length
@@ -127,11 +134,15 @@ export function combine(scores) {
 }
 
 const ratio = (x) => (x && x.total ? x.ok / x.total : 1); // no data passes
-/** Each threshold present in pass -> true / false. A ratio metric with no data (total 0) passes. */
+/** Target coverage: the share of chord changes in your bars that got a note on the first beat (no changes = 1). */
+export const coverage = (x) => (x && x.changes ? x.total / x.changes : 1);
+/** Each threshold present in pass -> true / false. A ratio metric with no data (total 0) passes; pass.cover checks
+ *  target coverage, so a solo cannot meet pass.targets by leaving every change silent. */
 export function checks(score, pass = {}) {
   const out = {};
   ['inside', 'grid', 'phrases', 'pitches'].forEach((k) => { if (pass[k] != null) out[k] = score[k] >= pass[k] - 1e-9; });
   ['rests', 'targets'].forEach((k) => { if (pass[k] != null) out[k] = ratio(score[k]) >= pass[k] - 1e-9; });
+  if (pass.cover != null) out.cover = coverage(score.targets) >= pass.cover - 1e-9;
   return out;
 }
 /** All thresholds of pass met. */

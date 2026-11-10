@@ -11,7 +11,7 @@ import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews 
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { patternBars, parseChord, patSpell } from '../music/forms.js';
-import { paletteAt, scoreChorus, combine, checks, passed, makeCall, roleOf, gridIndex, PER, APPROACH_E8 } from '../music/solo.js';
+import { paletteAt, scoreChorus, combine, checks, passed, coverage, makeCall, roleOf, gridIndex, PER, APPROACH_E8 } from '../music/solo.js';
 import { gridDev, tols, rhythmAccuracy } from '../music/recording.js';
 import { groove } from '../music/drums.js';
 import { recordingToMidi } from '../music/export.js';
@@ -353,6 +353,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
         stat(ph, t('soMPhrases'), 'phrases', pass.phrases),
         solo.phrasing ? stat(fmtR(s.rests), t('soMRests'), 'rests', pass.rests != null ? pct(pass.rests) : null) : null,
         solo.targets ? stat(fmtR(s.targets), t('soMTargets'), 'targets', pass.targets != null ? pct(pass.targets) : null) : null,
+        solo.targets && s.targets.changes != null ? stat(`${s.targets.total}/${s.targets.changes}`, t('soMCover'), 'cover', pass.cover != null ? pct(pass.cover) : null) : null,
         stat(s.pitches, t('soMPitches'), 'pitches', pass.pitches)));
   }
   function finishChorus(c) {
@@ -382,7 +383,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, bac
       const first = !exProgress(itemId).stages.done;
       updateEx(itemId, (p) => {
         const b = p.best || {}, rr = (x) => (x.total ? x.ok / x.total : null), mx = (a, v) => (v == null ? a : Math.max(a || 0, v));
-        return { ...p, runs: (p.runs || 0) + 1, best: { inside: mx(b.inside, total.inside), grid: mx(b.grid, total.grid), phrases: mx(b.phrases, total.phrases), pitches: mx(b.pitches, total.pitches), rests: mx(b.rests, rr(total.rests)), targets: mx(b.targets, rr(total.targets)) } };
+        return { ...p, runs: (p.runs || 0) + 1, best: { inside: mx(b.inside, total.inside), grid: mx(b.grid, total.grid), phrases: mx(b.phrases, total.phrases), pitches: mx(b.pitches, total.pitches), rests: mx(b.rests, rr(total.rests)), targets: mx(b.targets, rr(total.targets)), cover: total.targets.changes ? mx(b.cover, coverage(total.targets)) : b.cover } };
       });
       if (ok) {
         updateEx(itemId, (p) => ({ ...p, stages: { ...p.stages, done: true } }));

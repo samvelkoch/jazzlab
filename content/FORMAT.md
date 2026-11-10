@@ -366,8 +366,12 @@ with a reference; each chorus is scored by `scoreChorus()` in `app/js/music/solo
   "phrasing": { "play": 2, "rest": 2 },    // bars, repeated over the form; null = free (no rest bars)
   "call": false,                           // true: the band plays the `play` bars of each cell, you answer in the `rest` bars
   "targets": false,                        // true: score target notes on chord changes
+                                           //   score.targets = { ok, total, changes }: ok / total = accuracy (a chord tone
+                                           //   on the changes you played on), total / changes = coverage
   "choruses": 1,                           // choruses in one run; the run passes as a whole
-  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "targets": 0.6, "pitches": 3 }
+  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "targets": 0.6, "cover": 0.5, "pitches": 3 }
+  //  cover: share of chord changes in your bars that got a note on the first beat (else silence on every change would
+  //  pass "targets": a metric with no data passes)
 }
 ```
 
