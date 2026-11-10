@@ -33,7 +33,8 @@ export function renderExercise(root, { ex, rerender }) {
     swing: ex.swing,
     playing: false
   };
-  const saveSettings = () => store.set('settings', settings);
+  // merge: the appearance popover writes the timing offset into settings too; this screen's copy must not undo it
+  const saveSettings = () => { const { latencyMs: _own, ...mine } = settings; store.set('settings', { ...store.get('settings', {}), ...mine }); };
   const handOn = (hd) => st.hands === 'both' || st.hands === hd;
   const midiOn = () => midiState().connected;
 

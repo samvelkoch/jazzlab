@@ -5,6 +5,7 @@ import { freshItems, learningOrder, budgetLimits, BUDGETS, DEFAULT_BUDGET } from
 import { t, L, plural } from '../i18n.js';
 import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
+import { historyPanel, dataPanel, todayLine } from './history.js';
 import { store, progress, itemDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
 const fmtTime = (sec) => { const m = Math.round(sec / 60); return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`; };
@@ -137,6 +138,7 @@ export async function renderTrack(root, { model, index, rerender }) {
   const todayCard = h('section.hero', null,
     h('div.row.herohead', null, h('span.kicker', null, t('today')), h('div.grow'), budgetSeg),
     q.ids.length ? todayList : h('span.herotitle', null, t('nothingToday')),
+    q.ids.length ? null : (() => { const line = todayLine(); return line ? h('span.herotoday', null, line) : null; })(),
     others,
     startBtn,
     cur && curNext ? h('button.btn.ghost', { type: 'button', onclick: () => { endSession(track.id); rerender(); } }, t('endSession')) : null);
@@ -181,5 +183,5 @@ export async function renderTrack(root, { model, index, rerender }) {
       h('div.coursemain', null,
         h('div.row', null, h('h1', null, L(track.title)), h('div.grow'), tabs),
         ...track.sections.map(section)),
-      h('aside.courseside', null, todayCard, skills, stats, goal, fact)));
+      h('aside.courseside', null, todayCard, skills, stats, historyPanel(), goal, fact, dataPanel())));
 }

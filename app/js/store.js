@@ -1,6 +1,9 @@
 // Local persistence (this device only). Every access is guarded: storage can be unavailable
 // (private mode, blocked site data) and the app must still work.
-const PREFIX = 'jazzlab:';
+import { dayKey, addToDay } from './days.js';
+import { clampLatency } from './timing.js';
+
+export const PREFIX = 'jazzlab:';
 const mem = new Map();
 
 export const store = {
@@ -33,20 +36,33 @@ export const isDone = (p) => !!(p && p.stages && (p.stages.tempo || p.stages.don
 export const itemDone = (item, p) => (item && item.kind === 'pattern' ? !!(p && p.stages && p.stages.memory)
   : item && item.kind === 'perform' ? !!(p && p.runs >= 1) : isDone(p));
 
+// ---- history by day (days.js): seconds, passes, reviews, choruses ----
+/** Add counters to the day of `now` (a day starts at 04:00). */
+export function logDay(delta, now = new Date()) { store.set('days', addToDay(store.get('days', {}), dayKey(now), delta)); }
+export function days() { return store.get('days', {}); }
+
 // ---- practice time (seconds), counted only while actually playing ----
 let lastActive = 0, pending = 0, flushT = 0;
 export function practiceSeconds() { return store.get('practiceSec', 0) + pending; }
+/** Seconds not yet written (they are added to today's row on the next flush). */
+export const pendingSeconds = () => pending;
 /** Call on every note / playback tick. Counts up to 5 s of wall time per call. */
 export function markActive() {
   const now = Date.now();
   if (lastActive) pending += Math.min(5, (now - lastActive) / 1000);
   lastActive = now;
-  if (!flushT) flushT = setTimeout(() => { store.set('practiceSec', store.get('practiceSec', 0) + pending); pending = 0; flushT = 0; }, 5000);
+  if (!flushT) flushT = setTimeout(() => {
+    store.set('practiceSec', store.get('practiceSec', 0) + pending);
+    if (pending > 0) logDay({ sec: pending });
+    pending = 0; flushT = 0;
+  }, 5000);
 }
 export function idle() { lastActive = 0; }
 
 // ---- spaced review ----
 // review = { [itemId]: { due: ISO, interval: days, n: successes in a row, last: ISO } }
+// Every call that changes the schedule is logged for the day: a first pass as `passed`, a pass of a due item as
+// `reviewsOk`, a failure that moves the item back as `reviewsFail` (a repeated failure on the same day changes nothing).
 export const REVIEW_STEPS = [1, 3, 7, 14, 30];
 export function reviews() { return store.get('review', {}); }
 /** Called when an item is passed (first time or on review). ok=false sends it back to day 1. */
@@ -58,8 +74,10 @@ export function scheduleReview(id, ok, now = new Date()) {
   const n = ok ? Math.min(cur.n + 1, REVIEW_STEPS.length) : 0;
   const days = REVIEW_STEPS[Math.max(0, Math.min(n, REVIEW_STEPS.length) - 1)] || REVIEW_STEPS[0];
   const due = new Date(now); due.setHours(4, 0, 0, 0); due.setDate(due.getDate() + (ok ? days : 1));
+  const changed = due.toISOString() !== cur.due || n !== cur.n;
   all[id] = { due: due.toISOString(), interval: ok ? days : 1, n, last: now.toISOString() };
   store.set('review', all);
+  if (changed) logDay(ok ? (cur.due ? { reviewsOk: 1 } : { passed: 1 }) : { reviewsFail: 1 }, now);
   return all[id];
 }
 /** Ids due today or earlier, earliest first. */
@@ -89,3 +107,7 @@ export function sessionAdvance(id, track) {
   const s = session(track); if (!s) return;
   const k = s.ids.indexOf(id); if (k >= 0) { s.at = Math.max(s.at, k + 1); store.set(sessKey(track), s); }
 }
+
+// ---- timing offset (timing.js): settings.latencyMs, ms subtracted from every input time ----
+export const latencyMs = () => clampLatency(store.get('settings', {}).latencyMs);
+export function setLatencyMs(v) { const ms = clampLatency(v); store.set('settings', { ...store.get('settings', {}), latencyMs: ms }); return ms; }

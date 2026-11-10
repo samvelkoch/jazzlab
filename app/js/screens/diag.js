@@ -8,7 +8,8 @@
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
-import { store, updateEx, markActive, idle } from '../store.js';
+import { store, updateEx, markActive, idle, latencyMs, setLatencyMs } from '../store.js';
+import { suggestLatency } from '../timing.js';
 import { toMidi, noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import * as audio from '../music/audio.js';
@@ -185,7 +186,7 @@ export function renderDiag(root, { track, itemId, item, back }) {
   }
   function finishRhythm() {
     const devs = st.clicks.filter((c) => c.dev !== null).map((c) => c.dev);
-    R.rhythmHits = devs.length;
+    R.rhythmHits = devs.length; R.rhythmDevs = devs;
     if (devs.length >= MIN_HITS) {
       R.rhythmMs = devs.reduce((a, d) => a + Math.abs(d), 0) / devs.length;
       R.rhythmBias = devs.reduce((a, d) => a + d, 0) / devs.length;
@@ -330,6 +331,17 @@ export function renderDiag(root, { track, itemId, item, back }) {
         extra[m[0]] ? h('small.dref', null, extra[m[0]]()) : null,
         ref(t('dgPrevW'), m, prev), ref(t('dgBaseW'), m, base));
     }));
+    // every tap consistently late (or early) by more than 25 ms: offer to correct the timing offset by that much
+    const cur = latencyMs(), next = R.rhythmMs === null ? null : suggestLatency(R.rhythmDevs, cur);
+    if (next !== null) {
+      const by = next - cur;
+      const btn = h('button.btn', { type: 'button', onclick: () => {
+        setLatencyMs(next); btn.disabled = true;
+        line.textContent = t('dgLatApplied').replace('{n}', String(next));
+      } }, t('dgLatApply').replace('{n}', (by > 0 ? '+' : '−') + Math.abs(by)));
+      const line = h('span', null, t(by > 0 ? 'dgLatLate' : 'dgLatEarly').replace('{n}', String(Math.abs(Math.round(R.rhythmBias)))));
+      summary.append(h('div.dlat', { role: 'status' }, line, btn));
+    }
     paintStrip(); paintPrimary();
   }
 

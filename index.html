@@ -17,6 +17,15 @@
   try { var th = JSON.parse(localStorage.getItem('jazzlab:theme')); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th; var sc = JSON.parse(localStorage.getItem('jazzlab:scheme')); if (/^[a-z]+$/.test(sc)) document.documentElement.dataset.scheme = sc; } catch (e) {}
 </script>
 <script type="module" src="app/js/main.js"></script>
+<script>
+  // service worker (sw.js): fresh modules after a deploy, visited screens offline. Optional: without it nothing changes.
+  try {
+    var lh = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || lh)) {
+      window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    }
+  } catch (e) {}
+</script>
 </head>
 <body>
 <div id="app"><noscript>Jazzlab needs JavaScript.</noscript></div>

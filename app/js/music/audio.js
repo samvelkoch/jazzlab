@@ -1,6 +1,8 @@
 // Web Audio synth: a soft piano-like voice + metronome click.
 // iOS/iPadOS: audio must be unlocked inside a tap, and the ring/silent switch mutes Web Audio
 // unless the session is "playback" and a silent <audio> element keeps playing.
+import { latencyMs } from '../store.js';
+
 let ac = null, master = null, bus = null, silentEl = null;
 
 function silentWav() {
@@ -157,11 +159,13 @@ export function drum(kind, t, vel = 0.7) {
   }
 }
 
-/** Convert a DOM/MIDI event timestamp (performance.now() ms) to the audio clock. */
+/** Convert a DOM/MIDI event timestamp (performance.now() ms) to the audio clock. Every scored input goes through here:
+ *  the output latency (we hear the band late) and the user's timing offset (settings.latencyMs: the notes arrive late,
+ *  e.g. over Bluetooth MIDI) are both taken off. */
 export function toAudioTime(ts) {
   const nowMs = performance.now();
   if (!(ts > 0) || ts > nowMs + 50 || ts < nowMs - 2000) ts = nowMs;
-  return now() - (nowMs - ts) / 1000 - outputLatency();
+  return now() - (nowMs - ts) / 1000 - outputLatency() - latencyMs() / 1000;
 }
 
 // Keep the context alive across taps and tab switches.

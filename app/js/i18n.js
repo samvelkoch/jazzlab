@@ -148,7 +148,26 @@ const DICT = {
    navCourse: 'Курс', navChords: 'Аккорды', sections: 'Разделы',
     helpTitle: 'Как пользоваться', helpContents: 'Содержание', helpConnect: 'Как подключить →',
     wikiTab: 'Справочник', wikiUpper: 'СПРАВОЧНИК', wikiIntro: 'Отправная точка: короткие заметки и ссылки, чтобы было откуда начать.', wikiBack: 'Весь справочник',
-    factOfDay: 'Факт дня', aboutTune: 'об этой вещи ⓘ', factsW: 'Факты', linksW: 'Ссылки', relatedW: 'Связано', sourcesW: 'Источники', imageCredit: 'Фото: {credit}, {license}'
+    factOfDay: 'Факт дня', aboutTune: 'об этой вещи ⓘ', factsW: 'Факты', linksW: 'Ссылки', relatedW: 'Связано', sourcesW: 'Источники', imageCredit: 'Фото: {credit}, {license}',
+    // timing offset (appearance popover, check-up)
+    timingW: 'Синхронизация', latencyW: 'Поправка задержки', latLess: 'Меньше на 5 мс', latMore: 'Больше на 5 мс', latReset: 'Сбросить',
+    latHint: 'Если все ноты стабильно «поздно» (обычно Bluetooth MIDI), прибавь: на столько мс твои нажатия приходят позже.',
+    dgLatLate: 'Нажатия стабильно поздно, в среднем на {n} мс: похоже на задержку пианино (Bluetooth).',
+    dgLatEarly: 'Нажатия стабильно рано, в среднем на {n} мс.',
+    dgLatApply: 'Поправить на {n} мс', dgLatApplied: 'Поправка задержки теперь {n} мс (меняется в «Оформлении»).',
+    // history (home screen)
+    histTitle: 'Последние 14 дней', histMax: 'шкала до {n} мин',
+    hist7: '7 дней: {min} мин · дней с занятиями {days} · пройдено {p} · повторы {ok} ✓ / {fail} ✗',
+    histAria: 'Минуты за инструментом за 14 дней: всего {min} мин, дней с занятиями {days}, сегодня {today} мин.',
+    histToday: 'Сегодня: {min} мин · пройдено {p} · повторы {ok} ✓ / {fail} ✗',
+    // data: export / import
+    dataTitle: 'Данные', dataAbout: 'Прогресс хранится только в этом браузере. Сохрани файл, чтобы перенести его на другое устройство или держать копию.',
+    dataExport: 'Сохранить прогресс', dataImport: 'Загрузить из файла', dataSaved: 'Сохранено: {f}',
+    dataFileW: 'В файле от {d}: прогресс {p}, повторы {r}, дней истории {n}.', dataNowW: 'Сейчас на этом устройстве: прогресс {p}, повторы {r}, дней истории {n}.',
+    dataReplaceQ: 'Заменить всё на этом устройстве данными из файла?', dataReplace: 'Заменить', dataCancel: 'Отмена',
+    dataBad_json: 'Это не JSON-файл. Ничего не изменено.', dataBad_format: 'Это не файл прогресса Jazzlab. Ничего не изменено.',
+    dataBad_data: 'Файл повреждён: нет данных. Ничего не изменено.', dataFail: 'Не удалось записать данные: ничего не изменено.',
+    dataNoStorage: 'Хранилище браузера недоступно (приватный режим?).'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -292,7 +311,26 @@ const DICT = {
    navCourse: 'Course', navChords: 'Chords', sections: 'Sections',
     helpTitle: 'How to use', helpContents: 'Contents', helpConnect: 'How to connect →',
     wikiTab: 'Reference', wikiUpper: 'REFERENCE', wikiIntro: 'A starting point: short notes and links, so there is somewhere to begin.', wikiBack: 'All articles',
-    factOfDay: 'Fact of the day', aboutTune: 'about this tune ⓘ', factsW: 'Facts', linksW: 'Links', relatedW: 'Related', sourcesW: 'Sources', imageCredit: 'Image: {credit}, {license}'
+    factOfDay: 'Fact of the day', aboutTune: 'about this tune ⓘ', factsW: 'Facts', linksW: 'Links', relatedW: 'Related', sourcesW: 'Sources', imageCredit: 'Image: {credit}, {license}',
+    // timing offset (appearance popover, check-up)
+    timingW: 'Timing', latencyW: 'Timing offset', latLess: '5 ms less', latMore: '5 ms more', latReset: 'Reset',
+    latHint: 'If every note reads “late” (typically Bluetooth MIDI), raise it: your key presses arrive this many ms late.',
+    dgLatLate: 'Your taps were consistently late, by {n} ms on average: looks like piano latency (Bluetooth).',
+    dgLatEarly: 'Your taps were consistently early, by {n} ms on average.',
+    dgLatApply: 'Apply correction of {n} ms', dgLatApplied: 'The timing offset is now {n} ms (change it under Appearance).',
+    // history (home screen)
+    histTitle: 'Last 14 days', histMax: 'scale up to {n} min',
+    hist7: '7 days: {min} min · {days} days practised · {p} passed · reviews {ok} ✓ / {fail} ✗',
+    histAria: 'Minutes at the piano over 14 days: {min} min in all, {days} days practised, {today} min today.',
+    histToday: 'Today: {min} min · {p} passed · reviews {ok} ✓ / {fail} ✗',
+    // data: export / import
+    dataTitle: 'Data', dataAbout: 'Progress lives only in this browser. Save a file to move it to another device or to keep a copy.',
+    dataExport: 'Export progress', dataImport: 'Import progress', dataSaved: 'Saved: {f}',
+    dataFileW: 'File from {d}: {p} progress entries, {r} reviews, {n} days of history.', dataNowW: 'Now on this device: {p} progress entries, {r} reviews, {n} days of history.',
+    dataReplaceQ: 'Replace everything on this device with the file?', dataReplace: 'Replace', dataCancel: 'Cancel',
+    dataBad_json: 'This is not a JSON file. Nothing was changed.', dataBad_format: 'This is not a Jazzlab progress file. Nothing was changed.',
+    dataBad_data: 'The file is damaged: no data. Nothing was changed.', dataFail: 'Could not write the data: nothing was changed.',
+    dataNoStorage: 'Browser storage is not available (private mode?).'
   }
 };
 
