@@ -2,17 +2,24 @@
 import { t, getLang, setLang } from './i18n.js';
 import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './theme.js';
 import { midiState, onMidiState, connect } from './music/midi.js';
-import { sessionNext, sessionAdvance, endSession } from './store.js';
+import { session, sessionNext, sessionAdvance, endSession } from './store.js';
 
 // Item screens register how to link to an item id and which track they belong to (set by main.js once the track is loaded).
 let linkOf = () => null, linkTrack = null;
 export function setItemLinks(fn, track = null) { linkOf = fn; linkTrack = track; }
 export const itemHref = (id) => linkOf(id);
 
-/** "Next →" chip for the one-tap session; empty when no session is running or this is the last item. */
+/** "Next →" chip for the one-tap session; empty when no session is running. On the session's last item it is
+ *  "Finish ✓": back to the track home, ending the session (else the session would just stop there). */
 export function sessionChip(currentId) {
   const nx = sessionNext(currentId, linkTrack);
-  if (!nx) return null;
+  if (!nx) {
+    const s = session(linkTrack);
+    if (!s || !s.ids.length || s.ids[s.ids.length - 1] !== currentId) return null;
+    const home = !linkTrack || linkTrack === 'blues' ? '#/' : `#/track/${linkTrack}`;
+    // the label sits outside .sn/.st, which a phone hides
+    return h('a.chip.session.finish', { href: home, title: t('endSession'), onclick: () => endSession(linkTrack) }, h('b', null, t('sessionFinish')));
+  }
   const link = linkOf(nx.id);
   if (!link) return null;
   return h('a.chip.session', { href: link.href, title: link.title, onclick: () => sessionAdvance(currentId, linkTrack) },

@@ -397,9 +397,15 @@ footer.actions { flex: none; display: flex; align-items: center; gap: 10px; flex
   header.top .chip span { display: none; }
 }
 @media (max-width: 900px) {
-  main.course { flex-direction: column; align-items: stretch; }
-  .courseside { width: 100%; }
-  .coursemain { width: 100%; }
+  /* one column (phone, iPad portrait): the Today card right under the title + tabs row (the one-tap session is the
+     main use), skills / stats / goal / fact after the sections. The two wrappers drop out of the box tree so `order`
+     can interleave their children; the desktop sticky column is untouched. */
+  main.course { flex-direction: column; align-items: stretch; gap: 14px; }
+  .coursemain, .courseside { display: contents; }
+  .coursemain > * { order: 2; min-width: 0; }
+  .coursemain > .row { order: 0; }
+  .courseside > * { order: 3; }
+  .courseside > .hero { order: 1; }
   .stages button { padding: 0 10px; }
   header.top { flex-wrap: wrap; row-gap: 10px; }
   header.top .chip { max-width: 220px; }
@@ -517,6 +523,9 @@ main.imp { gap: 12px; }
 @media (max-width: 640px) {
   .roll .lnote, .roll .lrest { font-size: 12px; }
   .foothint { display: none; }
+  /* the form / solo / performance hint above the grid wraps instead of ending in "…" (the exercise screen keeps
+     one line: a wrapping loop result there would shift the staff mid-play) */
+  .formscreen .staffhead .fb { white-space: normal; } /* solo and performance screens are .formscreen too */
 }
 
 /* rhythm pattern in notation (like the book) + loop history */
@@ -971,8 +980,8 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
   footer.actions::after { content: ""; order: 2; flex: 0 0 100%; height: 0; margin-top: -8px; } /* forced line break */
   footer.actions > .grow { display: none; }
   .lickscreen[data-lstage="fingers"] .footsegs, .lickscreen[data-lstage="memory"] .footsegs { display: none; } /* all its controls are hidden there */
-  .footsegs { display: flex; align-items: center; gap: 8px; flex: 1 1 0; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
-  .footsegs::-webkit-scrollbar { display: none; }
+  /* the segments wrap onto a second line instead of scrolling: a hidden scroller cut «Drums / Metronome» off the edge */
+  .footsegs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; flex: 1 1 0; min-width: 0; }
   footer.actions .seg button { min-height: 36px; min-width: 0; padding: 0 11px; font-size: 14px; }
   footer.actions .iconbtn { width: 40px; height: 40px; }
   footer.actions .pair { gap: 4px; }
