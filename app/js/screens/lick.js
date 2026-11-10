@@ -7,7 +7,7 @@
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
-import { store, updateEx, exProgress, markActive, idle } from '../store.js';
+import { store, updateEx, exProgress, markActive, idle, reviews } from '../store.js';
 import { noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { lickNotes, lickSpell, patternBar, barChords, lickKeyNotes, lickOverKey } from '../music/forms.js';
@@ -33,8 +33,10 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   // the left hand under the 2 bars of the lick: the pattern over the chord twice, or over the progression in the key
   const lhOf = (c) => { if (!pattern) return [[], []]; if (keyed) return lickOverKey(lick, c, pattern).bars.map((b) => b.lh); const pb = patternBar(pattern, c); return [pb, pb]; };
   const saved = exProgress(itemId);
+  const due = !!(reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date());
   const st = {
-    stage: store.get('lickStage:' + itemId, 'echo'),
+    // a due review opens on «By heart»: its big button leads straight into the from-memory exercise
+    stage: due ? 'memory' : store.get('lickStage:' + itemId, 'echo'),
     chord: chords.includes(store.get('lickChord:' + itemId)) ? store.get('lickChord:' + itemId) : chords[0],
     bpm: store.get('tempo:' + itemId, lick.tempo || form.tempo || 66),
     swing: lick.swing !== undefined ? !!lick.swing : !!form.swing,
@@ -184,6 +186,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
     footHint.textContent = sid === 'echo' ? t('lkF_echo') : t('lkF_link');
     paintStages(); paintCycle(-1, 0); paintPrimary();
     if (sid === 'echo') fb(echoDone() ? `<span class="ok">${ICON.check} ${t(tk('lkEchoDone'))}</span>` : t('lkStartHint'));
+    else if (due && sid === 'memory') fb(`<b>${t('reviewDueHint')} ↓</b>`);
     else fb(exProgress(itemId).stages.done ? `<span class="ok">${ICON.check} ${t('lkPassed')}</span>` : '');
   }
   function setChord(c) {
@@ -229,9 +232,18 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], barSt = null, lhBars = [[], []], lastResult = '';
   const swingOff = () => { const beat = 60 / st.bpm; return st.swing ? beat * 2 / 3 : beat / 2; };
   const enqueue = (x) => { queue.push(x); queue.sort((a, b) => a.t - b.t); };
+  /** Phone: the keyboard sticks above the footer and covers the lower part of the screen. On Start, scroll just enough
+   *  for the whole roll to sit above it, but never past the feedback line (count-in, "your turn", the result). */
+  const phoneMq = window.matchMedia('(max-width: 640px)');
+  function bringRollUp() {
+    if (!phoneMq.matches) return;
+    const r = roll.getBoundingClientRect(), kp = kbPanel.getBoundingClientRect(), top = fbEl.getBoundingClientRect().top;
+    const d = Math.min(r.bottom - kp.top + 8, top - 8);
+    if (d > 2) window.scrollTo({ top: window.scrollY + d, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
   function play() {
     if (!audio.ensureAudio() || st.playing) return;
-    st.playing = true; screen.classList.add('playing'); paintPrimary();
+    st.playing = true; screen.classList.add('playing'); paintPrimary(); bringRollUp();
     lhBars = lhOf(st.chord);
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); }
