@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-eighths",
+  "title": {"ru": "Блюзовая гамма: ровные восьмые и пауза", "en": "Blues scale: even eighths and a rest"},
+  "about": {"ru": "Сначала простучи ритм на одной клавише, потом сыграй его нотами блюзовой гаммы. Играй либо ровными восьмыми, либо «две восьмые и пауза». Два такта играешь, два молчишь.", "en": "First tap the rhythm on one key, then play it with notes of the blues scale. Play either even eighths or «two eighths and a rest». Two bars on, two bars off."},
+  "form": "blues-c",
+  "pattern": "p2",
+  "palette": {"mode": "scale", "scale": "blues", "root": "C"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": ["even", "eighth-rest"],
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

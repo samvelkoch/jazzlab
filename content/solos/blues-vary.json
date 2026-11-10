@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "blues-vary",
+  "title": {"ru": "Блюз: измени мотив", "en": "Blues: vary the motif"},
+  "about": {"ru": "Бэнд играет мотив в один такт, ты в следующем такте отвечаешь тем же ритмом, но другими нотами. Ритм узнаётся, ноты новые. Сначала простучи ритм мотива, потом ноты.", "en": "The band plays a one-bar motif; in the next bar you answer with the same rhythm but different notes. The rhythm is recognisable, the notes are new. Tap the motif rhythm first, then the notes."},
+  "form": "blues-c",
+  "pattern": "p2",
+  "palette": {"mode": "scale", "scale": "blues", "root": "C"},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 1, "rest": 1},
+  "call": true,
+  "motif": "vary",
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "rests": 0.8, "motif": 0.6, "pitches": 3}
+}

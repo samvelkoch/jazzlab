@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-vary",
+  "title": {"ru": "Blue Bossa: измени мотив", "en": "Blue Bossa: vary the motif"},
+  "about": {"ru": "Бэнд играет мотив в один такт, ты отвечаешь тем же ритмом, но другими нотами палитры. Сначала простучи ритм мотива.", "en": "The band plays a one-bar motif; you answer with the same rhythm but other notes of the palette. Tap the motif rhythm first."},
+  "form": "blue-bossa",
+  "pattern": "b2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 7], "scale": "aeolian", "root": "C"}, {"bars": [8, 11], "scale": "major", "root": "Db"}, {"bars": [12, 15], "scale": "aeolian", "root": "C"}]},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 1, "rest": 1},
+  "call": true,
+  "motif": "vary",
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "rests": 0.8, "motif": 0.6, "pitches": 3}
+}

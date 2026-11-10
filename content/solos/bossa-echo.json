@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-echo",
+  "title": {"ru": "Blue Bossa: повтори мотив", "en": "Blue Bossa: repeat the motif"},
+  "about": {"ru": "Бэнд играет мотив в один такт, ты в следующем повторяешь его: тот же ритм, те же ноты (или сдвинутые тем же рисунком под новый аккорд). Сначала простучи ритм.", "en": "The band plays a one-bar motif; in the next bar you repeat it: same rhythm, same notes (or moved with the same shape to the new chord). Tap the rhythm first."},
+  "form": "blue-bossa",
+  "pattern": "b2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 7], "scale": "aeolian", "root": "C"}, {"bars": [8, 11], "scale": "major", "root": "Db"}, {"bars": [12, 15], "scale": "aeolian", "root": "C"}]},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 1, "rest": 1},
+  "call": true,
+  "motif": "repeat",
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "rests": 0.8, "motif": 0.6, "pitches": 3}
+}

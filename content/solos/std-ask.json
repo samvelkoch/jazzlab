@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-ask",
+  "title": {"ru": "Стандарт: такт-вопрос и такт-ответ", "en": "The standard: a question bar and an answer bar"},
+  "about": {"ru": "Сначала простучи ритм на два такта: в первом играешь с единицы, во втором входишь на тройке. Потом играй его нотами. Два такта играешь, два молчишь.", "en": "First tap the two-bar rhythm: in bar 1 you start on 1, in bar 2 you come in on 3. Then play it with notes. Two bars on, two bars off."},
+  "form": "std-f",
+  "pattern": "s2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 15], "scale": "major", "root": "F"}, {"bars": [16, 23], "scale": "major", "root": "Bb"}, {"bars": [24, 31], "scale": "major", "root": "F"}]},
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": "ask-answer",
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

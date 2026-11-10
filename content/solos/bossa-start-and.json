@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "bossa-start-and",
+  "title": {"ru": "Blue Bossa: вход не с единицы", "en": "Blue Bossa: not starting on 1"},
+  "about": {"ru": "Сначала простучи ритм на одной клавише: единица молчит, фраза входит на «и» первой доли или на двойке. Потом играй его нотами до минора. Два такта играешь, два молчишь.", "en": "First tap the rhythm on one key: beat 1 is silent, the phrase enters on the «and» of 1 or on 2. Then play it with notes of C minor. Two bars on, two bars off."},
+  "form": "blue-bossa",
+  "pattern": "b2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 7], "scale": "aeolian", "root": "C"}, {"bars": [8, 11], "scale": "major", "root": "Db"}, {"bars": [12, 15], "scale": "aeolian", "root": "C"}]},
+  "hand": {"lo": 60, "hi": 72},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": ["start-and", "start-two"],
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

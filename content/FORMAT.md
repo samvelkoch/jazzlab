@@ -401,11 +401,17 @@ with a reference; each chorus is scored by `scoreChorus()` in `app/js/music/solo
   "hand": { "lo": 60, "hi": 72 },          // the hand position: keyboard [lo-5, hi+7], palette brighter inside
   "phrasing": { "play": 2, "rest": 2 },    // bars, repeated over the form; null = free (no rest bars)
   "call": false,                           // true: the band plays the `play` bars of each cell, you answer in the `rest` bars
+  "rhythm": "charleston",                  // optional: a rhythm cell id (or a list of ids) from content/solos/rhythms.json;
+                                           //   your bars must play it (see «Rhythm cells»); a tap step comes first
+  "motif": "repeat",                       // optional, with call: the band plays a ONE-bar motif (phrasing 1 / 1), you
+                                           //   "repeat" it (same rhythm, same notes or moved) or "vary" it (same rhythm, other notes)
+  "endOn": "third",                        // optional: "third" | "root": the last note of each phrase lands on the chord's 3rd / root
   "targets": false,                        // true: score target notes on chord changes
                                            //   score.targets = { ok, total, changes }: ok / total = accuracy (a chord tone
                                            //   on the changes you played on), total / changes = coverage
   "choruses": 1,                           // choruses in one run; the run passes as a whole
-  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "targets": 0.6, "cover": 0.5, "pitches": 3 }
+  "pass": { "inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "targets": 0.6, "cover": 0.5, "pitches": 3,
+            "rhythm": 0.6, "motif": 0.5, "ends": 0.6 }
   //  cover: share of chord changes in your bars that got a note on the first beat (else silence on every change would
   //  pass "targets": a metric with no data passes)
 }
@@ -428,10 +434,38 @@ so a slightly early downbeat counts for the new bar):
   change at slot 4), in a `you` bar, the first note on the first beat of the new chord must be a chord tone. A change with no
   note on that beat is not counted.
 - **pitches**: distinct MIDI notes played in your bars.
-A run of several choruses: mean inside / grid / phrases, summed rests / targets, the fewest pitches of any chorus. `passed()`
+- **rhythm** (with `rhythm`): share of your bars that play a cell. A bar matches a cell bar when every note is on the grid
+  (the grid tolerance above), its onsets are a subset of the cell's, and at least 3/4 of the cell's onsets are played (one
+  of four may be missing; an empty bar never matches, an empty cell bar wants silence). With a list, any listed cell will do.
+  A two-bar cell (`"bars": 2`) is read by the position inside your stretch of `you` bars. Note lengths are not scored.
+  Pass `rhythm` as a share (0.6). Score: `{ ok, total }`; the bar cell gets ♪ (match) or ♩? (no match).
+- **motif** (with `call`): share of your answers (a stretch of `you` bars right after the band's stretch) that relate to the
+  band's call (its notes are recorded with the run). Without `motif`: any of: the same onsets (|answer ∩ call| / max ≥ 0.6),
+  the answer starts on the call's first note or ends on its last (same pitch class), the same contour (`shapeOf`: up / down /
+  arch / same, 3+ notes each). `motif: "repeat"`: the same onsets and the same notes (same pitch classes, or the same intervals:
+  moved). `motif: "vary"`: the same onsets, other notes (neither the same pitch classes nor the same intervals). An empty
+  answer does not relate. `{ ok, total }`.
+- **ends** (with `endOn`): the last note of each phrase of 2+ notes (a phrase as in **phrases**) is the third (minor or
+  major) or the root of the chord sounding at that note, in any octave. `{ ok, total }`.
+A run of several choruses: mean inside / grid / phrases, summed rests / targets / rhythm / motif / ends, the fewest pitches of any chorus. `passed()`
 checks only the thresholds present; a ratio with no data passes. The cells get ✓ (clean bar), − (rest broken), ◇ / ◆ (target
 hit / missed) after each bar; a board after each chorus and after the run. Passing sets `stages.done` and schedules a review;
-a failed run of a due item sends it back to day 1. Progress keeps `runs` and `best: { inside, grid, phrases, pitches, rests, targets }`.
+a failed run of a due item sends it back to day 1. Progress keeps `runs` and `best: { inside, grid, phrases, pitches, rests, targets, rhythm, motif, ends }`.
+
+### Rhythm cells (`content/solos/rhythms.json`, `jazzlab-rhythms/1`)
+
+`{ "cells": { "<id>": { "title": {…}, "about": {…}, "rhythm": "4. 4 r4.", "bars"?: 2 } } }`. `rhythm` is a rhythm line as in
+exercises (`8` eighth, `4` quarter, `2` half, `.` dot, `~` tie, `r` rest) of exactly `bars × 8` eighths (`resolveCells()` checks).
+Cells: `even` (8 eighths), `eighth-rest` (8 8 r4 8 8 r4), `anticipation` (4 4 4 r8 8: the and of 4), `start-and` (r8, then
+eighths: a rest on 1), `start-two` (a rest on 1, comes in on 2), `charleston` (4. 4 r4.: 1 and the and of 2), `repeated` (8 8 4
+twice), `beat3` (r2 8 8 4: from beat 3), `ask-answer` (2 bars: from 1, then from 3). Methodology: the rhythm comes first. A solo
+with `rhythm` shows the cell in notation (`rhythmnote.js`) and starts in the «Простучи» (tap) mode: count-in, the app plays the
+cell twice, then you tap it on any one key over a click (4 rounds; 3 for a two-bar cell). A round is clean when the taps are
+on the eighth grid and are exactly the cell's onsets; all but one round clean = the cell is tapped (progress `tapped: [ids]`).
+«Играть» (play) is open once every cell of the solo is tapped. Check: `node tests/motif.test.mjs`.
+
+The band's motif (`motif`): `makeMotif()` in `solo.js`: 4–5 palette notes on one of five fixed one-bar rhythms, a small step
+pattern, starting on a chord tone, inside the hand. Played once per `band` bar.
 
 Every run is recorded like a performance: store `recordings`, `kind: "solo"`, plus `band` (the band's call notes, for the
 playback) and `score`; the last 10 solo recordings are kept apart from the last 10 performances. The day queue takes at most
@@ -444,5 +478,8 @@ The bossa track's `imp` (after `rh`): `imp-bo1` `bossa-minor` (scales: C aeolian
 form `blue-bossa` (`style: "bossa"`: straight eighths, the bossa groove, no swing switch), pattern `b2`, hand 60–72.
 The std track's `imp` (after `tunes`): `imp-s1` `std-key` (scales: F major on bars 1–16 and 25–32, Bb major on 17–24),
 `imp-s2` `std-call`, `imp-s3` `std-chords` (chordscale, targets; two-chord bars switch the palette on slot 4), `imp-s4`
-`std-solo` (1 chorus); form `std-f`, pattern `s2`, swing, hand 60–74. Glossary: `improvisation`, `palette`, `target-note`;
+`std-solo` (1 chorus); form `std-f`, pattern `s2`, swing, hand 60–74. Rhythm / motif items (after the first of each track): blues `imp-b1r` `blues-eighths`, `imp-b2e` `blues-echo` (repeat),
+`imp-b2r` `blues-charleston`, `imp-b3r` `blues-anticipation`, `imp-b3v` `blues-vary`; bossa `imp-bo1r` `bossa-start-and`,
+`imp-bo2a` `bossa-anticipation`, `imp-bo2e` `bossa-echo`, `imp-bo3v` `bossa-vary`; std `imp-s1r` `std-displaced`, `imp-s2m`
+`std-answer` (motif 0.5), `imp-s2q` `std-ask` (two-bar cell), `imp-s3e` `std-end-third`. Glossary: `improvisation`, `palette`, `target-note`;
 reference article `content/wiki/improvisation.json`.

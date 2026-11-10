@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-solo/1",
+  "id": "std-displaced",
+  "title": {"ru": "Стандарт: фраза с третьей доли", "en": "The standard: a phrase from beat 3"},
+  "about": {"ru": "Сначала простучи ритм на одной клавише. Либо «ти-ти-та» два раза в такте, либо тишина до тройки и фраза с третьей доли. Потом играй его нотами фа мажора, на бридже си-бемоль мажора.", "en": "First tap the rhythm on one key. Either «ti-ti-ta» twice in the bar, or silence until 3 and a phrase from beat 3. Then play it with notes of F major (B-flat major on the bridge)."},
+  "form": "std-f",
+  "pattern": "s2",
+  "palette": {"mode": "scales", "parts": [{"bars": [0, 15], "scale": "major", "root": "F"}, {"bars": [16, 23], "scale": "major", "root": "Bb"}, {"bars": [24, 31], "scale": "major", "root": "F"}]},
+  "hand": {"lo": 60, "hi": 74},
+  "phrasing": {"play": 2, "rest": 2},
+  "rhythm": ["repeated", "beat3"],
+  "call": false,
+  "targets": false,
+  "choruses": 1,
+  "pass": {"inside": 0.9, "grid": 0.7, "phrases": 3, "rests": 0.8, "rhythm": 0.6, "pitches": 3}
+}

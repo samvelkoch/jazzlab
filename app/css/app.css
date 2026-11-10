@@ -906,6 +906,12 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 .solopal b { color: var(--fg); margin-right: 4px; }
 .solopal .ct { color: var(--accent); font-weight: 800; }
 .solopal .solochord { margin-left: 4px; }
+.solorhythm { display: flex; flex-direction: column; gap: 4px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--sub); }
+.solorhythm .rhyhead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 14px; }
+.solorhythm .rhyhead b { color: var(--fg); }
+.solorhythm .rhyabout { font-size: 14px; }
+.solorhythm .seg button { min-height: 32px; padding: 0 10px; font-size: 13px; }
+.solorhythm svg.rnote { max-height: 76px; }
 .soloboard { display: flex; flex-direction: column; gap: 10px; }
 .soloboard:empty { display: none; }
 .soloround { display: flex; flex-direction: column; gap: 6px; }
