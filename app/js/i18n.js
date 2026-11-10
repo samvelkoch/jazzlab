@@ -107,6 +107,8 @@ const DICT = {
     mlEchoGoal: '3 чистых повтора каждой фразы', mlEchoDone: 'Эхо пройдено во всех фразах. Теперь «Пальцы» →', mlNext: 'Следующая фраза: {p}',
     mlPassed: 'Мелодия выучена', mlStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом {n} пианино, {n} ты',
     fPlayHintMel: 'Играй мелодию правой, левая звучит сама', fPlayHintScreenMel: 'Без пианино: мелодия звучит как подсказка, нажимай на экране', fListenHintMel: 'Мелодия и левая звучат сами: слушай и смотри на клавиши',
+    fPlayHintBoth: 'Играй обеими руками: левую и правую, звучат только барабаны', fPlayHintScreenBoth: 'Без пианино: обе руки звучат как подсказка, нажимай на экране', fListenHintBoth: 'Обе руки звучат сами: слушай и смотри на клавиши', bothHandsChip: 'Две руки',
+    budgetW: 'Время занятия', dueElsewhere: 'Ещё к повтору', recordedW: 'записано',
     perfMelody: 'Мелодия', melEchoMeta: 'эхо {n}/{m}', skMelody: 'Фразы мелодии',
     // perform
     kind_perform: 'Выступление', perfUpper: 'ВЫСТУПЛЕНИЕ', perfEnding: 'Концовка', perfLeft: 'Левая', perfRight: 'Правая', perfOwn: 'или что хочешь',
@@ -249,6 +251,8 @@ const DICT = {
     mlEchoGoal: '3 clean repeats of every phrase', mlEchoDone: 'Echo done in every phrase. Now “Fingers” →', mlNext: 'Next phrase: {p}',
     mlPassed: 'Melody learned', mlStartHint: 'Press Start: a 1-bar count-in, then {n} piano, {n} you',
     fPlayHintMel: 'Play the tune with your right hand; the left hand plays itself', fPlayHintScreenMel: 'No piano: the tune sounds as a guide, tap on screen', fListenHintMel: 'The tune and the left hand play themselves: listen and watch the keys',
+    fPlayHintBoth: 'Play both hands, left and right; only the drums play along', fPlayHintScreenBoth: 'No piano: both hands sound as a guide, tap on screen', fListenHintBoth: 'Both hands play themselves: listen and watch the keys', bothHandsChip: 'Both hands',
+    budgetW: 'Session length', dueElsewhere: 'Also due for review', recordedW: 'recorded',
     perfMelody: 'Melody', melEchoMeta: 'echo {n}/{m}', skMelody: 'Melody phrases',
     // perform
     kind_perform: 'Performance', perfUpper: 'PERFORMANCE', perfEnding: 'Ending', perfLeft: 'Left', perfRight: 'Right', perfOwn: 'or whatever you like',

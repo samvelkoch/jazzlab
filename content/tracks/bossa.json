@@ -3,6 +3,11 @@
   "id": "bossa",
   "title": { "ru": "Босса-нова", "en": "Bossa nova" },
   "about": { "ru": "Цель дорожки: Blue Bossa целиком, левая держит ячейку боссы, правая ведёт мелодию. Ровные восьмые, не спеша.", "en": "Goal: the whole of Blue Bossa, the left hand holding the bossa cell, the right hand carrying the melody. Even eighths, no hurry." },
+  "path": [
+    "d-chords-cm", "ear-find-bossa", "pat-b1", "form-b1", "mel-bossa", "form-mel", "d-chords-db", "lick-bl1",
+    "form-rh-bl1", "imp-bo1", "pat-b2", "form-b2", "form-2h-bossa", "lick-bl2", "imp-bo2", "lick-bl3",
+    "form-rh-qa-bossa", "imp-bo3", "end-bossa", "perf-bossa", "imp-bo4"
+  ],
   "sections": [
     {
       "id": "keys", "title": { "ru": "Аккорды боссы", "en": "Bossa chords" },
@@ -22,7 +27,7 @@
     {
       "id": "melody", "title": { "ru": "Мелодия", "en": "The tune" },
       "about": { "ru": "Мелодия учится эхом по два такта: пианино играет, ты повторяешь. Потом пальцы, потом целиком над басом.", "en": "The tune is learned by echo, two bars at a time: the piano plays, you repeat. Then the fingers, then the whole thing over the bass." },
-      "items": ["mel-bossa", "form-mel"]
+      "items": ["mel-bossa", "form-mel", "form-2h-bossa"]
     },
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
@@ -67,6 +72,11 @@
       "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "melody": "bossa-cm",
       "title": { "ru": "Blue Bossa: мелодия над басом", "en": "Blue Bossa: the tune over the bass" },
       "about": { "ru": "Левая играет бас, ты ведёшь мелодию целиком. Три чистых круга подряд.", "en": "The left hand plays the bass, you carry the whole tune. Three clean choruses in a row." }
+    },
+    "form-2h-bossa": {
+      "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "both", "melody": "bossa-cm",
+      "title": { "ru": "Blue Bossa двумя руками", "en": "Blue Bossa, both hands" },
+      "about": { "ru": "Левая: бас-ячейка. Правая: мелодия целиком. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "Left: the bass cell. Right: the whole tune. The band is silent, only drums play. Three clean choruses in a row." }
     },
     "end-bossa": { "kind": "exercise", "ex": "bossa-end" },
     "lick-bl1": { "kind": "lick", "lick": "bl1", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"] },
