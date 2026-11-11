@@ -10,7 +10,8 @@
     "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "imp-bo2a", "ear-pr1-bossa", "form-rh-qa-bossa", "imp-bo3", "ear-q3-bossa", "imp-bo2e",
     "end-bossa", "ear-iv5-bossa", "perf-bossa", "ear-pr2-bossa", "imp-bo3v", "imp-bo4",
     "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa",
-    "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"
+    "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor",
+    "d-chords-wave", "form-wave", "form-wave-c3", "imp-wave"
   ],
   "sections": [
     {
@@ -60,8 +61,8 @@
     },
     {
       "id": "jobim", "title": { "ru": "Jobim: бразильская босса", "en": "Jobim: Brazilian bossa" },
-      "about": {"ru": "Blue Bossa это латин-джаз стандарт. Здесь гармония двух пьес Jobim, бразильская босса-нова. Мелодий в приложении нет (авторские права): слушай записи и подбирай на слух. Гармония упрощена.", "en": "Blue Bossa is a Latin jazz standard. Here are the changes of two Jobim tunes, Brazilian bossa nova. The tunes are not in the app (copyright): listen to the recordings and find them by ear. The changes are simplified."},
-      "items": ["d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa", "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"]
+      "about": {"ru": "Blue Bossa это латин-джаз стандарт. Здесь гармония трёх пьес Jobim, бразильская босса-нова. Мелодий в приложении нет (авторские права): слушай записи и подбирай на слух. Гармония упрощена.", "en": "Blue Bossa is a Latin jazz standard. Here are the changes of three Jobim tunes, Brazilian bossa nova. The tunes are not in the app (copyright): listen to the recordings and find them by ear. The changes are simplified."},
+      "items": ["d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa", "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor", "d-chords-wave", "form-wave", "form-wave-c3", "imp-wave"]
     }
   ],
   "items": {
@@ -160,6 +161,10 @@
     "d-chords-cor": {"kind": "drill", "title": {"ru": "Аккорды Corcovado", "en": "Corcovado chords"}, "about": {"ru": "D7, Abdim7, Gm7, C7: начало пьесы, уменьшённый аккорд ведёт вниз по полутонам. Потом остальные.", "en": "D7, Abdim7, Gm7, C7: the opening, the diminished chord leading down by half steps. Then the rest."}, "tasks": [{"type": "chord", "chords": ["D7", "Abdim7", "Gm7", "C7"], "n": 8}, {"type": "chord", "chords": ["Fmaj7", "Fm7", "Bb7", "Em7", "A7", "C6"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
     "form-cor": {"kind": "form", "form": "corcovado-c", "pattern": "b1", "title": {"ru": "Corcovado на басу", "en": "Corcovado, bass only"}, "about": {"ru": "Все 32 такта, левая держит ячейку. Пьеса тихая: играй мягко.", "en": "All 32 bars, the left hand holding the cell. A quiet tune: play softly."}},
     "form-cor-c2": {"kind": "form", "form": "corcovado-c", "pattern": "c2", "hand": "both", "title": {"ru": "Corcovado: аккорды между басом", "en": "Corcovado: chords between the bass"}, "about": {"ru": "Левая бас, правая аккорд между нотами баса. Тихо и мягко, как в записи.", "en": "Left hand the bass, right hand a chord between the bass notes. Quiet and soft, like the recording."}},
-    "imp-cor": {"kind": "solo", "solo": "corcovado-solo"}
+    "imp-cor": {"kind": "solo", "solo": "corcovado-solo"},
+    "d-chords-wave": {"kind": "drill", "title": {"ru": "Аккорды Wave", "en": "Wave chords"}, "about": {"ru": "Dmaj7, Bbdim7, Am7, D7: начало пьесы. Потом Gmaj7, Gm6 и цепочка доминант F#7 B7 E9 A7.", "en": "Dmaj7, Bbdim7, Am7, D7: the opening. Then Gmaj7, Gm6 and the chain of dominants F#7 B7 E9 A7."}, "tasks": [{"type": "chord", "chords": ["Dmaj7", "Bbdim7", "Am7", "D7"], "n": 8}, {"type": "chord", "chords": ["Gmaj7", "Gm6", "F#7", "B7", "E9", "Bb7", "A7"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
+    "form-wave": {"kind": "form", "form": "wave-d", "pattern": "b2", "title": {"ru": "Wave на басу", "en": "Wave, bass only"}, "about": {"ru": "Все 44 такта, левая держит ячейку. Мелодию слушай в записи и подпевай.", "en": "All 44 bars, the left hand holding the cell. Listen to the tune on a recording and sing along."}},
+    "form-wave-c3": {"kind": "form", "form": "wave-d", "pattern": "c3", "hand": "both", "title": {"ru": "Wave: аккорды по клаве", "en": "Wave: chords on the clave"}, "about": {"ru": "Левая бас, правая аккорды вместе с римом барабанов. Включи запись и играй вместе.", "en": "Left hand the bass, right hand chords with the drums' rim click. Put on the recording and play along."}},
+    "imp-wave": {"kind": "solo", "solo": "wave-solo"}
   }
 }
