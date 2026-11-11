@@ -40,7 +40,7 @@ export function scaleOf(chord) {
   let scale;
   if (o.has(3) && o.has(6) && o.has(10)) scale = 'locrian';
   else if (o.has(3) && o.has(6) && o.has(9)) scale = 'dim';
-  else if (o.has(3) && o.has(10)) scale = 'dorian';
+  else if (o.has(3) && (o.has(10) || o.has(9))) scale = 'dorian'; // m6: dorian (its 6th is natural)
   else if (o.has(3)) scale = 'aeolian';
   else if (o.has(4) && o.has(10)) scale = 'mixolydian';
   else scale = 'major';
