@@ -159,4 +159,14 @@ for (const id of ['blues', 'bossa', 'std']) {
   const idx = tr.path.map((x, i) => (tr.items[x].game ? i : -1)).filter((i) => i >= 0);
   idx.slice(1).forEach((i, j) => assert.ok(i - idx[j] >= 2, `${id}: ear items not adjacent`));
 }
+// ---- hints: the window narrows after a wrong key, steps are counted and worded ----
+{
+  assert.deepEqual(G.narrowWindow([60, 67], 62, 65), [63, 67], 'target above: the pressed key and below drop out');
+  assert.deepEqual(G.narrowWindow([60, 67], 66, 61), [60, 65], 'target below');
+  assert.deepEqual(G.narrowWindow([63, 67], 60, 65), [63, 67], 'a key outside the window changes nothing');
+  assert.deepEqual(G.narrowWindow([60, 67], 64, 64), [60, 67]);
+  assert.deepEqual([1, 2, 3, 4, 5, 11, 12, 21, 22].map((n) => G.stepsWord(n)), ['1 шаг', '2 шага', '3 шага', '4 шага', '5 шагов', '11 шагов', '12 шагов', '21 шаг', '22 шага']);
+  assert.equal(G.stepsWord(1, 'en'), '1 step'); assert.equal(G.stepsWord(3, 'en'), '3 steps');
+  assert.deepEqual(G.stepsBetween(62, 65), [63, 64]); assert.deepEqual(G.stepsBetween(65, 62), [64, 63]); assert.deepEqual(G.stepsBetween(60, 61), []);
+}
 console.log('ok: ear (levels, questions, answers, grading, track items)');

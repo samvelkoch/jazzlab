@@ -5,7 +5,8 @@ import { t } from '../i18n.js';
 /**
  * @param el     container element
  * @param range  [lowMidi, highMidi] of the exercise
- * @param opts   {onPress(midi), names: 'en'|'ru'|'off', center: midi shown first on a narrow screen}
+ * @param opts   {onPress(midi), names: 'en'|'ru'|'off', center: midi shown first on a narrow screen,
+ *                exact: true = show exactly the range (snapped out to white keys) instead of whole octaves}
  *
  * DOM: el (.kbwrap, the frame) > .kbscroll (scrolls sideways on a phone) > .kb (the keys), plus two
  * octave buttons (.kbnav) over the edges of the frame. On a desktop the keys fit the width, nothing scrolls
@@ -14,7 +15,8 @@ import { t } from '../i18n.js';
  */
 export function createKeyboard(el, range, opts = {}) {
   let [lo, hi] = range;
-  lo = lo - (lo % 12); hi = hi + 2; while (isBlack(hi)) hi++;
+  if (opts.exact) { if (isBlack(lo)) lo--; if (isBlack(hi)) hi++; }
+  else { lo = lo - (lo % 12); hi = hi + 2; while (isBlack(hi)) hi++; }
   const whites = [];
   for (let m = lo; m <= hi; m++) if (!isBlack(m)) whites.push(m);
   const w = 100 / whites.length;
@@ -148,6 +150,34 @@ export function createKeyboard(el, range, opts = {}) {
       }
       const ms = Object.keys(map).filter((m) => map[m]).map(Number);
       if (ms.length && opts.reveal !== false) reveal(ms);
+    },
+    /** Ear games: zone = [a, b] the target is in (keys outside are dimmed), win = [a, b] what is still possible
+     *  (zone keys outside it are struck out), bar = a strip above the keys: { kind: 'zone'|'arrow', from, to, label }. */
+    zone({ zone = null, win = null, bar = null } = {}) {
+      const inR = (r, m) => r && m >= r[0] && m <= r[1];
+      for (const m in keys) {
+        const k = keys[m], n = +m;
+        k.classList.toggle('ez-in', !!zone && inR(zone, n));
+        k.classList.toggle('ez-out', !!zone && !inR(zone, n));
+        k.classList.toggle('ez-elim', !!zone && !!win && inR(zone, n) && !inR(win, n));
+      }
+      el.classList.toggle('haszone', !!bar);
+      let strip = row.querySelector('.kbbar');
+      if (!bar) { if (strip) strip.remove(); return; }
+      if (!strip) { strip = document.createElement('div'); row.appendChild(strip); }
+      const edge = (m, right) => { // % from the left of the row
+        if (!keys[m]) return m < lo ? 0 : 100;
+        if (!isBlack(m)) return (whites.indexOf(m) + (right ? 1 : 0)) * w;
+        return (whites.indexOf(m - 1) + 1) * w + (right ? 0.31 : -0.31) * w;
+      };
+      const mid = (m) => (edge(m, false) + edge(m, true)) / 2;
+      let a, b;
+      if (bar.kind === 'arrow') { a = Math.min(mid(bar.from), edge(bar.to, bar.to > bar.from)); b = Math.max(mid(bar.from), edge(bar.to, bar.to > bar.from)); }
+      else { a = edge(bar.from, false); b = edge(bar.to, true); }
+      strip.className = 'kbbar ' + bar.kind + (bar.kind === 'arrow' && bar.to < bar.from ? ' left' : '');
+      strip.style.left = a + '%'; strip.style.width = Math.max(b - a, w) + '%';
+      const label = bar.label || '';
+      strip.textContent = bar.kind === 'arrow' && b - a < 3.5 * w ? (bar.to > bar.from ? '→' : '←') : label;
     },
     reveal,
     has: (m) => !!keys[m]

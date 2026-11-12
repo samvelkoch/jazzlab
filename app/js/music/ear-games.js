@@ -204,3 +204,23 @@ export function gradeRound({ wrong = 0, replayed = false, revealed = false }, ma
 export const maxWrongFor = (nButtons, cap = 4) => Math.max(1, Math.min(cap, nButtons - 1));
 /** Accuracy of a log of 'ok' | 'meh' | 'miss' over N rounds. */
 export const accuracy = (log, N) => (N ? (log.filter((x) => x === 'ok').length + 0.5 * log.filter((x) => x === 'meh').length) / N : 0);
+
+// ---------- hints ----------
+/** After a wrong key: the part of the window [a, b] the target can still be in (the pressed key and everything on its far side drop out). */
+export function narrowWindow([a, b], pressed, target) {
+  if (pressed === target) return [a, b];
+  return target > pressed ? [Math.max(a, pressed + 1), b] : [a, Math.min(b, pressed - 1)];
+}
+/** "3 шага" / "5 шагов" / "1 step": steps = keys counted one by one, black ones too. */
+export function stepsWord(n, lang = 'ru') {
+  if (lang !== 'ru') return `${n} ${n === 1 ? 'step' : 'steps'}`;
+  const d = n % 10, dd = n % 100;
+  const w = d === 1 && dd !== 11 ? 'шаг' : d >= 2 && d <= 4 && (dd < 12 || dd > 14) ? 'шага' : 'шагов';
+  return `${n} ${w}`;
+}
+/** The keys strictly between two notes (the steps shown after an interval answer), in the direction from `a` to `b`. */
+export function stepsBetween(a, b) {
+  const out = [], dir = b > a ? 1 : -1;
+  for (let m = a + dir; m !== b; m += dir) out.push(m);
+  return out;
+}
