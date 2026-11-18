@@ -1,8 +1,8 @@
 {
   "$format": "jazzlab-lick/1",
   "id": "l2",
-  "title": { "ru": "Вопрос: сверху вниз через F#", "en": "Question: down through F#" },
-  "about": { "ru": "Сверху вниз по блюзовой гамме, F# как проходящая, и фраза повисает на Bb и G. Вопрос: не заканчивается на корне, просит ответа.", "en": "Down the blues scale with F# passing, then the phrase hangs on Bb and G. A question: it does not end on the root and asks for an answer." },
+  "title": { "ru": "Вопрос: сверху вниз", "en": "Question: from the top down" },
+  "about": { "ru": "Сверху вниз, от мизинца, через чёрную клавишу как проходящую, и фраза повисает, не дойдя до дома. Вопрос: не заканчивается на пальце 1, просит ответа.", "en": "From the top down, from the pinky, through a black key in passing, and the phrase hangs before reaching home. A question: it does not end on finger 1, it asks for an answer." },
   "role": "question",
   "bars": 2,
   "tempo": 66,

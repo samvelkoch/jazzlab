@@ -2,7 +2,7 @@
   "$format": "jazzlab-lick/1",
   "id": "l1",
   "title": { "ru": "Ответ: синяя терция и домой", "en": "Answer: blue third and home" },
-  "about": { "ru": "Eb скользит в E (синяя нота в терцию), вверх до Bb и вниз домой на корень. Фраза-ответ: заканчивается на корне.", "en": "Eb slides into E (the blue note into the third), up to Bb and back home to the root. An answer: it ends on the root." },
+  "about": { "ru": "Палец 2 на чёрной клавише соскальзывает на белую рядом (это блюзовый «стон»), рука идёт вверх до мизинца и возвращается домой, на палец 1. Закончил дома, и ответ звучит законченно.", "en": "Finger 2 on a black key slides onto the white one next to it (the blues 'moan'), the hand climbs to the pinky and comes back home to finger 1. Ending at home makes the answer sound finished." },
   "role": "answer",
   "bars": 2,
   "tempo": 66,

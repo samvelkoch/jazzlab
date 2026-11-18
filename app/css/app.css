@@ -694,6 +694,85 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .lickscreen[data-lstage="fingers"] .lickcounts, .lickscreen[data-lstage="memory"] .lickcounts,
 .lickscreen[data-lstage="fingers"] footer .seg, .lickscreen[data-lstage="memory"] footer .seg,
 .lickscreen[data-lstage="fingers"] footer .stepper, .lickscreen[data-lstage="memory"] footer .stepper { display: none; }
+/* lick v2: stages Ритм → Ноты → Эхо */
+.lickscreen [hidden] { display: none !important; }
+.lickscreen[data-lstage="notes"] footer .footsegs, .lickscreen[data-lstage="notes"] footer .stepper { display: none; }
+.lickpanel .rhead { align-items: flex-start; }
+.lqtitles { display: flex; flex-direction: column; gap: 2px; flex: 1 1 360px; min-width: 0; }
+.lqsub { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.4; }
+.lqdots { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.lqdots i { width: 16px; height: 16px; border-radius: 50%; background: var(--none); }
+.lqdots i.on { background: var(--ok); }
+.lqlabel { font-size: 13px; font-weight: 700; color: var(--muted); }
+.lqintro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 26px; }
+.lqgoal { display: flex; flex-direction: column; gap: 6px; }
+.lqgoal h3 { margin: 0; font: 700 21px/1.25 var(--display); }
+.lqgoal p { margin: 0; font-size: 15px; line-height: 1.5; }
+.lqrules { display: flex; flex-direction: column; gap: 4px; }
+.lqrule { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; font-size: 14px; line-height: 1.35; padding: 4px 8px; border-radius: 12px; }
+.lqrule .n { font: 700 19px var(--display); color: var(--accent); }
+.lqrule.cur { background: var(--sub); }
+.lqrule.done .n { color: var(--ok); }
+.lickscreen.playing .lqsub { display: none; }
+.lqplay { display: flex; flex-direction: column; gap: 10px; }
+.lqphase { display: flex; align-items: center; gap: 16px; }
+.lqcells { flex: 0 1 460px; margin-left: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.lqcell { border-radius: 12px; background: var(--sub); color: var(--muted); padding: 5px 10px; display: flex; flex-direction: column; border: 2px solid transparent; }
+.lqcell b { font-size: 12px; letter-spacing: .06em; } .lqcell span { font-size: 14px; }
+.lqcell.on.piano { background: var(--panel); border-color: var(--fg); color: var(--fg); }
+.lqcell.on.you { background: var(--accent); color: var(--accent-fg); }
+.lqcell.next { border-color: var(--accent); border-style: dashed; }
+.lqbeats { display: flex; gap: 6px; }
+.lqbeats i { width: 46px; height: 46px; border-radius: 12px; background: var(--sub); color: var(--muted); font: 700 21px var(--display); font-style: normal; display: flex; align-items: center; justify-content: center; }
+.lqbeats i.on { background: var(--fg); color: var(--bg); }
+.lqphase.you .lqbeats i.on { background: var(--accent); color: var(--accent-fg); }
+.lqwords { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 200px; }
+.lqturn { font: 700 22px var(--display); } .lqphase.you .lqturn { color: var(--accent); }
+.lqturnsub { font-size: 14px; color: var(--muted); }
+.lickroll .prow.blk b { background: var(--fg); color: var(--bg); }
+.lqres { border: 2px solid var(--meh); background: var(--meh-soft); border-radius: 16px; padding: 10px 14px; display: flex; align-items: center; gap: 16px; }
+.lqrestext { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.lqres.ok { border-color: var(--ok); background: var(--ok-soft); }
+.lqreshead { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.lqreshead b { font: 700 19px var(--display); color: var(--meh); } .lqres.ok .lqreshead b { color: var(--ok); }
+.lqreshead span { font-size: 14px; }
+.lqchips { flex: 0 1 calc(var(--n) * 50px); display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 4px; }
+.lqchip { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
+.lqchip small { font-size: 11px; font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.lqchip b { width: 42px; height: 42px; border-radius: 12px; border: 2px solid currentColor; background: var(--panel); display: flex; align-items: center; justify-content: center; font: 700 18px var(--display); box-sizing: border-box; }
+.lqchip span { font-size: 12px; font-weight: 800; text-align: center; }
+.lqchip.ok, .lqchip.okish { color: var(--ok); } .lqchip.meh { color: var(--meh); } .lqchip.bad { color: var(--bad); }
+.lqchip.ok b { background: var(--ok-soft); } .lqchip.bad b { background: var(--bad-soft); } .lqchip.meh b { background: var(--meh-soft); }
+.lqlines { font-size: 14px; line-height: 1.45; color: var(--fg); }
+.lqlines:empty { display: none; }
+.lqnotes { display: flex; flex-direction: column; gap: 14px; }
+.lqseqrow { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.lqseq { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+.lqnote { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lqnote b { width: 52px; height: 52px; border-radius: 14px; border: 2px solid var(--line); background: var(--panel); color: var(--muted); font: 700 22px var(--display); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.lqnote.blk b { border-color: var(--muted); }
+.lqnote small { font-size: 12px; font-weight: 700; color: var(--muted); }
+.lqnote.done b { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); } .lqnote.done small { color: var(--ok); }
+.lqnote.cur b { width: 66px; height: 66px; border-radius: 18px; background: var(--rh); border-color: var(--rh); color: var(--panel); font-size: 28px; }
+.lqnote.cur small { color: var(--rh); }
+.lqmsg { display: flex; align-items: center; gap: 14px; border-radius: 16px; padding: 12px 16px; font-size: 15px; line-height: 1.45; min-height: 24px; }
+.lqmsg:empty { display: none; }
+.lqmsg .sym { font: 700 28px var(--display); }
+.lqmsg.bad { background: var(--bad-soft); } .lqmsg.bad b, .lqmsg.bad .sym { color: var(--bad); }
+.lqmsg.ok { background: var(--ok-soft); } .lqmsg.ok b { color: var(--ok); }
+.lqmsg.meh { background: var(--meh-soft); } .lqmsg.meh b { color: var(--meh); }
+.lqbonus { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 10px; }
+.lqbonus .btn { text-decoration: none; }
+.key.kh-bad { background: var(--bad) !important; }
+.key.kh-bad .lbl { color: #fff; }
+@media (max-width: 900px) { .lqintro { grid-template-columns: minmax(0, 1fr); } .lqres { flex-direction: column; align-items: stretch; } .lqphase { flex-wrap: wrap; } .lqcells { flex: 1 1 100%; } }
+@media (max-width: 640px) {
+  .lqbeats i { width: 36px; height: 36px; font-size: 17px; }
+  .lqcell span { display: none; }
+  .lqchip b { width: 34px; height: 34px; font-size: 15px; }
+  .lqchip small { display: none; }
+  .lqnote b { width: 40px; height: 40px; font-size: 18px; } .lqnote.cur b { width: 50px; height: 50px; }
+}
 .lickscreen .kb { height: clamp(90px, 16dvh, 150px); }
 /* melody: phrase chips carry their clean count */
 .melscreen .lickchords { flex-wrap: wrap; flex: 0 1 auto; max-width: 100%; }

@@ -2,7 +2,7 @@
   "$format": "jazzlab-lick/1",
   "id": "l3",
   "title": { "ru": "Ответ: три удара на одной ноте", "en": "Answer: three hits on one note" },
-  "about": { "ru": "Одна нота три раза подряд, это уже ритм и уже джаз. Потом вниз через Bb, F, Eb домой на корень.", "en": "One note three times is already rhythm and already jazz. Then down through Bb, F, Eb and home to the root." },
+  "about": { "ru": "Одна клавиша три раза подряд, это уже ритм и уже джаз. Потом вниз по чёрным и белым домой, на палец 1.", "en": "One key three times in a row: that is already rhythm and already jazz. Then down over black and white keys back home to finger 1." },
   "role": "answer",
   "bars": 2,
   "tempo": 66,

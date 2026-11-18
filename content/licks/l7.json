@@ -2,7 +2,7 @@
   "$format": "jazzlab-lick/1",
   "id": "l7",
   "title": { "ru": "Вопрос: с септимы вниз", "en": "Question: down from the seventh" },
-  "about": { "ru": "Держится за Bb и садится на синюю терцию Eb. Нарочно не закончено: ждёт ответа.", "en": "Hangs on Bb and lands on the blue third, Eb. Unfinished on purpose: it waits for an answer." },
+  "about": { "ru": "Держится за чёрную клавишу под мизинцем и садится на синюю чёрную клавишу под пальцем 1. Нарочно не закончено: ждёт ответа.", "en": "It holds on to the black key under the pinky and settles on the blue black key under finger 1. Unfinished on purpose: it waits for an answer." },
   "role": "question",
   "bars": 2,
   "tempo": 66,
