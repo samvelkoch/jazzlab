@@ -121,7 +121,8 @@ function layout(ex, names, fam) {
 /**
  * @param svg  <svg> element to draw into
  * @param ex   normalized exercise
- * @param opts {names: 'en'|'ru'|'off', onPick(i)}
+ * @param opts {names: 'en'|'ru'|'off', onPick(i), only: 't'|'b' (show just the treble or the bass staff),
+ *             chords: ['C7', ...] a chord symbol over each bar}
  */
 export function createStaff(svg, ex, opts = {}) {
   const per = ex.per;
@@ -210,8 +211,12 @@ export function createStaff(svg, ex, opts = {}) {
     });
   });
   o += '<g class="ghost" style="opacity:0"></g>';
-  svg.setAttribute('viewBox', `0 0 ${W} ${SV.H}`);
+  if (opts.chords) opts.chords.forEach((c, b) => { if (c) o += `<text class="chd" x="${barX[b] + 10}" y="${opts.only === 'b' ? SV.bTop - 36 : 16}">${c}</text>`; });
+  o += '<g class="tags"></g>';
+  // one staff only: crop the view to it (with room for fingers / tags above and below)
+  svg.setAttribute('viewBox', opts.only === 'b' ? `0 ${SV.bTop - 62} ${W} ${SV.H - SV.bTop + 72}` : opts.only === 't' ? `0 0 ${W} ${SV.tTop + 112}` : `0 0 ${W} ${SV.H}`);
   svg.innerHTML = o;
+  const tagsEl = svg.querySelector('.tags');
   const band = svg.querySelector('.band'), ghostEl = svg.querySelector('.ghost');
   if (opts.onPick) svg.querySelectorAll('.nt').forEach((g) => g.addEventListener('click', () => opts.onPick(+g.dataset.i)));
   let ghostT = 0, cursor = 0;
@@ -228,7 +233,15 @@ export function createStaff(svg, ex, opts = {}) {
     mark(i, cls) {
       svg.querySelectorAll(`.nt[data-i="${i}"]`).forEach((g) => { g.classList.remove('ok', 'meh', 'bad'); if (cls) g.classList.add(cls); });
     },
-    clearMarks() { svg.querySelectorAll('.nt.ok,.nt.meh,.nt.bad').forEach((g) => g.classList.remove('ok', 'meh', 'bad')); },
+    clearMarks() { svg.querySelectorAll('.nt.ok,.nt.meh,.nt.bad').forEach((g) => g.classList.remove('ok', 'meh', 'bad')); tagsEl.innerHTML = ''; },
+    /** A short word under (lh) or over (rh) note i: how it was played (✓, early, late, ✗). One tag per note and hand. */
+    tag(i, text, cls = '', hand = 'lh') {
+      const x = xOf(Math.floor(i / per), i % per), y = hand === 'rh' ? SV.tTop + 100 : SV.bTop + 92;
+      const old = tagsEl.querySelector(`[data-i="${i}"][data-h="${hand}"]`); if (old) old.remove();
+      const tx = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      tx.setAttribute('class', 'tag ' + cls); tx.setAttribute('x', x); tx.setAttribute('y', y); tx.setAttribute('text-anchor', 'middle');
+      tx.dataset.i = i; tx.dataset.h = hand; tx.textContent = text; tagsEl.appendChild(tx);
+    },
     /** Grey note showing where a pressed key sits on the staff. */
     ghost(m) {
       const n = midiToName(m), st = m >= 60 ? 't' : 'b', d = dia(n), y = yOf(d, st);

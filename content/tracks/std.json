@@ -146,8 +146,8 @@
     "imp-s3e": { "kind": "solo", "solo": "std-end-third" },
     "ear-find-std": {
       "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
-      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." },
-      "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 }
+      "about": { "ru": "Звучит «дом», потом загадка: найди её на клавишах. Зона, где она спрятана, подсвечена и растёт, только когда у тебя получается.", "en": "Home sounds, then the riddle: find it on the keys. The zone it hides in is lit up and grows only when you get it right." },
+      "rounds": 12, "pass": { "acc": 0.8 }
     },
     "ear-hl1-std": { "kind": "ear", "game": "hilo", "level": 1, "title": { "ru": "Выше или ниже", "en": "Higher or lower" }, "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }, "rounds": 12, "pass": { "acc": 0.8 }},
     "ear-iv1-std": { "kind": "ear", "game": "interval", "level": 1, "title": { "ru": "Интервалы: малая и большая терция", "en": "Intervals: minor or major third" }, "about": { "ru": "Две ноты вверх: малая терция (3 полутона, грустная) или большая (4, светлая)? Назови интервал или сыграй вторую ноту.", "en": "Two notes going up: a minor third (3 semitones, sad) or a major third (4, bright)? Name it or play the second note." }, "rounds": 12, "pass": { "acc": 0.8 }},

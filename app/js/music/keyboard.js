@@ -152,9 +152,10 @@ export function createKeyboard(el, range, opts = {}) {
       if (ms.length && opts.reveal !== false) reveal(ms);
     },
     /** Ear games: zone = [a, b] the target is in (keys outside are dimmed), win = [a, b] what is still possible
-     *  (zone keys outside it are struck out), bar = a strip above the keys: { kind: 'zone'|'arrow', from, to, label }. */
-    zone({ zone = null, win = null, bar = null } = {}) {
-      const inR = (r, m) => r && m >= r[0] && m <= r[1];
+     *  (zone keys outside it are struck out), bar = a strip above the keys: { kind: 'zone'|'arrow', from, to, label }.
+     *  inPlay: the exact notes of the zone when not every key in [a, b] is (white keys only): the others are dimmed too. */
+    zone({ zone = null, win = null, bar = null, inPlay = null } = {}) {
+      const inR = (r, m) => r && m >= r[0] && m <= r[1] && (!inPlay || inPlay.includes(m));
       for (const m in keys) {
         const k = keys[m], n = +m;
         k.classList.toggle('ez-in', !!zone && inR(zone, n));
