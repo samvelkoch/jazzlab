@@ -137,6 +137,10 @@ export function createKeyboard(el, range, opts = {}) {
       k.classList.remove('ok', 'meh', 'bad'); void k.offsetWidth; k.classList.add(cls);
       clearTimeout(k._ft); k._ft = setTimeout(() => k.classList.remove(cls), cls === 'bad' ? 450 : 300);
     },
+    /** Mark single keys without touching the badges: map { midi: 'bad' } (the lick's wrong key), {} clears. */
+    hint(map) {
+      for (const m in keys) { keys[m].className = keys[m].className.replace(/\skh-[a-z]+\b/g, ''); if (map[m]) keys[m].classList.add('kh-' + map[m]); }
+    },
     down(m, isDown) { const k = keys[m]; if (k) k.classList.toggle('down', isDown); },
     /** Chord mode: colour keys. map: { midi: { cls: 'base'|'third'|'seventh'|'tension'|'bass'|'hit'|'wrong'|'miss', label } }
      *  opts.reveal === false: do not scroll to the marked keys (the solo palette marks every octave). */
