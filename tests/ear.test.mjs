@@ -170,3 +170,24 @@ for (const id of ['blues', 'bossa', 'std']) {
   assert.deepEqual(G.stepsBetween(62, 65), [63, 64]); assert.deepEqual(G.stepsBetween(65, 62), [64, 63]); assert.deepEqual(G.stepsBetween(60, 61), []);
 }
 console.log('ok: ear (levels, questions, answers, grading, track items)');
+
+// ---- "Find the note": the zone ladder grows only with success ----
+{
+  const top = G.FIND_LADDER.length - 1;
+  G.FIND_LADDER.forEach((z, i) => {
+    assert.ok(z.keys.includes(G.FIND_HOME), 'every zone holds home');
+    if (i) assert.ok(z.keys.length > G.FIND_LADDER[i - 1].keys.length && G.FIND_LADDER[i - 1].keys.every((m) => z.keys.includes(m)), 'zones nest and grow');
+  });
+  assert.ok(G.FIND_LADDER[0].keys.length === 3 && G.FIND_LADDER[0].keys.every((m) => [0, 2, 4, 5, 7, 9, 11].includes(m % 12)), 'starts on 3 white keys');
+  let s = { lv: 0, okRun: 0, badRun: 0 };
+  s = G.findStep(s, 'ok'); s = G.findStep(s, 'ok'); assert.equal(s.lv, 0);
+  s = G.findStep(s, 'ok'); assert.equal(s.lv, 1); assert.equal(s.moved, 1);
+  s = G.findStep(s, 'ok'); s = G.findStep(s, 'meh'); s = G.findStep(s, 'ok'); s = G.findStep(s, 'ok'); assert.equal(s.lv, 1, 'a slip resets the run');
+  s = G.findStep(s, 'miss'); assert.equal(s.lv, 1); s = G.findStep(s, 'meh'); assert.equal(s.lv, 0); assert.equal(s.moved, -1);
+  s = G.findStep(G.findStep({ lv: 0 }, 'miss'), 'miss'); assert.equal(s.lv, 0, 'never below the first zone');
+  s = { lv: top, okRun: 2 }; s = G.findStep(s, 'ok'); assert.equal(s.lv, top, 'never above the last zone');
+  assert.equal(G.findStartLevel(0), 0); assert.equal(G.findStartLevel(3), 2); assert.equal(G.findStartLevel(99), top - 0);
+  const rng = G.mulberry32(9); let last = null;
+  for (let i = 0; i < 100; i++) { const m = G.findPick(G.FIND_LADDER[0].keys, last, rng); assert.ok(G.FIND_LADDER[0].keys.includes(m) && m !== last); last = m; }
+}
+console.log('find ladder ok');

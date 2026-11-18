@@ -224,3 +224,37 @@ export function stepsBetween(a, b) {
   for (let m = a + dir; m !== b; m += dir) out.push(m);
   return out;
 }
+
+// ---------- "Find the note": a zone ladder that grows with success ----------
+/** The zones of "Find the note", narrow to wide. Every zone holds `home` (the reference note played before the
+ *  riddle). keys: the notes in play (white keys only at first), label: an i18n key for the chip. */
+const span = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+export const FIND_HOME = 60;
+export const FIND_LADDER = [
+  { keys: [60, 62, 64], label: 'ezL3' },
+  { keys: [60, 62, 64, 65, 67], label: 'ezL5' },
+  { keys: span(60, 67), label: 'ezL8' },
+  { keys: span(60, 72), label: 'ezLoct' },
+  { keys: span(55, 76), label: 'ezLwide' },
+];
+export const FIND_UP = 3;   // first-try answers in a row that widen the zone
+export const FIND_DOWN = 2; // rounds in a row that were not first-try that narrow it again
+/** One round's result moves the ladder: { lv, okRun, badRun } -> the next state, with `moved` = +1 | -1 | 0.
+ *  'ok' = found on the first try (listening again is free); anything else counts against. */
+export function findStep({ lv = 0, okRun = 0, badRun = 0 }, res, top = FIND_LADDER.length - 1) {
+  if (res === 'ok') {
+    okRun++; badRun = 0;
+    if (okRun >= FIND_UP && lv < top) return { lv: lv + 1, okRun: 0, badRun: 0, moved: 1 };
+    return { lv, okRun, badRun, moved: 0 };
+  }
+  badRun++; okRun = 0;
+  if (badRun >= FIND_DOWN && lv > 0) return { lv: lv - 1, okRun: 0, badRun: 0, moved: -1 };
+  return { lv, okRun, badRun, moved: 0 };
+}
+/** The zone a new session starts on: one step below the best reached last time. */
+export const findStartLevel = (saved, top = FIND_LADDER.length - 1) => Math.max(0, Math.min(top, (Number(saved) || 0) - 1));
+/** A riddle from the zone's keys, not the same as the last one (when there is a choice). */
+export function findPick(keys, last, rng = Math.random) {
+  const pool = keys.length > 1 ? keys.filter((m) => m !== last) : keys;
+  return pool[Math.floor(rng() * pool.length)];
+}
