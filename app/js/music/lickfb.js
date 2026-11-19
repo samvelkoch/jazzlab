@@ -53,3 +53,16 @@ export function keyHint(want, got) {
 
 /** Count word for a slot of eighths in 4/4: 0 → «раз», 1 → «и», 2 → «два» … (keys of the i18n table) */
 export const beatKey = (slot) => (slot % 2 ? 'lqAnd' : 'lqBeat' + (Math.floor((slot % 8) / 2) + 1));
+
+/**
+ * Your own answer (stage «Свой ответ»): did it end at home? taps: [{ t, m }] of the answer window; homePc: pitch class
+ * of home (0 = C). → { count, last (midi | null), home: bool, dir: 'left'|'right'|'same', keys: semitones to the nearest home key }
+ */
+export function homeCheck(taps, homePc = 0) {
+  if (!taps.length) return { count: 0, last: null, home: false, dir: 'same', keys: 0 };
+  const last = taps.reduce((a, b) => (b.t >= a.t ? b : a)).m;
+  const pc = ((last - homePc) % 12 + 12) % 12;
+  const down = last - pc, up = down + 12; // the home keys around the last one
+  const target = pc === 0 ? last : pc <= 6 ? down : up;
+  return { count: taps.length, last, home: pc === 0, dir: target === last ? 'same' : target < last ? 'left' : 'right', keys: Math.abs(target - last) };
+}

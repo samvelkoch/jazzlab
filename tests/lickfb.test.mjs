@@ -1,6 +1,6 @@
 // Lick feedback: note-by-note scoring and plain-words key hints. Run: node tests/lickfb.test.mjs
 import assert from 'node:assert/strict';
-import { scoreRepeat, keyHint, beatKey, isBlack } from '../app/js/music/lickfb.js';
+import { scoreRepeat, keyHint, beatKey, isBlack, homeCheck } from '../app/js/music/lickfb.js';
 
 const exp = [{ t: 0, m: 63 }, { t: 0.5, m: 64 }, { t: 1, m: 67 }, { t: 2, m: 70 }];
 const o = { win: 0.15, tight: 0.05, near: 0.4 };
@@ -27,4 +27,10 @@ assert.deepEqual(keyHint(67, 64), { dir: 'right', keys: 3, black: false });
 assert.equal(keyHint(60, 60).dir, 'same');
 assert.equal(isBlack(63), true); assert.equal(isBlack(64), false);
 assert.deepEqual([0, 1, 2, 4, 6, 7, 8].map(beatKey), ['lqBeat1', 'lqAnd', 'lqBeat2', 'lqBeat3', 'lqBeat4', 'lqAnd', 'lqBeat1']);
+// own answer: ends at home or not
+assert.equal(homeCheck([], 0).count, 0);
+assert.deepEqual(homeCheck([{ t: 0, m: 67 }, { t: 1, m: 60 }], 0), { count: 2, last: 60, home: true, dir: 'same', keys: 0 });
+assert.deepEqual(homeCheck([{ t: 0, m: 60 }, { t: 1, m: 63 }], 0), { count: 2, last: 63, home: false, dir: 'left', keys: 3 });
+assert.deepEqual(homeCheck([{ t: 0, m: 70 }], 0), { count: 1, last: 70, home: false, dir: 'right', keys: 2 });
+assert.equal(homeCheck([{ t: 2, m: 72 }, { t: 1, m: 70 }], 0).home, true, 'the last in time counts');
 console.log('lickfb ok');

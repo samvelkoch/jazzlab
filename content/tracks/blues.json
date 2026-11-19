@@ -4,7 +4,7 @@
   "title": { "ru": "Блюз", "en": "Blues" },
   "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
   "path": [
-    "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "ear-hl1", "lick-l1", "form-rh-l1", "imp-b1", "d-fifths",
+    "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "ear-hl1", "lick-l1", "qa-l1", "form-rh-l1", "imp-b1", "d-fifths",
     "ear-iv1", "lick-l2", "lick-l3", "form-rh-l3", "form-2h-l1", "imp-b1r", "d-chords", "ear-hl2", "pat-p1q", "form-p1q",
     "lick-l4", "ear-iv2", "form-rh-l4", "lick-l5", "form-rh-qa", "imp-b2", "d-all", "imp-b2e", "ear-q1", "pat-p2", "form-p2", "imp-b2r",
     "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "form-rh-l6", "form-2h-qa", "imp-b3", "d-chords-ta", "ear-q2",
@@ -30,7 +30,7 @@
     {
       "id": "rh", "title": { "ru": "Правая рука", "en": "Right hand" },
       "about": { "ru": "Фразы на слух. Сначала повтори за пианино, потом пальцы, потом над всей формой. В конце вопрос и ответ.", "en": "Phrases by ear. Repeat after the piano, then fingers, then over the whole form. At the end, question and answer." },
-      "items": ["lick-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3", "form-2h-l1", "lick-l4", "lick-l5", "lick-l6", "lick-l7", "form-rh-l4", "form-rh-l6", "form-rh-qa", "form-2h-qa"]
+      "items": ["lick-l1", "qa-l1", "lick-l2", "lick-l3", "form-rh-l1", "form-rh-l3", "form-2h-l1", "lick-l4", "lick-l5", "lick-l6", "lick-l7", "form-rh-l4", "form-rh-l6", "form-rh-qa", "form-2h-qa"]
     },
     {
       "id": "imp", "title": { "ru": "Импровизация", "en": "Improvisation" },
@@ -122,6 +122,11 @@
     "lick-l1": { "kind": "lick", "lick": "l1", "form": "blues-c", "pattern": "p1" },
     "lick-l2": { "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1" },
     "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1" },
+    "qa-l1": {
+      "kind": "qa", "lick": "l1", "licks": ["l5", "l2", "l7", "l3", "l4", "l6"], "form": "blues-c", "pattern": "p1",
+      "title": { "ru": "Разговор: пианино спрашивает, ты отвечаешь", "en": "Conversation: the piano asks, you answer" },
+      "about": { "ru": "Сначала на слух: вопрос висит, ответ приходит домой. Потом по всему блюзу пианино спрашивает, а ты отвечаешь своей фразой. В конце отвечаешь по-своему: любые клавиши, главное закончить дома.", "en": "First by ear: a question hangs, an answer comes home. Then over the whole blues the piano asks and you answer with your phrase. Finally you answer your own way: any keys, as long as you end at home." }
+    },
     "form-rh-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1", "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" } },
     "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } },
     "form-2h-l1": {

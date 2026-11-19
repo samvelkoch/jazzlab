@@ -23,6 +23,7 @@ import { renderEar } from './screens/ear.js';
 import { renderEarRel } from './screens/ear-rel.js';
 import { renderForm } from './screens/form.js';
 import { renderLick } from './screens/lick.js';
+import { renderQA } from './screens/qa.js';
 import { renderMelody } from './screens/melody.js';
 import { renderPerform } from './screens/perform.js';
 import { renderSolo } from './screens/solo.js';
@@ -219,6 +220,11 @@ async function route() {
         const form = solo && model.forms[solo.form], pattern = solo && model.patterns[solo.pattern];
         if (!solo || !form || !pattern) { message(t('notFound')); return; }
         cleanup = renderSolo(root, { track: model.track, itemId: item.id, item, solo, form, pattern, rhythms: model.rhythms, back });
+      }
+      else if (item.kind === 'qa') {
+        const answer = model.licks[item.lick], form = model.forms[item.form];
+        if (!answer || !form) { message(t('notFound')); return; }
+        cleanup = renderQA(root, { track: model.track, itemId: item.id, item, answer, licks: (item.licks || []).map((l) => model.licks[l]).filter(Boolean), form, pattern: model.patterns[item.pattern], back });
       }
       else if (item.kind === 'lick') cleanup = renderLick(root, { track: model.track, itemId: item.id, item, lick: model.licks[item.lick], pattern: model.patterns[item.pattern], form: model.forms[item.form], back });
       else if (item.kind === 'perform') {

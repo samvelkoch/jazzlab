@@ -127,7 +127,7 @@ const qa = blues.items['form-rh-qa'];
 assert.deepEqual(qa.licks, ['l5', 'l4']);
 assert.equal(read('content/licks/l5.json').role, 'question');
 assert.equal(read('content/licks/l4.json').role, 'answer');
-assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'form-2h-l1', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa', 'form-2h-qa']);
+assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'qa-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'form-2h-l1', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa', 'form-2h-qa']);
 Object.values(blues.items).forEach((it) => { if (it.lick) read(`content/licks/${it.lick}.json`); (it.licks || []).forEach((l) => read(`content/licks/${l}.json`)); });
 
 // p3 «Корень и шелл»: root on 1 and 3, third + seventh together on 2 and 4
@@ -614,4 +614,11 @@ console.log('ok: sharp thirds');
   blt.sections.flatMap((x) => x.items).forEach((id) => assert.ok(id in blt.items, 'blues section item exists: ' + id));
   assert.deepEqual(blt.sections.flatMap((x) => x.items).slice().sort(), Object.keys(blt.items).sort(), 'every blues item is in a section');
   console.log('ok: tunes, ties');
+}
+// the conversation item: an answer lick + the questions it is asked
+{
+  const it = blues.items['qa-l1'];
+  assert.equal(it.kind, 'qa');
+  assert.equal(read(`content/licks/${it.lick}.json`).role, 'answer');
+  assert.ok(it.licks.some((l) => read(`content/licks/${l}.json`).role === 'question'), 'qa needs question licks');
 }
