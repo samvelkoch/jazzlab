@@ -66,3 +66,20 @@ export function homeCheck(taps, homePc = 0) {
   const target = pc === 0 ? last : pc <= 6 ? down : up;
   return { count: taps.length, last, home: pc === 0, dir: target === last ? 'same' : target < last ? 'left' : 'right', keys: Math.abs(target - last) };
 }
+
+/**
+ * A variation of a learned phrase (stage «Вариация»): start like the phrase (its first `head` keys, in order), change
+ * something (not a clean repeat: other keys, another rhythm, shorter, shifted), and end by the phrase's role: an answer
+ * comes home, a question does not. phraseM: the phrase's keys in time order; taps: [{ t, m }]; same: the taps were a
+ * clean repeat of the phrase (scoreRepeat(...).clean).
+ * → { ok, start, changed, endOk, end: homeCheck(...) }
+ */
+export function varyCheck(phraseM, taps, { role = 'answer', same = false, head = 2, homePc = 0 } = {}) {
+  const seq = taps.slice().sort((a, b) => a.t - b.t).map((x) => x.m);
+  const n = Math.min(head, phraseM.length);
+  const start = seq.length >= n && phraseM.slice(0, n).every((m, i) => seq[i] === m);
+  const end = homeCheck(taps, homePc);
+  const endOk = end.count > 0 && (role === 'question' ? !end.home : end.home);
+  const changed = !same && seq.length > 0;
+  return { ok: start && changed && endOk, start, changed, endOk, end };
+}

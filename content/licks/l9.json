@@ -1,0 +1,16 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "l9",
+  "title": { "ru": "Ответ: с квинты домой", "en": "Answer: from the fifth home" },
+  "about": { "ru": "Четыре ноты вниз: с квинты, через синюю терцию, домой на палец 1. Самый короткий ответ блюза.", "en": "Four notes down: from the fifth, through the blue third, home on finger 1. The shortest blues answer." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "events": [
+    { "t": 0, "d": 2, "deg": 7, "f": 4 },
+    { "t": 2, "d": 1, "deg": 5, "f": 3 },
+    { "t": 3, "d": 1, "deg": 3, "f": 2 },
+    { "t": 4, "d": 4, "deg": 0, "f": 1 }
+  ]
+}

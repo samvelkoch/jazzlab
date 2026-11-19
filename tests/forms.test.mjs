@@ -127,7 +127,24 @@ const qa = blues.items['form-rh-qa'];
 assert.deepEqual(qa.licks, ['l5', 'l4']);
 assert.equal(read('content/licks/l5.json').role, 'question');
 assert.equal(read('content/licks/l4.json').role, 'answer');
-assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['lick-l1', 'qa-l1', 'lick-l2', 'lick-l3', 'form-rh-l1', 'form-rh-l3', 'form-2h-l1', 'lick-l4', 'lick-l5', 'lick-l6', 'lick-l7', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa', 'form-2h-qa']);
+assert.deepEqual(blues.sections.find((s) => s.id === 'rh').items, ['form-rh-l1', 'form-rh-l3', 'form-2h-l1', 'form-rh-l4', 'form-rh-l6', 'form-rh-qa', 'form-2h-qa']);
+// the phrase book: each phrase = its lick item + its conversation item, by step; questions and answers alternate in the dialogue
+{
+  const ph = blues.sections.find((s) => s.id === 'phr').items;
+  assert.equal(ph.length % 2, 0);
+  for (let k = 0; k < ph.length; k += 2) {
+    const lk = blues.items[ph[k]], qa = blues.items[ph[k + 1]];
+    assert.equal(lk.kind, 'lick'); assert.equal(qa.kind, 'qa'); assert.equal(qa.lick, lk.lick); assert.equal(qa.step, lk.step);
+    const role = read(`content/licks/${lk.lick}.json`).role;
+    assert.ok(['question', 'answer'].includes(role), lk.lick + ' has a role');
+    const other = qa.licks.filter((l) => read(`content/licks/${l}.json`).role !== role);
+    assert.ok(other.length >= 3, `${ph[k + 1]}: the piano has 3+ phrases of the other role to vary`);
+    assert.ok(!qa.licks.includes(qa.lick));
+  }
+  const steps = ph.map((id) => blues.items[id].step);
+  assert.deepEqual(steps, steps.slice().sort((a, b) => a - b), 'steps in order');
+  assert.ok(ph.some((id) => blues.items[id].kind === 'qa' && read(`content/licks/${blues.items[id].lick}.json`).role === 'question'), 'you ask somewhere');
+}
 Object.values(blues.items).forEach((it) => { if (it.lick) read(`content/licks/${it.lick}.json`); (it.licks || []).forEach((l) => read(`content/licks/${l}.json`)); });
 
 // p3 «Корень и шелл»: root on 1 and 3, third + seventh together on 2 and 4

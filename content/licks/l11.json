@@ -1,0 +1,17 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "l11",
+  "title": { "ru": "Ответ: синкопа домой", "en": "Answer: syncopated home" },
+  "about": { "ru": "Сверху вниз по блюзу, а дом приходит раньше, на «и» после трёх. Ранний дом и есть синкопа: звучит как джаз.", "en": "Down the blues from the top, and home arrives early, on the \"and\" after three. That early home is syncopation: it sounds like jazz." },
+  "role": "answer",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "events": [
+    { "t": 0, "d": 1, "deg": 10, "f": 5 },
+    { "t": 1, "d": 2, "deg": 7, "f": 4 },
+    { "t": 3, "d": 1, "deg": 5, "f": 3 },
+    { "t": 4, "d": 1, "deg": 3, "f": 2 },
+    { "t": 5, "d": 3, "deg": 0, "f": 1 }
+  ]
+}

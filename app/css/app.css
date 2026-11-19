@@ -575,6 +575,7 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .item { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; min-height: 118px; border-radius: 18px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); text-decoration: none; }
 .item:hover { border-color: var(--accent); }
 .item[data-status="now"], .item[data-status="review"] { border: 2px solid var(--accent); }
+.kicker.ph-question { color: var(--meh); } .kicker.ph-answer { color: var(--accent); }
 .item[data-status="done"] .kicker { color: var(--ok); }
 .item .badge { position: absolute; top: 12px; right: 12px; }
 .itemtitle { font: 700 16px/1.25 var(--display); padding-right: 76px; }

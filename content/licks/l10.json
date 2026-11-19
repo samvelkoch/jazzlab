@@ -1,0 +1,17 @@
+{
+  "$format": "jazzlab-lick/1",
+  "id": "l10",
+  "title": { "ru": "Вопрос: с «и» на квинту", "en": "Question: from \"and\" to the fifth" },
+  "about": { "ru": "Начинается не на «раз», а на «и»: палец 2 на чёрной соскальзывает на белую, рука прыгает к квинте и держит её. Ещё раз к квинте, и повисла.", "en": "Starts on \"and\", not on one: finger 2 slides off the black key onto the white, the hand jumps to the fifth and holds it. Once more to the fifth, and it hangs." },
+  "role": "question",
+  "bars": 2,
+  "tempo": 66,
+  "swing": true,
+  "events": [
+    { "t": 1, "d": 1, "deg": 3, "f": 2 },
+    { "t": 2, "d": 1, "deg": 4, "f": 2 },
+    { "t": 3, "d": 3, "deg": 7, "f": 4 },
+    { "t": 8, "d": 1, "deg": 5, "f": 3 },
+    { "t": 9, "d": 4, "deg": 7, "f": 4 }
+  ]
+}

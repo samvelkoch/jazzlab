@@ -34,3 +34,20 @@ assert.deepEqual(homeCheck([{ t: 0, m: 60 }, { t: 1, m: 63 }], 0), { count: 2, l
 assert.deepEqual(homeCheck([{ t: 0, m: 70 }], 0), { count: 1, last: 70, home: false, dir: 'right', keys: 2 });
 assert.equal(homeCheck([{ t: 2, m: 72 }, { t: 1, m: 70 }], 0).home, true, 'the last in time counts');
 console.log('lickfb ok');
+
+// a variation: the same start, something changed, the ending by role
+{
+  const { varyCheck } = await import('../app/js/music/lickfb.js');
+  const l1 = [63, 64, 67, 70, 67, 65, 63, 60];
+  const tp = (ms) => ms.map((m, i) => ({ t: i * 0.3, m }));
+  assert.ok(varyCheck(l1, tp([63, 64, 67, 60]), { role: 'answer' }).ok, 'shorter, ends home');
+  assert.ok(!varyCheck(l1, tp(l1), { role: 'answer', same: true }).ok, 'a clean repeat is not a variation');
+  assert.ok(varyCheck(l1, tp(l1), { role: 'answer', same: false }).ok, 'the same keys in another rhythm is a variation');
+  const r = varyCheck(l1, tp([64, 63, 67, 60]), { role: 'answer' }); assert.ok(!r.ok && !r.start, 'must start like the phrase');
+  const h = varyCheck(l1, tp([63, 64, 67, 70]), { role: 'answer' }); assert.ok(!h.ok && h.start && !h.endOk, 'an answer must end home');
+  const q = [67, 67, 70, 67, 70];
+  assert.ok(varyCheck(q, tp([67, 67, 70, 65]), { role: 'question' }).ok, 'a question ends away from home');
+  assert.ok(!varyCheck(q, tp([67, 67, 63, 60]), { role: 'question' }).endOk, 'a question that comes home is an answer');
+  assert.ok(!varyCheck(q, [], { role: 'question' }).ok, 'silence is not a variation');
+}
+console.log('ok: varyCheck');

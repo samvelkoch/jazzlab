@@ -280,6 +280,20 @@ Track items that use licks:
   `"form-2h-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "both", "lick": "l1", "title", "about" }`
   (also `form-2h-qa` with `licks: ["l5", "l4"]`, `form-2h-bossa` and `form-2h-std` with the tune).
 
+## Conversation (`kind: "qa"`) and the phrase book
+
+`"qa-l8": { "kind": "qa", "lick": "l8", "licks": ["l1", "l9", "l4", "l3"], "form": "blues-c", "pattern": "p1", "stages": ["answer", "vary", "own"], "step": 2, "title", "about" }`
+opens `screens/qa.js`. `lick` = your phrase; its `role` (or `you: "question"|"answer"`) sets who starts: an answer phrase
+= the piano asks in bars 1–2, 5–6, 9–10 and you answer; a question phrase = you ask there and the piano answers. `licks` =
+the piano's phrases (the other role; picked at random each time, never the same twice in a row) plus more for the ear stage.
+Stages (`stages`, default all): `ear` (hangs or home, 6 of 8) → `answer` (your phrase in the dialogue, 3 clean in a row) →
+`vary` (start like the phrase: its first two keys; change something: not a clean repeat; end by role: an answer home, a
+question not home; 3, see `varyCheck` in `lickfb.js`) → `own` (any blues keys, end by role, silent while the piano plays; 4 → done).
+Texts with a question-mode variant are the i18n key + `Q` (`qa_answerQ` «Спроси фразой»).
+
+The blues section `phr` «Словарь фраз» pairs each phrase's `lick-*` item with its `qa-*` item; both carry `step` (1–2
+phrases per step), and the track card's kicker shows «Шаг N · вопрос|ответ · kind».
+
 ## Key-relative licks (`prog` + `keys`)
 
 A lick written over a progression instead of one chord: `"prog": ["Gm7 C7", "Fmaj7"]` = one chord string per bar,
