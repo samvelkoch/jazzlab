@@ -763,6 +763,30 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .lqmsg.meh { background: var(--meh-soft); } .lqmsg.meh b { color: var(--meh); }
 .lqbonus { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 10px; }
 .lqbonus .btn { text-decoration: none; }
+.lqdots i.bad { background: var(--bad); }
+/* question and answer */
+.qascreen[data-lstage="ear"] footer .stepper { display: none; }
+.qaear { display: flex; flex-direction: column; gap: 14px; }
+.qaeardots { display: none; }
+.qaask { display: flex; flex-direction: column; gap: 2px; }
+.qaask b { font: 700 22px var(--display); } .qaask span { color: var(--muted); font-size: 15px; }
+.qabtns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.qabig { min-height: 96px; border-radius: 18px; border: 2px solid var(--line); background: var(--panel); color: var(--fg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; font: inherit; }
+.qabig b { font: 700 22px var(--display); } .qabig span { font-size: 14px; color: var(--muted); }
+.qabig.q b { color: var(--meh); } .qabig.a b { color: var(--accent); }
+.qabig:disabled { opacity: .55; cursor: default; }
+.qabig.right { border-color: var(--ok); background: var(--ok-soft); } .qabig.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.qaear .lqmsg { flex-direction: column; align-items: flex-start; gap: 4px; }
+.qaearsum { font-size: 16px; }
+.qaform { display: flex; flex-direction: column; gap: 12px; }
+.qapairs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.qapair { border-radius: 12px; background: var(--sub); color: var(--muted); padding: 7px 10px; display: flex; flex-direction: column; border: 2px solid transparent; min-width: 0; }
+.qapair b { font-size: 12px; letter-spacing: .06em; } .qapair span { font-size: 15px; font-weight: 700; } .qapair small { font-size: 12px; }
+.qapair.you { background: var(--ok-soft); color: var(--ok); }
+.qapair.on.piano { background: var(--panel); border-color: var(--fg); color: var(--fg); }
+.qapair.on.you { background: var(--accent); color: var(--accent-fg); }
+.qapair.next { border-color: var(--accent); border-style: dashed; }
+@media (max-width: 640px) { .qapairs { grid-template-columns: repeat(3, minmax(0, 1fr)); } .qabig { min-height: 80px; } .qabig b { font-size: 18px; } }
 .key.kh-bad { background: var(--bad) !important; }
 .key.kh-bad .lbl { color: #fff; }
 @media (max-width: 900px) { .lqintro { grid-template-columns: minmax(0, 1fr); } .lqres { flex-direction: column; align-items: stretch; } .lqphase { flex-wrap: wrap; } .lqcells { flex: 1 1 100%; } }
