@@ -4,44 +4,57 @@
 //                   in bars 3–4, 7–8, 11–12 with the learned answer lick (item.lick). 3 clean answers in a row pass.
 //   3 Свой ответ  — the same form, you answer with any keys of the blues scale: stay silent while the piano asks, and end
 //                   at home. 4 such answers pass the item (done + review).
-// Item: { kind: "qa", lick: answer lick, licks: [other licks: the questions + more answers for the ear stage], form, pattern }
+//   The phrase's role (lick.role, or item.you) turns it around: a question phrase means YOU ask (bars 1–2, 5–6, 9–10)
+//   and the piano answers. Stage «Вариация» (between them): start like the phrase, change something, end by its role.
+//   item.stages picks the stages (default: ear, answer, vary, own). The piano's phrases are picked at random each time.
+// Item: { kind: "qa", lick: your phrase, licks: [the piano's phrases (other role) + more for the ear stage], form, pattern,
+//         you?: 'question'|'answer', stages?: [...] }
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
 import { store, updateEx, exProgress, markActive, idle, scheduleReview } from '../store.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { lickNotes, lickSpell, patternBar } from '../music/forms.js';
-import { scoreRepeat, keyHint, beatKey, homeCheck } from '../music/lickfb.js';
+import { scoreRepeat, keyHint, beatKey, homeCheck, varyCheck } from '../music/lickfb.js';
 import * as audio from '../music/audio.js';
 import { groove } from '../music/drums.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
 
 const PER = 8;
-const STAGES = ['ear', 'answer', 'own'];
-const EAR_ROUNDS = 8, EAR_PASS = 6, ANSWER_NEED = 3, OWN_NEED = 4;
+const ALL_STAGES = ['ear', 'answer', 'vary', 'own'];
+const EAR_ROUNDS = 8, EAR_PASS = 6, NEED = { answer: 3, vary: 3, own: 4 };
 const BLUES = [0, 3, 5, 6, 7, 10]; // the blues scale from home
 const HOME_KEY = 'C7';
 
 export function renderQA(root, { track, itemId, item, answer, licks, form, pattern, back }) {
   const settings = { met: true, pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
-  const questions = licks.filter((l) => l.role === 'question');
-  const answers = [answer, ...licks.filter((l) => l.role === 'answer' && l !== answer)];
+  const Q = (item.you || answer.role) === 'question'; // you ask, the piano answers
+  const STAGES = (Array.isArray(item.stages) ? item.stages : ALL_STAGES).filter((s) => ALL_STAGES.includes(s));
+  // texts: a question-mode variant (key + 'Q') where there is one
+  const T = (k) => { if (Q) { const v = t(k + 'Q'); if (v !== k + 'Q') return v; } return t(k); };
+  const mine = answer;
+  const others = licks.filter((l) => l !== mine);
+  const questions = Q ? [mine, ...others.filter((l) => l.role === 'question')] : others.filter((l) => l.role === 'question');
+  const answers = Q ? others.filter((l) => l.role === 'answer') : [mine, ...others.filter((l) => l.role === 'answer')];
   const bars = form.bars; // 12
-  const aNotes = lickNotes(answer, HOME_KEY);
-  const qNotes = questions.map((q) => lickNotes(q, HOME_KEY));
-  const prog = () => { const s = exProgress(itemId).stages || {}; return { ear: !!s.ear || !!s.done, answer: !!s.answer || !!s.done, own: !!s.done }; };
+  const aNotes = lickNotes(mine, HOME_KEY); // your phrase
+  const partners = (Q ? answers : questions).filter((l) => l !== mine);
+  const qNotes = partners.map((q) => lickNotes(q, HOME_KEY)); // the piano's phrases
+  const youPair = (pi) => (Q ? pi % 2 === 0 : pi % 2 === 1);
+  const prog = () => { const s = exProgress(itemId).stages || {}; return Object.fromEntries(STAGES.map((k) => [k, k === 'own' ? !!s.done : !!s[k] || !!s.done])); };
   const pass = (sid) => updateEx(itemId, (p) => ({ ...p, stages: { ...p.stages, [sid]: true, ...(sid === 'own' ? { done: true } : {}) } }));
+  const nextStage = (sid) => STAGES[STAGES.indexOf(sid) + 1] || null;
   const firstOpen = () => STAGES.find((s) => !prog()[s]) || 'own';
   const st = {
     stage: STAGES.includes(store.get('qaStage:' + itemId)) ? store.get('qaStage:' + itemId) : firstOpen(),
     bpm: store.get('tempo:' + itemId, answer.tempo || form.tempo || 66),
     swing: answer.swing !== undefined ? !!answer.swing : !!form.swing,
-    playing: false, streak: 0, own: 0, result: null,
+    playing: false, streak: 0, own: 0, vary: 0, result: null,
     ear: null // { order: [{lick, notes}], k, picks: [true|false], answered }
   };
   const midiOn = () => midiState().connected;
 
   // ---------- layout ----------
-  const stageBtn = (sid, n) => h('button', { type: 'button', 'data-stage': sid, onclick: () => setStage(sid) }, h('span.num', null, String(n)), t('qa_' + sid));
+  const stageBtn = (sid, n) => h('button', { type: 'button', 'data-stage': sid, onclick: () => setStage(sid) }, h('span.num', null, String(n)), T('qa_' + sid));
   const stages = h('nav.seg.stages', { 'aria-label': t('lqStages') }, ...STAGES.map((s, k) => stageBtn(s, k + 1)));
   const header = h('header.top', null,
     h('a.iconbtn', { href: back, 'aria-label': t('back'), title: t('back'), html: ICON.back }),
@@ -50,9 +63,9 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
   const title = h('h2'), sub = h('p.lqsub');
   const dotsLabel = h('span'), dots = h('div.lqdots', { role: 'img' }, dotsLabel);
 
-  const ruleRows = STAGES.map((s, k) => h('div.lqrule', { 'data-stage': s }, h('b.n', null, String(k + 1)), h('div', null, h('b', null, t('qa_' + s) + '. '), t('qaRule_' + s))));
+  const ruleRows = STAGES.map((s, k) => h('div.lqrule', { 'data-stage': s }, h('b.n', null, String(k + 1)), h('div', null, h('b', null, T('qa_' + s) + '. '), T('qaRule_' + s))));
   const intro = h('div.lqintro', null,
-    h('div.lqgoal', null, h('span.lqlabel', null, t('lqGives')), h('h3', null, t('qaGoal')), h('p', null, t('qaGoalText'))),
+    h('div.lqgoal', null, h('span.lqlabel', null, t('lqGives')), h('h3', null, T('qaGoal')), h('p', null, T('qaGoalText'))),
     h('div.lqrules', null, h('span.lqlabel', null, t('lqHow')), ...ruleRows));
 
   // ear stage
@@ -65,8 +78,8 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
 
   // form stages: the 12 bars as 6 pairs, whose turn, the beat, the result of the last answer
   const pairs = [0, 1, 2, 3, 4, 5].map((k) => {
-    const you = k % 2 === 1;
-    return h('div.qapair' + (you ? '.you' : '.piano'), null, h('b', null, t(you ? 'role_you' : 'role_piano')), h('span', null, t(you ? 'answerW' : 'questionW')), h('small', null, `${bars[2 * k]} · ${bars[2 * k + 1]}`));
+    const you = youPair(k), ask = k % 2 === 0;
+    return h('div.qapair' + (you ? '.you' : '.piano'), null, h('b', null, t(you ? 'role_you' : 'role_piano')), h('span', null, t(ask ? 'questionW' : 'answerW')), h('small', null, `${bars[2 * k]} · ${bars[2 * k + 1]}`));
   });
   const beats = [1, 2, 3, 4].map((n) => h('i', null, String(n)));
   const turnWord = h('b.lqturn'), turnSub = h('span.lqturnsub');
@@ -106,7 +119,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
   const homeKeys = () => { const out = []; for (let m = lo - 1; m <= hi + 1; m++) if (m % 12 === 0) out.push(m); return out; };
   function paintKeys(extra) {
     kb.hint({});
-    if (st.stage === 'answer') {
+    if (st.stage === 'answer' || st.stage === 'vary') {
       kb.mark({});
       const uniq = [...new Map(aNotes.map((e) => [e.m, e])).values()];
       kb.show({ rh: { notes: uniq.map((e) => lickSpell(e.m, e.deg)), f: uniq.map((e) => e.f) }, lh: null }, { rh: null, lh: null }, 'both');
@@ -114,7 +127,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
     }
     kb.show({ rh: null, lh: null }, { rh: null, lh: null }, 'both');
     const map = {};
-    if (st.stage === 'own') for (let m = lo - 1; m <= hi + 1; m++) if (BLUES.includes(m % 12)) map[m] = { cls: 'step' };
+    if (st.stage === 'own') for (let m = lo - 1; m <= hi + 1; m++) if (BLUES.includes(m % 12)) map[m] = Q && [7, 10].includes(m % 12) ? { cls: 'seventh', label: t('qaHangKey') } : { cls: 'step' };
     homeKeys().forEach((m) => { map[m] = { cls: 'base', label: t('qaHomeKey') }; });
     Object.assign(map, extra || {});
     kb.mark(map, { reveal: false });
@@ -141,11 +154,11 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
       dots.setAttribute('aria-label', `${t('qaDots_ear')}: ${picks.filter(Boolean).length} / ${EAR_ROUNDS}`);
       return;
     }
-    const need = st.stage === 'answer' ? ANSWER_NEED : OWN_NEED;
-    const n = p[st.stage] ? need : st.stage === 'answer' ? st.streak : st.own;
-    dotsLabel.textContent = t('qaDots_' + st.stage);
+    const need = NEED[st.stage];
+    const n = p[st.stage] ? need : st.stage === 'answer' ? st.streak : st[st.stage];
+    dotsLabel.textContent = T('qaDots_' + st.stage);
     for (let k = 0; k < need; k++) dots.append(h('i', { class: k < n ? 'on' : '' }));
-    dots.setAttribute('aria-label', `${t('qaDots_' + st.stage)}: ${Math.min(n, need)} / ${need}`);
+    dots.setAttribute('aria-label', `${T('qaDots_' + st.stage)}: ${Math.min(n, need)} / ${need}`);
   }
   function paintView() {
     screen.dataset.lstage = st.stage;
@@ -167,8 +180,8 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
     if (st.playing) stop();
     st.stage = sid; if (!keep) store.set('qaStage:' + itemId, sid);
     st.streak = 0; st.result = null; st.ear = null;
-    title.textContent = t('qaT_' + sid); sub.textContent = t('qaS_' + sid);
-    footHint.textContent = t('qaF_' + sid);
+    title.textContent = T('qaT_' + sid); sub.textContent = T('qaS_' + sid);
+    footHint.textContent = T('qaF_' + sid);
     resBox.replaceChildren();
     paintKeys(); paintStages(); paintDots(); paintPrimary(); paintPairs(-1); paintView();
   }
@@ -243,7 +256,9 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
   }
 
   // ---------- stages 2, 3: the form on a loop ----------
-  let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], ans = null, lhs = [];
+  let timer = 0, raf = 0, g = 0, beatTime = 0, queue = [], run = null, exp = [], ans = null, lhs = [], pk = -1;
+  // the piano's next phrase: at random, never the same one twice in a row
+  const nextPartner = () => { if (qNotes.length < 2) return 0; let k; do k = Math.floor(Math.random() * qNotes.length); while (k === pk); return k; };
   const enqueue = (x) => { queue.push(x); queue.sort((a, b) => a.t - b.t); };
   const pairOf = (bar) => Math.floor((bar % 12) / 2); // 0..5, odd = you
   function play() {
@@ -253,7 +268,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k }); }
     t0 += 4 * beat; beatTime = t0; g = 0; run = { t0, beat, swing: st.swing };
-    exp = []; ans = null;
+    exp = []; ans = null; pk = -1;
     timer = setInterval(schedule, 25); schedule(); raf = requestAnimationFrame(tick);
     paintPrimary(); paintView();
   }
@@ -263,12 +278,14 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
       const slot = g % PER, bar = Math.floor(g / PER), fb = bar % 12, pi = pairOf(bar), half = fb % 2, ls = half * PER + slot;
       const time = beatTime + (slot % 2 ? swingOff() : 0);
       if (time > ahead) break;
-      if (pi % 2 === 1 && half === 0 && slot === 0) { exp = []; enqueue({ t: time - 0.12, ansStart: bar, start: time }); }
+      const you = youPair(pi);
+      if (you && half === 0 && slot === 0) { exp = []; enqueue({ t: time - 0.12, ansStart: bar, start: time }); }
+      if (!you && half === 0 && slot === 0) pk = nextPartner();
       if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, style: form.style, bar }); else if (slot % 2 === 0) audio.click(time, slot === 0);
       lhs[fb].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
-      if (pi % 2 === 0) qNotes[(pi / 2) % qNotes.length].filter((e) => e.t === ls).forEach((e) => play1(e.m, time, e.stac ? Math.min(swingOff() * 0.6, 0.2) : swingOff() * e.d * 0.95, 0.6));
-      else if (st.stage === 'answer') aNotes.filter((e) => e.t === ls).forEach((e) => exp.push({ t: time, slot: ls, len: e.d, m: e.m, f: e.f }));
-      if (pi % 2 === 1 && half === 1 && slot === PER - 1) enqueue({ t: time + beat * 0.5 + 0.25, ansEnd: bar, end: time + beat * 0.5 });
+      if (!you) { if (qNotes.length) qNotes[Math.max(0, pk)].filter((e) => e.t === ls).forEach((e) => play1(e.m, time, e.stac ? Math.min(swingOff() * 0.6, 0.2) : swingOff() * e.d * 0.95, 0.6)); }
+      else if (st.stage === 'answer' || st.stage === 'vary') aNotes.filter((e) => e.t === ls).forEach((e) => exp.push({ t: time, slot: ls, len: e.d, m: e.m, f: e.f }));
+      if (you && half === 1 && slot === PER - 1) enqueue({ t: time + beat * 0.5 + 0.25, ansEnd: bar, end: time + beat * 0.5 });
       if (slot % 2) beatTime += beat;
       g++;
     }
@@ -282,18 +299,18 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
     const now = audio.now();
     while (queue.length && queue[0].t <= now) {
       const q = queue.shift();
-      if (q.ci !== undefined) { beats.forEach((b, k) => b.classList.toggle('on', k === q.ci)); turnWord.textContent = t('countInLabel'); turnSub.textContent = t('qaCountSub'); continue; }
+      if (q.ci !== undefined) { beats.forEach((b, k) => b.classList.toggle('on', k === q.ci)); turnWord.textContent = t('countInLabel'); turnSub.textContent = T('qaCountSub'); continue; }
       if (q.ansStart !== undefined) { ans = { taps: [], start: q.start, during: 0 }; }
       if (q.ansEnd !== undefined) finishAnswer();
     }
     const p = posAt(now);
     if (p >= 0) {
-      const bar = Math.floor(p / PER), pi = pairOf(bar), you = pi % 2 === 1;
+      const bar = Math.floor(p / PER), pi = pairOf(bar), you = youPair(pi);
       paintPairs(pi);
       beats.forEach((b, k) => b.classList.toggle('on', k === Math.floor((p % PER) / 2)));
       phase.classList.toggle('you', you);
-      turnWord.textContent = you ? t('impYourTurn') : t('qaPianoAsks');
-      turnSub.textContent = you ? t(st.stage === 'answer' ? 'qaYouAnswer' : 'qaYouOwn') : t('qaListenQ');
+      turnWord.textContent = you ? t('impYourTurn') : T('qaPianoAsks');
+      turnSub.textContent = you ? T(st.stage === 'answer' ? 'qaYouAnswer' : st.stage === 'vary' ? 'qaYouVary' : 'qaYouOwn') : T('qaListenQ');
       markActive();
     }
     raf = requestAnimationFrame(tick);
@@ -350,23 +367,45 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
         const cls = n.res === 'ok' ? 'ok' : n.res === 'bitEarly' || n.res === 'bitLate' ? 'okish' : n.res === 'wrong' || n.res === 'miss' ? 'bad' : 'meh';
         return h('div.lqchip.' + cls, null, h('small', null, t(beatKey(exp[i].slot))), h('b', null, String(exp[i].f || '·')), h('span', null, t('lqRes_' + n.res)));
       });
-      if (clean) { st.streak++; if (st.streak >= ANSWER_NEED && !prog().answer) { pass('answer'); paintStages(); head += ' ' + t('qaPassed_answer'); } }
+      if (clean) { st.streak++; if (st.streak >= NEED.answer && !prog().answer) { pass('answer'); paintStages(); head += ' ' + T(nextStage('answer') === 'vary' ? 'qaPassed_answer' : 'qaPassed_answerOwn'); } }
       else st.streak = 0;
     } else {
-      const c = homeCheck(a.taps, 0);
       const lines = [];
-      if (!c.count) { head = t('qaSilent'); lines.push(t('qaSilentSub')); }
-      else if (c.home) { head = t('qaEndedHome'); clean = true; lines.push(t('qaEndedHomeSub')); }
-      else { head = t('qaHung'); lines.push(t('qaHungSub').replace('{n}', `${c.keys} ${plural(c.keys, 'lqKeys')}`).replace('{d}', t(c.dir === 'left' ? 'lqLeft' : 'lqRight'))); }
-      if (during > 1) { clean = false; lines.push(t('qaTalkedOver').replace('{n}', during)); }
-      if (clean) { st.own++; if (st.own >= OWN_NEED && !prog().own) { pass('own'); scheduleReview(itemId, true); paintStages(); head += ' ' + t('qaPassed_own'); } }
-      if (c.last !== null) paintKeys({ [c.last]: { cls: c.home ? 'hit' : 'wrong', label: c.home ? t('qaHomeKey') : t('qaLastKey') } });
+      let c;
+      if (st.stage === 'vary') {
+        const same = scoreRepeat(exp, a.taps, { ...tols(), pitch: true }).clean;
+        const v = varyCheck(aNotes.map((e) => e.m), a.taps, { role: Q ? 'question' : 'answer', same });
+        c = v.end;
+        if (!c.count) { head = t('qaSilent'); lines.push(T('qaSilentSub')); }
+        else if (same) { head = t('qaVarySame'); lines.push(t('qaVarySameSub')); }
+        else if (!v.start) { head = t('qaVaryStart'); lines.push(t('qaVaryStartSub')); }
+        else if (!v.endOk) { head = Q ? t('qaEndedHomeQ') : t('qaHung'); lines.push(Q ? t('qaHomeNotQ') : t('qaHungSub').replace('{n}', `${c.keys} ${plural(c.keys, 'lqKeys')}`).replace('{d}', t(c.dir === 'left' ? 'lqLeft' : 'lqRight'))); }
+        else { head = t('qaVaryOk'); clean = true; lines.push(T('qaVaryOkSub')); }
+      } else {
+        c = homeCheck(a.taps, 0);
+        if (!c.count) { head = t('qaSilent'); lines.push(T('qaSilentSub')); }
+        else if (Q ? !c.home : c.home) { head = Q ? t('qaHungQ') : t('qaEndedHome'); clean = true; lines.push(Q ? t('qaHungQSub') : t('qaEndedHomeSub')); }
+        else if (Q) { head = t('qaEndedHomeQ'); lines.push(t('qaHomeNotQ')); }
+        else { head = t('qaHung'); lines.push(t('qaHungSub').replace('{n}', `${c.keys} ${plural(c.keys, 'lqKeys')}`).replace('{d}', t(c.dir === 'left' ? 'lqLeft' : 'lqRight'))); }
+      }
+      if (during > 1) { clean = false; lines.push(T('qaTalkedOver').replace('{n}', during)); }
+      const sid = st.stage;
+      if (clean) {
+        st[sid]++;
+        if (st[sid] >= NEED[sid] && !prog()[sid]) {
+          pass(sid); paintStages();
+          if (sid === 'own') scheduleReview(itemId, true);
+          head += ' ' + T(sid === 'own' ? 'qaPassed_own' : 'qaPassed_vary');
+        }
+      }
+      const good = Q ? !c.home : c.home;
+      if (c.last !== null) paintKeys({ [c.last]: { cls: good ? 'hit' : 'wrong', label: c.home ? t('qaHomeKey') : t('qaLastKey') } });
       html = lines.join('<br>');
     }
     st.result = { clean };
     resBox.className = 'lqres ' + (clean ? 'ok' : 'meh');
     resBox.replaceChildren(...[
-      h('div.lqrestext', null, h('div.lqreshead', null, h('b', null, head), h('span', null, clean ? '' : t('qaNextTime'))), h('div.lqlines', { html })),
+      h('div.lqrestext', null, h('div.lqreshead', null, h('b', null, head), h('span', null, clean ? '' : T('qaNextTime'))), h('div.lqlines', { html })),
       chips.length ? h('div.lqchips', { style: `--n:${chips.length}` }, ...chips) : null].filter(Boolean));
     paintDots(); paintView();
   }

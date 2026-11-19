@@ -69,6 +69,13 @@ export async function renderTrack(root, { model, index, rerender }) {
     }, L(c.title), c.ready ? null : h('small', null, ' · ' + t('soon')))));
 
   const kindLabel = (k) => t('kind_' + k);
+  // a phrase-book item: «Шаг 2 · вопрос · Лик» (the step and the phrase's role)
+  const kickerOf = (it) => {
+    const kind = kindLabel(it.labelKind || it.kind);
+    if (!it.step) return kind;
+    const l = it.lick && model.licks && model.licks[it.lick];
+    return [`${t('phStep')} ${it.step}`, l && l.role ? t(l.role === 'question' ? 'phQ' : 'phA') : null, kind].filter(Boolean).join(' · ');
+  };
   const status = (id) => {
     const p = prog[id];
     if (q.due.includes(id)) return 'review';
@@ -100,7 +107,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     const badge = { done: it.kind === 'perform' ? t('recordedW') : t('done'), now: t('now'), review: t('reviewW'), meh: t('inProgress'), none: '' }[s];
     const art = wikiOf(it);
     const card = h('a.item' + (art ? '.haswiki' : ''), { href: it.href, 'data-status': s },
-      h('span.kicker', null, kindLabel(it.labelKind || it.kind)),
+      h('span.kicker' + (it.step && model.licks && model.licks[it.lick] ? '.ph-' + model.licks[it.lick].role : ''), null, kickerOf(it)),
       h('span.itemtitle', null, markTerms(it.title, undefined, 'span')),
       h('span.itemmeta', null, meta(id) || (r && !q.due.includes(id) ? `${t('nextReview')} ${new Date(r.due).toLocaleDateString()}` : markTerms(it.about || '', undefined, 'span'))),
       badge ? h('span.badge.' + (s === 'review' ? 'now' : s), null, badge) : null);
