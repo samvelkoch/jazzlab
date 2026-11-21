@@ -89,6 +89,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     if (it.kind === 'drill' && p.best) return `${Math.round(p.best.acc * 100)}% · ${(p.best.avgMs / 1000).toFixed(1)} ${t('sec')}`;
     if (it.kind === 'ear' && typeof p.best === 'number') return `${Math.round(p.best * 100)}%`;
     if (it.kind === 'form' && p.choruses) return `${p.cleanChoruses || 0} ${t('fCleanOf')} ${p.choruses} · ${t('bestStreak')} ${p.bestStreak || 0}`;
+    if (it.kind === 'form' && !done(id) && p.stages && p.stages.notes) return `${t('stagesW')} 1/2`; // stage «Ноты» passed, no chorus in tempo yet
     if (it.kind === 'lick' && !done(id) && p.stages) { const n = ['rhythm', 'notes'].filter((s) => p.stages[s]).length; return n ? `${t('stagesW')} ${n}/3` : ''; }
     if (it.kind === 'melody' && !done(id)) { const [n, total] = melPhrases(id); return p.echo ? t('melEchoMeta').replace('{n}', n).replace('{m}', total) : ''; }
     if (it.kind === 'perform' && p.runs) return `${p.runs} ${plural(p.runs, 'perfRecs')} · ${t('perfBest')} ${p.bestPct || 0}%`;

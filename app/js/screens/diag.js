@@ -7,6 +7,7 @@
 // No pass, no review: the item is "done" after the first check-up and comes back to "Today" after `every` days.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, updateEx, markActive, idle, latencyMs, setLatencyMs } from '../store.js';
 import { suggestLatency } from '../timing.js';
@@ -52,8 +53,9 @@ function compare(m, now, ref) {
 
 export function renderDiag(root, { track, itemId, item, back }) {
   const settings = { names: 'en', pianoSnd: true, ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
-  const nmOct = (m) => noteName(midiToName(m), names) + (Math.floor(m / 12) - 1);
+  const names = nameMode(settings, 'text'); // prompts and feedback name the note; 'off' → letters
+  const namesS = nameMode(settings, 'short');
+  const nmOct = (m) => noteName(midiToName(m), namesS) + (Math.floor(m / 12) - 1);
   const st = { phase: 'idle', part: 0, k: -1, locked: true, log: [], target: null, last: null, wrong: 0, replayed: false, t0: 0, errors: 0, chord: null, clicks: [], lastTap: -1e9 };
   const R = {}; // results of this run
   const timers = new Set();
@@ -88,7 +90,7 @@ export function renderDiag(root, { track, itemId, item, back }) {
   const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   audio.preloadPiano(LO, HI);
-  const kb = createKeyboard(kbEl, [LO, HI - 2], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.6, 0.55); input(m); } });
+  const kb = createKeyboard(kbEl, [LO, HI - 2], { names: nameMode(settings, 'key'), onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.6, 0.55); input(m); } });
   function play1(m, time, dur, v) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) return; }
     audio.pianoNote(m, time, dur, v);

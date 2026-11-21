@@ -7,6 +7,7 @@
 // steps numbered, answer green) and the next question comes after a visible countdown, or after a reveal on Next.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, getLang } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { noteName } from '../music/notes.js';
@@ -21,7 +22,7 @@ const NEXT_MS = 2000, SHAPE_GAP_MS = 3500;
 export function renderEarRel(root, { track, itemId, item, back }) {
   const game = item.game, level = item.level || 1;
   const settings = { names: 'en', pianoSnd: true, ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'short'); // part of a chord name («C maj»): 'both' → letters
   const N = item.rounds || 12, passAcc = (item.pass && item.pass.acc) || 0.8;
   const opts = G.optionsOf(game, level);
   const hasKeys = game === 'interval' || game === 'quality'; // these can be answered on the keys

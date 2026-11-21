@@ -6,6 +6,7 @@
 // a performance is a result, not an exercise. The last 10 recordings live in store 'recordings'.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { store, updateEx, markActive, idle } from '../store.js';
 import { noteName, midiToName, toMidi } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -23,7 +24,7 @@ const r3 = (x) => Math.round(x * 1000) / 1000;
 
 export function renderPerform(root, { track, itemId, item, form, pattern, licks, ending, endItem, melody, melItem, back }) {
   const settings = { names: 'en', pianoSnd: true, perfBeat: 'drums', ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'short'); // the hand summary: 'both' → letters
   const bars = form.bars, NB = bars.length;
   const chords = [...new Set(bars.flatMap(barChords))]; // distinct chords (a bar may hold two: "C7 A7")
   const lhBars = patternBars(pattern, bars); // in form order: a voice-led pattern follows the previous bar
@@ -95,7 +96,7 @@ export function renderPerform(root, { track, itemId, item, form, pattern, licks,
   // ---------- keyboard: pressed keys only ----------
   const lo = Math.min(...lhMidi, ...rhMidi, ...endMidi), hi = Math.max(...lhMidi, ...rhMidi, ...endMidi);
   audio.preloadPiano(lo - 3, hi + 7);
-  const kb = createKeyboard(kbEl, [lo, hi + 5], { names: settings.names, onPress: (m) => {
+  const kb = createKeyboard(kbEl, [lo, hi + 5], { names: nameMode(settings, 'key'), onPress: (m) => {
     audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); markActive();
     if (!midiOn()) record(m, 0.6, audio.toAudioTime(performance.now()), TAP_DUR); // with a piano, MIDI is the one source
   } });

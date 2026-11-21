@@ -121,7 +121,9 @@ function layout(ex, names, fam) {
 /**
  * @param svg  <svg> element to draw into
  * @param ex   normalized exercise
- * @param opts {names: 'en'|'ru'|'off', onPick(i)}
+ * @param opts {names: 'en'|'ru'|'off', onPick(i), staves: 't' (treble only) | 'b' (bass only) | 'both' (both, cropped tight);
+ *              default: the full grand staff}
+ *              One staff: the viewBox is cropped to it, its barlines stop at its own lines, the other staff is not drawn.
  */
 export function createStaff(svg, ex, opts = {}) {
   const per = ex.per;
@@ -129,18 +131,23 @@ export function createStaff(svg, ex, opts = {}) {
   const fam = (typeof getComputedStyle === 'function' && getComputedStyle(svg).getPropertyValue('--body').trim()) || 'sans-serif';
   const { P, barX } = layout(ex, names, fam), xOf = P;
   const W = barX[ex.bars.length] + 6;
-  let o = `<rect class="band" x="0" y="4" width="26" height="${SV.H - 8}" rx="6"/>`;
-  ['t', 'b'].forEach((st) => { for (let k = 0; k < 5; k++) { const y = STF[st].top + k * 12; o += `<line class="ln" x1="10" x2="${W - 6}" y1="${y}" y2="${y}"/>`; } });
-  o += `<line class="bl" x1="10" x2="10" y1="${SV.tTop}" y2="${SV.bTop + 48}"/>`;
+  const one = opts.staves === 't' || opts.staves === 'b' ? opts.staves : null; // one staff only (form screen)
+  const shown = one ? [one] : ['t', 'b'];
+  // viewBox y, height; staves 'both' given explicitly (form screen, no fingers drawn) drops the finger room above the treble
+  const crop = one === 't' ? [14, 164] : one === 'b' ? [178, 146] : opts.staves === 'both' ? [14, 310] : [0, SV.H];
+  const yTop = one ? STF[one].top : SV.tTop, yBot = one ? STF[one].top + 48 : SV.bTop + 48; // barline ends
+  let o = `<rect class="band" x="0" y="${crop[0] + 4}" width="26" height="${crop[1] - 8}" rx="6"/>`;
+  shown.forEach((st) => { for (let k = 0; k < 5; k++) { const y = STF[st].top + k * 12; o += `<line class="ln" x1="10" x2="${W - 6}" y1="${y}" y2="${y}"/>`; } });
+  o += `<line class="bl" x1="10" x2="10" y1="${yTop}" y2="${yBot}"/>`;
   for (let b = 1; b <= ex.bars.length; b++) {
     const x = barX[b];
     o += b < ex.bars.length
-      ? `<line class="bl" x1="${x}" x2="${x}" y1="${SV.tTop}" y2="${SV.bTop + 48}"/>`
-      : `<line class="bl" x1="${x - 6}" x2="${x - 6}" y1="${SV.tTop}" y2="${SV.bTop + 48}"/><rect class="ink" x="${x - 3}" y="${SV.tTop}" width="4" height="${SV.bTop + 48 - SV.tTop}"/>`;
+      ? `<line class="bl" x1="${x}" x2="${x}" y1="${yTop}" y2="${yBot}"/>`
+      : `<line class="bl" x1="${x - 6}" x2="${x - 6}" y1="${yTop}" y2="${yBot}"/><rect class="ink" x="${x - 3}" y="${yTop}" width="4" height="${yBot - yTop}"/>`;
   }
-  o += `<text class="clef" x="14" y="${SV.tTop + 37}" font-size="48">\u{1D11E}</text>`;
-  o += `<text class="clef" x="14" y="${SV.bTop + 25}" font-size="44">\u{1D122}</text>`;
-  ['t', 'b'].forEach((st) => { o += `<text class="ts" x="52" y="${STF[st].top + 21}">${ex.beats}</text><text class="ts" x="52" y="${STF[st].top + 45}">4</text>`; });
+  if (shown.includes('t')) o += `<text class="clef" x="14" y="${SV.tTop + 37}" font-size="48">\u{1D11E}</text>`;
+  if (shown.includes('b')) o += `<text class="clef" x="14" y="${SV.bTop + 25}" font-size="44">\u{1D122}</text>`;
+  shown.forEach((st) => { o += `<text class="ts" x="52" y="${STF[st].top + 21}">${ex.beats}</text><text class="ts" x="52" y="${STF[st].top + 45}">4</text>`; });
   ex.dyn.forEach((d, k) => {
     const x = P(d.bar, 0) - 8, y = 186;
     if (d.cresc) {
@@ -150,7 +157,7 @@ export function createStaff(svg, ex, opts = {}) {
     } else o += `<text class="dy" x="${x}" y="${y}">${d.mark}</text>`;
   });
   ex.bars.forEach((bar, bi) => {
-    [['rh', 't', 'r'], ['lh', 'b', 'l']].forEach(([h, st, hc]) => {
+    [['rh', 't', 'r'], ['lh', 'b', 'l']].filter(([, st]) => shown.includes(st)).forEach(([h, st, hc]) => {
       const evs = bar[h];
       restsFor(evs, per).forEach((r) => { o += restSVG(r.d === 4 ? (P(bi, r.t) + P(bi, r.t + 3)) / 2 : r.d === 2 ? (P(bi, r.t) + P(bi, r.t + 1)) / 2 : P(bi, r.t), st, r.d); });
       const groups = [];
@@ -210,7 +217,7 @@ export function createStaff(svg, ex, opts = {}) {
     });
   });
   o += '<g class="ghost" style="opacity:0"></g>';
-  svg.setAttribute('viewBox', `0 0 ${W} ${SV.H}`);
+  svg.setAttribute('viewBox', `0 ${crop[0]} ${W} ${crop[1]}`);
   svg.innerHTML = o;
   const band = svg.querySelector('.band'), ghostEl = svg.querySelector('.ghost');
   if (opts.onPick) svg.querySelectorAll('.nt').forEach((g) => g.addEventListener('click', () => opts.onPick(+g.dataset.i)));

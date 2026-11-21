@@ -1,6 +1,7 @@
 // Exercise screen: stages Rhythm (tap the rhythm on one key) → Notes (wait mode) → In tempo → By heart.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { nameMode, storedMode } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { buildSteps, dynAt, midiRange } from '../music/exercise.js';
@@ -49,7 +50,7 @@ export function renderExercise(root, { ex, rerender }) {
     h('div.pop', null,
       h('div.popsec', null, check(t('metronome'), 'met'), check(t('countIn'), 'count'), check(t('loopOn'), 'loop'), check(t('gapBar'), 'gap'), check(t('pianoSound'), 'pianoSnd'), check(t('guideSound'), 'guideSnd')),
       h('div.popsec', null, h('span.pophead', null, t('noteNames')),
-        seg([['en', 'C D E'], ['ru', 'До Ре'], ['off', t('namesOff')]], settings.names, (v) => { settings.names = v; saveSettings(); kb.setNames(v); buildStaff(); render(st.step); })),
+        seg([['en', 'C D E'], ['ru', 'До Ре'], ['both', 'C (До)'], ['off', t('namesOff')]], storedMode(settings), (v) => { settings.names = v; saveSettings(); kb.setNames(nameMode(settings, 'key')); buildStaff(); render(st.step); })),
       h('div.popsec', null, h('span.pophead', null, t('sylSystem')),
         seg(SYL_KEYS.map((k) => [k, t('syl_' + k)]), settings.syl, (v) => { settings.syl = v; saveSettings(); rs.resyl(); })),
       h('div.popsec', null,
@@ -144,11 +145,11 @@ export function renderExercise(root, { ex, rerender }) {
 
   // ---------- engines ----------
   let staff;
-  function buildStaff() { staff = createStaff(svgEl, ex, { names: settings.names, onPick: (i) => goto(i) }); }
+  function buildStaff() { staff = createStaff(svgEl, ex, { names: nameMode(settings, 'key'), onPick: (i) => goto(i) }); }
   buildStaff();
   audio.preloadPiano(...midiRange(ex));
   const kb = createKeyboard(kbEl, midiRange(ex), {
-    names: settings.names,
+    names: nameMode(settings, 'key'),
     onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.6, 0.55); staff.ghost(m); if (!midiOn()) handleNote(m, performance.now()); }
   });
 
@@ -379,7 +380,7 @@ export function renderExercise(root, { ex, rerender }) {
     if (!expectedAt(st.step).size && !toPlayable()) return;
     const need = expectedAt(st.step);
     if (!need.has(m) && graceAt(st.step).has(m)) { kb.flash(m, 'ok'); return; }
-    if (!need.has(m)) { waitSt.bad++; waitSt.stepBad = true; waitSt.clean = false; kb.flash(m, 'bad'); showWaitFb(`${t('wrongNote')}: ${noteName(midiToName(m), settings.names === 'ru' ? 'ru' : 'en')}`); return; }
+    if (!need.has(m)) { waitSt.bad++; waitSt.stepBad = true; waitSt.clean = false; kb.flash(m, 'bad'); showWaitFb(`${t('wrongNote')}: ${noteName(midiToName(m), nameMode(settings, 'text'))}`); return; }
     waitGot.add(m); kb.flash(m, 'ok');
     if (![...need].every((x) => waitGot.has(x))) { showWaitFb(); return; }
     waitSt.ok++; staff.mark(st.step, waitSt.stepBad ? 'bad' : 'ok'); waitSt.stepBad = false; waitGot.clear();

@@ -100,3 +100,75 @@ export function barSummary(evs, nameOf) {
   (evs || []).slice().sort((a, b) => a.t - b.t || a.m - b.m).forEach((e) => { const n = nameOf(e); if (!seen.has(n)) { seen.add(n); out.push(n); } });
   return out;
 }
+
+/**
+ * The staff window of the form screen: bars k, k + 1, … (n bars, wrapping round the form) as a raw jazzlab-exercise/1
+ * object for createStaff (call normalize() on it). hands = { rh: perBar | null, lh: perBar | null } — the same per-bar notes
+ * the strip and the keyboard show ({t, d, m, f?, stac?}); a hand that is null stays empty. spellOf(hand, bar, e) = the note's
+ * spelled name with octave ('Eb4'). Notes starting on one slot of one hand become one event (a chord, low to high, a pitch
+ * once); its length is the longest of them, cut at the bar line. No fingers (they are on the strip and the keys).
+ */
+export function staffBars(hands, k, spellOf, n = 2) {
+  const NB = (hands.rh || hands.lh || []).length;
+  const bars = [];
+  for (let j = 0; j < Math.min(n, Math.max(NB, 1)); j++) {
+    const bar = NB ? (k + j) % NB : 0, out = { rh: [], lh: [] };
+    for (const hd of ['rh', 'lh']) {
+      const evs = (hands[hd] && hands[hd][bar]) || [], at = new Map();
+      evs.forEach((e) => { if (e.t >= 0 && e.t < PER) (at.get(e.t) || at.set(e.t, []).get(e.t)).push(e); });
+      out[hd] = [...at.keys()].sort((a, b) => a - b).map((t) => {
+        const es = at.get(t).slice().sort((a, b) => a.m - b.m), seen = new Set();
+        const uniq = es.filter((e) => (seen.has(e.m) ? false : seen.add(e.m)));
+        return { t, d: Math.max(1, Math.min(PER - t, Math.max(...es.map((e) => e.d || 1)))), n: uniq.map((e) => spellOf(hd, bar, e)), f: [], stac: es.every((e) => !!e.stac) };
+      });
+    }
+    bars.push(out);
+  }
+  return { $format: 'jazzlab-exercise/1', id: 'form-staff', time: [4, 4], dyn: [], bars };
+}
+
+// ---------- stage «Ноты»: the form walked event by event, no tempo ----------
+// An event = all your notes at one eighth slot of one bar (both hands together). The walk follows keyPlan from doneG (the
+// last event done, -1 before the first) and ends after the last event of the form: positions of the next chorus do not count.
+
+/** The event to press after doneG, as keyPlan returns it ({ g, bar, slot, target, tint }), or null at the end of the form. */
+export function walkTarget(hands, doneG) {
+  const NB = (hands.rh || hands.lh || []).length;
+  const p = keyPlan(hands, doneG);
+  return p && p.g < NB * PER ? p : null;
+}
+
+/** The keys of an event (target = { rh: [m], lh: [m] }), low to high, a pitch once. */
+export const eventKeys = (target) => [...new Set([...(target.rh || []), ...(target.lh || [])])].sort((a, b) => a - b);
+
+/** The key nearest to m among keys (a tie goes to the lower one); null for none. */
+export function nearestKey(keys, m) {
+  let best = null;
+  keys.forEach((k) => { if (best === null || Math.abs(k - m) < Math.abs(best - m)) best = k; });
+  return best;
+}
+
+/**
+ * One key pressed in the walk: keys = the event's keys, got = the ones already pressed (in any order), m = the key.
+ * → { res: 'hit' (one more of a chord) | 'done' (the event is complete) | 'again' (already pressed: ignored) | 'wrong',
+ *     got: the pressed keys after it, missing: the keys still to press, toward: for 'wrong', the missing key nearest to m }
+ */
+export function walkPress(keys, got, m) {
+  if (!keys.includes(m)) {
+    const missing = keys.filter((k) => !got.includes(k));
+    return { res: 'wrong', got: got.slice(), missing, toward: nearestKey(missing, m) };
+  }
+  if (got.includes(m)) return { res: 'again', got: got.slice(), missing: keys.filter((k) => !got.includes(k)), toward: null };
+  const g2 = [...got, m], missing = keys.filter((k) => !g2.includes(k));
+  return { res: missing.length ? 'hit' : 'done', got: g2, missing, toward: null };
+}
+
+/** The stage is passed when one whole form is walked with at most maxSlips wrong keys (the allowance of a clean chorus). */
+export const walkPassed = (slips, maxSlips) => slips <= maxSlips;
+
+/** The stage to open: a due review → 'tempo'; else the last one chosen for the item; else the first not passed. */
+export function openStage({ due, saved, prog }) {
+  if (due) return 'tempo';
+  if (saved === 'notes' || saved === 'tempo') return saved;
+  return prog.notes ? 'tempo' : 'notes';
+}
