@@ -18,7 +18,7 @@ export function sessionChip(currentId) {
   if (!nx) {
     const s = session(linkTrack);
     if (!s || !s.ids.length || s.ids[s.ids.length - 1] !== currentId) return null;
-    const home = !linkTrack || linkTrack === 'blues' ? '#/' : `#/track/${linkTrack}`;
+    const home = linkTrack ? `#/track/${linkTrack}` : '#/';
     // the label sits outside .sn/.st, which a phone hides
     return h('a.chip.session.finish', { href: home, title: t('endSession'), onclick: () => endSession(linkTrack) }, h('b', null, t('sessionFinish')));
   }
@@ -116,10 +116,10 @@ export function langSwitch(onChange) {
   return wrap;
 }
 
-/** Top-level sections: course / chords / reference. */
+/** Top-level sections: the course (chapters, `#/`) and free play (`#/play`: jam, riffs, chords, reference). */
 export function navTabs(active) {
   const a = (id, href, label) => h('a', { href, 'aria-current': id === active ? 'page' : null }, label);
-  return h('nav.seg.big.navtabs', { 'aria-label': t('sections') }, a('course', '#/', t('navCourse')), a('chords', '#/chords', t('navChords')), a('wiki', '#/wiki', t('wikiTab')));
+  return h('nav.seg.big.navtabs', { 'aria-label': t('sections') }, a('course', '#/', t('navCourse')), a('play', '#/play', t('navPlay')));
 }
 
 /** Phone layout: the keyboard panel / tap pad stick right above the footer, so CSS needs the footer height (--foot-h). */

@@ -1,4 +1,4 @@
-// Course screen: steps of the course, today's card, progress.
+// Riffs screen (#/riffs, under «Играть»): steps of the book course, today's card, progress.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { t, L } from '../i18n.js';
 import { markTerms } from '../glossary.js';
@@ -9,7 +9,7 @@ const fmtTime = (sec) => {
   return m < 60 ? `${m} ${t('min')}` : `${Math.floor(m / 60)}${t('h')} ${m % 60}${t('min')}`;
 };
 
-export async function renderCourse(root, { course, index, rerender }) {
+export async function renderCourse(root, { course, rerender }) {
   const prog = progress();
   const avail = new Set(course.available);
   const exDone = (id) => isDone(prog[id]);
@@ -26,17 +26,10 @@ export async function renderCourse(root, { course, index, rerender }) {
   const header = h('header.top', null,
     h('div.brand', { role: 'img', 'aria-label': 'Jazzlab' },
       h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
-    navTabs('course'),
+    navTabs('play'), // the riffs live in «Играть»: free play, no chapter
     h('div.grow'),
     midiChip(), langSwitch(rerender),
     h('a.iconbtn.helpbtn', { href: '#/help', 'aria-label': t('helpTitle'), title: t('helpTitle'), html: ICON.help }), themeButton());
-
-  const tabs = h('div.seg.big', { role: 'tablist', 'aria-label': t('courses') },
-    ...index.courses.map((c) => h(c.ready ? 'a' : 'button', {
-      href: c.ready ? (c.id === course.id ? '#/riffs' : c.kind === 'course' ? '#/riffs' : c.id === 'blues' ? '#/' : `#/track/${c.id}`) : null,
-      type: c.ready ? null : 'button', role: 'tab', 'aria-selected': String(c.id === course.id), disabled: !c.ready,
-      title: c.ready ? null : t('soon')
-    }, L(c.title), c.ready ? null : h('small', null, ' · ' + t('soon')))));
 
   const card = (s) => {
     const items = s.items.map((id) => (exDone(id) ? 'ok' : prog[id] ? 'meh' : 'none'));
@@ -77,7 +70,7 @@ export async function renderCourse(root, { course, index, rerender }) {
     header,
     h('main.course', null,
       h('div.coursemain', null,
-        h('div.row', null, h('h1', null, t('courses')), h('div.grow'), tabs),
+        h('div.row', null, h('h1', null, t('riffs'))),
         h('p.muted', null, markTerms(L(course.about))),
         h('div.stepgrid', null, ...course.steps.map(card))),
       h('aside.courseside', null, todayCard, stats, tip)));

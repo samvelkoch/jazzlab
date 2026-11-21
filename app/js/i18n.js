@@ -314,7 +314,16 @@ const DICT = {
     pStart: 'Начать', pContinue: 'Продолжить', pNext: 'Дальше: «{t}»', pFirstReview: 'Сначала повторить: «{t}»', pFirstDiag: 'Сначала замер: «{t}»',
     pDoneOf: 'Сделано {x} из {y}', pAllDone: 'путь пройден', pStepAria: 'Ступень {k} из {n}', pOf: '{k} из {n}',
     pExW: 'упражнение|упражнения|упражнений', pOpenAnyway: 'Всё равно открыть', pWhy: 'Зачем', pConcert: 'Концерт',
-    pPassed: 'сдано', pReview: 'повторить', pJam: 'Играть для удовольствия: аккомпанемент'
+    pPassed: 'сдано', pReview: 'повторить', pJam: 'Играть для удовольствия',
+    // chapters of the course on the «Путь» list
+    pChapterOf: 'глава {k} из {n}', pChapter: 'Глава {k}', pChapDone: 'пройдена',
+    pChapAfter: 'откроется после ступени {n}', pChapAfterOf: 'откроется после ступени {n} {g}',
+    pGen_blues: 'блюза', pGen_bossa: 'боссы', pGen_std: 'стандартов',
+    // «Играть» (play.js): free play, no passing and no order
+    navPlay: 'Играть', playCap: 'Играть для удовольствия', playLead: 'Здесь нет зачёта и порядка. Играй что хочешь.',
+    playJam: 'Аккомпанемент', playJamLine: 'Лёгкий бэнд играет форму, ты играешь правой что хочешь.',
+    playRiffsLine: '{n} {w}: простучи и сыграй.', playRhythmW: 'короткий ритм|коротких ритма|коротких ритмов',
+    playChordsLine: 'Что значит C7 или Dm7b5 и как взять его рукой.', playWikiLine: 'Короткие заметки о блюзе, боссе и пьесах.'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -622,7 +631,16 @@ const DICT = {
     pStart: 'Start', pContinue: 'Continue', pNext: 'Next: «{t}»', pFirstReview: 'First a review: «{t}»', pFirstDiag: 'First a check-up: «{t}»',
     pDoneOf: 'Done {x} of {y}', pAllDone: 'path complete', pStepAria: 'Step {k} of {n}', pOf: '{k} of {n}',
     pExW: 'exercise|exercises', pOpenAnyway: 'Open anyway', pWhy: 'Why', pConcert: 'Concert',
-    pPassed: 'passed', pReview: 'review', pJam: 'Play for fun: accompaniment'
+    pPassed: 'passed', pReview: 'review', pJam: 'Play for fun',
+    // chapters of the course on the «Path» list
+    pChapterOf: 'chapter {k} of {n}', pChapter: 'Chapter {k}', pChapDone: 'complete',
+    pChapAfter: 'opens after step {n}', pChapAfterOf: 'opens after step {n} of {g}',
+    pGen_blues: 'Blues', pGen_bossa: 'Bossa nova', pGen_std: 'Standards',
+    // «Play» (play.js): free play, no passing and no order
+    navPlay: 'Play', playCap: 'Play for fun', playLead: 'No tests and no order here. Play what you like.',
+    playJam: 'Accompaniment', playJamLine: 'A light band plays the form, you play anything with your right hand.',
+    playRiffsLine: '{n} {w}: tap them, then play.', playRhythmW: 'short rhythm|short rhythms',
+    playChordsLine: 'What C7 or Dm7b5 means and how your hand takes it.', playWikiLine: 'Short notes on blues, bossa and tunes.'
   }
 };
 

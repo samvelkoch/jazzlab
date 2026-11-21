@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
-import { stepsOf, stepProgress, stepDone, currentStepIndex, pathComplete, concertOf, pathProgress, unlockedOf, withUnlocked, stepLocked, firstSentence } from '../app/js/path.js';
+import { stepsOf, stepProgress, stepDone, currentStepIndex, pathComplete, concertOf, pathProgress, unlockedOf, withUnlocked, stepLocked, firstSentence, chaptersOf, chapterOpen, unlockedChaptersOf, withUnlockedChapter, homeChapter } from '../app/js/path.js';
 import { learningOrder } from '../app/js/queue.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -84,3 +84,45 @@ assert.equal(firstSentence('Ноты: C, E, G. А потом? Нет.'), 'Нот
 assert.equal(firstSentence('Готово! «Ещё» раз.'), 'Готово!');
 assert.equal(firstSentence(''), '');
 console.log('ok: path (steps in every track, helpers)');
+
+// ---- chapters: content/index.json `chapter` 1..N unique, `opensAfter` names a chapter track with enough steps ----
+const index = read('content/index.json');
+const chaps = chaptersOf(index);
+assert.deepEqual(chaps.map((c) => c.chapter), chaps.map((_, i) => i + 1), 'chapters are 1..N, unique');
+assert.deepEqual(chaps.map((c) => c.id), ['blues', 'bossa', 'std'], 'blues → bossa → standards');
+for (const c of chaps) {
+  assert.equal(c.kind, 'track', `${c.id}: a chapter is a track`);
+  if (!c.opensAfter) { assert.equal(c.chapter, 1, `${c.id}: only the first chapter has no rule`); continue; }
+  const prev = chaps.find((x) => x.id === c.opensAfter.track);
+  assert.ok(prev, `${c.id}: opensAfter.track ${c.opensAfter.track} is a chapter`);
+  assert.equal(prev.chapter, c.chapter - 1, `${c.id}: opens after the previous chapter`);
+  assert.ok(Number.isInteger(c.opensAfter.step) && c.opensAfter.step >= 1, `${c.id}: opensAfter.step is a step number`);
+  assert.ok(read(`content/tracks/${prev.id}.json`).steps.length >= c.opensAfter.step, `${c.id}: ${prev.id} has ${c.opensAfter.step}+ steps`);
+}
+assert.ok(!index.courses.find((c) => c.id === 'jazz-rhythms').chapter, 'the riffs course is not a chapter');
+
+// chapterOpen: the rule (steps 1..N of the previous chapter done), progress in it, opened anyway
+const rule = { track: 'x', step: 2 };
+assert.equal(chapterOpen(null, null, doneOf()), true, 'no rule: open');
+assert.equal(chapterOpen(rule, steps, doneOf()), false, 'fresh: closed');
+assert.equal(chapterOpen(rule, steps, doneOf('a', 'b', 'c', 'd')), false, 'step 2 not finished');
+assert.equal(chapterOpen(rule, steps, doneOf('a', 'b', 'c', 'd', 'e')), true, 'steps 1..2 done');
+assert.equal(chapterOpen(rule, steps, doneOf('d', 'e')), false, 'step 2 alone is not enough');
+assert.equal(chapterOpen(rule, steps, doneOf(), true), true, 'progress in the chapter keeps it open');
+assert.equal(chapterOpen(rule, steps, doneOf(), false, true), true, 'opened anyway');
+assert.equal(chapterOpen(rule, undefined, doneOf()), true, 'previous steps unknown: never lock');
+assert.equal(chapterOpen({ track: 'x', step: 5 }, steps, doneOf('a', 'b', 'c', 'd', 'e', 'f', 'g')), false, 'fewer steps than the rule: closed');
+
+// settings.unlockedChapters and settings.chapter
+assert.deepEqual(unlockedChaptersOf({}), []);
+assert.deepEqual(unlockedChaptersOf({ unlockedChapters: 'bossa' }), []);
+const c0 = { budget: 20, chapter: 'blues' };
+const c1 = withUnlockedChapter(c0, 'bossa');
+assert.deepEqual(c1, { budget: 20, chapter: 'blues', unlockedChapters: ['bossa'] });
+assert.deepEqual(c0, { budget: 20, chapter: 'blues' }, 'input unchanged');
+assert.deepEqual(withUnlockedChapter(c1, 'bossa'), c1, 'adding twice keeps one');
+assert.equal(homeChapter({}, chaps), 'blues');
+assert.equal(homeChapter({ chapter: 'bossa' }, chaps), 'bossa');
+assert.equal(homeChapter({ chapter: 'jazz-rhythms' }, chaps), 'blues', 'not a chapter: the first one');
+assert.equal(homeChapter(null, chaps), 'blues');
+console.log('ok: chapters');

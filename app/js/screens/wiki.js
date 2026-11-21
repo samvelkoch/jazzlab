@@ -51,7 +51,7 @@ function figure(img, cls) {
 function header(rerender) {
   return h('header.top', null,
     h('div.brand', { role: 'img', 'aria-label': 'Jazzlab' }, h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
-    navTabs('wiki'), h('div.grow'), midiChip(), langSwitch(rerender), themeButton());
+    navTabs('play'), h('div.grow'), midiChip(), langSwitch(rerender), themeButton());
 }
 
 export async function renderWikiIndex(root, { rerender }) {
