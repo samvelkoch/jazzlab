@@ -12,8 +12,13 @@
 // its voice-led chords (compBars), both yours and both scored.
 // A clean chorus allows max(1, round(notes per chorus / 40)) slips (misses + wrong notes): 1 for root-and-fifth
 // (24 or 48 notes) and the licks, 2 for the boogie (96 eighths per chorus), so denser patterns are not stricter.
+// Screen: while stopped a task block says what to play and how it is passed; the «Now / Next» strip shows the bar that
+// sounds with its notes under the eight eighth slots (one row per hand that is yours) and the next bar; the keyboard shows
+// the hand position of a bar ahead of time: every key of the bar tinted with its finger, the next note strong
+// (music/formview.js keyPlan). The next note moves on when it is hit or its window passes; after the last note of a bar
+// the keyboard already shows the next bar with notes, while the strip follows the bar that sounds.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
-import { t, L } from '../i18n.js';
+import { t, L, plural } from '../i18n.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews, logDay } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
@@ -24,6 +29,7 @@ import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
 import { decorateFunctions } from '../fnlabels.js';
 import { createTally, chorusBarAt } from '../music/tally.js';
+import { taskMode, phraseStarts, fmtBars, keyPlan, stripRow, barSummary } from '../music/formview.js';
 
 const PER = 8;
 const CLEAN_TO_PASS = 3; // clean choruses in a row
@@ -80,12 +86,69 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   });
   const grid = h('div.fgrid' + (NB > 16 ? '.long' : ''), null, ...cells);
   decorateFunctions(cells, bars); // ii · V · I under the chords, a bracket over each ii–V–I
-  // a long form scrolls inside its grid: keep the current bar visible
-  const keepInView = (k) => { const c = cells[k]; if (NB <= 16 || !c) return; if (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, c.offsetTop - 8); };
+  // a long form (or 16 bars on a short screen while playing) scrolls inside its grid: keep the current bar visible
+  const keepInView = (k) => { const c = cells[k]; if (!c || grid.scrollHeight <= grid.clientHeight + 1) return; if (c.offsetTop < grid.scrollTop || c.offsetTop + c.offsetHeight > grid.scrollTop + grid.clientHeight) grid.scrollTop = Math.max(0, c.offsetTop - 8); };
+  // ---------- task block (while stopped) ----------
+  const fill = (s, v) => s.replace(/\{(\w+)\}/g, (m, k) => (v[k] !== undefined ? v[k] : m));
+  const tm = taskMode({ rh, two, comp, mel, kl, pair });
+  const roleOf = (k) => (!pair ? null : lickAt(k).role === 'question' || lickAt(k).role === 'answer' ? lickAt(k).role : (k / 2) % 2 === 0 ? 'question' : 'answer');
+  const starts = rh && !comp && !mel && !kl ? phraseStarts(rhNotes, roleOf) : null;
+  const kBars = kPairs.filter((p) => p.bars.some((b) => (rhNotes[b] || []).length)).map((p) => `${p.bars[0] + 1}–${p.bars[1] + 1}`);
+  const partVars = { bars: tm.mode === 'key' || tm.sub === 'key' ? fmtBars(kBars) : starts ? fmtBars(starts.all) : '', q: starts ? fmtBars(starts.q) : '', a: starts ? fmtBars(starts.a) : '' };
+  const PART = { lick: 'Lick', qa: 'Qa', key: 'Key', mel: 'Mel' };
+  const headline = tm.mode === 'lh' ? t('fvLh') : tm.mode === 'comp' ? t('fvComp')
+    : tm.mode === 'both' ? fill(t('fvBoth'), { rh: fill(t('fvBoth' + PART[tm.sub]), partVars) }) : fill(t('fv' + PART[tm.mode] + (tm.mode === 'key' && kl.length > 1 ? 'Qa' : '')), partVars);
+  const ownAbout = L(item.about || form.about);
+  const abouts = (tm.mode === 'lh' || tm.mode === 'both' || tm.mode === 'comp' ? [L(pattern.about)] : []).concat(ownAbout && ownAbout !== L(pattern.about) ? [ownAbout] : []).filter(Boolean);
+  const taskEl = h('div.fvtask', null,
+    h('div.fvgoal', null, h('span.fvlabel', null, t('fvTask')), h('h3', null, headline), ...abouts.map((a) => h('p', null, markTerms(a)))),
+    h('div.fvrules', null,
+      h('p', null, h('b', null, fill(t('fvPass'), { n: CLEAN_TO_PASS, c: plural(CLEAN_TO_PASS, 'fvChorusW'), s: `${maxSlips} ${plural(maxSlips, 'fvPassSlips')}` }))),
+      h('p', null, t('fvLook'))));
+
+  // ---------- now / next strip ----------
+  const flats = !!form.flats;
+  const lhName = (k) => (e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || barChords(bars[k])[0]), flats), names);
+  const rhName = (e) => noteName(e.name || midiToName(e.m), names);
+  const handRows = [rh ? 'rh' : null, !rh || two ? 'lh' : null].filter(Boolean); // the hands that are yours, right above left
+  const notesOf = (hd, k) => (hd === 'rh' ? rhNotes[k] : lhNotes[k]) || [];
+  const nameFor = (hd, k) => (hd === 'rh' ? rhName : lhName(k));
+  const nowLabel = h('span.fvlabel'), nowChord = h('b.fvchord'), countEl = h('b.fvcount', { 'aria-hidden': 'true' });
+  const slotHeads = Array.from({ length: PER }, (_, s) => h('span' + (s % 2 ? '.and' : ''), null, s % 2 ? t('fvAnd') : String(s / 2 + 1)));
+  const rowEls = handRows.map((hd) => h('div.fvrow.fv-' + hd));
+  const nowCard = h('div.fvnow', null,
+    h('div.fvhead', null, nowLabel, nowChord, countEl),
+    h('div.fvbeats', null, h('div.fvrow.fvslots', null, ...slotHeads), ...rowEls));
+  const nextLabel = h('span.fvlabel', null, t('fvNext')), nextChord = h('b.fvchord'), nextNotes = h('span.fvnotes');
+  const nextCard = h('div.fvnext', null, nextLabel, nextChord, nextNotes);
+  const strip = h('div.fvstrip', null, nowCard, nextCard);
+  let nowBar = -1, nowFirst = false; // nowFirst: the stopped / count-in view of bar 1
+  function renderNow(k, first = false) {
+    nowBar = k; nowFirst = first;
+    nowLabel.textContent = `${t('fvNow')} · ${first ? t('fvFirst') : `${t('fvBar')} ${k + 1}`}`;
+    nowChord.textContent = bars[k];
+    handRows.forEach((hd, i) => {
+      const row = stripRow(notesOf(hd, k), nameFor(hd, k));
+      if (!row.some((c) => c && !c.hold)) { rowEls[i].replaceChildren(h('span.fvrest', null, t('fvRest') + (hd === 'rh' && !two ? ' · ' + t('fvListenLh') : ''))); return; }
+      rowEls[i].replaceChildren(...row.map((c) => (!c ? h('span') : c.hold ? h('span.hold') : h('span.on' + (c.names.length > 2 ? '.many' : ''), null,
+        ...c.names.map((n, j) => h('b', null, n, c.f[j] ? h('sup', null, String(c.f[j])) : null))))));
+    });
+    paintSlot(-1);
+  }
+  function renderNext(k) {
+    const nb = (k + 1) % NB;
+    nextChord.textContent = bars[nb];
+    const evs = handRows.flatMap((hd) => notesOf(hd, nb).map((e) => ({ t: e.t, m: e.m, n: nameFor(hd, nb)(e) })));
+    const list = barSummary(evs, (e) => e.n);
+    nextNotes.textContent = list.length ? list.join(' · ') : t('fvRest');
+  }
+  function paintSlot(slot) { [slotHeads, ...rowEls.map((r) => [...r.children])].forEach((cs) => cs.forEach((c, s) => c.classList.toggle('cur', s === slot))); }
+  function showFirst() { renderNow(0, true); renderNext(0); countEl.textContent = ''; }
+
   const panel = h('section.panel.formpanel', null,
     h('div.staffhead', null, chorusEl, streakEl, h('div.grow'), fbEl),
-    grid,
-    h('p.muted.dabout', null, markTerms(L(item.about || form.about))));
+    taskEl, strip,
+    grid);
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
   const bpmOut = h('output.bpm');
@@ -98,7 +161,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => (st.playing ? stop() : play()) });
   const footer = h('footer.actions', null, h('div.footsegs', null, modeSeg, form.style === 'bossa' ? null : swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
-  const screen = h('div.exscreen.formscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
+  const screen = h('div.exscreen.formscreen.fvscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
   const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
@@ -116,13 +179,29 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const lhLo = rh ? Math.min(...lhNotes.flat().map((e) => e.m)) : lo;
   audio.preloadPiano(Math.min(lo, lhLo) - 3, hi + 7);
   const kb = createKeyboard(kbEl, [lo, hi + 5], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
-  const handKey = rh ? 'rh' : 'lh';
-  const evAt = (src, bar, slot) => { const e = src[bar].filter((x) => x.t === slot); return e.length ? { notes: e.map((x) => x.name || midiToName(x.m)), f: e.map((x) => x.f), sug: false, acc: false } : null; };
-  const nextEv = (src, bar, slot) => { for (let k = 1; k <= PER * NB; k++) { const g = bar * PER + slot + k, b = Math.floor(g / PER) % NB, s = g % PER; const e = evAt(src, b, s); if (e) return e; } return null; };
-  function showKeys(bar, slot) {
-    if (two) kb.show({ rh: evAt(rhNotes, bar, slot), lh: evAt(lhNotes, bar, slot) }, { rh: nextEv(rhNotes, bar, slot), lh: nextEv(lhNotes, bar, slot) }, 'both');
-    else kb.show({ rh: null, lh: null, [handKey]: evAt(barNotes, bar, slot) }, { rh: null, lh: null, [handKey]: nextEv(barNotes, bar, slot) }, 'both');
+  // hand position ahead of time: doneG = the last event position that is over (hit or its window passed), -1 = none yet;
+  // the target is the first of your events after it, the keyboard shows the target's bar (formview.keyPlan)
+  const yours = { rh: rh ? rhNotes : null, lh: !rh || two ? lhNotes : null };
+  let doneG = -1, planG = null;
+  const slotTimes = new Map(); // event position -> its audio time, once scheduled
+  function paintKeys() {
+    const p = keyPlan(yours, doneG), key = p ? p.g : -1;
+    if (key === planG) return;
+    planG = key;
+    if (p) kb.plan(p.tint, p.target); else kb.plan({}, {});
   }
+  function syncKeys(now) {
+    const { win } = tols();
+    for (;;) {
+      const p = keyPlan(yours, doneG); if (!p) break;
+      const tm0 = slotTimes.get(p.g); if (tm0 === undefined) break; // not scheduled yet
+      const over = st.mode === 'play' ? !exp.some((x) => x.g === p.g && !x.hit && now <= x.t + win) : now > tm0 + 0.15;
+      if (!over) break;
+      doneG = p.g; slotTimes.delete(p.g);
+    }
+    paintKeys();
+  }
+  function resetKeys() { doneG = -1; slotTimes.clear(); paintKeys(); }
 
   function play1(m, time, dur, v) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) return; }
@@ -146,12 +225,14 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   function play() {
     if (!audio.ensureAudio() || st.playing) return;
     st.playing = true; screen.classList.add('playing'); paintPrimary();
+    panel.scrollTop = 0; if (window.matchMedia('(max-width: 640px)').matches) strip.scrollIntoView({ block: 'nearest' });
     st.streak = 0; st.choruses = 0; paintStreak();
     cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad', 'cur'));
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
     for (let k = 0; k < 4; k++) { audio.click(t0 + k * beat, k === 0); queue.push({ t: t0 + k * beat, ci: k + 1 }); }
     t0 += 4 * beat; beatTime = t0; g = 0; run = { t0, beat, swing: st.swing };
     exp = []; tally = createTally(NB);
+    resetKeys(); showFirst();
     timer = setInterval(schedule, 25); schedule(); raf = requestAnimationFrame(tick);
   }
   function schedule() {
@@ -167,8 +248,9 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
       evs.forEach((e) => {
         const dur = e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9;
         if (guideOn()) play1(e.m, time, dur, 0.45);
-        if (st.mode === 'play') exp.push({ t: time, m: e.m, bar, chorus, hit: false });
+        if (st.mode === 'play') exp.push({ t: time, m: e.m, bar, chorus, hit: false, g });
       });
+      if (evs.length) slotTimes.set(g, time);
       if (slot === 0) queue.push({ t: time, barStart: bar, chorus });
       if (slot === PER - 1) queue.push({ t: time + beat + 0.3, barEnd: bar, chorus, end: beatTime + beat });
       queue.push({ t: time, g });
@@ -184,12 +266,16 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   function tick() {
     const now = audio.now();
     if (st.mode === 'play') expire(now);
-    while (queue.length && queue[0].t <= now) {
-      const q = queue.shift();
-      if (q.ci !== undefined) { fb(`${t('countInLabel')}: <b>${q.ci}</b>`); continue; }
-      if (q.barStart !== undefined) { cells.forEach((c, k) => c.classList.toggle('cur', k === q.barStart)); keepInView(q.barStart); if (q.barStart === 0) { cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad')); } continue; }
+    syncKeys(now);
+    // every item that is due, in time order: a bar's judging (one beat + 0.3 s after its end) must not hold back the next bar's slots
+    const due = [];
+    if (queue.length) queue = queue.filter((q) => (q.t <= now ? (due.push(q), false) : true));
+    due.sort((a, b) => a.t - b.t);
+    for (const q of due) {
+      if (q.ci !== undefined) { fb(`${t('countInLabel')}: <b>${q.ci}</b>`); countEl.textContent = String(q.ci); continue; }
+      if (q.barStart !== undefined) { cells.forEach((c, k) => c.classList.toggle('cur', k === q.barStart)); cells[q.barStart].classList.remove('ok', 'meh', 'bad'); keepInView(q.barStart); if (q.barStart === 0) { cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad')); } continue; }
       if (q.barEnd !== undefined) { finishBar(q.barEnd, q.chorus); continue; }
-      if (q.g !== undefined) { const slot = q.g % PER, bar = Math.floor(q.g / PER) % NB; showKeys(bar, slot); const beats = cells[bar].querySelectorAll('.fbeats i'); beats.forEach((i, b) => i.classList.toggle('on', b <= slot >> 1)); if (slot === 0) cells.forEach((c, k) => { if (k !== bar) c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); }); markActive(); }
+      if (q.g !== undefined) { const slot = q.g % PER, bar = Math.floor(q.g / PER) % NB; if (bar !== nowBar || nowFirst) { renderNow(bar); renderNext(bar); countEl.textContent = ''; } paintSlot(slot); const beats = cells[bar].querySelectorAll('.fbeats i'); beats.forEach((i, b) => i.classList.toggle('on', b <= slot >> 1)); if (slot === 0) cells.forEach((c, k) => { if (k !== bar) c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); }); markActive(); }
     }
     raf = requestAnimationFrame(tick);
   }
@@ -214,6 +300,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     screen.classList.remove('playing');
     if (was) { audio.hush(); silence(); }
     cells.forEach((c) => { c.classList.remove('cur'); c.querySelectorAll('.fbeats i').forEach((i) => i.classList.remove('on')); });
+    resetKeys(); showFirst();
     idle(); paintPrimary();
   }
 
@@ -232,6 +319,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';
     tally.add(best.chorus, best.bar, cls);
+    syncKeys(audio.now());
     kb.flash(m, cls);
     fb(cls === 'ok' ? `<span class="ok">${t('even')}</span>` : `<span class="meh">${dt < 0 ? t('early') : t('late')} ${Math.round(Math.abs(dt) * 1000)} ${t('ms')}</span>`);
   }
@@ -270,7 +358,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const onKey = (e) => { if (e.code === 'Space' && !e.target.closest('input,select,textarea,summary')) { e.preventDefault(); if (st.playing) stop(); else play(); } };
   document.addEventListener('keydown', onKey);
 
-  setBpm(st.bpm); paintPrimary(); paintHint(); paintStreak(); showKeys(0, 0);
+  setBpm(st.bpm); paintPrimary(); paintHint(); paintStreak(); paintKeys(); showFirst();
   const saved = exProgress(itemId);
   fb(saved.cleanChoruses ? `${t('fSoFar')}: ${saved.cleanChoruses} ${t('fCleanOf')} ${saved.choruses}` : t('fStart').replace('{n}', NB));
   updateEx(itemId, (p) => p);

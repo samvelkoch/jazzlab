@@ -628,6 +628,103 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .fgrid.long .fchord { font-size: clamp(16px, 2.6dvh, 22px); }
 .formscreen .kb { height: clamp(110px, 22dvh, 190px); }
 
+/* ---------- form screen (form.js only, .fvscreen): task block, «Now / Next» strip, the keys of a bar ahead of time ---------- */
+.fvscreen .formpanel { gap: 8px; }
+@media (min-width: 641px) { .fvscreen .formpanel { overflow-y: auto; } } /* stopped on a short desktop pane the task block may push the grid: the panel scrolls */
+.fvtask { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 8px 24px; }
+.fvscreen.playing .fvtask { display: none; }
+.fvlabel { font-size: 13px; font-weight: 700; color: var(--muted); }
+.fvgoal { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.fvgoal h3 { margin: 0; font: 700 19px/1.25 var(--display); }
+.fvgoal p, .fvrules p { margin: 0; font-size: 14px; line-height: 1.45; }
+.fvrules { align-self: start; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px; border-radius: 12px; background: var(--sub); }
+.fvstrip { flex: none; display: flex; gap: 10px; align-items: stretch; }
+.fvnow { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 14px; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--accent); background: var(--panel); }
+.fvhead { flex: none; min-width: 112px; max-width: 220px; display: grid; grid-template-columns: auto auto; grid-template-areas: "label count" "chord count"; justify-content: start; align-items: center; gap: 2px 12px; }
+.fvhead .fvlabel { grid-area: label; } .fvhead .fvchord { grid-area: chord; } .fvhead .fvcount { grid-area: count; }
+.fvchord { font: 700 28px/1.1 var(--display); white-space: nowrap; }
+.fvcount { font: 700 34px/1 var(--display); color: var(--accent); }
+.fvcount:empty { display: none; }
+.fvbeats { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.fvrow { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 3px; }
+.fvrow > span { min-width: 0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.fvslots > span { font: 700 14px/1.6 var(--display); color: var(--muted); }
+.fvslots > span.and { font-size: 11px; font-weight: 600; opacity: .75; }
+.fvslots > span.cur { background: var(--fg); color: var(--bg); opacity: 1; }
+.fv-rh, .fv-lh { min-height: 32px; }
+.fv-rh { color: var(--rh); } .fv-lh { color: var(--lh); }
+.fvrow > span.on { padding: 2px 0; }
+.fv-rh > span.on { background: var(--rh-soft); } .fv-lh > span.on { background: var(--lh-soft); }
+.fv-rh > span.on.cur { background: var(--rh); color: var(--on); } .fv-lh > span.on.cur { background: var(--lh); color: var(--on); }
+.fvrow > span.on b { font: 700 15px/1.15 var(--display); white-space: nowrap; }
+.fvrow > span.on.many b { font-size: 13px; line-height: 1.05; } /* a three-note chord stays short */
+.fvrow sup { font-size: 10px; font-weight: 700; margin-left: 1px; opacity: .85; }
+.fvrow > span.hold::before { content: ""; width: 100%; height: 3px; border-radius: 2px; background: currentColor; opacity: .3; }
+.fvrest { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--muted); }
+.fvnext { flex: 0 0 168px; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 8px 12px; border-radius: 14px; border: 2px dashed var(--line); }
+.fvnext .fvchord { font-size: 20px; }
+.fvnotes { font-size: 13px; font-weight: 700; color: var(--muted); }
+.fvscreen .fgrid:not(.long) { flex: 1 0 auto; }
+.fvscreen .fgrid.long { min-height: 110px; }
+/* keyboard plan (keyboard.js plan): the bar's keys soft with a small finger badge, the keys to press next strong */
+.key.pl-r { background: var(--rh-soft); } .key.pl-l { background: var(--lh-soft); }
+.black.pl-r { background: color-mix(in srgb, var(--rh) 50%, var(--ebony)); } .black.pl-l { background: color-mix(in srgb, var(--lh) 50%, var(--ebony)); }
+.key.pl-r .badge:not(:empty), .key.pl-l .badge:not(:empty) { display: flex; width: 24px; height: 24px; font-size: 13px; }
+.key.pl-r .badge { background: var(--rh); } .key.pl-l .badge { background: var(--lh); }
+.key.tg-r { background: var(--rh); } .key.tg-l { background: var(--lh); }
+.key.tg-r .lbl, .key.tg-l .lbl { color: var(--on); }
+.key.tg-r .badge:not(:empty), .key.tg-l .badge:not(:empty) { width: 30px; height: 30px; font-size: 15px; background: var(--on); }
+.key.tg-r .badge { color: var(--rh); } .key.tg-l .badge { color: var(--lh); }
+.black.tg-r { box-shadow: 0 0 0 2px var(--bg), 0 0 0 5px var(--rh); } .black.tg-l { box-shadow: 0 0 0 2px var(--bg), 0 0 0 5px var(--lh); }
+.white.tg-r, .white.tg-l { box-shadow: inset 0 -6px 0 var(--fg); }
+@media (max-width: 900px) { .fvtask { grid-template-columns: minmax(0, 1fr); } }
+/* desktop while playing: the grid may scroll inside (16 bars with both hands on a short pane), the current bar kept in view */
+@media (min-width: 641px) {
+  .fvscreen.playing .fgrid { position: relative; overflow-y: auto; }
+  .fvscreen.playing .fgrid:not(.long) { flex: 1 1 0; min-height: 0; }
+}
+/* desktop while playing: the strip shows the notes, so the grid cells lose their notes line and get shorter (stopped, the grid
+   keeps it as the map of the form) */
+@media (min-width: 641px) {
+  .fvscreen.playing .fgrid .fnotes { display: none; }
+  .fvscreen.playing .fgrid { grid-auto-rows: minmax(max(46px, calc(29px + 2.6dvh)), 1fr); gap: 5px; }
+  .fvscreen.playing .fcell { padding-top: 4px; padding-bottom: 12px; justify-content: flex-start; }
+  .fvscreen.playing .fcell[data-fn-on] { padding-top: 14px; }
+  .fvscreen.playing .fchord { font-size: clamp(16px, 2.6dvh, 30px); line-height: 1; }
+  .fvscreen.playing .fbeats { bottom: 4px; }
+  .fvscreen.playing .fgrid.long { grid-auto-rows: minmax(44px, 1fr); }
+  .fvscreen.playing .fgrid.long .fcell[data-fn-on] { padding-top: 12px; }
+  .fvscreen.playing .fgrid.long .fchord { font-size: 15px; }
+}
+/* a short desktop pane (800×600): smaller keyboard; while playing the footer keeps the tempo and Stop on one line */
+@media (max-height: 700px) and (min-width: 641px) {
+  .fvscreen .kb { height: clamp(90px, 17dvh, 190px); }
+  .fvscreen .kbpanel { padding-top: 8px; padding-bottom: 8px; }
+  .fvscreen.playing .footsegs, .fvscreen.playing .foothint { display: none; }
+  .fvscreen.playing footer.actions { padding-top: 8px; padding-bottom: 8px; }
+  .fvscreen .staffhead { min-height: 28px; }
+  .fvnow, .fvnext { padding-top: 5px; padding-bottom: 5px; }
+  .fvslots > span { line-height: 1.35; }
+  .fv-rh, .fv-lh { min-height: 28px; }
+}
+@media (max-width: 640px) {
+  .fvstrip { flex-direction: column; gap: 6px; }
+  .fvscreen.playing .fvstrip { position: sticky; top: 0; z-index: 3; background: var(--panel); }
+  .fvnow { flex-direction: column; align-items: stretch; gap: 6px; padding: 6px 8px; }
+  .fvhead { min-width: 0; max-width: none; grid-template-columns: auto auto 1fr; grid-template-areas: "label chord count"; align-items: baseline; gap: 10px; }
+  .fvhead .fvcount { justify-self: end; }
+  .fvchord { font-size: 24px; }
+  .fvcount { font-size: 26px; }
+  .fvscreen .formpanel { padding-left: 12px; padding-right: 12px; }
+  .fvrow { gap: 2px; }
+  .fvrow > span.on { overflow: hidden; }
+  .fvrow > span.on b { font: 700 12px/1.15 var(--body); letter-spacing: -0.02em; max-width: 100%; overflow: hidden; }
+  .fvrow sup { display: none; } /* a phone column is ~35 px: the fingers stay on the keys' badges */
+  .fvnext { flex: none; flex-direction: row; align-items: baseline; gap: 8px; padding: 4px 10px; }
+  .fvnext .fvchord { font-size: 16px; }
+  .fvnotes { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
 /* ---------- harmonic function labels (fnlabels.js): quiet, muted; a ii–V–I gets a coloured top edge and its name ---------- */
 .ffn { position: absolute; top: 4px; left: 30px; right: 10px; display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; pointer-events: none; }
 .fnroles { display: inline-flex; gap: 8px; align-items: center; }
