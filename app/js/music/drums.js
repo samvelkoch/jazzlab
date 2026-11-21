@@ -7,12 +7,14 @@
 //   rim click on the bossa clave over two bars (3-2): bar A slots 0, 3, 6; bar B slots 2, 5
 //   (= 16th-grid positions 1, 4, 7 | 11, 14 of the clave written in 2/4; the son clave would put the last stroke on slot 4).
 // bar = the 0-based bar index from the start of the run; its parity picks bar A (even) or bar B (odd) of the clave.
-import * as audio from './audio.js';
+// gain = multiplies every velocity (default 1; the accompaniment screen's background volume).
+import * as audioMod from './audio.js';
 
 export const BOSSA_KICK = [0, 3, 4, 7];
 export const BOSSA_CLAVE = [[0, 3, 6], [2, 5]];
 
-export function groove(slot, time, { swing = false, style = null, bar = 0 } = {}) {
+export function groove(slot, time, { swing = false, style = null, bar = 0, gain = 1 } = {}) {
+  const audio = gain === 1 ? audioMod : { drum: (kind, t, vel) => audioMod.drum(kind, t, vel * gain) };
   const beatN = slot >> 1, off = slot % 2 === 1;
   if (style === 'bossa') {
     audio.drum('shaker', time, off ? 0.4 : 0.55);

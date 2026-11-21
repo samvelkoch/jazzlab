@@ -186,10 +186,14 @@ export async function renderTrack(root, { model, index, rerender }) {
     fact.hidden = false;
   }).catch(() => {});
 
+  // accompaniment: free play over the track's first form (the screen's back button returns here)
+  const jamForm = Object.values(track.items).map((it) => it.form || (it.solo && model.solos[it.solo] && model.solos[it.solo].form) || (it.melody && model.melodies[it.melody] && model.melodies[it.melody].form)).find(Boolean);
+  const jamCard = h('section.panel.tip.jamcard', null, h('b', null, t('jamTitle')), h('p', null, t('jamCardAbout')),
+    h('a.sklink', { href: jamForm ? `#/jam/${jamForm}` : '#/jam', onclick: () => { try { sessionStorage.setItem('jamBack', location.hash || '#/'); } catch (e) { /* no storage: back goes home */ } } }, `${t('jamCardGo')} →`));
   root.replaceChildren(header,
     h('main.course', null,
       h('div.coursemain', null,
         h('div.row', null, h('h1', null, L(track.title)), h('div.grow'), tabs),
         ...track.sections.map(section)),
-      h('aside.courseside', null, todayCard, skills, stats, historyPanel(), goal, fact, dataPanel())));
+      h('aside.courseside', null, todayCard, jamCard, skills, stats, historyPanel(), goal, fact, dataPanel())));
 }

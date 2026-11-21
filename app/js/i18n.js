@@ -300,6 +300,14 @@ const DICT = {
     dataBad_json: 'Это не JSON-файл. Ничего не изменено.', dataBad_format: 'Это не файл прогресса Jazzlab. Ничего не изменено.',
     dataBad_data: 'Файл повреждён: нет данных. Ничего не изменено.', dataFail: 'Не удалось записать данные: ничего не изменено.',
     dataNoStorage: 'Хранилище браузера недоступно (приватный режим?).'
+    // accompaniment (jam.js): free play over a light band
+    , jamTitle: 'Аккомпанемент', jamKicker: 'СВОБОДНАЯ ИГРА', jamStyle: 'Стиль', jamForm: 'Форма', jamTempo: 'Темп',
+    jamVol: 'Громкость фона', jamVolDown: 'Тише', jamVolUp: 'Громче', jamVariety: 'Разнообразие', jamVarLow: 'мало', jamVarHigh: 'много',
+    jamMode: 'Подсветка', jamModeChords: 'по аккордам', jamModeSimple: 'одна гамма', jamNoSimple: 'Для этой формы только по аккордам',
+    jamNoChange: 'аккорд не меняется', jamThisBar: 'в этом такте', jamInBars: 'через {n} {w}', jamBarsW: 'такт|такта|тактов',
+    jamHint: 'Выбери стиль и нажми «Старт». Играй правой рукой что хочешь: подсвечены ноты, которые звучат сейчас.',
+    jamHintPlay: 'Здесь нет ошибок. «Дом» звучит как конец фразы, «висит» просит продолжения.',
+    jamCardAbout: 'Лёгкий фон: бас, аккорды, барабаны. Ты играешь правой рукой что хочешь, без задания и оценки.', jamCardGo: 'Играть с фоном'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -593,6 +601,14 @@ const DICT = {
     dataBad_json: 'This is not a JSON file. Nothing was changed.', dataBad_format: 'This is not a Jazzlab progress file. Nothing was changed.',
     dataBad_data: 'The file is damaged: no data. Nothing was changed.', dataFail: 'Could not write the data: nothing was changed.',
     dataNoStorage: 'Browser storage is not available (private mode?).'
+    // accompaniment (jam.js): free play over a light band
+    , jamTitle: 'Accompaniment', jamKicker: 'FREE PLAY', jamStyle: 'Style', jamForm: 'Form', jamTempo: 'Tempo',
+    jamVol: 'Band volume', jamVolDown: 'Softer', jamVolUp: 'Louder', jamVariety: 'Variety', jamVarLow: 'little', jamVarHigh: 'a lot',
+    jamMode: 'Keys', jamModeChords: 'by chord', jamModeSimple: 'one scale', jamNoSimple: 'This form has only the by-chord view',
+    jamNoChange: 'the chord stays', jamThisBar: 'in this bar', jamInBars: 'in {n} {w}', jamBarsW: 'bar|bars',
+    jamHint: 'Pick a style and press Start. Play anything with your right hand: the lit keys are the notes that sound now.',
+    jamHintPlay: 'There are no mistakes here. «Home» sounds like the end of a phrase, «hangs» asks for more.',
+    jamCardAbout: 'A light band: bass, chords, drums. You play anything with your right hand, no task and no score.', jamCardGo: 'Play with the band'
   }
 };
 

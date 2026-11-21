@@ -1,0 +1,104 @@
+{
+  "$format": "jazzlab-jam/1",
+  "forms": ["blues-c", "blues-c-ta", "tinroof-c", "blue-bossa", "corcovado-c", "ipanema-f", "wave-d", "std-f", "aim-f", "bbb-g", "hsr-f", "sgb-f", "tft-f"],
+  "simple": {
+    "blues-c": { "palette": { "mode": "scale", "scale": "blues", "root": "C" } },
+    "blues-c-ta": { "palette": { "mode": "scale", "scale": "blues", "root": "C" } },
+    "tinroof-c": { "palette": { "mode": "scale", "scale": "blues", "root": "C" } },
+    "blue-bossa": { "palette": { "mode": "scales", "parts": [
+      { "bars": [0, 7], "scale": "aeolian", "root": "C" },
+      { "bars": [8, 11], "scale": "major", "root": "Db" },
+      { "bars": [12, 15], "scale": "aeolian", "root": "C" }
+    ] } },
+    "std-f": { "palette": { "mode": "scales", "parts": [
+      { "bars": [0, 15], "scale": "major", "root": "F" },
+      { "bars": [16, 23], "scale": "major", "root": "Bb" },
+      { "bars": [24, 31], "scale": "major", "root": "F" }
+    ] } }
+  },
+  "styles": [
+    {
+      "id": "slow-blues",
+      "title": { "ru": "Медленный блюз", "en": "Slow blues" },
+      "tempo": 60, "swing": true, "drums": "swing", "drumGain": 0.9, "walk": false,
+      "bass": [
+        { "id": "p1", "level": 1, "pattern": "p1" },
+        { "id": "octave", "level": 1, "events": [{ "t": 0, "d": 4, "deg": 0 }, { "t": 4, "d": 4, "deg": 12 }] },
+        { "id": "p1q", "level": 2, "pattern": "p1q" }
+      ],
+      "comp": [
+        { "id": "long", "level": 1, "events": [{ "t": 0, "d": 4 }] },
+        { "id": "two-four", "level": 2, "events": [{ "t": 2, "d": 2 }, { "t": 6, "d": 2 }] },
+        { "id": "and-two", "level": 2, "events": [{ "t": 3, "d": 2 }, { "t": 6, "d": 2 }] },
+        { "id": "rest", "level": 3, "events": [] }
+      ]
+    },
+    {
+      "id": "swing",
+      "title": { "ru": "Свинг", "en": "Swing" },
+      "tempo": 92, "swing": true, "drums": "swing", "drumGain": 0.9, "walk": true,
+      "bass": [],
+      "comp": [
+        { "id": "charleston", "level": 1, "events": [{ "t": 0, "d": 2 }, { "t": 3, "d": 1 }] },
+        { "id": "two-four", "level": 1, "events": [{ "t": 2, "d": 1 }, { "t": 6, "d": 1 }] },
+        { "id": "and-two", "level": 2, "events": [{ "t": 3, "d": 2 }] },
+        { "id": "rest", "level": 3, "events": [] }
+      ]
+    },
+    {
+      "id": "boogie",
+      "title": { "ru": "Буги", "en": "Boogie" },
+      "tempo": 96, "swing": true, "drums": "swing", "drumGain": 1, "walk": false,
+      "bass": [
+        { "id": "p2", "level": 1, "pattern": "p2" },
+        { "id": "up", "level": 1, "events": [
+          { "t": 0, "d": 1, "deg": 0 }, { "t": 1, "d": 1, "deg": 4 }, { "t": 2, "d": 1, "deg": 7 }, { "t": 3, "d": 1, "deg": 9 },
+          { "t": 4, "d": 1, "deg": 0 }, { "t": 5, "d": 1, "deg": 4 }, { "t": 6, "d": 1, "deg": 7 }, { "t": 7, "d": 1, "deg": 9 }
+        ] },
+        { "id": "octave", "level": 2, "events": [
+          { "t": 0, "d": 1, "deg": 0 }, { "t": 1, "d": 1, "deg": 4 }, { "t": 2, "d": 1, "deg": 7 }, { "t": 3, "d": 1, "deg": 9 },
+          { "t": 4, "d": 1, "deg": 12 }, { "t": 5, "d": 1, "deg": 9 }, { "t": 6, "d": 1, "deg": 7 }, { "t": 7, "d": 1, "deg": 4 }
+        ] },
+        { "id": "quarters", "level": 2, "events": [
+          { "t": 0, "d": 2, "deg": 0, "stac": true }, { "t": 2, "d": 2, "deg": 7, "stac": true }, { "t": 4, "d": 2, "deg": 9, "stac": true }, { "t": 6, "d": 2, "deg": 7, "stac": true }
+        ] }
+      ],
+      "comp": [
+        { "id": "and-two", "level": 1, "events": [{ "t": 3, "d": 1 }] },
+        { "id": "rest", "level": 1, "events": [] },
+        { "id": "two-four", "level": 2, "events": [{ "t": 2, "d": 1 }, { "t": 6, "d": 1 }] },
+        { "id": "push", "level": 3, "events": [{ "t": 7, "d": 1 }] }
+      ]
+    },
+    {
+      "id": "bossa",
+      "title": { "ru": "Босса", "en": "Bossa" },
+      "tempo": 96, "swing": false, "drums": "bossa", "drumGain": 0.9, "walk": false,
+      "bass": [
+        { "id": "b1", "level": 1, "pattern": "b1" },
+        { "id": "b2", "level": 2, "pattern": "b2" },
+        { "id": "pickup", "level": 3, "events": [{ "t": 0, "d": 3, "deg": 0 }, { "t": 3, "d": 1, "deg": 7 }, { "t": 4, "d": 3, "deg": 0 }, { "t": 7, "d": 1, "deg": 7 }] }
+      ],
+      "comp": [
+        { "id": "c1", "level": 1, "events": [{ "t": 0, "d": 3 }, { "t": 3, "d": 3 }] },
+        { "id": "c2", "level": 2, "events": [{ "t": 2, "d": 3 }, { "t": 5, "d": 3 }] },
+        { "id": "c3", "level": 2, "bars": 2, "events": [{ "t": 0, "d": 3, "bar": 0 }, { "t": 3, "d": 3, "bar": 0 }, { "t": 6, "d": 2, "bar": 0 }, { "t": 2, "d": 3, "bar": 1 }, { "t": 5, "d": 3, "bar": 1 }] }
+      ]
+    },
+    {
+      "id": "ballad",
+      "title": { "ru": "Баллада", "en": "Ballad" },
+      "tempo": 60, "swing": false, "drums": "straight", "drumGain": 0.45, "walk": false,
+      "bass": [
+        { "id": "halves", "level": 1, "events": [{ "t": 0, "d": 4, "deg": 0 }, { "t": 4, "d": 4, "deg": 0 }] },
+        { "id": "whole", "level": 1, "events": [{ "t": 0, "d": 8, "deg": 0 }] },
+        { "id": "p1", "level": 2, "pattern": "p1" }
+      ],
+      "comp": [
+        { "id": "long", "level": 1, "events": [{ "t": 0, "d": 8 }] },
+        { "id": "arp", "level": 2, "events": [{ "t": 0, "d": 8, "note": 0 }, { "t": 3, "d": 5, "note": 1 }] },
+        { "id": "halves", "level": 2, "events": [{ "t": 0, "d": 4 }, { "t": 4, "d": 4 }] }
+      ]
+    }
+  ]
+}
