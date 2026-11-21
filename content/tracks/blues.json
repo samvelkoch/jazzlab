@@ -21,7 +21,7 @@
       "words": [
         { "term": "bar", "before": "pat-p1", "word": { "ru": "Такт", "en": "Bar" }, "text": { "ru": "Четыре счёта: раз, два, три, четыре. Блюз идёт такт за тактом.", "en": "Four counts: one, two, three, four. The blues goes bar by bar." }, "keys": [] },
         { "term": "chord", "before": "pat-p1", "word": { "ru": "Аккорд", "en": "Chord" }, "text": { "ru": "Несколько клавиш вместе. В блюзе три аккорда: C7, F7 и G7.", "en": "Several keys together. The blues has three chords: C7, F7 and G7." }, "keys": [["C3", "E3", "G3", "Bb3"]], "covers": ["seventh-chord"] },
-        { "term": "chorus", "before": "form-p1", "word": { "ru": "Круг", "en": "Chorus" }, "text": { "ru": "Все 12 тактов от начала до конца. Потом они идут снова, по кругу.", "en": "All 12 bars from start to end. Then they come again, round and round." }, "keys": [], "covers": ["form"] }
+        { "term": "chorus", "before": "form-p1", "word": { "ru": "Круг", "en": "Round" }, "text": { "ru": "Все 12 тактов от начала до конца. Потом они идут снова, по кругу.", "en": "All 12 bars from start to end. Then they come again, round and round." }, "keys": [], "covers": ["form"] }
       ] },
     { "id": "s2", "title": { "ru": "Первая фраза", "en": "The first phrase" },
       "goal": { "ru": "После этой ступени ты правой отвечаешь пианино и играешь первое своё соло.", "en": "After this step your right hand answers the piano and you play your first solo." },
@@ -227,7 +227,7 @@
     "form-p1": {
       "kind": "form", "form": "blues-c", "pattern": "p1",
       "title": { "ru": "Блюз левой рукой", "en": "The blues with the left hand" },
-      "does": { "ru": "Левая играет те же две клавиши все 12 тактов, под барабаны.", "en": "The left plays the same two keys all 12 bars, over drums." },
+      "does": { "ru": "Левая играет по две клавиши на такт все 12 тактов, под барабаны.", "en": "The left plays two keys a bar all 12 bars, over drums." },
       "about": { "ru": "Двенадцать тактов, три аккорда, и всё сначала. Левая держит ровный ход, барабаны помогают не сбиться.", "en": "Twelve bars, three chords, and round again. The left keeps a steady motion, the drums help you stay on track." }
     },
     "form-p1q": {
@@ -319,13 +319,13 @@
     "lick-l2": {
       "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1", "step": 3,
       "title": { "ru": "Вопрос: сверху вниз", "en": "Question: top to bottom" },
-      "does": { "ru": "Правая: от мизинца вниз, фраза не доходит до C и повисает.", "en": "Right: down from the little finger, stopping short of C, and it hangs." },
+      "does": { "ru": "Правая: от мизинца вниз, домой не доходит и повисает на G.", "en": "Right: down from the little finger, it does not get home and hangs on G." },
       "about": { "ru": "Сверху вниз от мизинца, по пути задевает чёрную клавишу. До C не доходит, поэтому просит ответа.", "en": "Down from the little finger, brushing a black key on the way. It does not reach C, so it asks for an answer." }
     },
     "lick-l3": {
       "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1", "step": 3,
       "title": { "ru": "Ответ: три удара", "en": "Answer: three hits" },
-      "does": { "ru": "Правая: одна клавиша три раза, потом вниз на C.", "en": "Right: one key three times, then down to C." }
+      "does": { "ru": "Правая: одна клавиша три раза, шаг вверх, потом вниз на C.", "en": "Right: one key three times, a step up, then down to C." }
     },
     "qa-l1": {
       "kind": "qa", "lick": "l1", "licks": ["l5", "l8", "l2", "l7", "l3", "l4", "l6"], "step": 1, "form": "blues-c",
@@ -459,7 +459,7 @@
     "lick-l7": {
       "kind": "lick", "lick": "l7", "form": "blues-c", "pattern": "p1", "step": 6,
       "title": { "ru": "Вопрос: с септимы вниз", "en": "Question: down from the seventh" },
-      "does": { "ru": "Правая: с чёрной под мизинцем вниз на чёрную под пальцем 1. Повисает.", "en": "Right: from the black key under the little finger down to the black one under finger 1. It hangs." }
+      "does": { "ru": "Правая: с чёрной под мизинцем вниз на чёрную под пальцем 1. Повисает.", "en": "Right: from the black key under finger 5 down to the black one under finger 1." }
     },
     "form-rh-l4": {
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l4",
