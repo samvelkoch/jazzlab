@@ -45,7 +45,7 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
   };
   const bpmOf = () => st.bpm[st.style.id] || st.style.tempo;
   const save = () => store.set('jam', { style: st.style.id, form: fid, vol: st.vol, variety: st.variety, mode: !simple && saved.mode === 'simple' ? 'simple' : st.mode, bpm: st.bpm }); // a form without a simple palette keeps the choice for the others
-  const back = (() => { try { return sessionStorage.getItem('jamBack') || '#/'; } catch (e) { return '#/'; } })();
+  const back = (() => { try { return sessionStorage.getItem('jamBack') || '#/play'; } catch (e) { return '#/play'; } })(); // free play: back to «Играть» unless a screen set jamBack
 
   // ---------- layout ----------
   const header = h('header.top', null,

@@ -150,7 +150,7 @@ export function renderChordsHub(root, { data, rerender }) {
 
   const head = h('header.top', null,
     h('div.brand', { role: 'img', 'aria-label': 'Jazzlab' }, h('span.brandname', { 'aria-hidden': 'true' }, 'jazz', h('span.key'), 'lab')),
-    navTabs('chords'), h('div.grow'), midiChip(), langSwitch(rerender), themeButton());
+    navTabs('play'), h('div.grow'), midiChip(), langSwitch(rerender), themeButton());
 
   const path = h('section.panel.cpath', null,
     h('div.row', null, h('h2', null, tr('path')), h('div.grow'), h('span.meta', null, tr('pathHint'))),

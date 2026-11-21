@@ -1,9 +1,11 @@
 // Track screen (the home screen) «Путь»: a yellow poster (where you are on the path + today's lesson with one button)
-// and, beside it, three tabs: the path cut into steps, every exercise by section, progress panels.
+// and, beside it, three tabs: the path cut into steps, every exercise by section, progress panels. The path tab lists
+// the course's chapters (blues → bossa → standards) as rows around the shown chapter's steps.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { diagFmt } from './diag.js';
 import { freshItems, learningOrder, budgetLimits, BUDGETS, DEFAULT_BUDGET } from '../queue.js';
-import { stepsOf, stepProgress, stepDone, stepLocked, currentStepIndex, pathComplete, pathProgress, concertOf, unlockedOf, withUnlocked, firstSentence } from '../path.js';
+import { stepsOf, stepProgress, stepDone, stepLocked, currentStepIndex, pathComplete, pathProgress, concertOf, unlockedOf, withUnlocked, firstSentence,
+  chaptersOf, chapterOpen, unlockedChaptersOf, withUnlockedChapter } from '../path.js';
 import { t, L, plural } from '../i18n.js';
 import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
@@ -18,10 +20,16 @@ const p2 = (n) => String(n).padStart(2, '0');
 const TABS = ['path', 'all', 'prog'];
 const tabOf = () => { try { const v = sessionStorage.getItem('homeTab'); return TABS.includes(v) ? v : 'path'; } catch (e) { return 'path'; } };
 const setTabOf = (v) => { try { sessionStorage.setItem('homeTab', v); } catch (e) { /* no storage: the default next time */ } };
-// the other tracks' raw JSON (item ids only), fetched once for the «due in other tracks» lines
+// the other tracks' raw JSON (steps, items), fetched once for the chapter rows and the «due in other tracks» lines
 const tracksBase = new URL('../../../content/tracks/', import.meta.url);
 const otherTracks = {};
 const trackJson = (id) => (otherTracks[id] = otherTracks[id] || fetch(new URL(`${id}.json`, tracksBase)).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }));
+
+/** The form the accompaniment opens for a track: the first item's form (directly, or through its solo / melody). */
+export const jamFormOf = (model) => Object.values(model.track.items).map((it) => it.form || (it.solo && model.solos[it.solo] && model.solos[it.solo].form) || (it.melody && model.melodies[it.melody] && model.melodies[it.melody].form)).find(Boolean) || null;
+
+/** A chapter's one-line pitch: the first sentence of its `about`, without a «Цель дорожки:» / «Goal:» lead-in. */
+const pitchOf = (about) => { const s = firstSentence(L(about)).replace(/^[^:.]{1,20}:\s*/, ''); return s.charAt(0).toUpperCase() + s.slice(1); };
 
 /** A check-up is due when there is none yet or the newest one is older than `item.every` days (default 30). */
 export function diagDue(item, now = new Date()) {
@@ -88,11 +96,23 @@ export async function renderTrack(root, { model, index, rerender }) {
     h('div.grow'), midiChip(), langSwitch(rerender),
     h('a.iconbtn.helpbtn', { href: '#/help', 'aria-label': t('helpTitle'), title: t('helpTitle'), html: ICON.help }), themeButton());
 
-  const courseTabs = h('div.seg.big.coursetabs', { role: 'tablist', 'aria-label': t('courses') },
-    ...index.courses.map((c) => h(c.ready ? 'a' : 'button', {
-      href: c.ready ? (c.id === 'blues' ? '#/' : c.kind === 'course' ? '#/riffs' : `#/track/${c.id}`) : null,
-      type: c.ready ? null : 'button', role: 'tab', 'aria-selected': String(c.id === track.id), disabled: !c.ready, title: c.ready ? null : t('soon')
-    }, L(c.title), c.ready ? null : h('small', null, ' · ' + t('soon')))));
+  // ---- chapters: each one's steps, progress and whether it is open (a chapter that cannot load counts as open) ----
+  const chapters = chaptersOf(index);
+  const raws = await Promise.all(chapters.map((c) => (c.id === track.id ? Promise.resolve(track) : trackJson(c.id).catch(() => null))));
+  const unlockedCh = unlockedChaptersOf(settings);
+  const chap = chapters.map((c, i) => {
+    const raw = raws[i];
+    if (!raw) return { c, raw: null };
+    const isCur = c.id === track.id;
+    const dn = isCur ? done : (id) => !!(raw.items && raw.items[id]) && itemDone(raw.items[id], prog[id]);
+    const st2 = isCur ? steps : stepsOf(raw).map((s) => ({ ...s, items: s.items.filter((id) => raw.items && raw.items[id]) }));
+    return { c, raw, done: dn, steps: st2, total: pathProgress(st2, dn), complete: pathComplete(st2, dn), progress: st2.some((s) => s.items.some(dn)) };
+  });
+  chap.forEach((x) => {
+    const rule = x.c.opensAfter, prev = rule ? chap.find((y) => y.c.id === rule.track) : null;
+    x.open = !x.raw || chapterOpen(rule, prev && prev.steps, prev ? prev.done : () => false, x.progress, unlockedCh.includes(x.c.id));
+  });
+  const curChap = chap.find((x) => x.c.id === track.id) || null;
 
   // ---- item state (one word) and the details line of the old cards ----
   const status = (id) => {
@@ -165,7 +185,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     const m = sd ? `✓ ${fill(t('pOf'), { k: pr.total, n: pr.total })}` : kind === 'lock' ? `${pr.total} ${plural(pr.total, 'pExW')}` : fill(t('pOf'), { k: pr.done, n: pr.total });
     const btn = h('button.pstephead', { type: 'button', 'aria-controls': bid },
       h('span.pstepnum', null, p2(k + 1)), h('span.ptitle2', null, stepTitle(s)), h('span.pmeta2', null, m));
-    const node = h('section.pstep', { 'data-kind': kind, 'aria-labelledby': bid + '-h' }, h('h2', { id: bid + '-h' }, btn), body);
+    const node = h('section.pstep', { 'data-kind': kind, 'aria-labelledby': bid + '-h' }, h('h3', { id: bid + '-h' }, btn), body);
     let built = false;
     const build = () => {
       if (built) return; built = true;
@@ -189,11 +209,37 @@ export async function renderTrack(root, { model, index, rerender }) {
     return node;
   };
 
-  // accompaniment: free play over the track's first form (the screen's back button returns here)
-  const jamForm = Object.values(track.items).map((it) => it.form || (it.solo && model.solos[it.solo] && model.solos[it.solo].form) || (it.melody && model.melodies[it.melody] && model.melodies[it.melody].form)).find(Boolean);
-  const jamRow = h('a.pjam', { href: jamForm ? `#/jam/${jamForm}` : '#/jam', onclick: () => { try { sessionStorage.setItem('jamBack', location.hash || '#/'); } catch (e) { /* no storage: back goes home */ } } }, `${t('pJam')} →`);
+  // ---- one chapter row: the shown one heads its steps; an open one is a link; a closed one opens a pitch + «open anyway» ----
+  const chapLabel = (c) => `${fill(t('pChapter'), { k: c.chapter })} · ${L(c.title)}`;
+  const chapMeta = (x) => (!x.raw ? '' : x.complete ? `✓ ${t('pChapDone')}` : fill(t('pOf'), { k: x.total.done, n: x.total.total }));
+  const chapRow = (x) => {
+    const { c } = x;
+    if (c.id === track.id) return h('h2.pchap', { 'data-kind': 'cur' }, h('span.pchapt', null, chapLabel(c)), h('span.pmeta2', null, chapMeta(x)));
+    if (x.open) return h('h2.pchap', { 'data-kind': 'open' }, h('a.pchapa', { href: `#/track/${c.id}` }, h('span.pchapt', null, chapLabel(c)), h('span.pmeta2', null, `${chapMeta(x)} →`)));
+    const rule = c.opensAfter, n = p2(rule.step);
+    const cap = rule.track === track.id ? fill(t('pChapAfter'), { n }) : fill(t('pChapAfterOf'), { n, g: t('pGen_' + rule.track) });
+    const bid = `chap-${c.id}`;
+    const body = h('div.pchapbody', { id: bid, hidden: true },
+      h('p.popen', null, pitchOf(x.raw.about), ' ',
+        h('button.plinkbtn', { type: 'button', onclick: () => {
+          store.set('settings', withUnlockedChapter(store.get('settings', {}), c.id));
+          location.hash = `#/track/${c.id}`;
+        } }, t('pOpenAnyway'))));
+    const btn = h('button.pchapa', { type: 'button', 'aria-expanded': 'false', 'aria-controls': bid, onclick: () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open)); body.hidden = !open;
+    } }, h('span.pchapt', null, chapLabel(c)), h('span.pmeta2', null, cap));
+    return h('div.pchapbox', { 'data-kind': 'lock' }, h('h2.pchap', { 'data-kind': 'lock' }, btn), body);
+  };
 
-  const pathTab = () => h('div.ppath', null, ...steps.map(stepNode), jamRow);
+  // free play (accompaniment, riffs, chords, reference) lives in «Играть»
+  const playRow = h('a.pjam', { href: '#/play' }, `${t('pJam')} →`);
+
+  const pathTab = () => {
+    if (!curChap) return h('div.ppath', null, ...steps.map(stepNode), playRow);
+    const before = chap.filter((x) => x.c.chapter < curChap.c.chapter), after = chap.filter((x) => x.c.chapter > curChap.c.chapter);
+    return h('div.ppath', null, ...before.map(chapRow), chapRow(curChap), ...steps.map(stepNode), ...after.map(chapRow), playRow);
+  };
 
   // ---- every exercise by section: compact ruled rows, title + state ----
   const allTab = () => h('div.pall', null, ...track.sections.map((sec) => h('section.psec', null,
@@ -283,7 +329,7 @@ export async function renderTrack(root, { model, index, rerender }) {
   const dueAll = dueReviews();
   const otherIds = dueAll.length ? index.courses.filter((c) => c.kind === 'track' && c.ready && c.id !== track.id) : [];
   Promise.all(otherIds.map((c) => trackJson(c.id).then((tj) => ({ c, n: dueAll.filter((id) => tj.items && tj.items[id]).length })).catch(() => null))).then((rows) => {
-    const lines = rows.filter((r) => r && r.n > 0).map(({ c, n }) => h('a.todayother', { href: c.id === 'blues' ? '#/' : `#/track/${c.id}` },
+    const lines = rows.filter((r) => r && r.n > 0).map(({ c, n }) => h('a.todayother', { href: `#/track/${c.id}` },
       `${t('dueElsewhere')}: ${L(c.title)} · ${n} →`));
     if (!lines.length || !others.isConnected) return;
     others.replaceChildren(...lines); others.hidden = false;
@@ -299,7 +345,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     running ? h('button.ptextbtn', { type: 'button', onclick: () => { endSession(track.id); rerender(); } }, t('endSession')) : null,
     others);
   const poster = h('section.hot.pposter', { 'aria-label': t('pToday') },
-    h('div.cap', null, L(track.title)),
+    h('div.cap', null, curChap ? `${L(track.title)} · ${fill(t('pChapterOf'), { k: curChap.c.chapter, n: chapters.length })}` : L(track.title)),
     h('div.pbig', { 'aria-label': fill(t('pStepAria'), { k: curK + 1, n: steps.length }) }, p2(curK + 1), h('small', null, '/' + p2(steps.length))),
     h('h1.pstitle', null, stepTitle(st)),
     st.goal ? h('p.pgoalbig', null, markTerms(L(st.goal))) : null,
@@ -309,5 +355,5 @@ export async function renderTrack(root, { model, index, rerender }) {
 
   root.replaceChildren(header,
     h('main.home', null, poster,
-      h('div.plist', null, courseTabs, tabs, panelBox)));
+      h('div.plist', null, tabs, panelBox)));
 }

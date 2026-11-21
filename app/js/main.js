@@ -1,5 +1,6 @@
 // Boot + hash router.
-//   #/              blues track (home)      #/track/<id>   another track
+//   #/              the current chapter (settings.chapter, else blues)   #/track/<id>   a chapter (sets settings.chapter)
+//   #/play          free play: accompaniment, riffs, chords, reference
 //   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | melody | solo | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
 //   #/t/<track>/<item>/fingers/<key>    a key-relative lick (item.keys) in one key (RH lick + LH pattern over lick.prog)
@@ -18,7 +19,10 @@ import { patternExercise, lickExercise, lickExerciseKey, melodyExercise, barChor
 import { renderCourse } from './screens/course.js';
 import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
-import { renderTrack } from './screens/track.js';
+import { renderTrack, jamFormOf } from './screens/track.js';
+import { renderPlay } from './screens/play.js';
+import { store } from './store.js';
+import { chaptersOf, homeChapter } from './path.js';
 import { renderDrill } from './screens/drill.js';
 import { renderEar } from './screens/ear.js';
 import { renderEarRel } from './screens/ear-rel.js';
@@ -152,6 +156,12 @@ async function route() {
       ex.back = '#/riffs';
       document.title = `${L(ex.title)} · Jazzlab`;
       cleanup = renderExercise(root, { ex, rerender });
+    } else if (hash === '/play') {
+      const { index, course } = await content();
+      // the accompaniment row opens the first form of the learner's current chapter
+      const model = await trackModel(homeChapter(store.get('settings', {}), chaptersOf(index))).catch(() => null);
+      document.title = `${t('navPlay')} · Jazzlab`;
+      renderPlay(root, { course, jamForm: model ? jamFormOf(model) : null, rerender });
     } else if (hash === '/riffs') {
       const { index, course } = await content();
       document.title = `${t('riffs')} · Jazzlab`;
@@ -208,7 +218,7 @@ async function route() {
       const item = model.items[mti[2]];
       if (!item) { message(t('notFound')); return; }
       setItemLinks((id) => model.items[id] ? { href: model.items[id].href, title: model.items[id].title } : null, mti[1]);
-      const back = mti[1] === 'blues' ? '#/' : `#/track/${mti[1]}`;
+      const back = `#/track/${mti[1]}`;
       document.title = `${item.title} · Jazzlab`;
       if (item.kind === 'drill') cleanup = renderDrill(root, { track: model.track, itemId: item.id, item, back });
       else if (item.kind === 'ear' && item.game) cleanup = renderEarRel(root, { track: model.track, itemId: item.id, item, back });
@@ -266,8 +276,12 @@ async function route() {
       document.title = `${t('jamTitle')} · Jazzlab`;
       cleanup = renderJam(root, { jam, forms, patterns, formId });
     } else {
-      const id = mt ? mt[1] : 'blues';
-      const [{ index }, model] = await Promise.all([content(), trackModel(id)]);
+      const { index } = await content();
+      const chapters = chaptersOf(index);
+      const id = mt ? mt[1] : homeChapter(store.get('settings', {}), chapters);
+      const model = await trackModel(id);
+      // opening a chapter makes it the one `#/` shows next time
+      if (mt && chapters.some((c) => c.id === id)) { const st = store.get('settings', {}); if (st.chapter !== id) store.set('settings', { ...st, chapter: id }); }
       setItemLinks((iid) => model.items[iid] ? { href: model.items[iid].href, title: model.items[iid].title } : null, id);
       document.title = 'Jazzlab';
       await renderTrack(root, { model, index, rerender });
