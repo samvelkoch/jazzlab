@@ -154,7 +154,29 @@ unfinished one; later steps are shown muted with a soft lock: «Всё равн�
 `steps` is one step over its learning order. Helpers: `app/js/path.js`; checks: `node tests/path.test.mjs`.
 
 **Item line (`does`).** Optional `"does": {ru, en}` on an item: one line under its title on the path, «what the hands
-do». Without it the first sentence of `about` is shown; the full `about` opens under «Зачем».
+do». Without it the first sentence of `about` is shown; the full `about` opens under «Зачем». Every path item of the
+three chapters carries its own `title` and `does` (RU `does` ≤ 75 characters: which hand, what it presses, on which count;
+for an ear game what you hear and what you answer). An item may carry its own `about` (1–3 plain sentences: why it matters,
+what to listen for); it wins over the source file's.
+
+**Word cards (`words`).** Optional `"words": [ … ]` on a step: «Новое слово» rows on the path, each drawn right before its
+`before` item (several cards before one item keep their order). A card is not an exercise: no state, not counted in «K из N».
+
+```jsonc
+"words": [
+  { "term": "chord",            // a glossary id (content/glossary.json)
+    "before": "pat-p1",         // an item of this step
+    "word": { "ru": "Аккорд", "en": "Chord" },          // shown in display type
+    "text": { "ru": "Несколько клавиш вместе. …", "en": "…" },  // one line
+    "keys": [["C3", "E3", "G3", "Bb3"]],               // groups of notes: each group sounds together, groups in sequence;
+                                                       // [] = text only, no mini keyboard and no «Послушать»
+    "covers": ["seventh-chord"] }                      // optional: other glossary ids this card also introduces
+]
+```
+
+Order rule (`node tests/words.test.mjs`): walking the chapters (blues → bossa → standards), steps and items in order, a
+glossary term may appear in an item's `title`, `does` or resolved `about` (RU) only after its card (its `term` or `covers`);
+a step's `title` and `goal` may use the step's own cards. A term is introduced once in the whole course.
 
 **Session budget.** The «Урок на сегодня» block (the yellow poster of «Путь») has a 10 · 20 · 40 min switch (`settings.budget`, default 20): 10 → up to 3 reviews +
 1 new item, 20 → up to 4 reviews + 2 new, 40 → up to 6 reviews + 3 new (`BUDGETS` in `queue.js`; `todayQueue(model, limits)`

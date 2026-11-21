@@ -2,7 +2,7 @@
   "$format": "jazzlab-track/1",
   "id": "bossa",
   "title": { "ru": "Босса-нова", "en": "Bossa nova" },
-  "about": { "ru": "Цель дорожки: Blue Bossa целиком, левая держит ячейку боссы, правая ведёт мелодию. Ровные восьмые, не спеша.", "en": "Goal: the whole of Blue Bossa, the left hand holding the bossa cell, the right hand carrying the melody. Even eighths, no hurry." },
+  "about": { "ru": "К концу главы ты играешь Blue Bossa целиком: левая держит ячейку боссы, правая ведёт мелодию. Ровные восьмые, не спеша.", "en": "By the end of the chapter you play the whole of Blue Bossa: the left holds the bossa cell, the right carries the melody. Even eighths, no hurry." },
   "path": [
     "d-chords-cm", "ear-find-bossa", "ear-hl1-bossa", "pat-b1", "ear-iv1-bossa", "form-b1", "d-chords-db", "pat-c1",
     "form-c1", "mel-bossa", "ear-q1-bossa", "form-mel", "lick-bl1", "ear-q2-bossa", "form-rh-bl1", "ear-iv2-bossa",
@@ -17,42 +17,62 @@
       "goal": { "ru": "После этой ступени левая играет бас Blue Bossa от начала до конца.", "en": "After this step your left hand plays the Blue Bossa bass from start to finish." },
       "items": [
         "d-chords-cm", "ear-find-bossa", "ear-hl1-bossa", "pat-b1", "ear-iv1-bossa", "form-b1"
+      ],
+      "words": [
+        { "term": "bossa-cell", "before": "pat-b1", "word": { "ru": "Ячейка боссы", "en": "Bossa cell" }, "text": { "ru": "Узор левой руки: корень на «раз», квинта чуть позже, и она тянется. Ровно, без раскачки.", "en": "The left-hand pattern: root on “one”, the fifth a little later, and it holds. Even, no sway." }, "keys": [["C3"], ["G3"]] }
       ] },
     { "id": "s2", "title": { "ru": "Аккорды и мелодия", "en": "Chords and the melody" },
       "goal": { "ru": "После этой ступени ты ведёшь мелодию Blue Bossa правой над басом левой.", "en": "After this step your right hand carries the Blue Bossa melody over the left-hand bass." },
       "items": [
         "d-chords-db", "pat-c1", "form-c1", "mel-bossa", "ear-q1-bossa", "form-mel"
+      ],
+      "words": [
+        { "term": "comping", "before": "pat-c1", "word": { "ru": "Аккомпанемент", "en": "Comping" }, "text": { "ru": "Правая берёт аккорды, пока левая играет бас. Важно не какие ноты, а где в такте.", "en": "The right takes chords while the left plays the bass. What matters is not which notes but where in the bar." }, "keys": [] }
       ] },
     { "id": "s3", "title": { "ru": "Первая фраза и соло", "en": "The first phrase and a solo" },
       "goal": { "ru": "После этой ступени ты играешь свою первую фразу в боссе и короткое соло.", "en": "After this step you play your first bossa phrase and a short solo." },
       "items": [
         "lick-bl1", "ear-q2-bossa", "form-rh-bl1", "ear-iv2-bossa", "pat-b2", "form-b2", "imp-bo1"
-      ] },
+      ],
+      "words": [] },
     { "id": "s4", "title": { "ru": "Две руки", "en": "Both hands" },
       "goal": { "ru": "После этой ступени ты играешь Blue Bossa двумя руками: бас и мелодия вместе.", "en": "After this step you play Blue Bossa with both hands: the bass and the melody together." },
       "items": [
         "ear-hl2-bossa", "imp-bo1r", "pat-c2", "form-c2", "pat-c3", "form-c3", "lick-bl2", "form-2h-bossa"
+      ],
+      "words": [
+        { "term": "clave", "before": "pat-c3", "word": { "ru": "Клаве", "en": "Clave" }, "text": { "ru": "Короткий ритм, который повторяется всю пьесу. В боссе барабанщик стучит его по ободу.", "en": "A short rhythm that repeats through the whole tune. In bossa the drummer taps it on the rim." }, "keys": [] }
       ] },
     { "id": "s5", "title": { "ru": "Разговор", "en": "The conversation" },
       "goal": { "ru": "После этой ступени твои фразы спрашивают и отвечают, а соло попадает в аккорды.", "en": "After this step your phrases ask and answer, and your solo lands on the chords." },
       "items": [
         "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "imp-bo2a", "ear-pr1-bossa", "form-rh-qa-bossa",
         "imp-bo3"
+      ],
+      "words": [
+        { "term": "ii-v-i", "before": "ear-pr1-bossa", "word": { "ru": "II–V–I", "en": "II–V–I" }, "text": { "ru": "Три аккорда подряд, которые ведут домой. В C это Dm7, G7 и Cmaj7.", "en": "Three chords in a row that lead home. In C they are Dm7, G7 and Cmaj7." }, "keys": [["D3", "F3", "A3", "C4"], ["G3", "B3", "D4", "F4"], ["C3", "E3", "G3", "B3"]] }
       ] },
     { "id": "s6", "title": { "ru": "Выступление", "en": "The performance" },
       "goal": { "ru": "После этой ступени ты играешь Blue Bossa целиком, с концовкой, и записываешь её.", "en": "After this step you play the whole of Blue Bossa, with an ending, and record it." },
       "items": [
         "imp-bo2e", "end-bossa", "ear-q3-bossa", "imp-bo3v", "imp-bo4", "perf-bossa"
-      ] },
+      ],
+      "words": [] },
     { "id": "s7", "title": { "ru": "Ipanema и Corcovado", "en": "Ipanema and Corcovado" },
       "goal": { "ru": "После этой ступени ты аккомпанируешь двум пьесам Жобима и играешь над ними своё.", "en": "After this step you accompany two Jobim tunes and play your own lines over them." },
       "items": [
         "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa", "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"
+      ],
+      "words": [
+        { "term": "passing-dim", "before": "d-chords-cor", "word": { "ru": "Уменьшённый аккорд", "en": "Diminished chord" }, "text": { "ru": "Напряжённый аккорд-мостик между двумя соседними. В Corcovado он ведёт вниз по одной клавише.", "en": "A tense little bridge chord between two neighbours. In Corcovado it leads down one key at a time." }, "keys": [["Ab3", "B3", "D4", "F4"]] }
       ] },
     { "id": "s8", "title": { "ru": "Wave", "en": "Wave" },
       "goal": { "ru": "После этой ступени ты аккомпанируешь Wave и играешь над ней своё.", "en": "After this step you accompany Wave and play your own lines over it." },
       "items": [
         "ear-iv5-bossa", "d-chords-wave", "form-wave", "ear-pr2-bossa", "form-wave-c3", "imp-wave"
+      ],
+      "words": [
+        { "term": "dominant", "before": "ear-pr2-bossa", "word": { "ru": "Доминанта", "en": "Dominant" }, "text": { "ru": "Аккорд с цифрой 7, который тянет домой: G7 просится в C.", "en": "A chord with a 7 that pulls home: G7 wants to go to C." }, "keys": [["G3", "B3", "D4", "F4"], ["C3", "E3", "G3", "C4"]] }
       ] }
   ],
   "sections": [
@@ -109,104 +129,335 @@
   ],
   "items": {
     "d-chords-cm": {
-      "kind": "drill", "title": { "ru": "Аккорды до минора", "en": "C minor chords" },
-      "about": { "ru": "Cm7, Fm7, G7, Dm7b5: четыре формы ладони первой половины.", "en": "Cm7, Fm7, G7, Dm7b5: the four hand shapes of the first half." },
-      "tasks": [{ "type": "chord", "chords": ["Cm7", "Fm7", "G7", "Dm7b5"], "n": 8 }],
-      "pass": { "acc": 0.85, "avgMs": 6000 }
+      "kind": "drill", "tasks": [{ "type": "chord", "chords": ["Cm7", "Fm7", "G7", "Dm7b5"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Cm7, Fm7, G7, Dm7b5", "en": "Chords Cm7, Fm7, G7, Dm7b5" },
+      "does": { "ru": "Я называю аккорд, ты берёшь его четыре клавиши вместе.", "en": "I name a chord, you take its four keys together." },
+      "about": { "ru": "Cm7, Fm7, G7, Dm7b5: четыре формы ладони первой половины.", "en": "Cm7, Fm7, G7, Dm7b5: the four hand shapes of the first half." }
     },
     "d-chords-db": {
-      "kind": "drill", "title": { "ru": "Аккорды в Db", "en": "Chords in D-flat" },
-      "about": { "ru": "Ebm7, Ab7, Dbmaj7: три формы второй половины, все на чёрных.", "en": "Ebm7, Ab7, Dbmaj7: the three shapes of the second half, all on the black keys." },
-      "tasks": [{ "type": "chord", "chords": ["Ebm7", "Ab7", "Dbmaj7"], "n": 6 }],
-      "pass": { "acc": 0.85, "avgMs": 6000 }
+      "kind": "drill", "tasks": [{ "type": "chord", "chords": ["Ebm7", "Ab7", "Dbmaj7"], "n": 6 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Ebm7, Ab7, Dbmaj7", "en": "Chords Ebm7, Ab7, Dbmaj7" },
+      "does": { "ru": "Я называю аккорд, ты берёшь его четыре клавиши вместе.", "en": "I name a chord, you take its four keys together." },
+      "about": { "ru": "Ebm7, Ab7, Dbmaj7: три аккорда середины пьесы. В них много чёрных клавиш.", "en": "Ebm7, Ab7, Dbmaj7: the three chords in the middle of the tune. They have many black keys." }
     },
-    "pat-b1": { "kind": "pattern", "pattern": "b1", "form": "blue-bossa" },
-    "pat-b2": { "kind": "pattern", "pattern": "b2", "form": "blue-bossa" },
-    "form-b1": { "kind": "form", "form": "blue-bossa", "pattern": "b1", "title": { "ru": "Blue Bossa на басу", "en": "Blue Bossa, bass only" } },
-    "form-b2": { "kind": "form", "form": "blue-bossa", "pattern": "b2", "title": { "ru": "Blue Bossa с ходом", "en": "Blue Bossa with the move" } },
-    "pat-c1": { "kind": "pattern", "pattern": "c1", "form": "blue-bossa" },
-    "pat-c2": { "kind": "pattern", "pattern": "c2", "form": "blue-bossa" },
-    "pat-c3": { "kind": "pattern", "pattern": "c3", "form": "blue-bossa" },
+    "pat-b1": {
+      "kind": "pattern", "pattern": "b1", "form": "blue-bossa",
+      "title": { "ru": "Левая: ячейка боссы", "en": "Left: the bossa cell" },
+      "does": { "ru": "Левая: корень на «раз», квинта на «и» после двух, и держишь её.", "en": "Left: root on “one”, the fifth on the “and” after two, and hold it." },
+      "about": { "ru": "Это ячейка боссы: корень, потом квинта чуть позже, и она тянется до конца такта. Ровно, без раскачки, каждый такт одинаково.", "en": "This is the bossa cell: the root, then the fifth a little later, held to the end of the bar. Even, no sway, the same every bar." }
+    },
+    "pat-b2": {
+      "kind": "pattern", "pattern": "b2", "form": "blue-bossa",
+      "title": { "ru": "Левая: ячейка с ходом", "en": "Left: the cell with a step" },
+      "does": { "ru": "Левая: корень на «раз», квинта на «и» после двух, корень на «четыре».", "en": "Left: root on “one”, the fifth on the “and” after two, root on “four”." }
+    },
+    "form-b1": {
+      "kind": "form", "form": "blue-bossa", "pattern": "b1",
+      "title": { "ru": "Blue Bossa на басу", "en": "Blue Bossa on the bass" },
+      "does": { "ru": "Левая играет ячейку боссы все 16 тактов, под барабаны.", "en": "The left plays the bossa cell all 16 bars, over drums." },
+      "about": { "ru": "Шестнадцать тактов Blue Bossa Кенни Дорэма. Левая держит ячейку, барабаны держат ровный ход.", "en": "The sixteen bars of Kenny Dorham’s Blue Bossa. The left holds the cell, the drums keep a steady motion." }
+    },
+    "form-b2": {
+      "kind": "form", "form": "blue-bossa", "pattern": "b2",
+      "title": { "ru": "Blue Bossa: ячейка с ходом", "en": "Blue Bossa: the cell with a step" },
+      "does": { "ru": "Левая играет ячейку с ходом все 16 тактов, под барабаны.", "en": "The left plays the cell with a step all 16 bars, over drums." },
+      "about": { "ru": "Тот же Blue Bossa, но в ячейке ещё корень на «четыре». Так левая в боссе звучит чаще всего.", "en": "The same Blue Bossa, but the cell gets the root on “four” as well. This is the most common bossa left hand." }
+    },
+    "pat-c1": {
+      "kind": "pattern", "pattern": "c1", "form": "blue-bossa",
+      "title": { "ru": "Аккорды вместе с басом", "en": "Chords together with the bass" },
+      "does": { "ru": "Левая: бас боссы. Правая: аккорд из трёх нот там же, где бас.", "en": "Left: the bossa bass. Right: a three-note chord right where the bass is." }
+    },
+    "pat-c2": {
+      "kind": "pattern", "pattern": "c2", "form": "blue-bossa",
+      "title": { "ru": "Аккорды между басом", "en": "Chords between the bass" },
+      "does": { "ru": "Правая: аккорд на «два» и на «и» после трёх, между нот левой.", "en": "Right: a chord on “two” and on the “and” after three, between the left’s notes." }
+    },
+    "pat-c3": {
+      "kind": "pattern", "pattern": "c3", "form": "blue-bossa",
+      "title": { "ru": "Аккорды по клаве", "en": "Chords on the clave" },
+      "does": { "ru": "Правая: аккорд там, где барабаны щёлкают по ободу. Узор на два такта.", "en": "Right: a chord where the drums click on the rim. A two-bar pattern." }
+    },
     "form-c1": {
       "kind": "form", "form": "blue-bossa", "pattern": "c1", "hand": "both",
       "title": { "ru": "Blue Bossa: аккорды с басом", "en": "Blue Bossa: chords with the bass" },
+      "does": { "ru": "Левая: бас. Правая: аккорд там же. С тобой только барабаны.", "en": "Left: the bass. Right: a chord in the same place. Only drums with you." },
       "about": { "ru": "Левая играет бас, правая аккорд на те же доли. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "The left hand plays the bass, the right hand a chord on the same beats. The band is silent, only drums play. Three clean choruses in a row." }
     },
     "form-c2": {
       "kind": "form", "form": "blue-bossa", "pattern": "c2", "hand": "both",
       "title": { "ru": "Blue Bossa: аккорды между басом", "en": "Blue Bossa: chords between the bass" },
+      "does": { "ru": "Левая: бас с ходом. Правая: аккорды между его нот.", "en": "Left: the bass with a step. Right: chords between its notes." },
       "about": { "ru": "Бас с ходом в левой, аккорды между его нот в правой. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "The bass with the move in the left hand, chords between its notes in the right. The band is silent, only drums play. Three clean choruses in a row." }
     },
     "form-c3": {
       "kind": "form", "form": "blue-bossa", "pattern": "c3", "hand": "both",
       "title": { "ru": "Blue Bossa: аккорды по клаве", "en": "Blue Bossa: chords on the clave" },
+      "does": { "ru": "Левая: бас с ходом. Правая: аккорды по щелчкам клаве.", "en": "Left: the bass with a step. Right: chords on the clave clicks." },
       "about": { "ru": "Бас с ходом в левой, аккорды по щелчку на ободе в правой. Слушай его в барабанах. Три чистых круга подряд.", "en": "The bass with the move in the left hand, chords on the rim click in the right. Listen for it in the drums. Three clean choruses in a row." }
     },
-    "mel-bossa": { "kind": "melody", "melody": "bossa-cm", "pattern": "b1" },
+    "mel-bossa": {
+      "kind": "melody", "melody": "bossa-cm", "pattern": "b1",
+      "title": { "ru": "Blue Bossa: мелодия", "en": "Blue Bossa: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Мелодия по мотивам Blue Bossa Кенни Дорэма. Восьмые ровные, длинные ноты тянутся, как в левой. Учишь её за пианино, по два такта.", "en": "A melody after Kenny Dorham’s Blue Bossa. Even eighths, long notes held like in the left hand. You learn it after the piano, two bars at a time." }
+    },
     "form-mel": {
       "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "melody": "bossa-cm",
-      "title": { "ru": "Blue Bossa: мелодия над басом", "en": "Blue Bossa: the tune over the bass" },
+      "title": { "ru": "Blue Bossa: мелодия над басом", "en": "Blue Bossa: the melody over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет бас, ты ведёшь мелодию целиком. Три чистых круга подряд.", "en": "The left hand plays the bass, you carry the whole tune. Three clean choruses in a row." }
     },
     "form-2h-bossa": {
       "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "both", "melody": "bossa-cm",
-      "title": { "ru": "Blue Bossa двумя руками", "en": "Blue Bossa, both hands" },
+      "title": { "ru": "Blue Bossa двумя руками", "en": "Blue Bossa with both hands" },
+      "does": { "ru": "Левая: ячейка боссы. Правая: мелодия. С тобой только барабаны.", "en": "Left: the bossa cell. Right: the melody. Only drums with you." },
       "about": { "ru": "Левая: бас-ячейка. Правая: мелодия целиком. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "Left: the bass cell. Right: the whole tune. The band is silent, only drums play. Three clean choruses in a row." }
     },
-    "end-bossa": { "kind": "exercise", "ex": "bossa-end" },
-    "lick-bl1": { "kind": "lick", "lick": "bl1", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"] },
-    "lick-bl2": { "kind": "lick", "lick": "bl2", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"] },
-    "lick-bl3": { "kind": "lick", "lick": "bl3", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"] },
+    "end-bossa": {
+      "kind": "exercise", "ex": "bossa-end",
+      "title": { "ru": "Концовка боссы", "en": "The bossa ending" },
+      "does": { "ru": "Обе руки: Dm7b5, G7 и долгий Cm в конце. Тихо.", "en": "Both hands: Dm7b5, G7 and a long Cm at the end. Quietly." }
+    },
+    "lick-bl1": {
+      "kind": "lick", "lick": "bl1", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"],
+      "title": { "ru": "Ответ: вверх и назад", "en": "Answer: up and back" },
+      "does": { "ru": "Правая: пять клавиш вверх от C до G и назад, домой на C.", "en": "Right: five keys up from C to G and back, home to C." },
+      "about": { "ru": "Пять клавиш вверх и назад, как «лесенка» в блюзе. Только здесь до минор, поэтому звучит мягче и темнее.", "en": "Five keys up and back, like the blues “ladder”. Only here it is C minor, so it sounds softer and darker." }
+    },
+    "lick-bl2": {
+      "kind": "lick", "lick": "bl2", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"],
+      "title": { "ru": "Вопрос: с Bb вниз", "en": "Question: down from Bb" },
+      "does": { "ru": "Правая: с Bb вниз по соседним клавишам, и фраза повисает на G.", "en": "Right: down from Bb by neighbouring keys, and the phrase hangs on G." },
+      "about": { "ru": "Сверху вниз с Bb, по соседним клавишам, и фраза повисает на G. Не дома, поэтому это вопрос.", "en": "Down from Bb by neighbouring keys, and the phrase hangs on G. It is not home, so it is a question." }
+    },
+    "lick-bl3": {
+      "kind": "lick", "lick": "bl3", "form": "blue-bossa", "pattern": "b1", "chords": ["Cm7", "Fm7", "G7"],
+      "title": { "ru": "Ответ: синкопа домой", "en": "Answer: syncopation home" },
+      "does": { "ru": "Правая: от G вниз, ноты на «и», и домой на C.", "en": "Right: down from G, notes on the “and”, and home to C." }
+    },
     "form-rh-bl1": {
       "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "lick": "bl1",
-      "title": { "ru": "Blue Bossa: фраза правой", "en": "Blue Bossa: the phrase, right hand" }
+      "title": { "ru": "Blue Bossa: ответ правой", "en": "Blue Bossa: the answer, right hand" },
+      "does": { "ru": "Правая играет «Вверх и назад» в каждой паре тактов. Левую играет пианино.", "en": "The right plays “Up and back” in every pair of bars. The piano plays the left." },
+      "about": { "ru": "Пять клавиш вверх и назад, как «лесенка» в блюзе. Только здесь до минор, поэтому звучит мягче и темнее.", "en": "Five keys up and back, like the blues “ladder”. Only here it is C minor, so it sounds softer and darker." }
     },
     "form-rh-qa-bossa": {
       "kind": "form", "form": "blue-bossa", "pattern": "b1", "hand": "rh", "licks": ["bl2", "bl1"],
       "title": { "ru": "Blue Bossa: вопрос и ответ", "en": "Blue Bossa: question and answer" },
+      "does": { "ru": "Правая: два такта вопрос, два такта ответ. Левую играет пианино.", "en": "Right: two bars question, two bars answer. The piano plays the left." },
       "about": { "ru": "Вопрос на тактах 1, 5, 9, 13, ответ на 3, 7, 11, 15. Лад подстраивается под аккорд сам.", "en": "The question on bars 1, 5, 9, 13, the answer on 3, 7, 11, 15. The scale fits itself to the chord." }
     },
-    "imp-bo1": { "kind": "solo", "solo": "bossa-minor" },
-    "imp-bo2": { "kind": "solo", "solo": "bossa-call" },
-    "imp-bo3": { "kind": "solo", "solo": "bossa-chords" },
-    "imp-bo4": { "kind": "solo", "solo": "bossa-solo" },
-    "imp-bo1r": { "kind": "solo", "solo": "bossa-start-and" },
-    "imp-bo2a": { "kind": "solo", "solo": "bossa-anticipation" },
-    "imp-bo2e": { "kind": "solo", "solo": "bossa-echo" },
-    "imp-bo3v": { "kind": "solo", "solo": "bossa-vary" },
-    "ear-find-bossa": {
-      "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
-      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." },
-      "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 }
+    "imp-bo1": {
+      "kind": "solo", "solo": "bossa-minor",
+      "title": { "ru": "Первое соло в боссе", "en": "First bossa solo" },
+      "does": { "ru": "Бэнд играет. Два такта играешь подсвеченные клавиши, два молчишь.", "en": "The band plays. Two bars you play the lit keys, two you rest." },
+      "about": { "ru": "Бэнд играет Blue Bossa, ты играешь своё подсвеченными клавишами. Два такта играешь, два молчишь. Восьмые ровные, без раскачки.", "en": "The band plays Blue Bossa, you play your own on the lit keys. Two bars you play, two you rest. Even eighths, no sway." }
     },
-    "ear-hl1-bossa": { "kind": "ear", "game": "hilo", "level": 1, "title": { "ru": "Выше или ниже", "en": "Higher or lower" }, "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-iv1-bossa": { "kind": "ear", "game": "interval", "level": 1, "title": { "ru": "Интервалы: малая и большая терция", "en": "Intervals: minor or major third" }, "about": { "ru": "Две ноты вверх: малая терция (3 полутона, грустная) или большая (4, светлая)? Назови интервал или сыграй вторую ноту.", "en": "Two notes going up: a minor third (3 semitones, sad) or a major third (4, bright)? Name it or play the second note." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-q1-bossa": { "kind": "ear", "game": "quality", "level": 1, "title": { "ru": "Аккорд: мажор или минор", "en": "Chord: major or minor" }, "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-q2-bossa": { "kind": "ear", "game": "quality", "level": 2, "title": { "ru": "Аккорд: maj7, m7 или 7", "en": "Chord: maj7, m7 or 7" }, "about": { "ru": "Четыре ноты. Maj7 светлый и мечтательный, m7 мягкий, доминантный 7 просит разрешения.", "en": "Four notes. Maj7 is bright and dreamy, m7 is mellow, the dominant 7 wants to resolve." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-iv2-bossa": { "kind": "ear", "game": "interval", "level": 2, "title": { "ru": "Интервалы: кварта и квинта", "en": "Intervals: fourth and fifth" }, "about": { "ru": "К терциям добавились чистая кварта и квинта: твёрдые, «пустые» интервалы.", "en": "The perfect fourth and fifth join the thirds: the firm, hollow intervals." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-hl2-bossa": { "kind": "ear", "game": "hilo", "level": 2, "title": { "ru": "Выше или ниже: тоньше", "en": "Higher or lower: finer" }, "about": { "ru": "Тот же вопрос, но расстояние сужается до полутона.", "en": "The same question, but the gap narrows down to a semitone." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-iv3-bossa": { "kind": "ear", "game": "interval", "level": 3, "title": { "ru": "Интервалы: септимы и октава", "en": "Intervals: sevenths and the octave" }, "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-hl3-bossa": { "kind": "ear", "game": "hilo", "level": 3, "title": { "ru": "Выше, ниже или одинаково", "en": "Higher, lower or the same" }, "about": { "ru": "Близкие ноты, иногда одна и та же дважды. Не торопись, переслушай.", "en": "Close notes, sometimes the very same note twice. Take your time, listen again." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-pr1-bossa": { "kind": "ear", "game": "prog", "level": 1, "title": { "ru": "II–V–I: мажор или минор", "en": "ii–V–I: major or minor" }, "about": { "ru": "Звучит II–V–I. Он ведёт в мажор или в минор? В миноре первый аккорд полууменьшенный, а конец темнее.", "en": "A ii–V–I plays. Does it land in a major or a minor key? In minor the first chord is half-diminished and the ending is darker." }, "rounds": 10, "pass": { "acc": 0.75 }},
-    "ear-q3-bossa": { "kind": "ear", "game": "quality", "level": 3, "title": { "ru": "Аккорд: ещё m7b5", "en": "Chord: and m7b5" }, "about": { "ru": "Добавился полууменьшенный m7b5: напряжённый минорный аккорд, тот самый ii в миноре.", "en": "The half-diminished m7b5 joins in: a tense minor chord, the ii of a minor key." }, "rounds": 12, "pass": { "acc": 0.7 }},
-    "ear-iv5-bossa": { "kind": "ear", "game": "interval", "level": 5, "title": { "ru": "Интервалы вниз", "en": "Intervals going down" }, "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-pr2-bossa": { "kind": "ear", "game": "prog", "level": 2, "title": { "ru": "Где здесь V?", "en": "Which chord is the V?" }, "about": { "ru": "Три аккорда подряд, один из них V7: доминанта, которая тянет к тонике. Какой по счёту?", "en": "Three chords in a row, one of them is the V7: the dominant that pulls to the tonic. Which one is it?" }, "rounds": 10, "pass": { "acc": 0.7 }},
+    "imp-bo2": {
+      "kind": "solo", "solo": "bossa-call",
+      "title": { "ru": "Соло: ответь бэнду", "en": "Solo: answer the band" },
+      "does": { "ru": "Два такта бэнд спрашивает, два такта ты отвечаешь своей фразой.", "en": "The band asks for two bars, you answer for two with your phrase." },
+      "about": { "ru": "Два такта бэнд спрашивает короткой фразой, два такта ты отвечаешь своей. Подсвечены клавиши, которые годятся сейчас. Пока бэнд играет, ты молчишь.", "en": "For two bars the band asks with a short phrase, for two you answer with yours. The keys that fit right now are lit. While the band plays, you stay silent." }
+    },
+    "imp-bo3": {
+      "kind": "solo", "solo": "bossa-chords",
+      "title": { "ru": "Соло: попади в аккорд", "en": "Solo: hit the chord" },
+      "does": { "ru": "На первом счёте нового аккорда сыграй его ноту. Она подсвечена.", "en": "On the first count of a new chord, play its note. It is lit up." },
+      "about": { "ru": "Целевая нота: на первом счёте такта, где сменился аккорд, сыграй его ноту. Подсвеченные клавиши меняются вместе с аккордом.", "en": "The target note: on the first count of the bar where the chord changes, play its note. The lit keys change with the chord." }
+    },
+    "imp-bo4": {
+      "kind": "solo", "solo": "bossa-solo",
+      "title": { "ru": "Соло на два круга", "en": "A solo of two rounds" },
+      "does": { "ru": "Два круга подряд без остановки. Начни просто, ко второму добавь.", "en": "Two rounds in a row without stopping. Start simple, add in the second." },
+      "about": { "ru": "Два круга подряд, без остановки. На сменах аккорда ищи целевые ноты. Начни просто, ко второму кругу добавь, и не забывай молчать между фразами.", "en": "Two rounds in a row without stopping. On chord changes look for target notes. Start simple, add in the second round, and remember to rest between phrases." }
+    },
+    "imp-bo1r": {
+      "kind": "solo", "solo": "bossa-start-and",
+      "title": { "ru": "Соло: начни не с «раз»", "en": "Solo: don’t start on “one”" },
+      "does": { "ru": "Простучи ритм: «раз» молчит, входишь на «и» или на «два». Потом нотами.", "en": "Tap the rhythm: “one” is silent, you come in on “and” or “two”. Then notes." }
+    },
+    "imp-bo2a": {
+      "kind": "solo", "solo": "bossa-anticipation",
+      "title": { "ru": "Соло: зайди чуть раньше", "en": "Solo: come in a little early" },
+      "does": { "ru": "Простучи ритм, потом сыграй. Последняя нота на «и» после четырёх.", "en": "Tap the rhythm, then play it. The last note is on the “and” after four." },
+      "about": { "ru": "Сначала простучи ритм: две восьмые и тишина, или три четверти и нота на «и» после четырёх. Потом сыграй его подсвеченными клавишами. Восьмые ровные.", "en": "First tap the rhythm: two eighths and silence, or three quarters and a note on the “and” after four. Then play it on the lit keys. Even eighths." }
+    },
+    "imp-bo2e": {
+      "kind": "solo", "solo": "bossa-echo",
+      "title": { "ru": "Соло: повтори за бэндом", "en": "Solo: repeat after the band" },
+      "does": { "ru": "Бэнд играет один такт, ты в следующем повторяешь тот же рисунок.", "en": "The band plays one bar, in the next you repeat the same shape." }
+    },
+    "imp-bo3v": {
+      "kind": "solo", "solo": "bossa-vary",
+      "title": { "ru": "Соло: тот же ритм, другие ноты", "en": "Solo: same rhythm, other notes" },
+      "does": { "ru": "Бэнд играет один такт. Ты отвечаешь тем же ритмом, но другими клавишами.", "en": "The band plays one bar. You answer with the same rhythm on other keys." },
+      "about": { "ru": "Бэнд играет мотив в один такт, ты отвечаешь тем же ритмом, но другими подсвеченными клавишами. Сначала простучи ритм.", "en": "The band plays a one-bar motif, you answer with the same rhythm on other lit keys. Tap the rhythm first." }
+    },
+    "ear-find-bossa": {
+      "kind": "ear", "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 },
+      "title": { "ru": "Найди ноту на слух", "en": "Find the note by ear" },
+      "does": { "ru": "Я играю ноту, ты ищешь её на клавишах.", "en": "I play a note, you look for it on the keys." },
+      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." }
+    },
+    "ear-hl1-bossa": {
+      "kind": "ear", "game": "hilo", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше или ниже", "en": "Higher or lower" },
+      "does": { "ru": "Звучат две ноты. Скажи, вторая выше или ниже.", "en": "Two notes sound. Say if the second is higher or lower." },
+      "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }
+    },
+    "ear-iv1-bossa": {
+      "kind": "ear", "game": "interval", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: терция грустная или светлая", "en": "By ear: a sad or a bright third" },
+      "does": { "ru": "Звучат две ноты. Скажи, какая это терция, или сыграй вторую ноту.", "en": "Two notes sound. Say which third it is, or play the second note." },
+      "about": { "ru": "Две ноты вверх. Терция на три клавиши звучит грустно, на четыре светло. Назови её или сыграй вторую ноту.", "en": "Two notes going up. A third of three keys sounds sad, of four keys bright. Name it or play the second note." }
+    },
+    "ear-q1-bossa": {
+      "kind": "ear", "game": "quality", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: мажор или минор", "en": "By ear: major or minor" },
+      "does": { "ru": "Звучит аккорд из трёх нот. Скажи, светлый он или грустный.", "en": "A three-note chord sounds. Say if it is bright or sad." },
+      "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }
+    },
+    "ear-q2-bossa": {
+      "kind": "ear", "game": "quality", "level": 2, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: три цвета аккорда", "en": "By ear: three chord colours" },
+      "does": { "ru": "Звучит аккорд из четырёх нот. Скажи, какой он: maj7, m7 или 7.", "en": "A four-note chord sounds. Say which it is: maj7, m7 or 7." },
+      "about": { "ru": "Четыре ноты вместе. Maj7 светлый и мечтательный, m7 мягкий, 7 напряжённый и просится дальше.", "en": "Four notes together. Maj7 is bright and dreamy, m7 is soft, 7 is tense and wants to move on." }
+    },
+    "ear-iv2-bossa": {
+      "kind": "ear", "game": "interval", "level": 2, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: два широких интервала", "en": "By ear: two wider intervals" },
+      "does": { "ru": "К терциям добавились два интервала пошире. Назови или сыграй вторую ноту.", "en": "Two wider intervals join the thirds. Name it or play the second note." },
+      "about": { "ru": "К терциям добавились кварта и квинта. Они звучат крепко и пусто, без настроения.", "en": "The fourth and the fifth join the thirds. They sound firm and bare, without a mood." }
+    },
+    "ear-hl2-bossa": {
+      "kind": "ear", "game": "hilo", "level": 2, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше или ниже: совсем рядом", "en": "Higher or lower: very close" },
+      "does": { "ru": "Тот же вопрос, но ноты всё ближе, к концу соседние клавиши.", "en": "The same question, but the notes get closer, down to neighbouring keys." },
+      "about": { "ru": "Тот же вопрос, но ноты всё ближе, до соседних клавиш. Чем ближе ноты, тем внимательнее слушай.", "en": "The same question, but the notes get closer, down to neighbouring keys. The closer they are, the more carefully you listen." }
+    },
+    "ear-iv3-bossa": {
+      "kind": "ear", "game": "interval", "level": 3, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: септимы и октава", "en": "By ear: sevenths and the octave" },
+      "does": { "ru": "Ещё три широких интервала. Назови или сыграй вторую ноту.", "en": "Three more wide intervals. Name it or play the second note." },
+      "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }
+    },
+    "ear-hl3-bossa": {
+      "kind": "ear", "game": "hilo", "level": 3, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше, ниже или та же", "en": "Higher, lower or the same" },
+      "does": { "ru": "Ноты совсем рядом, иногда одна и та же дважды. Скажи, что слышишь.", "en": "The notes are very close, sometimes the same one twice. Say what you hear." },
+      "about": { "ru": "Близкие ноты, иногда одна и та же дважды. Не торопись, переслушай.", "en": "Close notes, sometimes the very same note twice. Take your time, listen again." }
+    },
+    "ear-pr1-bossa": {
+      "kind": "ear", "game": "prog", "level": 1, "rounds": 10, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: II–V–I, мажор или минор", "en": "By ear: II–V–I, major or minor" },
+      "does": { "ru": "Звучат три аккорда подряд. Скажи, пришли они в мажор или в минор.", "en": "Three chords sound in a row. Say if they land in major or in minor." },
+      "about": { "ru": "Три аккорда ведут домой. Слушай конец: светлый это мажор, тёмный это минор.", "en": "Three chords lead home. Listen to the end: bright is major, dark is minor." }
+    },
+    "ear-q3-bossa": {
+      "kind": "ear", "game": "quality", "level": 3, "rounds": 12, "pass": { "acc": 0.7 },
+      "title": { "ru": "На слух: четыре цвета аккорда", "en": "By ear: four chord colours" },
+      "does": { "ru": "Тот же вопрос, и добавился четвёртый ответ: m7b5.", "en": "The same question with a fourth answer: m7b5." },
+      "about": { "ru": "Добавился m7b5: тёмный и напряжённый, как минор, который не успокоился.", "en": "m7b5 joins: dark and tense, like a minor chord that has not settled." }
+    },
+    "ear-iv5-bossa": {
+      "kind": "ear", "game": "interval", "level": 5, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: интервалы вниз", "en": "By ear: intervals down" },
+      "does": { "ru": "Те же интервалы, но вторая нота ниже первой.", "en": "The same intervals, but the second note is lower than the first." },
+      "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }
+    },
+    "ear-pr2-bossa": {
+      "kind": "ear", "game": "prog", "level": 2, "rounds": 10, "pass": { "acc": 0.7 },
+      "title": { "ru": "На слух: где доминанта", "en": "By ear: where is the dominant" },
+      "does": { "ru": "Звучат три аккорда подряд. Скажи, какой из них доминанта.", "en": "Three chords sound in a row. Say which one is the dominant." },
+      "about": { "ru": "Три аккорда подряд, один из них V7: доминанта, которая тянет к тонике. Какой по счёту?", "en": "Three chords in a row, one of them is the V7: the dominant that pulls to the tonic. Which one is it?" }
+    },
     "perf-bossa": {
-      "kind": "perform", "form": "blue-bossa", "pattern": "b1", "licks": ["bl1", "bl3"], "melody": "bossa-cm", "choruses": 2,
-      "title": { "ru": "Blue Bossa, два круга", "en": "Blue Bossa, two choruses" },
+      "kind": "perform", "form": "blue-bossa", "pattern": "b1", "licks": ["bl1", "bl3"], "melody": "bossa-cm",
+      "choruses": 2,
+      "title": { "ru": "Blue Bossa: два круга", "en": "Blue Bossa: two rounds" },
+      "does": { "ru": "Обе руки, два круга и концовка. Запись остаётся.", "en": "Both hands, two rounds and the ending. The recording stays." },
       "about": { "ru": "Левая держит ячейку, правая играет мелодию: первый круг как написано, второй можно чуть по-своему. Запись остаётся.", "en": "The left hand holds the cell, the right hand plays the tune: the first chorus as written, the second a little your own way. The recording stays." }
     },
-    "d-chords-ipa": {"kind": "drill", "title": {"ru": "Аккорды Ipanema", "en": "Ipanema chords"}, "about": {"ru": "Fmaj7, G7, Gm7, Gb7: начало пьесы, Gb7 скользит на полтона вниз в Fmaj7. Потом аккорды бриджа.", "en": "Fmaj7, G7, Gm7, Gb7: the opening, Gb7 sliding down a half step into Fmaj7. Then the bridge chords."}, "tasks": [{"type": "chord", "chords": ["Fmaj7", "G7", "Gm7", "Gb7"], "n": 8}, {"type": "chord", "chords": ["Gbmaj7", "B7", "F#m7", "D7", "Eb7", "Am7"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
-    "form-ipa": {"kind": "form", "form": "ipanema-f", "pattern": "b2", "title": {"ru": "Ipanema на басу", "en": "Ipanema, bass only"}, "about": {"ru": "Все 40 тактов гармонии Jobim, левая держит ячейку боссы. Мелодию слушай в записи и подпевай.", "en": "All 40 bars of Jobim's changes, the left hand holding the bossa cell. Listen to the tune on a recording and sing along."}},
-    "form-ipa-c1": {"kind": "form", "form": "ipanema-f", "pattern": "c1", "hand": "both", "title": {"ru": "Ipanema: аккорды с басом", "en": "Ipanema: chords with the bass"}, "about": {"ru": "Левая бас, правая аккорд на те же доли. Так звучит аккомпанемент под мелодию: включи запись и играй вместе.", "en": "Left hand the bass, right hand a chord on the same beats. This is the accompaniment under the tune: put on a recording and play along."}},
-    "imp-ipa": {"kind": "solo", "solo": "ipanema-solo"},
-    "d-chords-cor": {"kind": "drill", "title": {"ru": "Аккорды Corcovado", "en": "Corcovado chords"}, "about": {"ru": "D7, Abdim7, Gm7, C7: начало пьесы, уменьшённый аккорд ведёт вниз по полутонам. Потом остальные.", "en": "D7, Abdim7, Gm7, C7: the opening, the diminished chord leading down by half steps. Then the rest."}, "tasks": [{"type": "chord", "chords": ["D7", "Abdim7", "Gm7", "C7"], "n": 8}, {"type": "chord", "chords": ["Fmaj7", "Fm7", "Bb7", "Em7", "A7", "C6"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
-    "form-cor": {"kind": "form", "form": "corcovado-c", "pattern": "b1", "title": {"ru": "Corcovado на басу", "en": "Corcovado, bass only"}, "about": {"ru": "Все 32 такта, левая держит ячейку. Пьеса тихая: играй мягко.", "en": "All 32 bars, the left hand holding the cell. A quiet tune: play softly."}},
-    "form-cor-c2": {"kind": "form", "form": "corcovado-c", "pattern": "c2", "hand": "both", "title": {"ru": "Corcovado: аккорды между басом", "en": "Corcovado: chords between the bass"}, "about": {"ru": "Левая бас, правая аккорд между нотами баса. Тихо и мягко, как в записи.", "en": "Left hand the bass, right hand a chord between the bass notes. Quiet and soft, like the recording."}},
-    "imp-cor": {"kind": "solo", "solo": "corcovado-solo"},
-    "d-chords-wave": {"kind": "drill", "title": {"ru": "Аккорды Wave", "en": "Wave chords"}, "about": {"ru": "Dmaj7, Bbdim7, Am7, D7: начало пьесы. Потом Gmaj7, Gm6 и цепочка доминант F#7 B7 E9 A7.", "en": "Dmaj7, Bbdim7, Am7, D7: the opening. Then Gmaj7, Gm6 and the chain of dominants F#7 B7 E9 A7."}, "tasks": [{"type": "chord", "chords": ["Dmaj7", "Bbdim7", "Am7", "D7"], "n": 8}, {"type": "chord", "chords": ["Gmaj7", "Gm6", "F#7", "B7", "E9", "Bb7", "A7"], "n": 8}], "pass": {"acc": 0.85, "avgMs": 6000}},
-    "form-wave": {"kind": "form", "form": "wave-d", "pattern": "b2", "title": {"ru": "Wave на басу", "en": "Wave, bass only"}, "about": {"ru": "Все 44 такта, левая держит ячейку. Мелодию слушай в записи и подпевай.", "en": "All 44 bars, the left hand holding the cell. Listen to the tune on a recording and sing along."}},
-    "form-wave-c3": {"kind": "form", "form": "wave-d", "pattern": "c3", "hand": "both", "title": {"ru": "Wave: аккорды по клаве", "en": "Wave: chords on the clave"}, "about": {"ru": "Левая бас, правая аккорды вместе с римом барабанов. Включи запись и играй вместе.", "en": "Left hand the bass, right hand chords with the drums' rim click. Put on the recording and play along."}},
-    "imp-wave": {"kind": "solo", "solo": "wave-solo"}
+    "d-chords-ipa": {
+      "kind": "drill",
+      "tasks": [{ "type": "chord", "chords": ["Fmaj7", "G7", "Gm7", "Gb7"], "n": 8 }, { "type": "chord", "chords": ["Gbmaj7", "B7", "F#m7", "D7", "Eb7", "Am7"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Ipanema", "en": "Ipanema chords" },
+      "does": { "ru": "Я называю аккорд пьесы, ты берёшь его клавиши вместе.", "en": "I name a chord of the tune, you take its keys together." },
+      "about": { "ru": "Сначала Fmaj7, G7, Gm7, Gb7: начало пьесы, Gb7 соскальзывает на клавишу вниз, в Fmaj7. Потом аккорды середины пьесы.", "en": "First Fmaj7, G7, Gm7, Gb7: the start of the tune, Gb7 slides one key down into Fmaj7. Then the chords of the middle part." }
+    },
+    "form-ipa": {
+      "kind": "form", "form": "ipanema-f", "pattern": "b2",
+      "title": { "ru": "Ipanema на басу", "en": "Ipanema on the bass" },
+      "does": { "ru": "Левая играет ячейку с ходом все 40 тактов, под барабаны.", "en": "The left plays the cell with a step all 40 bars, over drums." },
+      "about": { "ru": "Все 40 тактов гармонии Jobim, левая держит ячейку боссы. Мелодию слушай в записи и подпевай.", "en": "All 40 bars of Jobim's changes, the left hand holding the bossa cell. Listen to the tune on a recording and sing along." }
+    },
+    "form-ipa-c1": {
+      "kind": "form", "form": "ipanema-f", "pattern": "c1", "hand": "both",
+      "title": { "ru": "Ipanema: аккорды с басом", "en": "Ipanema: chords with the bass" },
+      "does": { "ru": "Левая: бас. Правая: аккорд там же. Все 40 тактов.", "en": "Left: the bass. Right: a chord in the same place. All 40 bars." },
+      "about": { "ru": "Левая бас, правая аккорд на те же доли. Так звучит аккомпанемент под мелодию: включи запись и играй вместе.", "en": "Left hand the bass, right hand a chord on the same beats. This is the accompaniment under the tune: put on a recording and play along." }
+    },
+    "imp-ipa": {
+      "kind": "solo", "solo": "ipanema-solo",
+      "title": { "ru": "Ipanema: твоё соло", "en": "Ipanema: your solo" },
+      "does": { "ru": "Бэнд играет всю пьесу, ты играешь своё подсвеченными клавишами.", "en": "The band plays the whole tune, you play your own on the lit keys." },
+      "about": { "ru": "Бэнд играет пьесу Жобима, ты играешь своё ровными восьмыми. Подсвеченные клавиши идут за аккордами, на смене ищи ноту нового аккорда.", "en": "The band plays the Jobim tune, you play your own in even eighths. The lit keys follow the chords; on a change, look for a note of the new chord." }
+    },
+    "d-chords-cor": {
+      "kind": "drill",
+      "tasks": [{ "type": "chord", "chords": ["D7", "Abdim7", "Gm7", "C7"], "n": 8 }, { "type": "chord", "chords": ["Fmaj7", "Fm7", "Bb7", "Em7", "A7", "C6"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Corcovado", "en": "Corcovado chords" },
+      "does": { "ru": "Я называю аккорд пьесы, ты берёшь его клавиши вместе.", "en": "I name a chord of the tune, you take its keys together." },
+      "about": { "ru": "D7, Abdim7, Gm7, C7: начало пьесы. В уменьшённом аккорде ноты сползают вниз по одной клавише. Потом остальные.", "en": "D7, Abdim7, Gm7, C7: the start of the tune. In the diminished chord the notes slide down one key at a time. Then the rest." }
+    },
+    "form-cor": {
+      "kind": "form", "form": "corcovado-c", "pattern": "b1",
+      "title": { "ru": "Corcovado на басу", "en": "Corcovado on the bass" },
+      "does": { "ru": "Левая играет ячейку боссы все 32 такта. Тихо и мягко.", "en": "The left plays the bossa cell all 32 bars. Soft and quiet." },
+      "about": { "ru": "Все 32 такта, левая держит ячейку. Пьеса тихая: играй мягко.", "en": "All 32 bars, the left hand holding the cell. A quiet tune: play softly." }
+    },
+    "form-cor-c2": {
+      "kind": "form", "form": "corcovado-c", "pattern": "c2", "hand": "both",
+      "title": { "ru": "Corcovado: аккорды между басом", "en": "Corcovado: chords between the bass" },
+      "does": { "ru": "Левая: бас. Правая: аккорды между его нот. Тихо.", "en": "Left: the bass. Right: chords between its notes. Quietly." },
+      "about": { "ru": "Левая бас, правая аккорд между нотами баса. Тихо и мягко, как в записи.", "en": "Left hand the bass, right hand a chord between the bass notes. Quiet and soft, like the recording." }
+    },
+    "imp-cor": {
+      "kind": "solo", "solo": "corcovado-solo",
+      "title": { "ru": "Corcovado: твоё соло", "en": "Corcovado: your solo" },
+      "does": { "ru": "Бэнд играет всю пьесу, ты играешь своё подсвеченными клавишами.", "en": "The band plays the whole tune, you play your own on the lit keys." },
+      "about": { "ru": "Бэнд играет пьесу Жобима, ты играешь своё ровными восьмыми. Подсвеченные клавиши идут за аккордами, на смене ищи ноту нового аккорда.", "en": "The band plays the Jobim tune, you play your own in even eighths. The lit keys follow the chords; on a change, look for a note of the new chord." }
+    },
+    "d-chords-wave": {
+      "kind": "drill",
+      "tasks": [{ "type": "chord", "chords": ["Dmaj7", "Bbdim7", "Am7", "D7"], "n": 8 }, { "type": "chord", "chords": ["Gmaj7", "Gm6", "F#7", "B7", "E9", "Bb7", "A7"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Wave", "en": "Wave chords" },
+      "does": { "ru": "Я называю аккорд пьесы, ты берёшь его клавиши вместе.", "en": "I name a chord of the tune, you take its keys together." },
+      "about": { "ru": "Dmaj7, Bbdim7, Am7, D7: начало пьесы. Потом Gmaj7, Gm6 и цепочка F#7, B7, E9, A7: каждый тянет к следующему.", "en": "Dmaj7, Bbdim7, Am7, D7: the start of the tune. Then Gmaj7, Gm6 and the chain F#7, B7, E9, A7: each pulls to the next." }
+    },
+    "form-wave": {
+      "kind": "form", "form": "wave-d", "pattern": "b2",
+      "title": { "ru": "Wave на басу", "en": "Wave on the bass" },
+      "does": { "ru": "Левая играет ячейку с ходом все 44 такта, под барабаны.", "en": "The left plays the cell with a step all 44 bars, over drums." },
+      "about": { "ru": "Все 44 такта, левая держит ячейку. Мелодию слушай в записи и подпевай.", "en": "All 44 bars, the left hand holding the cell. Listen to the tune on a recording and sing along." }
+    },
+    "form-wave-c3": {
+      "kind": "form", "form": "wave-d", "pattern": "c3", "hand": "both",
+      "title": { "ru": "Wave: аккорды по клаве", "en": "Wave: chords on the clave" },
+      "does": { "ru": "Левая: бас. Правая: аккорды по щелчкам клаве.", "en": "Left: the bass. Right: chords on the clave clicks." },
+      "about": { "ru": "Левая бас, правая аккорды вместе с римом барабанов. Включи запись и играй вместе.", "en": "Left hand the bass, right hand chords with the drums' rim click. Put on the recording and play along." }
+    },
+    "imp-wave": {
+      "kind": "solo", "solo": "wave-solo",
+      "title": { "ru": "Wave: твоё соло", "en": "Wave: your solo" },
+      "does": { "ru": "Бэнд играет всю пьесу, ты играешь своё подсвеченными клавишами.", "en": "The band plays the whole tune, you play your own on the lit keys." },
+      "about": { "ru": "Бэнд играет пьесу Жобима, ты играешь своё ровными восьмыми. Подсвеченные клавиши идут за аккордами, на смене ищи ноту нового аккорда.", "en": "The band plays the Jobim tune, you play your own in even eighths. The lit keys follow the chords; on a change, look for a note of the new chord." }
+    }
   }
 }

@@ -1,0 +1,18 @@
+{
+  "_note": "Word cards for chapters 2 and 3, decided by the lead (RU; EN pair by the implementer). Words introduced in an earlier chapter count as known (blues -> bossa -> std). keys = groups of notes, each group sounds together, groups play in sequence.",
+  "bossa": {
+    "s1": [{ "term": "bossa-cell", "before": "pat-b1", "word": "Ячейка боссы", "text": "Узор левой руки: корень на «раз», квинта чуть позже, и она тянется. Ровно, без свинга.", "keys": [["C3"], ["G3"]] }],
+    "s2": [{ "term": "comping", "before": "pat-c1", "word": "Аккомпанемент", "text": "Правая берёт аккорды, пока левая играет бас. Важно не какие ноты, а где в такте.", "keys": [] }],
+    "s4": [{ "term": "clave", "before": "pat-c3", "word": "Клаве", "text": "Короткий ритм, который повторяется всю пьесу. В боссе барабанщик стучит его по ободу.", "keys": [] }],
+    "s5": [{ "term": "ii-v-i", "before": "ear-pr1-bossa", "word": "II–V–I", "text": "Три аккорда подряд, которые ведут домой. В C это Dm7, G7 и Cmaj7.", "keys": [["D3", "F3", "A3", "C4"], ["G3", "B3", "D4", "F4"], ["C3", "E3", "G3", "B3"]] }],
+    "s7": [{ "term": "passing-dim", "before": "d-chords-cor", "word": "Уменьшённый аккорд", "text": "Напряжённый аккорд-мостик между двумя соседними. В Corcovado он ведёт вниз по одной клавише.", "keys": [["Ab3", "B3", "D4", "F4"]] }],
+    "s8": [{ "term": "dominant", "before": "ear-pr2-bossa", "word": "Доминанта", "text": "Аккорд с цифрой 7, который тянет домой: G7 просится в C.", "keys": [["G3", "B3", "D4", "F4"], ["C3", "E3", "G3", "C4"]] }]
+  },
+  "std": {
+    "s1": [
+      { "term": "standard", "before": "d-chords-f", "word": "Стандарт", "text": "Известная джазовая песня. Мелодию и аккорды знают все, каждый играет по-своему.", "keys": [] },
+      { "term": "bridge", "before": "pat-s1", "word": "Бридж", "text": "Средняя часть песни: другие аккорды, а потом возвращается знакомое начало.", "keys": [] }
+    ],
+    "s2": [{ "term": "voice-leading", "before": "pat-s2", "word": "Голосоведение", "text": "От аккорда к аккорду сдвигается одна нота, остальные стоят. Рука не прыгает.", "keys": [] }]
+  }
+}

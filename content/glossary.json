@@ -205,6 +205,21 @@
       }
     },
     {
+      "id": "interval",
+      "match": [
+        "интервал",
+        "interval"
+      ],
+      "title": {
+        "ru": "Интервал",
+        "en": "Interval"
+      },
+      "short": {
+        "ru": "Расстояние между двумя нотами, считается в клавишах. Маленький интервал звучит тесно, большой просторно.",
+        "en": "The distance between two notes, counted in keys. A small interval sounds tight, a big one sounds open."
+      }
+    },
+    {
       "id": "third",
       "match": [
         "терци",
@@ -249,6 +264,21 @@
       "short": {
         "ru": "Нота прямо под следующим корнем сверху: от C это Bb, на две клавиши ниже верхней C. Она добавляет аккорду джазовый, чуть тревожный цвет.",
         "en": "The note just under the next root above: from C it is Bb, two keys below the upper C. It gives a chord its jazzy, slightly restless colour."
+      }
+    },
+    {
+      "id": "chord",
+      "match": [
+        "аккорд",
+        "chord"
+      ],
+      "title": {
+        "ru": "Аккорд",
+        "en": "Chord"
+      },
+      "short": {
+        "ru": "Несколько клавиш, нажатых вместе. У аккорда есть имя: C7, Dm7. Буква говорит, от какой клавиши он строится.",
+        "en": "Several keys pressed together. A chord has a name: C7, Dm7. The letter says which key it is built from."
       }
     },
     {

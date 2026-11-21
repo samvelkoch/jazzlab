@@ -9,6 +9,9 @@ import { stepsOf, stepProgress, stepDone, stepLocked, currentStepIndex, pathComp
 import { t, L, plural } from '../i18n.js';
 import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
+import * as audio from '../music/audio.js';
+import { toMidi } from '../music/notes.js';
+import { miniSvg } from '../music/minikb.js';
 import { historyPanel, dataPanel, todayLine } from './history.js';
 import { store, progress, itemDone, practiceSeconds, reviews, dueReviews, longTerm, session, startSession, endSession, sessionNext } from '../store.js';
 
@@ -28,7 +31,7 @@ const trackJson = (id) => (otherTracks[id] = otherTracks[id] || fetch(new URL(`$
 /** The form the accompaniment opens for a track: the first item's form (directly, or through its solo / melody). */
 export const jamFormOf = (model) => Object.values(model.track.items).map((it) => it.form || (it.solo && model.solos[it.solo] && model.solos[it.solo].form) || (it.melody && model.melodies[it.melody] && model.melodies[it.melody].form)).find(Boolean) || null;
 
-/** A chapter's one-line pitch: the first sentence of its `about`, without a «Цель дорожки:» / «Goal:» lead-in. */
+/** A chapter's one-line pitch: the first sentence of its `about`, without a short «…:» lead-in (an old «Goal:»). */
 const pitchOf = (about) => { const s = firstSentence(L(about)).replace(/^[^:.]{1,20}:\s*/, ''); return s.charAt(0).toUpperCase() + s.slice(1); };
 
 /** A check-up is due when there is none yet or the newest one is older than `item.every` days (default 30). */
@@ -175,6 +178,28 @@ export async function renderTrack(root, { model, index, rerender }) {
     return h('li.pitem' + (concert ? '.concert' : ''), { 'data-status': s }, ...kids);
   };
 
+  // ---- a «Новое слово» card: not an exercise (no state, no number, never «now»); a row before its `before` item ----
+  const listen = (groups) => {
+    if (!audio.ensureAudio()) return; // inside the tap: unlocks and resumes the AudioContext
+    audio.hush();
+    const ms = groups.map((g) => g.map(toMidi)), all = ms.flat();
+    // the sampled piano once its notes are loaded (a cold first tap would otherwise get the synth fallback)
+    audio.preloadPiano(Math.min(...all), Math.max(...all)).then(() => {
+      const t0 = audio.now() + 0.06;
+      ms.forEach((g, i) => g.forEach((m) => audio.pianoNote(m, t0 + i * 0.5, i === ms.length - 1 ? 1.2 : 0.48, 0.5)));
+    });
+  };
+  const wordRow = (w) => {
+    const keys = Array.isArray(w.keys) ? w.keys.filter((g) => Array.isArray(g) && g.length) : [];
+    return h('li.pword', null,
+      h('span.pwcap', null, t('pNewWord')),
+      h('div.pwbody', null,
+        h('span.pwword', null, L(w.word)),
+        h('span.pwtext', null, markTerms(L(w.text), undefined, 'button', [w.term, ...(w.covers || [])]),
+          keys.length ? [' ', h('button.pwlisten', { type: 'button', onclick: () => listen(keys) }, t('pListen'))] : null)),
+      keys.length ? h('div.pwkb', { html: miniSvg(keys.flat()) }) : null);
+  };
+
   // ---- one step: a heading whose button opens / closes it; rows are built on first open ----
   const stepNode = (s, k) => {
     const sd = stepDone(s, done), pr = stepProgress(s, done);
@@ -201,7 +226,9 @@ export async function renderTrack(root, { model, index, rerender }) {
       }
       const goal = kind === 'open' ? L(s.goal) : ''; // the current step's goal is on the poster
       if (goal) body.append(h('p.pgoal', null, markTerms(goal)));
-      body.append(h('ol.pitems', null, ...s.items.map((id, i) => itemRow(id, i + 1, i === s.items.length - 1 && !s.synthetic && id === concertOf(s)))));
+      const words = Array.isArray(s.words) ? s.words : [];
+      body.append(h('ol.pitems', null, ...s.items.flatMap((id, i) => [...words.filter((w) => w.before === id).map(wordRow),
+        itemRow(id, i + 1, i === s.items.length - 1 && !s.synthetic && id === concertOf(s))])));
     };
     const set = (open) => { if (open) build(); btn.setAttribute('aria-expanded', String(open)); body.hidden = !open; };
     btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
@@ -345,7 +372,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     running ? h('button.ptextbtn', { type: 'button', onclick: () => { endSession(track.id); rerender(); } }, t('endSession')) : null,
     others);
   const poster = h('section.hot.pposter', { 'aria-label': t('pToday') },
-    h('div.cap', null, curChap ? `${L(track.title)} · ${fill(t('pChapterOf'), { k: curChap.c.chapter, n: chapters.length })}` : L(track.title)),
+    h('div.cap', null, curChap ? `${L(curChap.c.title)} · ${fill(t('pChapterOf'), { k: curChap.c.chapter, n: chapters.length })}` : L(track.title)),
     h('div.pbig', { 'aria-label': fill(t('pStepAria'), { k: curK + 1, n: steps.length }) }, p2(curK + 1), h('small', null, '/' + p2(steps.length))),
     h('h1.pstitle', null, stepTitle(st)),
     st.goal ? h('p.pgoalbig', null, markTerms(L(st.goal))) : null,

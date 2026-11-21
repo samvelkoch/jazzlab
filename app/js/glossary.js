@@ -24,11 +24,12 @@ export function loadGlossary() {
 
 const pick = (v, lang) => (v && typeof v === 'object' ? v[lang] || v.ru || v.en || '' : v || '');
 
-/** The text with its first glossary terms wrapped in a clickable word. `tag`: 'button' (default) or 'span' inside a link. */
-export function markTerms(text, lang = getLang(), tag = 'button') {
+/** The text with its first glossary terms wrapped in a clickable word. `tag`: 'button' (default) or 'span' inside a link.
+ *  `skip`: term ids left unmarked (a word card does not mark the word it explains). */
+export function markTerms(text, lang = getLang(), tag = 'button', skip = []) {
   const frag = document.createDocumentFragment();
   const src = String(text || '');
-  const ranges = glossary ? findTerms(src, glossary.terms, lang) : [];
+  const ranges = glossary ? findTerms(src, glossary.terms, lang).filter((r) => !skip.includes(r.id)) : [];
   let at = 0;
   for (const r of ranges) {
     if (r.start > at) frag.append(src.slice(at, r.start));

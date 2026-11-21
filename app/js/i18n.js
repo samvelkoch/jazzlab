@@ -70,7 +70,7 @@ const DICT = {
     // tracks, session, reviews
     riffs: 'Риффы', nextW: 'Дальше', startSession: 'Начать', continueSession: 'Продолжить занятие', endSession: 'Закончить занятие',
     nothingToday: 'На сегодня всё. Сыграй блюз для души.', reviewW: 'повтор', nextReview: 'повтор', inProgress: 'начато',
-    kind_drill: 'Дрил', kind_pattern: 'Левая рука', kind_comp: 'Аккомпанемент', kind_exercise: 'Упражнение', kind_form: 'Форма', itemsDone: 'элементов', longTermW: 'в долгой памяти', trackGoal: 'Цель дорожки',
+    kind_drill: 'Дрил', kind_pattern: 'Левая рука', kind_comp: 'Аккомпанемент', kind_exercise: 'Упражнение', kind_form: 'Форма', itemsDone: 'элементов', longTermW: 'в долгой памяти', trackGoal: 'Цель главы',
     stagesW: 'этапов', bestStreak: 'подряд', sec: 'с', again: 'Ещё раз',
     // drill
     drillUpper: 'ДРИЛ', dPlay: 'СЫГРАЙ', dAnyOctave: 'в любой октаве', dAll: 'ВСЕ', dAllSub: 'все {n} клавиши с этим именем', dChord: 'СОБЕРИ АККОРД', dChordSub: 'ноты: {notes}',
@@ -313,7 +313,7 @@ const DICT = {
     pToday: 'Урок на сегодня', pMixReview: 'повторить', pMixNew: 'новое', pMinW: 'минута|минуты|минут',
     pStart: 'Начать', pContinue: 'Продолжить', pNext: 'Дальше: «{t}»', pFirstReview: 'Сначала повторить: «{t}»', pFirstDiag: 'Сначала замер: «{t}»',
     pDoneOf: 'Сделано {x} из {y}', pAllDone: 'путь пройден', pStepAria: 'Ступень {k} из {n}', pOf: '{k} из {n}',
-    pExW: 'упражнение|упражнения|упражнений', pOpenAnyway: 'Всё равно открыть', pWhy: 'Зачем', pConcert: 'Концерт',
+    pExW: 'упражнение|упражнения|упражнений', pOpenAnyway: 'Всё равно открыть', pWhy: 'Зачем', pConcert: 'Концерт', pNewWord: 'Новое слово', pListen: 'Послушать',
     pPassed: 'сдано', pReview: 'повторить', pJam: 'Играть для удовольствия',
     // chapters of the course on the «Путь» list
     pChapterOf: 'глава {k} из {n}', pChapter: 'Глава {k}', pChapDone: 'пройдена',
@@ -392,7 +392,7 @@ const DICT = {
     planned: 'Planned', min: 'min', h: 'h',
     riffs: 'Riffs', nextW: 'Next', startSession: 'Start', continueSession: 'Continue session', endSession: 'End session',
     nothingToday: 'Nothing due today. Play a blues for fun.', reviewW: 'review', nextReview: 'review', inProgress: 'started',
-    kind_drill: 'Drill', kind_pattern: 'Left hand', kind_comp: 'Comping', kind_exercise: 'Exercise', kind_form: 'Form', itemsDone: 'items', longTermW: 'in long-term memory', trackGoal: 'Track goal',
+    kind_drill: 'Drill', kind_pattern: 'Left hand', kind_comp: 'Comping', kind_exercise: 'Exercise', kind_form: 'Form', itemsDone: 'items', longTermW: 'in long-term memory', trackGoal: 'Chapter goal',
     stagesW: 'stages', bestStreak: 'in a row', sec: 's', again: 'Again',
     drillUpper: 'DRILL', dPlay: 'PLAY', dAnyOctave: 'any octave', dAll: 'ALL', dAllSub: 'all {n} keys with this name', dChord: 'BUILD THE CHORD', dChordSub: 'notes: {notes}',
     int_m3: 'MINOR THIRD UP FROM', int_M3: 'MAJOR THIRD UP FROM', int_p4: 'FOURTH UP FROM', int_p5: 'FIFTH UP FROM', int_m7: 'MINOR SEVENTH UP FROM', int_p8: 'OCTAVE UP FROM', int_up: 'UP FROM', dIntervalSub: '{n} keys up, black keys included',
@@ -630,7 +630,7 @@ const DICT = {
     pToday: 'Today\'s lesson', pMixReview: 'to review', pMixNew: 'new', pMinW: 'minute|minutes',
     pStart: 'Start', pContinue: 'Continue', pNext: 'Next: «{t}»', pFirstReview: 'First a review: «{t}»', pFirstDiag: 'First a check-up: «{t}»',
     pDoneOf: 'Done {x} of {y}', pAllDone: 'path complete', pStepAria: 'Step {k} of {n}', pOf: '{k} of {n}',
-    pExW: 'exercise|exercises', pOpenAnyway: 'Open anyway', pWhy: 'Why', pConcert: 'Concert',
+    pExW: 'exercise|exercises', pOpenAnyway: 'Open anyway', pWhy: 'Why', pConcert: 'Concert', pNewWord: 'New word', pListen: 'Listen',
     pPassed: 'passed', pReview: 'review', pJam: 'Play for fun',
     // chapters of the course on the «Path» list
     pChapterOf: 'chapter {k} of {n}', pChapter: 'Chapter {k}', pChapDone: 'complete',

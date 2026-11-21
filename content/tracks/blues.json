@@ -2,7 +2,7 @@
   "$format": "jazzlab-track/1",
   "id": "blues",
   "title": { "ru": "Блюз", "en": "Blues" },
-  "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
+  "about": { "ru": "К концу главы ты играешь 12-тактовый блюз в C целиком, три круга: левая держит ровный ход, правая играет фразы. Медленно это нормально.", "en": "By the end of the chapter you play a whole 12-bar blues in C, three rounds: the left keeps a steady motion, the right plays phrases. Slow is fine." },
   "path": [
     "d-white", "ear-find", "pat-p1", "d-black", "ear-hl1", "form-p1", "lick-l1", "qa-l1", "form-rh-l1", "lick-l8",
     "qa-l8", "lick-l9", "qa-l9", "imp-b1", "d-fifths", "ear-iv1", "lick-l2", "qa-l2", "lick-l3", "qa-l3", "form-rh-l3",
@@ -17,47 +17,86 @@
       "goal": { "ru": "После этой ступени ты играешь весь блюз левой рукой под барабаны.", "en": "After this step you play the whole blues with your left hand over drums." },
       "items": [
         "d-white", "ear-find", "pat-p1", "d-black", "ear-hl1", "form-p1"
+      ],
+      "words": [
+        { "term": "bar", "before": "pat-p1", "word": { "ru": "Такт", "en": "Bar" }, "text": { "ru": "Четыре счёта: раз, два, три, четыре. Блюз идёт такт за тактом.", "en": "Four counts: one, two, three, four. The blues goes bar by bar." }, "keys": [] },
+        { "term": "chord", "before": "pat-p1", "word": { "ru": "Аккорд", "en": "Chord" }, "text": { "ru": "Несколько клавиш вместе. В блюзе три аккорда: C7, F7 и G7.", "en": "Several keys together. The blues has three chords: C7, F7 and G7." }, "keys": [["C3", "E3", "G3", "Bb3"]], "covers": ["seventh-chord"] },
+        { "term": "chorus", "before": "form-p1", "word": { "ru": "Круг", "en": "Round" }, "text": { "ru": "Все 12 тактов от начала до конца. Потом они идут снова, по кругу.", "en": "All 12 bars from start to end. Then they come again, round and round." }, "keys": [], "covers": ["form"] }
       ] },
     { "id": "s2", "title": { "ru": "Первая фраза", "en": "The first phrase" },
       "goal": { "ru": "После этой ступени ты правой отвечаешь пианино и играешь первое своё соло.", "en": "After this step your right hand answers the piano and you play your first solo." },
       "items": [
         "lick-l1", "qa-l1", "form-rh-l1", "lick-l8", "qa-l8", "lick-l9", "qa-l9", "imp-b1"
+      ],
+      "words": [
+        { "term": "lick", "before": "lick-l1", "word": { "ru": "Фраза", "en": "Phrase" }, "text": { "ru": "Короткая мелодия на пару тактов, как слово в разговоре.", "en": "A short melody over a couple of bars, like a word in a conversation." }, "keys": [] },
+        { "term": "question-answer", "before": "lick-l1", "word": { "ru": "Вопрос и ответ", "en": "Question and answer" }, "text": { "ru": "Вопрос кончается не дома и повисает. Ответ приходит домой, на C.", "en": "A question ends away from home and hangs. An answer comes home, to C." }, "keys": [["G4"], ["C4"]] },
+        { "term": "tonic", "before": "lick-l1", "word": { "ru": "Дом", "en": "Home" }, "text": { "ru": "Клавиша C. Закончи фразу на ней, и фраза звучит законченной.", "en": "The key C. End a phrase on it and the phrase sounds finished." }, "keys": [["C4"], ["C5"]] },
+        { "term": "blues-scale", "before": "imp-b1", "word": { "ru": "Блюзовая гамма", "en": "Blues scale" }, "text": { "ru": "Шесть клавиш: C, Eb, F, Gb, G, Bb. Играй любые из них, и звучит блюз.", "en": "Six keys: C, Eb, F, Gb, G, Bb. Play any of them and it sounds like the blues." }, "keys": [["C4"], ["Eb4"], ["F4"], ["Gb4"], ["G4"], ["Bb4"]] }
       ] },
     { "id": "s3", "title": { "ru": "Две руки вместе", "en": "Both hands together" },
       "goal": { "ru": "После этой ступени ты играешь блюз двумя руками: левая держит, правая отвечает.", "en": "After this step you play the blues with both hands: the left holds, the right answers." },
       "items": [
         "d-fifths", "ear-iv1", "lick-l2", "qa-l2", "lick-l3", "qa-l3", "form-rh-l3", "form-2h-l1"
+      ],
+      "words": [
+        { "term": "root", "before": "d-fifths", "word": { "ru": "Корень", "en": "Root" }, "text": { "ru": "Главная нота аккорда, по ней он назван. У C7 это C, у F7 это F.", "en": "The main note of a chord, it gives the chord its name. In C7 it is C, in F7 it is F." }, "keys": [["C3"]] },
+        { "term": "fifth", "before": "d-fifths", "word": { "ru": "Квинта", "en": "Fifth" }, "text": { "ru": "От корня семь клавиш вверх, чёрные тоже считай. От C это G.", "en": "Seven keys up from the root, black ones counted too. From C it is G." }, "keys": [["C3"], ["G3"], ["C3", "G3"]] },
+        { "term": "interval", "before": "ear-iv1", "word": { "ru": "Интервал", "en": "Interval" }, "text": { "ru": "Расстояние между двумя нотами. Маленькое звучит тесно, большое просторно.", "en": "The distance between two notes. A small one sounds tight, a big one sounds open." }, "keys": [["C4"], ["E4"]] },
+        { "term": "third", "before": "ear-iv1", "word": { "ru": "Терция", "en": "Third" }, "text": { "ru": "От корня три или четыре клавиши вверх: от C это Eb или E. Eb грустная, E светлая.", "en": "Three or four keys up from the root: from C it is Eb or E. Eb is sad, E is bright." }, "keys": [["C4", "Eb4"], ["C4", "E4"]] }
       ] },
     { "id": "s4", "title": { "ru": "Левая шагает", "en": "The left hand walks" },
       "goal": { "ru": "После этой ступени левая играет на каждый счёт, а правая знает ещё одну фразу.", "en": "After this step your left hand plays on every count and your right hand knows one more phrase." },
       "items": [
         "imp-b1r", "d-chords", "ear-hl2", "pat-p1q", "lick-l4", "qa-l4", "form-rh-l4", "form-p1q"
+      ],
+      "words": [
+        { "term": "eighth", "before": "imp-b1r", "word": { "ru": "Восьмая", "en": "Eighth note" }, "text": { "ru": "Две ноты на один счёт: «раз-и, два-и».", "en": "Two notes on one count: “one-and, two-and”." }, "keys": [] },
+        { "term": "quarter", "before": "pat-p1q", "word": { "ru": "Четверть", "en": "Quarter note" }, "text": { "ru": "Одна нота на один счёт: «раз, два, три, четыре».", "en": "One note on one count: “one, two, three, four”." }, "keys": [] }
       ] },
     { "id": "s5", "title": { "ru": "Вопрос и ответ", "en": "Question and answer" },
       "goal": { "ru": "После этой ступени ты сам ведёшь разговор: одна фраза спрашивает, другая отвечает.", "en": "After this step you lead the conversation yourself: one phrase asks, the next one answers." },
       "items": [
         "ear-iv2", "lick-l5", "qa-l5", "form-rh-qa", "d-all", "imp-b2e", "imp-b2"
+      ],
+      "words": [
+        { "term": "octave", "before": "d-all", "word": { "ru": "Октава", "en": "Octave" }, "text": { "ru": "Та же нота выше или ниже: от C до следующей C.", "en": "The same note higher or lower: from one C to the next C." }, "keys": [["C3"], ["C4"], ["C3", "C4"]] }
       ] },
     { "id": "s6", "title": { "ru": "Буги", "en": "Boogie" },
       "goal": { "ru": "После этой ступени левая играет буги, а правая начинает фразу не с первого счёта.", "en": "After this step your left hand plays boogie and your right hand starts a phrase off the first count." },
       "items": [
         "lick-l10", "qa-l10", "lick-l11", "qa-l11", "ear-q1", "pat-p2", "imp-b2r", "form-p2"
+      ],
+      "words": [
+        { "term": "syncopation", "before": "lick-l11", "word": { "ru": "Синкопа", "en": "Syncopation" }, "text": { "ru": "Нота между счётами, на «и». От неё ритм качается.", "en": "A note between the counts, on the “and”. It makes the rhythm sway." }, "keys": [] },
+        { "term": "major-minor", "before": "ear-q1", "word": { "ru": "Мажор и минор", "en": "Major and minor" }, "text": { "ru": "Два настроения аккорда: мажор светлый, минор грустный. Разница в одной клавише.", "en": "Two moods of a chord: major is bright, minor is sad. One key makes the difference." }, "keys": [["C4", "E4", "G4"], ["C4", "Eb4", "G4"]] },
+        { "term": "boogie", "before": "pat-p2", "word": { "ru": "Буги", "en": "Boogie" }, "text": { "ru": "Левая бежит вверх и вниз по одним и тем же клавишам, а рука стоит на месте.", "en": "The left runs up and down the same keys while the hand stays in place." }, "keys": [] }
       ] },
     { "id": "s7", "title": { "ru": "St. Louis Blues", "en": "St. Louis Blues" },
       "goal": { "ru": "После этой ступени ты играешь настоящий блюз 1914 года и разговор двумя руками.", "en": "After this step you play a real blues from 1914 and a conversation with both hands." },
       "items": [
         "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "qa-l6", "form-rh-l6", "imp-b3", "form-2h-qa"
+      ],
+      "words": [
+        { "term": "seventh", "before": "ear-iv3", "word": { "ru": "Септима", "en": "Seventh" }, "text": { "ru": "Нота на две клавиши ниже верхнего корня: от C это Bb. Она даёт аккорду джазовый цвет.", "en": "The note two keys below the upper root: from C it is Bb. It gives a chord its jazz colour." }, "keys": [["C3"], ["Bb3"], ["C3", "Bb3"]] },
+        { "term": "blue-note", "before": "lick-l6", "word": { "ru": "Синяя нота", "en": "Blue note" }, "text": { "ru": "Eb вместо E над C. Нота нарочно чуть ниже, от неё блюз звучит грустно.", "en": "Eb instead of E over C. The note is a little low on purpose, and the blues sounds sad." }, "keys": [["E4"], ["Eb4"]] },
+        { "term": "target-note", "before": "imp-b3", "word": { "ru": "Целевая нота", "en": "Target note" }, "text": { "ru": "Нота нового аккорда на первом счёте такта, где аккорд сменился.", "en": "A note of the new chord on the first count of the bar where the chord changes." }, "keys": [] }
       ] },
     { "id": "s8", "title": { "ru": "Красивый конец", "en": "A proper ending" },
       "goal": { "ru": "После этой ступени блюз не обрывается: последние такты ведут на новый круг, а в конце стоит точка.", "en": "After this step the blues does not just stop: the last bars lead into a new round, and the end has a full stop." },
       "items": [
         "d-chords-ta", "ear-q2", "pat-ta", "form-ta", "imp-b3r", "pat-p3", "form-p3", "end-blues"
+      ],
+      "words": [
+        { "term": "turnaround", "before": "d-chords-ta", "word": { "ru": "Оборот", "en": "Turnaround" }, "text": { "ru": "Последние два такта круга. Они разворачивают музыку к началу.", "en": "The last two bars of the round. They turn the music back to the start." }, "keys": [] },
+        { "term": "shell", "before": "pat-p3", "word": { "ru": "Шелл", "en": "Shell" }, "text": { "ru": "Аккорд из трёх нот: корень, терция и септима. У C7 это C, E и Bb.", "en": "A chord of three notes: root, third and seventh. In C7 that is C, E and Bb." }, "keys": [["C3", "E3", "Bb3"]] }
       ] },
     { "id": "s9", "title": { "ru": "Выступление", "en": "The performance" },
       "goal": { "ru": "После этой ступени ты играешь три круга блюза для семьи и записываешь их.", "en": "After this step you play three rounds of the blues for your family and record them." },
       "items": [
         "ear-iv5", "imp-b3v", "lick-l7", "qa-l7", "imp-b4", "mel-tinroof", "form-mel-tinroof", "perf-blues"
-      ] }
+      ],
+      "words": [] }
   ],
   "sections": [
     {
@@ -116,184 +155,413 @@
   ],
   "items": {
     "d-white": {
-      "kind": "drill", "title": { "ru": "Белые ноты", "en": "White notes" },
-      "about": { "ru": "Я называю ноту, ты играешь её в любой октаве. Быстро, не считая от до.", "en": "I name a note, you play it in any octave. Fast, without counting up from C." },
-      "tasks": [{ "type": "note", "notes": ["C", "D", "E", "F", "G", "A", "B"], "n": 16 }],
-      "pass": { "acc": 0.9, "avgMs": 2500 }
+      "kind": "drill", "tasks": [{ "type": "note", "notes": ["C", "D", "E", "F", "G", "A", "B"], "n": 16 }],
+      "pass": { "acc": 0.9, "avgMs": 2500 },
+      "title": { "ru": "Белые клавиши по именам", "en": "White keys by name" },
+      "does": { "ru": "Я называю ноту, ты нажимаешь её. Любой рукой, в любом месте.", "en": "I name a note, you press it. Either hand, anywhere." },
+      "about": { "ru": "Имена белых клавиш должны приходить сразу, без счёта от C. Тогда ноты в упражнениях не пугают.", "en": "The names of the white keys should come at once, without counting up from C. Then the notes in the exercises stop being scary." }
     },
     "d-black": {
-      "kind": "drill", "title": { "ru": "Чёрные ноты блюза", "en": "Blues black notes" },
-      "about": { "ru": "Bb, Eb, F#, Ab, Db: чёрные клавиши, которые живут в блюзе. Любая октава.", "en": "Bb, Eb, F#, Ab, Db: the black keys that live in the blues. Any octave." },
-      "tasks": [{ "type": "note", "notes": ["Bb", "Eb", "F#", "Ab", "Db"], "n": 14 }],
-      "pass": { "acc": 0.9, "avgMs": 3000 }
+      "kind": "drill", "tasks": [{ "type": "note", "notes": ["Bb", "Eb", "F#", "Ab", "Db"], "n": 14 }],
+      "pass": { "acc": 0.9, "avgMs": 3000 },
+      "title": { "ru": "Чёрные клавиши блюза", "en": "The black keys of the blues" },
+      "does": { "ru": "Я называю чёрную клавишу, ты нажимаешь её.", "en": "I name a black key, you press it." },
+      "about": { "ru": "Bb, Eb, F#, Ab, Db: чёрные клавиши, которые часто звучат в блюзе. Найди любую, высоко или низко.", "en": "Bb, Eb, F#, Ab, Db: the black keys you hear a lot in the blues. Find any of them, high or low." }
     },
     "d-all": {
-      "kind": "drill", "title": { "ru": "Все октавы", "en": "Every octave" },
-      "about": { "ru": "Сыграй все клавиши с этим именем, снизу вверх. На экране их четыре, на пианино больше: хватит четырёх.", "en": "Play every key with this name, bottom to top. Four are on screen; four are enough." },
-      "tasks": [{ "type": "all", "notes": ["C", "F", "G", "Bb", "Eb"], "n": 5 }],
-      "pass": { "acc": 0.9, "avgMs": 7000 }
+      "kind": "drill", "tasks": [{ "type": "all", "notes": ["C", "F", "G", "Bb", "Eb"], "n": 5 }],
+      "pass": { "acc": 0.9, "avgMs": 7000 },
+      "title": { "ru": "Все октавы", "en": "All octaves" },
+      "does": { "ru": "Я называю ноту, ты играешь все клавиши с этим именем снизу вверх.", "en": "I name a note, you play every key with that name, low to high." },
+      "about": { "ru": "Сыграй все клавиши с этим именем, снизу вверх. На экране их четыре, на пианино больше: хватит четырёх.", "en": "Play every key with this name, bottom to top. Four are on screen; four are enough." }
     },
     "d-fifths": {
-      "kind": "drill", "title": { "ru": "Квинты", "en": "Fifths" },
-      "about": { "ru": "Квинта: семь клавиш вверх, включая чёрные. Левая рука блюза живёт на корне и квинте.", "en": "A fifth: seven keys up, black ones included. The blues left hand lives on the root and the fifth." },
+      "kind": "drill",
       "tasks": [{ "type": "interval", "semis": 7, "label": "fifth", "notes": ["C", "F", "G", "Bb", "Eb", "D", "A"], "n": 12 }],
-      "pass": { "acc": 0.9, "avgMs": 4000 }
+      "pass": { "acc": 0.9, "avgMs": 4000 },
+      "title": { "ru": "Квинты", "en": "Fifths" },
+      "does": { "ru": "Я называю ноту, ты нажимаешь клавишу на семь выше.", "en": "I name a note, you press the key seven above it." },
+      "about": { "ru": "Квинта: семь клавиш вверх, включая чёрные. Левая рука блюза живёт на корне и квинте.", "en": "A fifth: seven keys up, black ones included. The blues left hand lives on the root and the fifth." }
     },
     "d-chords": {
-      "kind": "drill", "title": { "ru": "Аккорды блюза", "en": "Blues chords" },
-      "about": { "ru": "C7, F7, G7: четыре ноты вместе, любой рукой, в любом порядке. Это формы ладони, а не теория.", "en": "C7, F7, G7: four notes together, any hand, any order. Hand shapes, not theory." },
-      "tasks": [{ "type": "chord", "chords": ["C7", "F7", "G7"], "n": 9 }],
-      "pass": { "acc": 0.85, "avgMs": 6000 }
+      "kind": "drill", "tasks": [{ "type": "chord", "chords": ["C7", "F7", "G7"], "n": 9 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды C7, F7, G7", "en": "Chords C7, F7, G7" },
+      "does": { "ru": "Я называю аккорд, ты берёшь его четыре клавиши вместе.", "en": "I name a chord, you take its four keys together." },
+      "about": { "ru": "C7, F7, G7: четыре ноты вместе, любой рукой, в любом порядке. Это формы ладони, а не теория.", "en": "C7, F7, G7: four notes together, any hand, any order. Hand shapes, not theory." }
     },
     "d-chords-ta": {
-      "kind": "drill", "title": { "ru": "Аккорды оборота", "en": "Turnaround chords" },
-      "about": { "ru": "A7 и Dm7: две новые формы ладони для оборота.", "en": "A7 and Dm7: two new hand shapes for the turnaround." },
-      "tasks": [{ "type": "chord", "chords": ["A7", "Dm7"], "n": 6 }],
-      "pass": { "acc": 0.85, "avgMs": 6000 }
+      "kind": "drill", "tasks": [{ "type": "chord", "chords": ["A7", "Dm7"], "n": 6 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды A7 и Dm7", "en": "Chords A7 and Dm7" },
+      "does": { "ru": "Я называю аккорд, ты берёшь его четыре клавиши вместе.", "en": "I name a chord, you take its four keys together." },
+      "about": { "ru": "A7 и Dm7: две новые формы ладони для оборота.", "en": "A7 and Dm7: two new hand shapes for the turnaround." }
     },
-    "pat-p1": { "kind": "pattern", "pattern": "p1", "form": "blues-c" },
-    "pat-p1q": { "kind": "pattern", "pattern": "p1q", "form": "blues-c" },
-    "pat-p2": { "kind": "pattern", "pattern": "p2", "form": "blues-c" },
-    "pat-p3": { "kind": "pattern", "pattern": "p3", "form": "blues-c" },
-    "pat-ta": { "kind": "pattern", "pattern": "p1", "form": "blues-c-ta", "title": { "ru": "Оборот: четыре аккорда", "en": "The turnaround: four chords" } },
-    "form-p1": { "kind": "form", "form": "blues-c", "pattern": "p1", "title": { "ru": "Блюз на половинных", "en": "Blues in half notes" } },
-    "form-p1q": { "kind": "form", "form": "blues-c", "pattern": "p1q", "title": { "ru": "Блюз на четвертях", "en": "Blues in quarter notes" } },
-    "form-p2": { "kind": "form", "form": "blues-c", "pattern": "p2", "title": { "ru": "Блюз на буги", "en": "Boogie blues" } },
-    "form-ta": { "kind": "form", "form": "blues-c-ta", "pattern": "p1", "title": { "ru": "Блюз с оборотом", "en": "Blues with a turnaround" } },
-    "form-p3": { "kind": "form", "form": "blues-c-ta", "pattern": "p3", "title": { "ru": "Блюз на шелле", "en": "Shell blues" } },
-    "end-blues": { "kind": "exercise", "ex": "blues-end" },
+    "pat-p1": {
+      "kind": "pattern", "pattern": "p1", "form": "blues-c",
+      "title": { "ru": "Левая: две клавиши на такт", "en": "Left: two keys a bar" },
+      "does": { "ru": "Левая: мизинец на «раз», большой палец на «три».", "en": "Left: little finger on “one”, thumb on “three”." },
+      "about": { "ru": "Самая простая работа левой: две клавиши на такт. Мизинец стоит на нижней, большой палец на верхней.", "en": "The simplest job for the left hand: two keys a bar. The little finger sits on the lower one, the thumb on the upper one." }
+    },
+    "pat-p1q": {
+      "kind": "pattern", "pattern": "p1q", "form": "blues-c",
+      "title": { "ru": "Левая: четыре клавиши на такт", "en": "Left: four keys a bar" },
+      "does": { "ru": "Левая: корень, квинта, корень, квинта. По одной на каждый счёт.", "en": "Left: root, fifth, root, fifth. One on every count." },
+      "about": { "ru": "Та же левая, но четвертями: корень, квинта, корень, квинта. Коротко и ровно, «раз» и «три» чуть сильнее.", "en": "The same left hand in quarter notes: root, fifth, root, fifth. Short and even, “one” and “three” a little stronger." }
+    },
+    "pat-p2": {
+      "kind": "pattern", "pattern": "p2", "form": "blues-c",
+      "title": { "ru": "Левая: буги", "en": "Left: boogie" },
+      "does": { "ru": "Левая: восьмые вверх и обратно вниз, мизинец на корне.", "en": "Left: eighths up and back down, little finger on the root." }
+    },
+    "pat-p3": {
+      "kind": "pattern", "pattern": "p3", "form": "blues-c",
+      "title": { "ru": "Левая: корень и шелл", "en": "Left: root and shell" },
+      "does": { "ru": "Левая: корень на «раз» и «три», две верхние ноты шелла на «два» и «четыре».", "en": "Left: root on “one” and “three”, the shell’s top two notes on “two” and “four”." }
+    },
+    "pat-ta": {
+      "kind": "pattern", "pattern": "p1", "form": "blues-c-ta",
+      "title": { "ru": "Левая: оборот", "en": "Left: the turnaround" },
+      "does": { "ru": "Левая: те же две клавиши на такт, но аккордов четыре подряд.", "en": "Left: the same two keys a bar, but four chords in a row." }
+    },
+    "form-p1": {
+      "kind": "form", "form": "blues-c", "pattern": "p1",
+      "title": { "ru": "Блюз левой рукой", "en": "The blues with the left hand" },
+      "does": { "ru": "Левая играет по две клавиши на такт все 12 тактов, под барабаны.", "en": "The left plays two keys a bar all 12 bars, over drums." },
+      "about": { "ru": "Двенадцать тактов, три аккорда, и всё сначала. Левая держит ровный ход, барабаны помогают не сбиться.", "en": "Twelve bars, three chords, and round again. The left keeps a steady motion, the drums help you stay on track." }
+    },
+    "form-p1q": {
+      "kind": "form", "form": "blues-c", "pattern": "p1q",
+      "title": { "ru": "Блюз: левая шагает", "en": "Blues: the left walks" },
+      "does": { "ru": "Левая играет четвертями все 12 тактов, под барабаны.", "en": "The left plays quarter notes all 12 bars, over drums." },
+      "about": { "ru": "Тот же блюз, но левая шагает на каждый счёт. Слушай, чтобы шаги были ровными.", "en": "The same blues, but the left steps on every count. Listen for even steps." }
+    },
+    "form-p2": {
+      "kind": "form", "form": "blues-c", "pattern": "p2",
+      "title": { "ru": "Блюз на буги", "en": "The blues on boogie" },
+      "does": { "ru": "Левая играет буги все 12 тактов, под барабаны.", "en": "The left plays boogie all 12 bars, over drums." },
+      "about": { "ru": "Тот же блюз, но левая играет буги. Рука стоит на месте, двигаются только пальцы.", "en": "The same blues with the left playing boogie. The hand stays in place, only the fingers move." }
+    },
+    "form-ta": {
+      "kind": "form", "form": "blues-c-ta", "pattern": "p1",
+      "title": { "ru": "Блюз с оборотом", "en": "The blues with a turnaround" },
+      "does": { "ru": "Левая играет весь круг, в последних двух тактах оборот.", "en": "The left plays the whole round, the turnaround in the last two bars." }
+    },
+    "form-p3": {
+      "kind": "form", "form": "blues-c-ta", "pattern": "p3",
+      "title": { "ru": "Блюз на шелле", "en": "The blues on shells" },
+      "does": { "ru": "Левая играет корень и шелл все 12 тактов, под барабаны.", "en": "The left plays root and shell all 12 bars, over drums." }
+    },
+    "end-blues": {
+      "kind": "exercise", "ex": "blues-end",
+      "title": { "ru": "Концовка блюза", "en": "The blues ending" },
+      "does": { "ru": "Последние аккорды блюза: ты ставишь точку.", "en": "The last chords of the blues: you put the full stop." }
+    },
     "ear-find": {
-      "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
-      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." },
-      "rounds": 12, "ranges": [[60, 67], [60, 72], [55, 79]], "pass": { "acc": 0.8 }
+      "kind": "ear", "rounds": 12, "ranges": [[60, 67], [60, 72], [55, 79]], "pass": { "acc": 0.8 },
+      "title": { "ru": "Найди ноту на слух", "en": "Find the note by ear" },
+      "does": { "ru": "Я играю ноту, ты ищешь её на клавишах.", "en": "I play a note, you look for it on the keys." },
+      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." }
     },
-    "ear-hl1": { "kind": "ear", "game": "hilo", "level": 1, "title": { "ru": "Выше или ниже", "en": "Higher or lower" }, "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-iv1": { "kind": "ear", "game": "interval", "level": 1, "title": { "ru": "Интервалы: малая и большая терция", "en": "Intervals: minor or major third" }, "about": { "ru": "Две ноты вверх: малая терция (3 полутона, грустная) или большая (4, светлая)? Назови интервал или сыграй вторую ноту.", "en": "Two notes going up: a minor third (3 semitones, sad) or a major third (4, bright)? Name it or play the second note." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-hl2": { "kind": "ear", "game": "hilo", "level": 2, "title": { "ru": "Выше или ниже: тоньше", "en": "Higher or lower: finer" }, "about": { "ru": "Тот же вопрос, но расстояние сужается до полутона.", "en": "The same question, but the gap narrows down to a semitone." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-iv2": { "kind": "ear", "game": "interval", "level": 2, "title": { "ru": "Интервалы: кварта и квинта", "en": "Intervals: fourth and fifth" }, "about": { "ru": "К терциям добавились чистая кварта и квинта: твёрдые, «пустые» интервалы.", "en": "The perfect fourth and fifth join the thirds: the firm, hollow intervals." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-q1": { "kind": "ear", "game": "quality", "level": 1, "title": { "ru": "Аккорд: мажор или минор", "en": "Chord: major or minor" }, "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-iv3": { "kind": "ear", "game": "interval", "level": 3, "title": { "ru": "Интервалы: септимы и октава", "en": "Intervals: sevenths and the octave" }, "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-q2": { "kind": "ear", "game": "quality", "level": 2, "title": { "ru": "Аккорд: maj7, m7 или 7", "en": "Chord: maj7, m7 or 7" }, "about": { "ru": "Четыре ноты. Maj7 светлый и мечтательный, m7 мягкий, доминантный 7 просит разрешения.", "en": "Four notes. Maj7 is bright and dreamy, m7 is mellow, the dominant 7 wants to resolve." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-iv5": { "kind": "ear", "game": "interval", "level": 5, "title": { "ru": "Интервалы вниз", "en": "Intervals going down" }, "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "lick-l1": { "kind": "lick", "lick": "l1", "form": "blues-c", "pattern": "p1", "step": 1 },
-    "lick-l2": { "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1", "step": 3 },
-    "lick-l3": { "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1", "step": 3 },
+    "ear-hl1": {
+      "kind": "ear", "game": "hilo", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше или ниже", "en": "Higher or lower" },
+      "does": { "ru": "Звучат две ноты. Скажи, вторая выше или ниже.", "en": "Two notes sound. Say if the second is higher or lower." },
+      "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }
+    },
+    "ear-iv1": {
+      "kind": "ear", "game": "interval", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: терция грустная или светлая", "en": "By ear: a sad or a bright third" },
+      "does": { "ru": "Звучат две ноты. Скажи, какая это терция, или сыграй вторую ноту.", "en": "Two notes sound. Say which third it is, or play the second note." },
+      "about": { "ru": "Две ноты вверх. Терция на три клавиши звучит грустно, на четыре светло. Назови её или сыграй вторую ноту.", "en": "Two notes going up. A third of three keys sounds sad, of four keys bright. Name it or play the second note." }
+    },
+    "ear-hl2": {
+      "kind": "ear", "game": "hilo", "level": 2, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше или ниже: совсем рядом", "en": "Higher or lower: very close" },
+      "does": { "ru": "Тот же вопрос, но ноты всё ближе, к концу соседние клавиши.", "en": "The same question, but the notes get closer, down to neighbouring keys." },
+      "about": { "ru": "Тот же вопрос, но ноты всё ближе, до соседних клавиш. Чем ближе ноты, тем внимательнее слушай.", "en": "The same question, but the notes get closer, down to neighbouring keys. The closer they are, the more carefully you listen." }
+    },
+    "ear-iv2": {
+      "kind": "ear", "game": "interval", "level": 2, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: два широких интервала", "en": "By ear: two wider intervals" },
+      "does": { "ru": "К терциям добавились два интервала пошире. Назови или сыграй вторую ноту.", "en": "Two wider intervals join the thirds. Name it or play the second note." },
+      "about": { "ru": "К терциям добавились чистая кварта и квинта: твёрдые, «пустые» интервалы.", "en": "The perfect fourth and fifth join the thirds: the firm, hollow intervals." }
+    },
+    "ear-q1": {
+      "kind": "ear", "game": "quality", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: мажор или минор", "en": "By ear: major or minor" },
+      "does": { "ru": "Звучит аккорд из трёх нот. Скажи, светлый он или грустный.", "en": "A three-note chord sounds. Say if it is bright or sad." },
+      "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }
+    },
+    "ear-iv3": {
+      "kind": "ear", "game": "interval", "level": 3, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: септимы и октава", "en": "By ear: sevenths and the octave" },
+      "does": { "ru": "Ещё три широких интервала. Назови или сыграй вторую ноту.", "en": "Three more wide intervals. Name it or play the second note." },
+      "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }
+    },
+    "ear-q2": {
+      "kind": "ear", "game": "quality", "level": 2, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: три цвета аккорда", "en": "By ear: three chord colours" },
+      "does": { "ru": "Звучит аккорд из четырёх нот. Скажи, какой он: maj7, m7 или 7.", "en": "A four-note chord sounds. Say which it is: maj7, m7 or 7." },
+      "about": { "ru": "Четыре ноты вместе. Maj7 светлый и мечтательный, m7 мягкий, 7 напряжённый и просится дальше.", "en": "Four notes together. Maj7 is bright and dreamy, m7 is soft, 7 is tense and wants to move on." }
+    },
+    "ear-iv5": {
+      "kind": "ear", "game": "interval", "level": 5, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: интервалы вниз", "en": "By ear: intervals down" },
+      "does": { "ru": "Те же интервалы, но вторая нота ниже первой.", "en": "The same intervals, but the second note is lower than the first." },
+      "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }
+    },
+    "lick-l1": {
+      "kind": "lick", "lick": "l1", "form": "blues-c", "pattern": "p1", "step": 1,
+      "title": { "ru": "Ответ: скользнул и домой", "en": "Answer: slide and home" },
+      "does": { "ru": "Правая: палец 2 скользит с чёрной на белую, фраза кончается на C.", "en": "Right: finger 2 slides from black to white, the phrase ends on C." }
+    },
+    "lick-l2": {
+      "kind": "lick", "lick": "l2", "form": "blues-c", "pattern": "p1", "step": 3,
+      "title": { "ru": "Вопрос: сверху вниз", "en": "Question: top to bottom" },
+      "does": { "ru": "Правая: от мизинца вниз, домой не доходит и повисает на G.", "en": "Right: down from the little finger, it does not get home and hangs on G." },
+      "about": { "ru": "Сверху вниз от мизинца, по пути задевает чёрную клавишу. До C не доходит, поэтому просит ответа.", "en": "Down from the little finger, brushing a black key on the way. It does not reach C, so it asks for an answer." }
+    },
+    "lick-l3": {
+      "kind": "lick", "lick": "l3", "form": "blues-c", "pattern": "p1", "step": 3,
+      "title": { "ru": "Ответ: три удара", "en": "Answer: three hits" },
+      "does": { "ru": "Правая: одна клавиша три раза, шаг вверх, потом вниз на C.", "en": "Right: one key three times, a step up, then down to C." }
+    },
     "qa-l1": {
-      "kind": "qa", "lick": "l1", "licks": ["l5", "l8", "l2", "l7", "l3", "l4", "l6"], "step": 1, "form": "blues-c", "pattern": "p1",
-      "title": { "ru": "Разговор: пианино спрашивает, ты отвечаешь", "en": "Conversation: the piano asks, you answer" },
+      "kind": "qa", "lick": "l1", "licks": ["l5", "l8", "l2", "l7", "l3", "l4", "l6"], "step": 1, "form": "blues-c",
+      "pattern": "p1",
+      "title": { "ru": "Разговор: пианино спрашивает", "en": "Conversation: the piano asks" },
+      "does": { "ru": "Пианино играет вопрос, ты отвечаешь фразой и кончаешь на C.", "en": "The piano plays a question, you answer with a phrase ending on C." },
       "about": { "ru": "Сначала на слух: вопрос висит, ответ приходит домой. Потом по всему блюзу пианино спрашивает, а ты отвечаешь своей фразой. В конце отвечаешь по-своему: любые клавиши, главное закончить дома.", "en": "First by ear: a question hangs, an answer comes home. Then over the whole blues the piano asks and you answer with your phrase. Finally you answer your own way: any keys, as long as you end at home." }
     },
-    "lick-l8": { "kind": "lick", "lick": "l8", "form": "blues-c", "pattern": "p1", "step": 2 },
+    "lick-l8": {
+      "kind": "lick", "lick": "l8", "form": "blues-c", "pattern": "p1", "step": 2,
+      "title": { "ru": "Вопрос: стук и вверх", "en": "Question: knock and up" },
+      "does": { "ru": "Правая: два удара по одной клавише, шаг вверх, и фраза повисает.", "en": "Right: two hits on one key, a step up, and the phrase hangs." }
+    },
     "qa-l8": {
       "kind": "qa", "lick": "l8", "licks": ["l1", "l9", "l4", "l3"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 2,
-      "title": { "ru": "Разговор: ты спрашиваешь «стук и вверх»", "en": "Conversation: you ask \"knock and up\"" },
+      "title": { "ru": "Разговор: спроси «стуком»", "en": "Conversation: ask with a “knock”" },
+      "does": { "ru": "Ты играешь этот вопрос, пианино отвечает. Потом меняешь его.", "en": "You play this question, the piano answers. Then you change it." },
       "about": { "ru": "Ты задаёшь вопрос этой фразой, пианино отвечает, каждый раз по-разному. Потом меняешь фразу, потом спрашиваешь по-своему и не приходишь домой.", "en": "You ask with this phrase, the piano answers, differently each time. Then you change the phrase, then ask your own way without coming home." }
     },
-    "lick-l9": { "kind": "lick", "lick": "l9", "form": "blues-c", "pattern": "p1", "step": 2 },
+    "lick-l9": {
+      "kind": "lick", "lick": "l9", "form": "blues-c", "pattern": "p1", "step": 2,
+      "title": { "ru": "Ответ: четыре ноты вниз", "en": "Answer: four notes down" },
+      "does": { "ru": "Правая: четыре ноты вниз, последняя C.", "en": "Right: four notes down, the last one is C." },
+      "about": { "ru": "Самый короткий ответ блюза: с G вниз через F и Eb, и домой на C.", "en": "The shortest answer in the blues: down from G through F and Eb, and home to C." }
+    },
     "qa-l9": {
       "kind": "qa", "lick": "l9", "licks": ["l8", "l5", "l2", "l7"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 2,
-      "title": { "ru": "Разговор: ты отвечаешь «с квинты домой»", "en": "Conversation: you answer \"from the fifth home\"" },
+      "title": { "ru": "Разговор: ответь «четырьмя нотами»", "en": "Conversation: answer with “four notes”" },
+      "does": { "ru": "Пианино спрашивает, ты отвечаешь этой фразой. Потом меняешь её.", "en": "The piano asks, you answer with this phrase. Then you change it." },
       "about": { "ru": "Пианино спрашивает, каждый раз по-разному, ты отвечаешь этой фразой. Потом меняешь её, потом отвечаешь по-своему и приходишь домой.", "en": "The piano asks, differently each time, you answer with this phrase. Then you change it, then answer your own way and come home." }
     },
     "qa-l2": {
       "kind": "qa", "lick": "l2", "licks": ["l1", "l9", "l4", "l3"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 3,
-      "title": { "ru": "Разговор: ты спрашиваешь «сверху вниз»", "en": "Conversation: you ask \"from the top down\"" },
+      "title": { "ru": "Разговор: спроси «сверху вниз»", "en": "Conversation: ask “top to bottom”" },
+      "does": { "ru": "Ты играешь этот вопрос, пианино отвечает. Потом меняешь его.", "en": "You play this question, the piano answers. Then you change it." },
       "about": { "ru": "Ты задаёшь вопрос этой фразой, пианино отвечает, каждый раз по-разному. Потом меняешь фразу, потом спрашиваешь по-своему и не приходишь домой.", "en": "You ask with this phrase, the piano answers, differently each time. Then you change the phrase, then ask your own way without coming home." }
     },
     "qa-l3": {
       "kind": "qa", "lick": "l3", "licks": ["l8", "l5", "l2", "l7"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 3,
-      "title": { "ru": "Разговор: ты отвечаешь «три удара на одной ноте»", "en": "Conversation: you answer \"three hits on one note\"" },
+      "title": { "ru": "Разговор: ответь «тремя ударами»", "en": "Conversation: answer with “three hits”" },
+      "does": { "ru": "Пианино спрашивает, ты отвечаешь этой фразой. Потом меняешь её.", "en": "The piano asks, you answer with this phrase. Then you change it." },
       "about": { "ru": "Пианино спрашивает, каждый раз по-разному, ты отвечаешь этой фразой. Потом меняешь её, потом отвечаешь по-своему и приходишь домой.", "en": "The piano asks, differently each time, you answer with this phrase. Then you change it, then answer your own way and come home." }
     },
     "qa-l4": {
       "kind": "qa", "lick": "l4", "licks": ["l8", "l5", "l2", "l7"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 4,
-      "title": { "ru": "Разговор: ты отвечаешь «лесенка вверх и вниз»", "en": "Conversation: you answer \"up the ladder and down\"" },
+      "title": { "ru": "Разговор: ответь «лесенкой»", "en": "Conversation: answer with “the ladder”" },
+      "does": { "ru": "Пианино спрашивает, ты отвечаешь этой фразой. Потом меняешь её.", "en": "The piano asks, you answer with this phrase. Then you change it." },
       "about": { "ru": "Пианино спрашивает, каждый раз по-разному, ты отвечаешь этой фразой. Потом меняешь её, потом отвечаешь по-своему и приходишь домой.", "en": "The piano asks, differently each time, you answer with this phrase. Then you change it, then answer your own way and come home." }
     },
     "qa-l5": {
       "kind": "qa", "lick": "l5", "licks": ["l1", "l9", "l4", "l3"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 4,
-      "title": { "ru": "Разговор: ты спрашиваешь «качели на квинте»", "en": "Conversation: you ask \"swinging on the fifth\"" },
+      "title": { "ru": "Разговор: спроси «качелями»", "en": "Conversation: ask with the “seesaw”" },
+      "does": { "ru": "Ты играешь этот вопрос, пианино отвечает. Потом меняешь его.", "en": "You play this question, the piano answers. Then you change it." },
       "about": { "ru": "Ты задаёшь вопрос этой фразой, пианино отвечает, каждый раз по-разному. Потом меняешь фразу, потом спрашиваешь по-своему и не приходишь домой.", "en": "You ask with this phrase, the piano answers, differently each time. Then you change the phrase, then ask your own way without coming home." }
     },
-    "lick-l10": { "kind": "lick", "lick": "l10", "form": "blues-c", "pattern": "p1", "step": 5 },
+    "lick-l10": {
+      "kind": "lick", "lick": "l10", "form": "blues-c", "pattern": "p1", "step": 5,
+      "title": { "ru": "Вопрос: начни между счётами", "en": "Question: start between the counts" },
+      "does": { "ru": "Правая: начинаешь не на «раз», а на «и», и повисаешь на G.", "en": "Right: you start not on “one” but on “and”, and hang on G." }
+    },
     "qa-l10": {
       "kind": "qa", "lick": "l10", "licks": ["l1", "l9", "l4", "l3"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 5,
-      "title": { "ru": "Разговор: ты спрашиваешь «с «и» на квинту»", "en": "Conversation: you ask \"from \"and\" to the fifth\"" },
+      "title": { "ru": "Разговор: спроси с «и»", "en": "Conversation: ask from “and”" },
+      "does": { "ru": "Ты играешь этот вопрос, пианино отвечает. Потом меняешь его.", "en": "You play this question, the piano answers. Then you change it." },
       "about": { "ru": "Ты задаёшь вопрос этой фразой, пианино отвечает, каждый раз по-разному. Потом меняешь фразу, потом спрашиваешь по-своему и не приходишь домой.", "en": "You ask with this phrase, the piano answers, differently each time. Then you change the phrase, then ask your own way without coming home." }
     },
-    "lick-l11": { "kind": "lick", "lick": "l11", "form": "blues-c", "pattern": "p1", "step": 5 },
+    "lick-l11": {
+      "kind": "lick", "lick": "l11", "form": "blues-c", "pattern": "p1", "step": 5,
+      "title": { "ru": "Ответ: синкопа домой", "en": "Answer: syncopation home" },
+      "does": { "ru": "Правая: сверху вниз, а на C приходишь раньше счёта.", "en": "Right: top to bottom, and you reach C before the count." }
+    },
     "qa-l11": {
       "kind": "qa", "lick": "l11", "licks": ["l8", "l5", "l2", "l7"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 5,
-      "title": { "ru": "Разговор: ты отвечаешь «синкопа домой»", "en": "Conversation: you answer \"syncopated home\"" },
+      "title": { "ru": "Разговор: ответь синкопой", "en": "Conversation: answer with syncopation" },
+      "does": { "ru": "Пианино спрашивает, ты отвечаешь этой фразой. Потом меняешь её.", "en": "The piano asks, you answer with this phrase. Then you change it." },
       "about": { "ru": "Пианино спрашивает, каждый раз по-разному, ты отвечаешь этой фразой. Потом меняешь её, потом отвечаешь по-своему и приходишь домой.", "en": "The piano asks, differently each time, you answer with this phrase. Then you change it, then answer your own way and come home." }
     },
     "qa-l6": {
       "kind": "qa", "lick": "l6", "licks": ["l8", "l5", "l2", "l7"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 6,
-      "title": { "ru": "Разговор: ты отвечаешь «синяя терция дрожит»", "en": "Conversation: you answer \"the blue third trembles\"" },
+      "title": { "ru": "Разговор: ответь «дрожащей»", "en": "Conversation: answer with the “tremble”" },
+      "does": { "ru": "Пианино спрашивает, ты отвечаешь этой фразой. Потом меняешь её.", "en": "The piano asks, you answer with this phrase. Then you change it." },
       "about": { "ru": "Пианино спрашивает, каждый раз по-разному, ты отвечаешь этой фразой. Потом меняешь её, потом отвечаешь по-своему и приходишь домой.", "en": "The piano asks, differently each time, you answer with this phrase. Then you change it, then answer your own way and come home." }
     },
     "qa-l7": {
       "kind": "qa", "lick": "l7", "licks": ["l1", "l9", "l4", "l3"], "form": "blues-c", "pattern": "p1",
       "stages": ["answer", "vary", "own"], "step": 6,
-      "title": { "ru": "Разговор: ты спрашиваешь «с септимы вниз»", "en": "Conversation: you ask \"down from the seventh\"" },
+      "title": { "ru": "Разговор: спроси «с септимы»", "en": "Conversation: ask “from the seventh”" },
+      "does": { "ru": "Ты играешь этот вопрос, пианино отвечает. Потом меняешь его.", "en": "You play this question, the piano answers. Then you change it." },
       "about": { "ru": "Ты задаёшь вопрос этой фразой, пианино отвечает, каждый раз по-разному. Потом меняешь фразу, потом спрашиваешь по-своему и не приходишь домой.", "en": "You ask with this phrase, the piano answers, differently each time. Then you change the phrase, then ask your own way without coming home." }
     },
-    "form-rh-l1": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1", "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" } },
-    "form-rh-l3": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3", "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" } },
+    "form-rh-l1": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l1",
+      "title": { "ru": "Блюз: ответ правой", "en": "Blues: the answer, right hand" },
+      "does": { "ru": "Правая играет «Ответ» в каждой паре тактов. Левую играет пианино.", "en": "The right plays “Answer” in every pair of bars. The piano plays the left." }
+    },
+    "form-rh-l3": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l3",
+      "title": { "ru": "Блюз: три удара", "en": "Blues: three hits" },
+      "does": { "ru": "Правая играет «Три удара» в каждой паре тактов. Левую играет пианино.", "en": "The right plays “Three hits” in every pair of bars. The piano plays the left." }
+    },
     "form-2h-l1": {
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "both", "lick": "l1",
-      "title": { "ru": "Блюз двумя руками: ответ", "en": "Blues, both hands: the answer" },
+      "title": { "ru": "Блюз двумя руками", "en": "The blues with both hands" },
+      "does": { "ru": "Левая: две клавиши на такт. Правая: «Ответ» в каждой паре тактов.", "en": "Left: two keys a bar. Right: “Answer” in every pair of bars." },
       "about": { "ru": "Левая: корень и квинта. Правая: «Ответ» на каждой паре тактов. Бэнд молчит, играют только барабаны: это уже твой блюз. Три чистых круга подряд.", "en": "Left: root and fifth. Right: the «Answer» on every pair of bars. The band is silent, only drums play: this is your blues now. Three clean choruses in a row." }
     },
-    "lick-l4": { "kind": "lick", "lick": "l4", "form": "blues-c", "pattern": "p1", "step": 4 },
-    "lick-l5": { "kind": "lick", "lick": "l5", "form": "blues-c", "pattern": "p1", "step": 4 },
-    "lick-l6": { "kind": "lick", "lick": "l6", "form": "blues-c", "pattern": "p1", "step": 6 },
-    "lick-l7": { "kind": "lick", "lick": "l7", "form": "blues-c", "pattern": "p1", "step": 6 },
-    "form-rh-l4": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l4", "title": { "ru": "Блюз: лесенка", "en": "Blues: the ladder" } },
-    "form-rh-l6": { "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l6", "title": { "ru": "Блюз: дрожащая терция", "en": "Blues: the trembling third" } },
+    "lick-l4": {
+      "kind": "lick", "lick": "l4", "form": "blues-c", "pattern": "p1", "step": 4,
+      "title": { "ru": "Ответ: лесенка", "en": "Answer: the ladder" },
+      "does": { "ru": "Правая: пять пальцев на пяти клавишах, вверх до G и вниз на C.", "en": "Right: five fingers on five keys, up to G and down to C." }
+    },
+    "lick-l5": {
+      "kind": "lick", "lick": "l5", "form": "blues-c", "pattern": "p1", "step": 4,
+      "title": { "ru": "Вопрос: качели на G", "en": "Question: seesaw on G" },
+      "does": { "ru": "Правая: начинаешь на G и на G повисаешь.", "en": "Right: you start on G and hang on G." }
+    },
+    "lick-l6": {
+      "kind": "lick", "lick": "l6", "form": "blues-c", "pattern": "p1", "step": 6,
+      "title": { "ru": "Ответ: синяя нота дрожит", "en": "Answer: the blue note trembles" },
+      "does": { "ru": "Правая: пальцы 2 и 3 качаются с чёрной на белую, потом вверх и на C.", "en": "Right: fingers 2 and 3 rock from black to white, then up and to C." }
+    },
+    "lick-l7": {
+      "kind": "lick", "lick": "l7", "form": "blues-c", "pattern": "p1", "step": 6,
+      "title": { "ru": "Вопрос: с септимы вниз", "en": "Question: down from the seventh" },
+      "does": { "ru": "Правая: с чёрной под мизинцем вниз на чёрную под пальцем 1. Повисает.", "en": "Right: from the black key under finger 5 down to the black one under finger 1." }
+    },
+    "form-rh-l4": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l4",
+      "title": { "ru": "Блюз: лесенка", "en": "Blues: the ladder" },
+      "does": { "ru": "Правая играет «Лесенку» в каждой паре тактов. Левую играет пианино.", "en": "The right plays “The ladder” in every pair of bars. The piano plays the left." }
+    },
+    "form-rh-l6": {
+      "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "lick": "l6",
+      "title": { "ru": "Блюз: дрожащая нота", "en": "Blues: the trembling note" },
+      "does": { "ru": "Правая играет эту фразу в каждой паре тактов. Левую играет пианино.", "en": "The right plays this phrase in every pair of bars. The piano plays the left." }
+    },
     "form-rh-qa": {
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "licks": ["l5", "l4"],
-      "title": { "ru": "Блюз: вопрос и ответ", "en": "Blues: question and answer" },
+      "title": { "ru": "Блюз: вопрос и ответ правой", "en": "Blues: question and answer, right hand" },
+      "does": { "ru": "Правая: два такта вопрос, два такта ответ, и так весь круг.", "en": "Right: two bars question, two bars answer, all the way round." },
       "about": { "ru": "Вопрос на нечётных парах тактов, ответ на чётных. Так разговаривает блюз.", "en": "A question on bars 1, 5, 9, an answer on 3, 7, 11. That is how the blues talks." }
     },
     "form-2h-qa": {
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "both", "licks": ["l5", "l4"],
-      "title": { "ru": "Блюз двумя руками: вопрос и ответ", "en": "Blues, both hands: question and answer" },
+      "title": { "ru": "Блюз двумя руками: разговор", "en": "The blues with both hands: conversation" },
+      "does": { "ru": "Левая: две клавиши на такт. Правая: вопрос, потом ответ.", "en": "Left: two keys a bar. Right: a question, then an answer." },
       "about": { "ru": "Левая: корень и квинта. Правая: вопрос на тактах 1, 5, 9, ответ на 3, 7, 11. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "Left: root and fifth. Right: a question on bars 1, 5, 9, an answer on 3, 7, 11. The band is silent, only drums play. Three clean choruses in a row." }
     },
-    "imp-b1": { "kind": "solo", "solo": "blues-scale" },
-    "imp-b2": { "kind": "solo", "solo": "blues-call" },
-    "imp-b3": { "kind": "solo", "solo": "blues-chords" },
-    "imp-b4": { "kind": "solo", "solo": "blues-solo" },
-    "imp-b1r": { "kind": "solo", "solo": "blues-eighths" },
-    "imp-b2e": { "kind": "solo", "solo": "blues-echo" },
-    "imp-b2r": { "kind": "solo", "solo": "blues-charleston" },
-    "imp-b3r": { "kind": "solo", "solo": "blues-anticipation" },
-    "imp-b3v": { "kind": "solo", "solo": "blues-vary" },
-    "mel-stl": { "kind": "melody", "melody": "stl-c", "pattern": "p1" },
+    "imp-b1": {
+      "kind": "solo", "solo": "blues-scale",
+      "title": { "ru": "Первое соло: шесть клавиш", "en": "First solo: six keys" },
+      "does": { "ru": "Бэнд играет блюз. Два такта играешь любые из шести клавиш, два молчишь.", "en": "The band plays the blues. Two bars you play any of six keys, two you rest." },
+      "about": { "ru": "Первое своё соло. Два такта играешь, два молчишь: тишина тоже музыка. Клавиши аккорда подсвечены ярче.", "en": "Your first own solo. Two bars you play, two you stay silent: silence is music too. The chord’s keys are lit brighter." }
+    },
+    "imp-b2": {
+      "kind": "solo", "solo": "blues-call",
+      "title": { "ru": "Соло: ответь бэнду", "en": "Solo: answer the band" },
+      "does": { "ru": "Два такта бэнд спрашивает, два такта ты отвечаешь своей фразой.", "en": "The band asks for two bars, you answer for two with your phrase." }
+    },
+    "imp-b3": {
+      "kind": "solo", "solo": "blues-chords",
+      "title": { "ru": "Соло: попади в аккорд", "en": "Solo: hit the chord" },
+      "does": { "ru": "На первом счёте нового аккорда сыграй его ноту. Она подсвечена.", "en": "On the first count of a new chord, play its note. It is lit up." },
+      "about": { "ru": "Теперь подсвеченные клавиши меняются вместе с аккордом. На первом счёте такта, где аккорд сменился, сыграй его ноту, и соло слышно по аккордам.", "en": "Now the lit keys change with the chord. On the first count of the bar where the chord changes, play its note, and the solo follows the chords." }
+    },
+    "imp-b4": {
+      "kind": "solo", "solo": "blues-solo",
+      "title": { "ru": "Соло на три круга", "en": "A solo of three rounds" },
+      "does": { "ru": "Три круга подряд без остановки. Начни просто, к третьему добавь.", "en": "Three rounds in a row without stopping. Start simple, add by the third." },
+      "about": { "ru": "Три круга подряд, без остановки. Начни просто, к третьему кругу добавь. Фразы, тишина и целевые ноты: всё, чему научился, сразу.", "en": "Three rounds in a row without stopping. Start simple, add by the third round. Phrases, silence and target notes: everything you have learned at once." }
+    },
+    "imp-b1r": {
+      "kind": "solo", "solo": "blues-eighths",
+      "title": { "ru": "Соло: ровные восьмые", "en": "Solo: even eighths" },
+      "does": { "ru": "Сначала простучи ритм на одной клавише, потом сыграй его нотами блюза.", "en": "First tap the rhythm on one key, then play it with blues notes." },
+      "about": { "ru": "Сначала простучи ритм на одной клавише, потом сыграй его нотами блюзовой гаммы. Ровные восьмые или две восьмые и тишина. Два такта играешь, два молчишь.", "en": "First tap the rhythm on one key, then play it with the notes of the blues scale. Even eighths, or two eighths and silence. Two bars you play, two you rest." }
+    },
+    "imp-b2e": {
+      "kind": "solo", "solo": "blues-echo",
+      "title": { "ru": "Соло: повтори за бэндом", "en": "Solo: repeat after the band" },
+      "does": { "ru": "Бэнд играет один такт, ты в следующем повторяешь тот же рисунок.", "en": "The band plays one bar, in the next you repeat the same shape." }
+    },
+    "imp-b2r": {
+      "kind": "solo", "solo": "blues-charleston",
+      "title": { "ru": "Соло: ритм чарльстон", "en": "Solo: the Charleston rhythm" },
+      "does": { "ru": "Длинная нота на «раз», короткая на «и» после двух. Простучи, потом сыграй.", "en": "A long note on “one”, a short one on the “and” after two. Tap, then play." },
+      "about": { "ru": "Сначала простучи ритм на одной клавише: длинная нота на «раз», короткая на «и» после двух, потом тишина. Потом сыграй его нотами блюзовой гаммы: два такта играешь, два молчишь.", "en": "First tap the rhythm on one key: a long note on “one”, a short one on the “and” after two, then silence. Then play it with blues scale notes: two bars you play, two you rest." }
+    },
+    "imp-b3r": {
+      "kind": "solo", "solo": "blues-anticipation",
+      "title": { "ru": "Соло: зайди чуть раньше", "en": "Solo: come in a little early" },
+      "does": { "ru": "Последнюю ноту такта играешь на «и» после четырёх, перед новым «раз».", "en": "The last note of the bar is on the “and” after four, before the new “one”." }
+    },
+    "imp-b3v": {
+      "kind": "solo", "solo": "blues-vary",
+      "title": { "ru": "Соло: тот же ритм, другие ноты", "en": "Solo: same rhythm, other notes" },
+      "does": { "ru": "Бэнд играет один такт. Ты отвечаешь тем же ритмом, но другими клавишами.", "en": "The band plays one bar. You answer with the same rhythm on other keys." }
+    },
+    "mel-stl": {
+      "kind": "melody", "melody": "stl-c", "pattern": "p1",
+      "title": { "ru": "St. Louis Blues: мелодия", "en": "St. Louis Blues: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Припев St. Louis Blues Хэнди (1914) по первому изданию, перенесён из G в C. Учишь его за пианино, по два такта.", "en": "The chorus of Handy’s St. Louis Blues (1914) from the first edition, moved from G to C. You learn it after the piano, two bars at a time." }
+    },
     "form-mel-stl": {
       "kind": "form", "form": "blues-c", "pattern": "p1", "hand": "rh", "melody": "stl-c",
       "title": { "ru": "St. Louis Blues над басом", "en": "St. Louis Blues over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет корень и квинту, ты ведёшь припев целиком. Три чистых круга подряд.", "en": "The left hand plays root and fifth, you carry the whole chorus. Three clean choruses in a row." }
     },
-    "mel-tinroof": { "kind": "melody", "melody": "tinroof-c", "pattern": "p1" },
+    "mel-tinroof": {
+      "kind": "melody", "melody": "tinroof-c", "pattern": "p1",
+      "title": { "ru": "Tin Roof Blues: мелодия", "en": "Tin Roof Blues: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Припев Tin Roof Blues (New Orleans Rhythm Kings, 1923), перенесён из Eb в C. Медленный блюз, двенадцать тактов.", "en": "The chorus of Tin Roof Blues (New Orleans Rhythm Kings, 1923), moved from Eb to C. A slow blues, twelve bars." }
+    },
     "form-mel-tinroof": {
       "kind": "form", "form": "tinroof-c", "pattern": "p1", "hand": "rh", "melody": "tinroof-c",
       "title": { "ru": "Tin Roof Blues над басом", "en": "Tin Roof Blues over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая корень и квинта, ты ведёшь припев. Три чистых круга подряд.", "en": "The left hand plays root and fifth, you carry the chorus. Three clean choruses in a row." }
     },
     "perf-blues": {
-      "kind": "perform", "form": "blues-c-ta", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "melody": "stl-c", "choruses": 3,
-      "title": { "ru": "Блюз в C, три круга", "en": "Blues in C, three choruses" },
+      "kind": "perform", "form": "blues-c-ta", "pattern": "p1", "licks": ["l1", "l3", "l4", "l6"], "melody": "stl-c",
+      "choruses": 3,
+      "title": { "ru": "Блюз в C: три круга", "en": "Blues in C: three rounds" },
+      "does": { "ru": "Обе руки, три круга и концовка. Запись остаётся.", "en": "Both hands, three rounds and the ending. The recording stays." },
       "about": { "ru": "Левая: корень и квинта. Правая: лики «Ответ», «Три удара», «Лесенку» или что хочешь. Отсчёт, три круга и концовка: Db7, потом C7.", "en": "Left: root and fifth. Right: the «Answer», «Three hits» and «The ladder» licks, or whatever you like. Count-in, three choruses and the ending: Db7, then C7." }
     },
     "diag": {

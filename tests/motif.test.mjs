@@ -200,10 +200,11 @@ const NEW = {
 };
 const forms = { blues: ['blues-c', 'p2', 72], bossa: ['blue-bossa', 'b2', 72], std: ['std-f', 's2', 74] };
 const KEYS = ['inside', 'grid', 'phrases', 'rests', 'targets', 'cover', 'pitches', 'rhythm', 'motif', 'ends'];
+const tech = ({ title, does, about, ...rest }) => rest; // an item without its texts (title / does / about: tests/words.test.mjs)
 Object.entries(NEW).forEach(([tid, items]) => {
   const tr = read(`content/tracks/${tid}.json`), imp = tr.sections.find((x) => x.id === 'imp');
   Object.entries(items).forEach(([id, sid]) => {
-    assert.deepEqual(tr.items[id], { kind: 'solo', solo: sid });
+    assert.deepEqual(tech(tr.items[id]), { kind: 'solo', solo: sid });
     assert.ok(imp.items.includes(id) && tr.path.includes(id), id + ': in the imp section and the path');
     const so = read(`content/solos/${sid}.json`);
     assert.equal(so.$format, 'jazzlab-solo/1'); assert.equal(so.id, sid);
