@@ -1,5 +1,5 @@
 // Boot + hash router.
-//   #/              the current chapter (settings.chapter, else blues)   #/track/<id>   a chapter (sets settings.chapter)
+//   #/              the current chapter (settings.chapter, else blues)   #/track/<id>   a chapter (only a chapter row on «Путь» sets settings.chapter)
 //   #/play          free play: accompaniment, riffs, chords, reference
 //   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | melody | solo | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
@@ -280,8 +280,6 @@ async function route() {
       const chapters = chaptersOf(index);
       const id = mt ? mt[1] : homeChapter(store.get('settings', {}), chapters);
       const model = await trackModel(id);
-      // opening a chapter makes it the one `#/` shows next time
-      if (mt && chapters.some((c) => c.id === id)) { const st = store.get('settings', {}); if (st.chapter !== id) store.set('settings', { ...st, chapter: id }); }
       setItemLinks((iid) => model.items[iid] ? { href: model.items[iid].href, title: model.items[iid].title } : null, id);
       document.title = 'Jazzlab';
       await renderTrack(root, { model, index, rerender });

@@ -215,14 +215,14 @@ export async function renderTrack(root, { model, index, rerender }) {
   const chapRow = (x) => {
     const { c } = x;
     if (c.id === track.id) return h('h2.pchap', { 'data-kind': 'cur' }, h('span.pchapt', null, chapLabel(c)), h('span.pmeta2', null, chapMeta(x)));
-    if (x.open) return h('h2.pchap', { 'data-kind': 'open' }, h('a.pchapa', { href: `#/track/${c.id}` }, h('span.pchapt', null, chapLabel(c)), h('span.pmeta2', null, `${chapMeta(x)} →`)));
+    if (x.open) return h('h2.pchap', { 'data-kind': 'open' }, h('a.pchapa', { href: `#/track/${c.id}`, onclick: () => store.set('settings', { ...store.get('settings', {}), chapter: c.id }) }, h('span.pchapt', null, chapLabel(c)), h('span.pmeta2', null, `${chapMeta(x)} →`)));
     const rule = c.opensAfter, n = p2(rule.step);
     const cap = rule.track === track.id ? fill(t('pChapAfter'), { n }) : fill(t('pChapAfterOf'), { n, g: t('pGen_' + rule.track) });
     const bid = `chap-${c.id}`;
     const body = h('div.pchapbody', { id: bid, hidden: true },
       h('p.popen', null, pitchOf(x.raw.about), ' ',
         h('button.plinkbtn', { type: 'button', onclick: () => {
-          store.set('settings', withUnlockedChapter(store.get('settings', {}), c.id));
+          store.set('settings', { ...withUnlockedChapter(store.get('settings', {}), c.id), chapter: c.id });
           location.hash = `#/track/${c.id}`;
         } }, t('pOpenAnyway'))));
     const btn = h('button.pchapa', { type: 'button', 'aria-expanded': 'false', 'aria-controls': bid, onclick: () => {
