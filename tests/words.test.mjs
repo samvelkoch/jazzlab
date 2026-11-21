@@ -91,3 +91,19 @@ assert.ok(cards >= 20, `word cards: ${cards}`);
 assert.ok(fails.length === 0, `${fails.length} term(s) before their card:\n` + fails.join('\n'));
 
 console.log(`words: ${cards} cards, ${introduced.size} terms introduced, every path text uses only known terms`);
+
+// ---- the mini keyboard of a card: the smallest whole-octave range, every key of the card inside it ----
+const { miniRange, miniLayout, miniSvg } = await import('../app/js/music/minikb.js');
+assert.deepEqual(miniRange(['C3', 'E3', 'G3', 'Bb3']), [48, 59]); // one octave C3–B3
+assert.deepEqual(miniRange(['C3', 'C4']), [48, 60]); // a top C ends the range on that C
+assert.deepEqual(miniRange(['Eb4', 'Gb4', 'Bb4']), [60, 71]);
+assert.deepEqual(miniRange(['G3', 'B3', 'D4', 'F4']), [48, 71]); // two octaves
+assert.equal(miniLayout(48, 59).whites, 7);
+assert.equal(miniLayout(48, 60).whites, 8);
+for (const c of chapters) for (const s of read(`content/tracks/${c.id}.json`).steps) for (const w of s.words || []) {
+  if (!w.keys.length) continue;
+  const svg = miniSvg(w.keys.flat());
+  const on = (svg.match(/ on"/g) || []).length;
+  assert.equal(on, new Set(w.keys.flat()).size, `${c.id}/${w.term}: every key of the card is lit once`);
+}
+console.log('words: mini keyboards ok');

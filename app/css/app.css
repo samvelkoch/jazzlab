@@ -1638,6 +1638,21 @@ main.home { flex: 1; display: grid; grid-template-columns: minmax(340px, 5fr) 7f
 .pwhybody p { margin: 0 0 6px; max-width: 42em; }
 .pwhybody .pmeta { font-size: 14px; color: var(--muted); }
 .pwhybody[hidden] { display: none; }
+/* «Новое слово»: a card between the item rows, not an exercise (no number, no state, never yellow): a full-bleed --sub
+   band, caption · the word in display type + one line + «Послушать» · a small static keyboard, the word's keys filled
+   with --rh-key («look here»; keys stay light in both themes) */
+.pword { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 0 10px; align-items: center; margin: 0 -28px; padding: 12px 28px;
+  background: var(--sub); border-top: 1px solid var(--fg); }
+.pwcap { font: 700 var(--t-cap)/1.3 var(--body); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.pwbody { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pwword { font: 800 var(--t-d2)/.95 var(--display); text-transform: uppercase; }
+.pwtext { font-size: 15px; line-height: 1.4; }
+.pwlisten { margin: -10px 0; padding: 10px 0; border: 0; background: transparent; color: var(--fg); cursor: pointer; font-weight: 700;
+  text-decoration: underline 2px; text-underline-offset: 4px; }
+.pwkb .minikb { display: block; max-width: 100%; height: auto; }
+.minikb .wk { fill: var(--ivory); stroke: var(--ivory-edge); stroke-width: 1; }
+.minikb .bk { fill: var(--ebony); }
+.minikb .on { fill: var(--rh-key); }
 .pjam { display: flex; align-items: center; min-height: 52px; padding: 12px 0; border-bottom: 1px solid var(--fg); color: var(--fg); text-decoration: none;
   font: 700 var(--t-cap)/1.3 var(--body); text-transform: uppercase; letter-spacing: .1em; }
 .pjam:hover { text-decoration: underline 2px; text-underline-offset: 4px; }
@@ -1664,6 +1679,8 @@ main.home { flex: 1; display: grid; grid-template-columns: minmax(340px, 5fr) 7f
   .popen, .pgoal { margin-left: 50px; }
   .pwhybody { padding-left: 50px; }
   .pitem[data-status="now"] { margin: 0 -16px; padding: 0 16px; }
+  .pword { margin: 0 -16px; padding: 12px 16px; grid-template-columns: minmax(0, 1fr) auto; }
+  .pwcap { grid-column: 1 / -1; }
   .btn.pgo { font-size: 34px; min-height: 64px; }
 }
 @media (max-width: 640px) {
@@ -1672,8 +1689,15 @@ main.home { flex: 1; display: grid; grid-template-columns: minmax(340px, 5fr) 7f
   .pchap { font-size: var(--t-d2); }
   .pitem.concert .ptitle { font-size: 24px; }
   .seg.big.ptabs { gap: 18px; }
-  .plink { align-items: start; } .pn { padding-top: 3px; } .pside { justify-content: flex-start; }
+  .plink { align-items: start; } .pn { padding-top: 3px; }
+  /* the state and «Зачем» go under the text, so the one line (`does`) gets the full width and stays within two lines */
+  .pitem { grid-template-columns: minmax(0, 1fr); }
+  .plink { padding-bottom: 4px; }
+  .pside { flex-direction: row; align-items: center; justify-content: flex-start; gap: 14px; padding: 0 0 4px 50px; }
+  .pside:empty { display: none; } .pitem:has(.pside:empty) .plink { padding-bottom: 11px; }
   .seg.big.ptabs > button { font-size: 22px; }
+  .pword { grid-template-columns: minmax(0, 1fr); }
+  .pwkb { margin-top: 8px; }
 }
 
 /* ---------- «Играть» (play.js): free play, apart from the course ----------

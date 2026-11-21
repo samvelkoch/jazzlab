@@ -313,7 +313,7 @@ const DICT = {
     pToday: 'Урок на сегодня', pMixReview: 'повторить', pMixNew: 'новое', pMinW: 'минута|минуты|минут',
     pStart: 'Начать', pContinue: 'Продолжить', pNext: 'Дальше: «{t}»', pFirstReview: 'Сначала повторить: «{t}»', pFirstDiag: 'Сначала замер: «{t}»',
     pDoneOf: 'Сделано {x} из {y}', pAllDone: 'путь пройден', pStepAria: 'Ступень {k} из {n}', pOf: '{k} из {n}',
-    pExW: 'упражнение|упражнения|упражнений', pOpenAnyway: 'Всё равно открыть', pWhy: 'Зачем', pConcert: 'Концерт',
+    pExW: 'упражнение|упражнения|упражнений', pOpenAnyway: 'Всё равно открыть', pWhy: 'Зачем', pConcert: 'Концерт', pNewWord: 'Новое слово', pListen: 'Послушать',
     pPassed: 'сдано', pReview: 'повторить', pJam: 'Играть для удовольствия',
     // chapters of the course on the «Путь» list
     pChapterOf: 'глава {k} из {n}', pChapter: 'Глава {k}', pChapDone: 'пройдена',
@@ -630,7 +630,7 @@ const DICT = {
     pToday: 'Today\'s lesson', pMixReview: 'to review', pMixNew: 'new', pMinW: 'minute|minutes',
     pStart: 'Start', pContinue: 'Continue', pNext: 'Next: «{t}»', pFirstReview: 'First a review: «{t}»', pFirstDiag: 'First a check-up: «{t}»',
     pDoneOf: 'Done {x} of {y}', pAllDone: 'path complete', pStepAria: 'Step {k} of {n}', pOf: '{k} of {n}',
-    pExW: 'exercise|exercises', pOpenAnyway: 'Open anyway', pWhy: 'Why', pConcert: 'Concert',
+    pExW: 'exercise|exercises', pOpenAnyway: 'Open anyway', pWhy: 'Why', pConcert: 'Concert', pNewWord: 'New word', pListen: 'Listen',
     pPassed: 'passed', pReview: 'review', pJam: 'Play for fun',
     // chapters of the course on the «Path» list
     pChapterOf: 'chapter {k} of {n}', pChapter: 'Chapter {k}', pChapDone: 'complete',
