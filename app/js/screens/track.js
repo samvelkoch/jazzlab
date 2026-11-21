@@ -28,7 +28,7 @@ const trackJson = (id) => (otherTracks[id] = otherTracks[id] || fetch(new URL(`$
 /** The form the accompaniment opens for a track: the first item's form (directly, or through its solo / melody). */
 export const jamFormOf = (model) => Object.values(model.track.items).map((it) => it.form || (it.solo && model.solos[it.solo] && model.solos[it.solo].form) || (it.melody && model.melodies[it.melody] && model.melodies[it.melody].form)).find(Boolean) || null;
 
-/** A chapter's one-line pitch: the first sentence of its `about`, without a «Цель дорожки:» / «Goal:» lead-in. */
+/** A chapter's one-line pitch: the first sentence of its `about`, without a short «…:» lead-in (an old «Goal:»). */
 const pitchOf = (about) => { const s = firstSentence(L(about)).replace(/^[^:.]{1,20}:\s*/, ''); return s.charAt(0).toUpperCase() + s.slice(1); };
 
 /** A check-up is due when there is none yet or the newest one is older than `item.every` days (default 30). */
@@ -345,7 +345,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     running ? h('button.ptextbtn', { type: 'button', onclick: () => { endSession(track.id); rerender(); } }, t('endSession')) : null,
     others);
   const poster = h('section.hot.pposter', { 'aria-label': t('pToday') },
-    h('div.cap', null, curChap ? `${L(track.title)} · ${fill(t('pChapterOf'), { k: curChap.c.chapter, n: chapters.length })}` : L(track.title)),
+    h('div.cap', null, curChap ? `${L(curChap.c.title)} · ${fill(t('pChapterOf'), { k: curChap.c.chapter, n: chapters.length })}` : L(track.title)),
     h('div.pbig', { 'aria-label': fill(t('pStepAria'), { k: curK + 1, n: steps.length }) }, p2(curK + 1), h('small', null, '/' + p2(steps.length))),
     h('h1.pstitle', null, stepTitle(st)),
     st.goal ? h('p.pgoalbig', null, markTerms(L(st.goal))) : null,

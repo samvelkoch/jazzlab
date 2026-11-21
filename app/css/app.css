@@ -1043,9 +1043,7 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .black.mk-miss { outline-color: #eab308; }
 .key[class*=" mk-"] .lbl { color: inherit; }
 /* jam and question / answer: «home» (where a phrase lands) = the ok green, «hangs» = a framed key (not the left-hand colour) */
-/* jam: the palette of the moment = the keys that sound «now», a pale --hot tint on the key (home and hangs stay as they are) */
-.jamscreen .key.white.mk-pal { background: color-mix(in srgb, var(--hot) 45%, var(--ivory)); }
-.jamscreen .key.black.mk-pal { background: color-mix(in srgb, var(--hot) 45%, var(--ebony)); }
+/* jam: the palette of the moment (the pale --hot tint, shared with the solo screen: .mk-pal below); home and hangs stay as they are */
 .jamscreen .key.mk-base, .qascreen .key.mk-base { background: var(--ok-key); color: #ffffff; box-shadow: none; }
 .jamscreen .key.white.mk-seventh { background: var(--ivory); color: #111111; box-shadow: inset 0 0 0 4px #111111; }
 .jamscreen .key.black.mk-seventh { background: var(--ebony); color: #ffffff; box-shadow: inset 0 0 0 3px var(--ivory); }
@@ -1228,9 +1226,10 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 .solohead .ok { color: var(--ok); } .solohead .muted { font-weight: 400; }
 .solostats { flex-wrap: wrap; }
 .solostats .dstat { min-width: 96px; text-align: center; }
-/* the palette's scale notes (not chord tones): a soft tint of --ext, dark labels; the chord tones keep their colours */
-.key.white.mk-pal { background: color-mix(in srgb, var(--ext-key) 26%, var(--ivory)); }
-.key.black.mk-pal { background: color-mix(in srgb, var(--ext-key) 45%, var(--ebony)); }
+/* the palette = the notes you may play now (jam, solo; on the solo screen the scale notes, the chord tones keep their
+   colours): a pale --hot tint on the key, dark labels */
+.key.white.mk-pal { background: color-mix(in srgb, var(--hot) 45%, var(--ivory)); }
+.key.black.mk-pal { background: color-mix(in srgb, var(--hot) 45%, var(--ebony)); }
 .key.white.mk-pal .lbl { color: #2a2a2a; } /* AA on the tint in both themes */
 .soloscreen .key.far[class*=" mk-"] { opacity: .55; }
 @media (max-width: 640px) {
