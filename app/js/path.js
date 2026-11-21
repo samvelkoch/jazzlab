@@ -50,6 +50,41 @@ export function withUnlocked(settings, trackId, stepId) {
 /** A soft lock: a step after the current one that the learner has not opened. Nothing is ever hard-blocked. */
 export const stepLocked = (steps, k, isDone, unlocked = []) => k > currentStepIndex(steps, isDone) && !unlocked.includes(steps[k].id);
 
+// ---- chapters: blues → bossa → standards (content/index.json `chapter`, `opensAfter`) ----
+
+/** The chapter entries of content/index.json (those with a numeric `chapter`), in chapter order. */
+export const chaptersOf = (index) => ((index && index.courses) || []).filter((c) => Number.isInteger(c.chapter)).sort((a, b) => a.chapter - b.chapter);
+
+/** Whether a chapter is open. `rule` = its `opensAfter` ({ track, step }) or none; `prevSteps` = the steps of
+ *  `rule.track`; open when there is no rule, when steps 1..rule.step are all done, when the learner has progress in it
+ *  (`hasProgress`), or when he opened it anyway (`unlocked`). Unknown previous steps (not loaded): open, never lock. */
+export function chapterOpen(rule, prevSteps, isDone, hasProgress = false, unlocked = false) {
+  if (!rule || hasProgress || unlocked) return true;
+  if (!Array.isArray(prevSteps)) return true;
+  const need = prevSteps.slice(0, rule.step);
+  return need.length >= rule.step && need.every((s) => stepDone(s, isDone));
+}
+
+/** The chapter ids the learner opened anyway (`settings.unlockedChapters`), as an array. */
+export function unlockedChaptersOf(settings) {
+  const u = settings && settings.unlockedChapters;
+  return Array.isArray(u) ? u : [];
+}
+
+/** A new settings object with `trackId` added to `settings.unlockedChapters` (the input is not changed). */
+export function withUnlockedChapter(settings, trackId) {
+  const s = settings && typeof settings === 'object' ? settings : {};
+  const cur = unlockedChaptersOf(s);
+  return { ...s, unlockedChapters: cur.includes(trackId) ? cur : [...cur, trackId] };
+}
+
+/** The chapter the home route `#/` shows: `settings.chapter` when it names a chapter, else the first chapter. */
+export function homeChapter(settings, chapters) {
+  const c = settings && settings.chapter;
+  if (c && chapters.some((x) => x.id === c)) return c;
+  return chapters.length ? chapters[0].id : 'blues';
+}
+
 // abbreviations whose dot does not end a sentence (St. Louis, т. е., e.g.)
 const ABBR = /(?:^|[\s(«"])(?:St|Mr|Mrs|Dr|No|vs|etc|e\.g|i\.e|т|т\. е|т\.е|т\. д|т\.д|см|напр|др|ок)\.$/i;
 /** The first sentence of a text (the line under an item's title when it has no `does`). A sentence ends at . ! ? …

@@ -1,8 +1,8 @@
 {
   "courses": [
-    { "id": "blues", "kind": "track", "ready": true, "title": { "ru": "Блюз", "en": "Blues" } },
-    { "id": "jazz-rhythms", "kind": "course", "ready": true, "title": { "ru": "Риффы", "en": "Riffs" } },
-    { "id": "bossa", "kind": "track", "ready": true, "title": { "ru": "Босса-нова", "en": "Bossa nova" } },
-    { "id": "std", "kind": "track", "ready": true, "title": { "ru": "Стандарты", "en": "Standards" } }
+    { "id": "blues", "kind": "track", "ready": true, "chapter": 1, "title": { "ru": "Блюз", "en": "Blues" } },
+    { "id": "bossa", "kind": "track", "ready": true, "chapter": 2, "opensAfter": { "track": "blues", "step": 5 }, "title": { "ru": "Босса-нова", "en": "Bossa nova" } },
+    { "id": "std", "kind": "track", "ready": true, "chapter": 3, "opensAfter": { "track": "bossa", "step": 4 }, "title": { "ru": "Стандарты", "en": "Standards" } },
+    { "id": "jazz-rhythms", "kind": "course", "ready": true, "title": { "ru": "Риффы", "en": "Riffs" } }
   ]
 }

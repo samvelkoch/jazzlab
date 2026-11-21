@@ -89,7 +89,16 @@ slip, miss with two; on the keys, up to two slips are meh). Relative-ear item id
 Item screens are `#/t/<track>/<item>`. Item ids are store keys (progress, reviews), so they must be unique across
 all tracks (the bossa ear game is `ear-find-bossa`, not `ear-find`). Each track has its own one-tap session
 (store `session` for the blues, `session:<track>` for the others). A track is listed in `content/index.json`
-(`"kind": "track"`, `"ready": true` shows it in the home tabs, opened at `#/track/<id>`; the blues is `#/`).
+(`"kind": "track"`, `"ready": true`, opened at `#/track/<id>`).
+
+Chapters: the course is the tracks with `"chapter": 1|2|3` in `content/index.json`, in that order (blues → bossa nova →
+standards). A chapter may carry `"opensAfter": { "track": "<previous chapter>", "step": N }`: it opens once steps 1..N of
+that track are all done. It is also open when the learner has at least one done item among its steps, or opened it anyway
+(`settings.unlockedChapters: [trackId]`). Otherwise it is softly closed: grey on the «Путь» list with «Всё равно открыть»;
+nothing is blocked, `#/track/<id>` and item links always work. `#/` shows `settings.chapter` (the chapter last opened at
+`#/track/<id>`), else the first chapter. Pure logic: `chapterOpen`, `chaptersOf`, `homeChapter` in `app/js/path.js`; the
+data rules are tested in `tests/path.test.mjs`. An entry without `chapter` (the riffs course `jazz-rhythms`, kind
+`course`) is not a chapter: it lives in «Играть» (`#/play`, `#/riffs`).
 
 The bossa track (`content/tracks/bossa.json`): chord drills of Blue Bossa (`d-chords-cm`, `d-chords-db`), the patterns
 `pat-b1` / `pat-b2` over `blue-bossa`, the form with each (`form-b1`, `form-b2`), the comping section (`comp`, right-hand chords over the
