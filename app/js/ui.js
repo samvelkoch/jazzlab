@@ -1,6 +1,6 @@
 // Small DOM helpers + shared header pieces.
 import { t, getLang, setLang } from './i18n.js';
-import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './theme.js';
+import { toggleTheme, currentTheme } from './theme.js';
 import { midiState, onMidiState, connect } from './music/midi.js';
 import { store, session, sessionNext, sessionAdvance, endSession, latencyMs, setLatencyMs } from './store.js';
 import { storedMode } from './music/names.js';
@@ -66,24 +66,17 @@ export const ICON = {
   note: svg('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>', 18, 'stroke-width="2.2"')
 };
 
-/** Appearance popover: light / dark + colour scheme, and the timing offset (every screen has this popover). */
+/** Appearance popover: light / dark, note names and the timing offset (every screen has this popover). */
 export function themeButton(onChange) {
   const sum = h('summary.iconbtn', { 'aria-label': t('theme'), title: t('theme') });
   const mode = h('div.seg', { role: 'group', 'aria-label': t('theme') });
-  const schemes = h('div.schemes', { role: 'group', 'aria-label': t('colors') });
   const paint = () => {
-    const th = currentTheme(), sc = currentScheme();
+    const th = currentTheme();
     sum.innerHTML = th === 'dark' ? ICON.moon : ICON.sun;
     mode.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === th)));
-    schemes.querySelectorAll('button').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.v === sc));
-      b.querySelectorAll('i').forEach((i, k) => { i.style.background = SCHEMES[b.dataset.v][th][k]; });
-    });
   };
   [['light', t('light')], ['dark', t('dark')]].forEach(([v, label]) => mode.append(h('button', { type: 'button', 'data-v': v,
     onclick: () => { if (currentTheme() !== v) toggleTheme(); paint(); if (onChange) onChange(); } }, label)));
-  Object.keys(SCHEMES).forEach((v) => schemes.append(h('button', { type: 'button', 'data-v': v,
-    onclick: () => { setScheme(v); paint(); if (onChange) onChange(); } }, h('span.sw3', null, h('i'), h('i'), h('i')), t('scheme_' + v))));
   // timing offset: «my notes arrive late by N ms» (Bluetooth MIDI); subtracted from every input time (audio.toAudioTime)
   const latOut = h('output.latout', { 'aria-live': 'polite' });
   const paintLat = () => { const v = latencyMs(); latOut.textContent = `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v)} ${t('ms')}`; };
@@ -106,7 +99,7 @@ export function themeButton(onChange) {
       window.dispatchEvent(new CustomEvent('jl-names'));
     } }, label)));
   const names = h('div.popsec', null, h('span.pophead', null, t('noteNames')), namesSeg);
-  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), h('div.popsec', null, h('span.pophead', null, t('colors')), schemes), names, timing));
+  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), names, timing));
   d.addEventListener('toggle', () => { if (d.open) { paintLat(); paintNames(); } }); // the check-up may have changed it meanwhile
   paint(); paintLat(); paintNames();
   return d;
