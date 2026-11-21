@@ -50,6 +50,7 @@ a { color: inherit; }
 /* display type: condensed heavy grotesque in capitals; caption: the one small label style (replaces every kicker) */
 h1, .disp { font: 800 var(--t-d2)/.92 var(--display); text-transform: uppercase; letter-spacing: .005em; margin: 0; }
 .kicker, .cap, .pophead, .skhead, .fvlabel, .lqlabel, .patlabel, .perflisthead { font: 700 var(--t-cap)/1.3 var(--body); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.nc { text-transform: none; } /* a chord symbol / roman numeral inside a capital heading (caps.js) */
 .muted { color: var(--muted); margin: 0; }
 .grow { flex: 1 1 0; min-width: 0; }
 .row { display: flex; align-items: center; gap: 10px; }
