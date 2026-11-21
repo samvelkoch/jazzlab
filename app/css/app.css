@@ -666,6 +666,28 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .fvnotes { font-size: 13px; font-weight: 700; color: var(--muted); }
 .fvscreen .fgrid:not(.long) { flex: 1 0 auto; }
 .fvscreen .fgrid.long { min-height: 110px; }
+/* staff (form.js, switch «Ноты»): the bar that sounds and the next one; desktop: beside the grid, under the strip */
+.fvscreen [hidden] { display: none !important; }
+.fvlive { display: contents; }
+.fvstaff { min-width: 0; border-radius: 14px; background: var(--paper); padding: 4px 6px; }
+.fvstaff svg.staff { display: block; width: auto; height: clamp(110px, 22dvh, 180px); max-width: 100%; }
+.fvstaff[data-staves="both"] svg.staff { height: clamp(120px, 21dvh, 260px); }
+.fvstaff .nt { cursor: default; }
+.fvstaff svg.nocur .band { display: none; }
+@media (min-width: 641px) {
+  .fvscreen .formpanel.fvstaffon { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto 1fr;
+    grid-template-areas: "head head" "task task" "strip strip" "staff grid"; align-content: start; }
+  .fvscreen .formpanel.fvstaffon > .staffhead { grid-area: head; } .fvscreen .formpanel.fvstaffon > .fvtask { grid-area: task; }
+  .fvscreen .formpanel.fvstaffon .fvstrip { grid-area: strip; } .fvscreen .formpanel.fvstaffon .fvstaff { grid-area: staff; align-self: start; max-width: min(56vw, 640px); }
+  .fvscreen .formpanel.fvstaffon > .fgrid { grid-area: grid; }
+  .fvscreen.playing .formpanel.fvstaffon { grid-template-rows: auto 0 auto minmax(0, 1fr); }
+  .fvscreen.playing .formpanel.fvstaffon .fvstaff { align-self: stretch; min-height: 0; } /* a short pane: the staff shrinks to its row */
+  .fvscreen.playing .formpanel.fvstaffon .fvstaff svg.staff { max-height: 100%; }
+  /* the grid is narrower beside the staff: the ii · V · I labels get their own line above the chord */
+  .fvscreen .formpanel.fvstaffon .fgrid .fcell.fcell[data-fn-on] { padding-top: 24px; }
+  .fvscreen.playing .formpanel.fvstaffon .fgrid { grid-auto-rows: minmax(46px, auto); }
+  .fvscreen.playing .formpanel.fvstaffon .fgrid .fcell[data-fn-on] { min-height: 58px; } /* a cell keeps its label line; the grid scrolls inside */
+}
 /* keyboard plan (keyboard.js plan): the bar's keys soft with a small finger badge, the keys to press next strong */
 .key.pl-r { background: var(--rh-soft); } .key.pl-l { background: var(--lh-soft); }
 .black.pl-r { background: color-mix(in srgb, var(--rh) 50%, var(--ebony)); } .black.pl-l { background: color-mix(in srgb, var(--lh) 50%, var(--ebony)); }
@@ -709,7 +731,9 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 }
 @media (max-width: 640px) {
   .fvstrip { flex-direction: column; gap: 6px; }
-  .fvscreen.playing .fvstrip { position: sticky; top: 0; z-index: 3; background: var(--panel); }
+  .fvscreen .fvlive { display: flex; flex-direction: column; gap: 6px; }
+  .fvscreen.playing .fvlive { position: sticky; top: 0; z-index: 3; background: var(--panel); }
+  .fvscreen .fvstaff svg.staff { min-width: 0; width: 100%; height: auto; max-height: 30dvh; }
   .fvnow { flex-direction: column; align-items: stretch; gap: 6px; padding: 6px 8px; }
   .fvhead { min-width: 0; max-width: none; grid-template-columns: auto auto 1fr; grid-template-areas: "label chord count"; align-items: baseline; gap: 10px; }
   .fvhead .fvcount { justify-self: end; }

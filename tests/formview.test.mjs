@@ -1,7 +1,9 @@
 // Form screen view logic: task mode, bar lists, the «Now» strip, the «Next» summary, the keyboard plan. Run: node tests/formview.test.mjs
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { taskMode, phraseStarts, fmtBars, eventSlots, nextEventG, keyPlan, stripRow, barSummary } from '../app/js/music/formview.js';
+import { taskMode, phraseStarts, fmtBars, eventSlots, nextEventG, keyPlan, stripRow, barSummary, staffBars } from '../app/js/music/formview.js';
+import { normalize } from '../app/js/music/exercise.js';
+import { midiToName } from '../app/js/music/notes.js';
 
 // ---------- task mode ----------
 assert.deepEqual(taskMode({ rh: false }), { mode: 'lh' });
@@ -88,10 +90,27 @@ assert.deepEqual(stripRow([], nm), Array(8).fill(null));
 assert.deepEqual(barSummary([{ t: 4, m: 55 }, { t: 0, m: 48 }, { t: 6, m: 48 }, { t: 2, m: 64 }], nm), ['C', 'E', 'G']);
 assert.deepEqual(barSummary([], nm), []);
 
+// ---------- the staff window ----------
+{ const sp = (hd, bar, e) => midiToName(e.m);
+  const lh = [[{ t: 0, m: 48, d: 4 }, { t: 4, m: 55, d: 4 }], [{ t: 0, m: 53, d: 4 }, { t: 4, m: 60, d: 4 }], [{ t: 0, m: 55, d: 8 }]];
+  const rh = [[{ t: 0, m: 67, d: 1 }, { t: 0, m: 64, d: 2 }, { t: 0, m: 64, d: 2 }, { t: 6, m: 70, d: 4 }], [], [{ t: 7, m: 72, d: 1, stac: true }]];
+  let ex = staffBars({ rh, lh }, 0, sp);
+  assert.equal(ex.bars.length, 2);
+  assert.deepEqual(ex.bars[0].rh, [{ t: 0, d: 2, n: ['E4', 'G4'], f: [], stac: false }, { t: 6, d: 2, n: ['A#4'], f: [], stac: false }]); // chord low → high, cut at the bar line
+  assert.deepEqual(ex.bars[0].lh.map((e) => e.n), [['C3'], ['G3']]);
+  assert.deepEqual(ex.bars[1].rh, []);
+  ex = staffBars({ rh, lh: null }, 2, sp); // the last bar wraps round to bar 1; a hand that is not yours stays empty
+  assert.deepEqual(ex.bars[0].rh, [{ t: 7, d: 1, n: ['C5'], f: [], stac: true }]); assert.deepEqual(ex.bars[0].lh, []);
+  assert.deepEqual(ex.bars[1].rh.map((e) => e.n), [['E4', 'G4'], ['A#4']]);
+  const norm = normalize(ex); // the screen normalizes it for createStaff
+  assert.equal(norm.per, 8); assert.equal(norm.bars[0].rh[0].notes[0], 'C5');
+  assert.equal(staffBars({ rh: [[{ t: 0, m: 60 }]], lh: null }, 0, sp).bars.length, 1); } // a one-bar form: one bar
+
 // ---------- every new string exists in ru and en ----------
 { const src = readFileSync(new URL('../app/js/i18n.js', import.meta.url), 'utf8');
   const keys = ['fvTask', 'fvLh', 'fvLick', 'fvQa', 'fvKey', 'fvKeyQa', 'fvMel', 'fvBoth', 'fvBothLick', 'fvBothQa', 'fvBothKey', 'fvBothMel', 'fvComp',
-    'fvPass', 'fvChorusW', 'fvPassSlips', 'fvLook', 'fvNow', 'fvFirst', 'fvBar', 'fvNext', 'fvRest', 'fvListenLh', 'fvAnd'];
+    'fvPass', 'fvChorusW', 'fvPassSlips', 'fvLook', 'fvNow', 'fvFirst', 'fvBar', 'fvNext', 'fvRest', 'fvListenLh', 'fvAnd',
+    'fvStaffOn', 'fvStaffOff', 'fvStaffAria'];
   for (const k of keys) assert.equal((src.match(new RegExp(`\\b${k}: '`, 'g')) || []).length, 2, 'ru + en for ' + k); }
 
 console.log('formview: ok');

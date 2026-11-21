@@ -17,6 +17,9 @@
 // the hand position of a bar ahead of time: every key of the bar tinted with its finger, the next note strong
 // (music/formview.js keyPlan). The next note moves on when it is hit or its window passes; after the last note of a bar
 // the keyboard already shows the next bar with notes, while the strip follows the bar that sounds.
+// Staff (footer switch «Ноты: вкл / выкл», settings.formStaffRh / formStaffLh, on by default for a right-hand part, off for a
+// left-hand pattern alone and comping): the bar that sounds and the next one on a staff, drawn from the same per-bar notes as
+// the strip (music/formview.js staffBars), with your hands only; a phone shows one staff (the right hand when there is one).
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
 import { nameMode, nameInText } from '../music/names.js';
@@ -24,13 +27,15 @@ import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews, logDay } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
+import { createStaff } from '../music/staff.js';
+import { normalize } from '../music/exercise.js';
 import { patternBars, compBars, lickBars, melodyBarNotes, rhRoot, parseChord, patSpell, barChords, iivPairs, lickOverKey } from '../music/forms.js';
 import { groove } from '../music/drums.js';
 import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
 import { decorateFunctions } from '../fnlabels.js';
 import { createTally, chorusBarAt } from '../music/tally.js';
-import { taskMode, phraseStarts, fmtBars, keyPlan, stripRow, barSummary } from '../music/formview.js';
+import { taskMode, phraseStarts, fmtBars, keyPlan, stripRow, barSummary, staffBars } from '../music/formview.js';
 
 const PER = 8;
 const CLEAN_TO_PASS = 3; // clean choruses in a row
@@ -110,8 +115,10 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
 
   // ---------- now / next strip ----------
   const flats = !!form.flats;
-  const lhName = (k) => (e) => noteName(patSpell(e.m, e.deg, parseChord(e.chord || barChords(bars[k])[0]), flats), names);
-  const rhName = (e) => noteName(e.name || midiToName(e.m), names);
+  const lhSpell = (k, e) => patSpell(e.m, e.deg, parseChord(e.chord || barChords(bars[k])[0]), flats); // with the octave: 'Bb2'
+  const rhSpell = (e) => e.name || midiToName(e.m);
+  const lhName = (k) => (e) => noteName(lhSpell(k, e), names);
+  const rhName = (e) => noteName(rhSpell(e), names);
   const handRows = [rh ? 'rh' : null, !rh || two ? 'lh' : null].filter(Boolean); // the hands that are yours, right above left
   const notesOf = (hd, k) => (hd === 'rh' ? rhNotes[k] : lhNotes[k]) || [];
   const nameFor = (hd, k) => (hd === 'rh' ? rhName : lhName(k));
@@ -124,11 +131,57 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const nextLabel = h('span.fvlabel', null, t('fvNext')), nextChord = h('b.fvchord'), nextNotes = h('span.fvnotes');
   const nextCard = h('div.fvnext', null, nextLabel, nextChord, nextNotes);
   const strip = h('div.fvstrip', null, nowCard, nextCard);
+  // ---------- staff: the bar that sounds and the next one ----------
+  const staffKey = rh && !comp ? 'formStaffRh' : 'formStaffLh'; // a melody / lick / phrase part: on by default; a pattern alone, comping: off
+  let staffOn = typeof settings[staffKey] === 'boolean' ? settings[staffKey] : staffKey === 'formStaffRh';
+  const staffSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  staffSvg.setAttribute('class', 'staff'); staffSvg.setAttribute('role', 'img'); staffSvg.setAttribute('aria-label', t('fvStaffAria'));
+  const staffBox = h('div.fvstaff', null, staffSvg);
+  const live = h('div.fvlive', null, strip, staffBox); // phone: one sticky block while playing
+  const phoneMq = window.matchMedia('(max-width: 640px)');
+  const staffNames = nameMode(settings, 'key');
+  const staffHands = { rh: rh ? rhNotes : null, lh: !rh || two ? lhNotes : null };
+  const staffSpell = (hd, k, e) => (hd === 'rh' ? rhSpell(e) : lhSpell(k, e));
+  const staffWin = new Map(); // first bar -> normalized 2-bar exercise (built once, off the hot path after the first use)
+  const winEx = (k) => { if (!staffWin.has(k)) { const ex = normalize(staffBars(staffHands, k, staffSpell)); ex.dyn = []; staffWin.set(k, ex); } return staffWin.get(k); };
+  let staff = null, staffK = -1, staffMode = '';
+  /** one staff on a phone (the right hand when it is yours), both staves when both hands are yours on a wider screen */
+  const stavesNow = () => (phoneMq.matches ? (rh ? 't' : 'b') : rh && two ? 'both' : rh ? 't' : 'b');
+  function drawStaff(k) {
+    if (!staffOn) return;
+    const mode = stavesNow();
+    if (k === staffK && mode === staffMode && staff) return;
+    staffK = k; staffMode = mode;
+    staff = createStaff(staffSvg, winEx(k), { names: staffNames, staves: mode });
+    const vb = staffSvg.getAttribute('viewBox').split(' ').map(Number);
+    staffSvg.style.aspectRatio = `${vb[2]} / ${vb[3]}`;
+    staffBox.dataset.staves = mode;
+  }
+  function staffCursor(slot) {
+    if (!staff) return;
+    staffSvg.classList.toggle('nocur', slot < 0);
+    if (slot >= 0) staff.setCursor(slot);
+  }
+  function paintStaffOn() {
+    staffBox.hidden = !staffOn; panel.classList.toggle('fvstaffon', staffOn);
+    staffTg.setAttribute('aria-pressed', String(staffOn)); staffTg.textContent = t(staffOn ? 'fvStaffOn' : 'fvStaffOff');
+    if (staffOn) { staffK = -1; drawStaff(Math.max(0, nowBar)); staffCursor(nowFirst || !st.playing ? -1 : curSlot); }
+  }
+  /** Phone: the keyboard sticks above the footer; scroll just enough for the strip (and the staff) to sit above it. */
+  function bringLiveUp() {
+    if (!phoneMq.matches) return;
+    const r = live.getBoundingClientRect(), kp = kbPanel.getBoundingClientRect();
+    const d = Math.min(r.bottom - kp.top + 6, r.top - 4);
+    if (d > 2) window.scrollTo({ top: window.scrollY + d, behavior: 'auto' });
+  }
+  const onPhone = () => { if (staffOn) { staffK = -1; drawStaff(Math.max(0, nowBar)); staffCursor(nowFirst || !st.playing ? -1 : curSlot); } };
+  phoneMq.addEventListener('change', onPhone);
   let nowBar = -1, nowFirst = false; // nowFirst: the stopped / count-in view of bar 1
   function renderNow(k, first = false) {
     nowBar = k; nowFirst = first;
     nowLabel.textContent = `${t('fvNow')} · ${first ? t('fvFirst') : `${t('fvBar')} ${k + 1}`}`;
     nowChord.textContent = bars[k];
+    drawStaff(k);
     handRows.forEach((hd, i) => {
       const row = stripRow(notesOf(hd, k), nameFor(hd, k));
       if (!row.some((c) => c && !c.hold)) { rowEls[i].replaceChildren(h('span.fvrest', null, t('fvRest') + (hd === 'rh' && !two ? ' · ' + t('fvListenLh') : ''))); return; }
@@ -144,12 +197,13 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     const list = barSummary(evs, (e) => e.n);
     nextNotes.textContent = list.length ? list.join(' · ') : t('fvRest');
   }
-  function paintSlot(slot) { [slotHeads, ...rowEls.map((r) => [...r.children])].forEach((cs) => cs.forEach((c, s) => c.classList.toggle('cur', s === slot))); }
+  let curSlot = -1;
+  function paintSlot(slot) { curSlot = slot; staffCursor(slot); [slotHeads, ...rowEls.map((r) => [...r.children])].forEach((cs) => cs.forEach((c, s) => c.classList.toggle('cur', s === slot))); }
   function showFirst() { renderNow(0, true); renderNext(0); countEl.textContent = ''; }
 
   const panel = h('section.panel.formpanel', null,
     h('div.staffhead', null, chorusEl, streakEl, h('div.grow'), fbEl),
-    taskEl, strip,
+    taskEl, live,
     grid);
   const kbEl = h('div');
   const kbPanel = h('section.panel.kbpanel', null, kbEl);
@@ -160,9 +214,13 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const modeSeg = seg([['play', t('fPlay')], ['listen', t('fListen')]], st.mode, (v) => { if (st.playing) stop(); st.mode = v; paintHint(); }, 'rMode');
   const swingSeg = seg([['straight', t('straight')], ['swing', t('swing')]], st.swing ? 'swing' : 'straight', (v) => { st.swing = v === 'swing'; }, 'eighths');
   const beatSeg = seg([['drums', t('drums')], ['click', t('metronome')]], settings.impBeat, (v) => { settings.impBeat = v; store.set('settings', { ...store.get('settings', {}), impBeat: v }); }, 'backing');
+  const staffTg = h('button', { type: 'button', onclick: () => {
+    staffOn = !staffOn; settings[staffKey] = staffOn; store.set('settings', { ...store.get('settings', {}), [staffKey]: staffOn }); paintStaffOn();
+  } });
+  const staffSeg = h('div.seg.fvstaffseg', { role: 'group', 'aria-label': t('fvStaffAria') }, staffTg);
   const footHint = h('span.foothint');
   const primary = h('button.btn.accent.xl', { type: 'button', onclick: () => (st.playing ? stop() : play()) });
-  const footer = h('footer.actions', null, h('div.footsegs', null, modeSeg, form.style === 'bossa' ? null : swingSeg, beatSeg), tempoBox, footHint, h('div.grow'), primary);
+  const footer = h('footer.actions', null, h('div.footsegs', null, modeSeg, form.style === 'bossa' ? null : swingSeg, beatSeg, staffSeg), tempoBox, footHint, h('div.grow'), primary);
   const screen = h('div.exscreen.formscreen.fvscreen', null, header, h('main.ex', null, panel, kbPanel), footer);
   root.replaceChildren(screen);
   const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
@@ -227,7 +285,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   function play() {
     if (!audio.ensureAudio() || st.playing) return;
     st.playing = true; screen.classList.add('playing'); paintPrimary();
-    panel.scrollTop = 0; if (window.matchMedia('(max-width: 640px)').matches) strip.scrollIntoView({ block: 'nearest' });
+    panel.scrollTop = 0; bringLiveUp();
     st.streak = 0; st.choruses = 0; paintStreak();
     cells.forEach((c) => c.classList.remove('ok', 'meh', 'bad', 'cur'));
     const beat = 60 / st.bpm; let t0 = audio.now() + 0.12;
@@ -360,10 +418,10 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const onKey = (e) => { if (e.code === 'Space' && !e.target.closest('input,select,textarea,summary')) { e.preventDefault(); if (st.playing) stop(); else play(); } };
   document.addEventListener('keydown', onKey);
 
-  setBpm(st.bpm); paintPrimary(); paintHint(); paintStreak(); paintKeys(); showFirst();
+  setBpm(st.bpm); paintPrimary(); paintHint(); paintStreak(); paintKeys(); showFirst(); paintStaffOn();
   const saved = exProgress(itemId);
   fb(saved.cleanChoruses ? `${t('fSoFar')}: ${saved.cleanChoruses} ${t('fCleanOf')} ${saved.choruses}` : t('fStart').replace('{n}', NB));
   updateEx(itemId, (p) => p);
 
-  return () => { if (footRO) footRO.disconnect(); if (st.playing) stop(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
+  return () => { phoneMq.removeEventListener('change', onPhone); if (footRO) footRO.disconnect(); if (st.playing) stop(); offNote(); document.removeEventListener('keydown', onKey); header.querySelectorAll('.chip').forEach((c) => c._cleanup && c._cleanup()); };
 }

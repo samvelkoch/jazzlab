@@ -100,3 +100,29 @@ export function barSummary(evs, nameOf) {
   (evs || []).slice().sort((a, b) => a.t - b.t || a.m - b.m).forEach((e) => { const n = nameOf(e); if (!seen.has(n)) { seen.add(n); out.push(n); } });
   return out;
 }
+
+/**
+ * The staff window of the form screen: bars k, k + 1, … (n bars, wrapping round the form) as a raw jazzlab-exercise/1
+ * object for createStaff (call normalize() on it). hands = { rh: perBar | null, lh: perBar | null } — the same per-bar notes
+ * the strip and the keyboard show ({t, d, m, f?, stac?}); a hand that is null stays empty. spellOf(hand, bar, e) = the note's
+ * spelled name with octave ('Eb4'). Notes starting on one slot of one hand become one event (a chord, low to high, a pitch
+ * once); its length is the longest of them, cut at the bar line. No fingers (they are on the strip and the keys).
+ */
+export function staffBars(hands, k, spellOf, n = 2) {
+  const NB = (hands.rh || hands.lh || []).length;
+  const bars = [];
+  for (let j = 0; j < Math.min(n, Math.max(NB, 1)); j++) {
+    const bar = NB ? (k + j) % NB : 0, out = { rh: [], lh: [] };
+    for (const hd of ['rh', 'lh']) {
+      const evs = (hands[hd] && hands[hd][bar]) || [], at = new Map();
+      evs.forEach((e) => { if (e.t >= 0 && e.t < PER) (at.get(e.t) || at.set(e.t, []).get(e.t)).push(e); });
+      out[hd] = [...at.keys()].sort((a, b) => a - b).map((t) => {
+        const es = at.get(t).slice().sort((a, b) => a.m - b.m), seen = new Set();
+        const uniq = es.filter((e) => (seen.has(e.m) ? false : seen.add(e.m)));
+        return { t, d: Math.max(1, Math.min(PER - t, Math.max(...es.map((e) => e.d || 1)))), n: uniq.map((e) => spellOf(hd, bar, e)), f: [], stac: es.every((e) => !!e.stac) };
+      });
+    }
+    bars.push(out);
+  }
+  return { $format: 'jazzlab-exercise/1', id: 'form-staff', time: [4, 4], dyn: [], bars };
+}
