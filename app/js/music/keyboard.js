@@ -65,7 +65,7 @@ export function createKeyboard(el, range, opts = {}) {
     for (const m in keys) keys[m].querySelector('.lbl').textContent = mode === 'off' ? '' : noteName(keys[m].dataset.n, mode);
   };
   setNames(opts.names || 'en');
-  const STATE = /\s(on-r|on-l|nx-r|nx-l|sug|acc|muted)\b/g;
+  const STATE = /\s(on-r|on-l|nx-r|nx-l|sug|acc|muted|pl-r|pl-l|tg-r|tg-l)\b/g;
 
   // ---- sideways scrolling (phone) ----
   const paintNav = () => {
@@ -131,6 +131,21 @@ export function createKeyboard(el, range, opts = {}) {
         for (const e of [cur[h], next[h]]) if (e) e.notes.forEach((n) => want.push(toMidi(n)));
       }
       if (want.length) reveal(want);
+    },
+    /** Hand position ahead of time (form screen): tint = { rh: [{m, f}], lh: [{m, f}] } every key of the shown bar, softly
+     *  coloured with its finger; target = { rh: [m], lh: [m] } the keys to press next, strong. Clears show()'s marks too.
+     *  Scrolls (phone) to the bar's keys, or to the target alone when the bar is wider than the view. */
+    plan(tint, target) {
+      for (const m in keys) { keys[m].className = keys[m].className.replace(STATE, ''); keys[m].querySelector('.badge').textContent = ''; }
+      const all = [], tg = [];
+      for (const hd of ['rh', 'lh']) {
+        (tint[hd] || []).forEach((e) => { const k = keys[e.m]; if (!k) return; k.classList.add('pl-' + hd[0]); k.querySelector('.badge').textContent = e.f || ''; all.push(e.m); });
+        (target[hd] || []).forEach((m) => { const k = keys[m]; if (!k) return; k.classList.add('tg-' + hd[0]); tg.push(m); });
+      }
+      if (!all.length && !tg.length) return;
+      const ks = all.map((m) => keys[m]), vw = scroller.clientWidth;
+      const span = ks.length ? Math.max(...ks.map((k) => k.offsetLeft + k.offsetWidth)) - Math.min(...ks.map((k) => k.offsetLeft)) : 0;
+      reveal(vw && span > vw - 40 && tg.length ? tg : all.concat(tg));
     },
     flash(m, cls) {
       const k = keys[m]; if (!k) return;
