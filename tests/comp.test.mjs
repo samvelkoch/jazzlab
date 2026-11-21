@@ -15,6 +15,7 @@ const pats = Object.fromEntries(['c1', 'c2', 'c3'].map((id) => [id, read(`conten
 // drums.js needs a browser (audio); read the clave out of its source
 const BOSSA_CLAVE = JSON.parse(/BOSSA_CLAVE = (\[\[.*?\]\]);/.exec(readFileSync(join(root, 'app/js/music/drums.js'), 'utf8'))[1]);
 const eq = (a, b, m) => assert.deepEqual(a, b, m);
+const tech = ({ title, does, about, ...rest }) => rest; // an item without its texts (title / does / about: tests/words.test.mjs)
 
 // ---- voicings: every chord of the form, chord tones only, with the 3rd and 7th, in range, 3 distinct notes ----
 const formChords = [...new Set(form.bars.flatMap(barChords))];
@@ -88,7 +89,7 @@ assert.ok(e1.bars.every((b) => b.rh.length === 0)); assert.equal(e1.rhythm, '4. 
 
 // ---- the track ----
 for (const id of ['c1', 'c2', 'c3']) {
-  eq(bt.items['pat-' + id], { kind: 'pattern', pattern: id, form: 'blue-bossa' });
+  eq(tech(bt.items['pat-' + id]), { kind: 'pattern', pattern: id, form: 'blue-bossa' });
   const f = bt.items['form-' + id];
   assert.equal(f.kind, 'form'); assert.equal(f.hand, 'both'); assert.equal(f.pattern, id); assert.equal(f.form, 'blue-bossa');
   assert.ok(f.title.ru && f.title.en && f.about.ru && f.about.en);

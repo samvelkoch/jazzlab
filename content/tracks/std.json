@@ -2,7 +2,7 @@
   "$format": "jazzlab-track/1",
   "id": "std",
   "title": { "ru": "Джазовые стандарты", "en": "Jazz standards" },
-  "about": { "ru": "Цель дорожки: 32-тактовый стандарт целиком. Левая ведёт аккорды голосоведением, правая мелодию, потом свои фразы по II–V–I.", "en": "Goal: a whole 32-bar standard. The left hand leads the chords with voice leading, the right hand carries the tune, then your own phrases over II–V–I." },
+  "about": { "ru": "К концу главы ты играешь 32-тактовый стандарт целиком: левая ведёт аккорды, правая мелодию, потом свои фразы.", "en": "By the end of the chapter you play a whole 32-bar standard: the left leads the chords, the right the melody, then your own phrases." },
   "path": [
     "d-chords-f", "ear-find-std", "ear-hl1-std", "pat-s1", "form-s1", "ear-iv1-std", "mel-std", "form-mel-std",
     "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "pat-s2", "form-s2", "lick-k1", "form-rh-k1", "imp-s1r",
@@ -17,42 +17,55 @@
       "goal": { "ru": "После этой ступени ты ведёшь мелодию стандарта правой над басом левой.", "en": "After this step your right hand carries the melody of a standard over the left-hand bass." },
       "items": [
         "d-chords-f", "ear-find-std", "ear-hl1-std", "pat-s1", "form-s1", "ear-iv1-std", "mel-std", "form-mel-std"
+      ],
+      "words": [
+        { "term": "standard", "before": "d-chords-f", "word": { "ru": "Стандарт", "en": "Standard" }, "text": { "ru": "Известная джазовая песня. Мелодию и аккорды знают все, каждый играет по-своему.", "en": "A well-known jazz song. Everyone knows the melody and chords, each plays it their own way." }, "keys": [] },
+        { "term": "bridge", "before": "pat-s1", "word": { "ru": "Бридж", "en": "Bridge" }, "text": { "ru": "Средняя часть песни: другие аккорды, а потом возвращается знакомое начало.", "en": "The middle part of a song: other chords, then the familiar start comes back." }, "keys": [] }
       ] },
     { "id": "s2", "title": { "ru": "Аккорды в левой и первая фраза", "en": "Left-hand chords and the first phrase" },
       "goal": { "ru": "После этой ступени левая играет аккорды из двух нот, а правая вставляет фразу в нужных местах.", "en": "After this step your left hand plays two-note chords and your right hand drops a phrase in the right places." },
       "items": [
         "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "pat-s2", "form-s2", "lick-k1", "form-rh-k1"
+      ],
+      "words": [
+        { "term": "voice-leading", "before": "pat-s2", "word": { "ru": "Голосоведение", "en": "Voice leading" }, "text": { "ru": "От аккорда к аккорду сдвигается одна нота, остальные стоят. Рука не прыгает.", "en": "From chord to chord one note moves, the others stay. The hand does not jump." }, "keys": [] }
       ] },
     { "id": "s3", "title": { "ru": "Две руки", "en": "Both hands" },
       "goal": { "ru": "После этой ступени ты играешь стандарт двумя руками: бас и мелодия вместе.", "en": "After this step you play the standard with both hands: the bass and the melody together." },
       "items": [
         "imp-s1r", "ear-iv2-std", "imp-s2", "ear-hl2-std", "imp-s2m", "ear-pr1-std", "form-2h-std"
-      ] },
+      ],
+      "words": [] },
     { "id": "s4", "title": { "ru": "Разговор", "en": "The conversation" },
       "goal": { "ru": "После этой ступени твои фразы спрашивают и отвечают, а соло попадает в аккорды.", "en": "After this step your phrases ask and answer, and your solo lands on the chords." },
       "items": [
         "lick-k2", "lick-k3", "ear-iv3-std", "form-rh-qa-std", "imp-s2q", "pat-s2-form", "imp-s3"
-      ] },
+      ],
+      "words": [] },
     { "id": "s5", "title": { "ru": "Выступление", "en": "The performance" },
       "goal": { "ru": "После этой ступени ты играешь стандарт два круга, с концовкой, и записываешь его.", "en": "After this step you play the standard for two rounds, with an ending, and record it." },
       "items": [
         "ear-hl3-std", "end-std", "imp-s3e", "ear-pr2-std", "imp-s4", "perf-std"
-      ] },
+      ],
+      "words": [] },
     { "id": "s6", "title": { "ru": "Bye Bye Blackbird и Sweet Georgia Brown", "en": "Bye Bye Blackbird and Sweet Georgia Brown" },
       "goal": { "ru": "После этой ступени в твоём репертуаре ещё две пьесы.", "en": "After this step you have two more tunes in your repertoire." },
       "items": [
         "ear-iv4-std", "mel-bbb", "form-mel-bbb", "perf-bbb", "mel-sgb", "form-mel-sgb", "perf-sgb"
-      ] },
+      ],
+      "words": [] },
     { "id": "s7", "title": { "ru": "Honeysuckle Rose и Ain't Misbehavin'", "en": "Honeysuckle Rose and Ain't Misbehavin'" },
       "goal": { "ru": "После этой ступени ты играешь две пьесы Фэтса Уоллера.", "en": "After this step you play two Fats Waller tunes." },
       "items": [
         "ear-iv5-std", "mel-hsr", "form-mel-hsr", "perf-hsr", "mel-aim", "form-mel-aim", "perf-aim"
-      ] },
+      ],
+      "words": [] },
     { "id": "s8", "title": { "ru": "Tea for Two", "en": "Tea for Two" },
       "goal": { "ru": "После этой ступени ты играешь Tea for Two и слышишь интервалы в аккорде.", "en": "After this step you play Tea for Two and hear intervals inside a chord." },
       "items": [
         "ear-q3-std", "mel-tft", "ear-iv6-std", "form-mel-tft", "ear-iv7-std", "perf-tft"
-      ] }
+      ],
+      "words": [] }
   ],
   "sections": [
     {
@@ -103,137 +116,332 @@
   ],
   "items": {
     "d-chords-f": {
-      "kind": "drill", "title": { "ru": "Аккорды в F", "en": "Chords in F" },
-      "about": { "ru": "Fmaj7, Gm7, C7, Bbmaj7: из них сделаны части A.", "en": "Fmaj7, Gm7, C7, Bbmaj7: the A sections are made of these." },
-      "tasks": [{ "type": "chord", "chords": ["Fmaj7", "Gm7", "C7", "Bbmaj7"], "n": 8 }],
-      "pass": { "acc": 0.85, "avgMs": 6000 }
+      "kind": "drill", "tasks": [{ "type": "chord", "chords": ["Fmaj7", "Gm7", "C7", "Bbmaj7"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Fmaj7, Gm7, C7, Bbmaj7", "en": "Chords Fmaj7, Gm7, C7, Bbmaj7" },
+      "does": { "ru": "Я называю аккорд, ты берёшь его четыре клавиши вместе.", "en": "I name a chord, you take its four keys together." },
+      "about": { "ru": "Fmaj7, Gm7, C7, Bbmaj7: из них сделаны части A.", "en": "Fmaj7, Gm7, C7, Bbmaj7: the A sections are made of these." }
     },
     "d-chords-f2": {
-      "kind": "drill", "title": { "ru": "Аккорды бриджа", "en": "Bridge chords" },
-      "about": { "ru": "Cm7, F7, Am7, D7: заход в Bb и дорога обратно.", "en": "Cm7, F7, Am7, D7: the way into B-flat and the way back." },
-      "tasks": [{ "type": "chord", "chords": ["Cm7", "F7", "Am7", "D7"], "n": 8 }],
-      "pass": { "acc": 0.85, "avgMs": 6000 }
+      "kind": "drill", "tasks": [{ "type": "chord", "chords": ["Cm7", "F7", "Am7", "D7"], "n": 8 }],
+      "pass": { "acc": 0.85, "avgMs": 6000 },
+      "title": { "ru": "Аккорды Cm7, F7, Am7, D7", "en": "Chords Cm7, F7, Am7, D7" },
+      "does": { "ru": "Я называю аккорд, ты берёшь его четыре клавиши вместе.", "en": "I name a chord, you take its four keys together." },
+      "about": { "ru": "Cm7, F7, Am7, D7: заход в Bb и дорога обратно.", "en": "Cm7, F7, Am7, D7: the way into B-flat and the way back." }
     },
-    "pat-s1": { "kind": "pattern", "pattern": "s1", "form": "std-f" },
-    "pat-s2": { "kind": "pattern", "pattern": "s2", "form": "std-f" },
+    "pat-s1": {
+      "kind": "pattern", "pattern": "s1", "form": "std-f",
+      "title": { "ru": "Левая: бас стандарта", "en": "Left: the standard bass" },
+      "does": { "ru": "Левая: корень на «раз» и «три». Если в такте два аккорда, второй на «три».", "en": "Left: root on “one” and “three”. Two chords in a bar: the second on “three”." }
+    },
+    "pat-s2": {
+      "kind": "pattern", "pattern": "s2", "form": "std-f",
+      "title": { "ru": "Левая: шелл с голосоведением", "en": "Left: shell with voice leading" },
+      "does": { "ru": "Левая: корень на «раз» и «три», две ноты шелла на «два» и «четыре».", "en": "Left: root on “one” and “three”, the two shell notes on “two” and “four”." },
+      "about": { "ru": "Корень внизу, а две ноты сверху берутся поближе к прошлым. От аккорда к аккорду сдвигается одна нота, рука почти не двигается.", "en": "The root below, and the two notes above are taken close to the previous ones. From chord to chord one note moves, the hand hardly moves." }
+    },
     "pat-s2-form": {
       "kind": "pattern", "pattern": "s2", "form": "std-f", "over": "bars",
-      "title": { "ru": "Шелл по всей форме", "en": "Shell over the whole form" },
+      "title": { "ru": "Шелл по всей форме", "en": "Shells through the whole form" },
+      "does": { "ru": "Левая: тот же шелл на все 32 такта, без барабанов и не спеша.", "en": "Left: the same shell through all 32 bars, no drums, no hurry." },
       "about": { "ru": "Тот же шелл на все 32 такта, без барабанов и не спеша. Следи, какая нота сдвигается.", "en": "The same shell over all 32 bars, no drums, no hurry. Watch which note moves." }
     },
-    "form-s1": { "kind": "form", "form": "std-f", "pattern": "s1", "title": { "ru": "Стандарт на басу", "en": "The standard, bass only" } },
-    "form-s2": { "kind": "form", "form": "std-f", "pattern": "s2", "title": { "ru": "Стандарт на шелле", "en": "The standard on the shell" } },
-    "mel-std": { "kind": "melody", "melody": "std-f", "pattern": "s1" },
+    "form-s1": {
+      "kind": "form", "form": "std-f", "pattern": "s1",
+      "title": { "ru": "Стандарт на басу", "en": "The standard on the bass" },
+      "does": { "ru": "Левая: корень на «раз» и «три» все 32 такта, под барабаны.", "en": "Left: root on “one” and “three” all 32 bars, over drums." },
+      "about": { "ru": "32 такта: A, A, бридж и снова A. Левая держит корни, барабаны держат ход.", "en": "32 bars: A, A, the bridge and A again. The left holds the roots, the drums keep the motion." }
+    },
+    "form-s2": {
+      "kind": "form", "form": "std-f", "pattern": "s2",
+      "title": { "ru": "Стандарт на шелле", "en": "The standard on shells" },
+      "does": { "ru": "Левая играет шелл все 32 такта, под барабаны.", "en": "The left plays shells all 32 bars, over drums." },
+      "about": { "ru": "Тот же стандарт, но левая играет шелл. Слушай, как одна нота ведёт от аккорда к аккорду.", "en": "The same standard, but the left plays shells. Listen to one note leading from chord to chord." }
+    },
+    "mel-std": {
+      "kind": "melody", "melody": "std-f", "pattern": "s1",
+      "title": { "ru": "Стандарт в F: мелодия", "en": "Standard in F: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Своя вещь в духе старых стандартов: 32 такта, бридж уходит в Bb. Учишь её за пианино, по два такта, не спеша.", "en": "Our own tune in the spirit of the old standards: 32 bars, the bridge goes to Bb. You learn it after the piano, two bars at a time, no hurry." }
+    },
     "form-mel-std": {
       "kind": "form", "form": "std-f", "pattern": "s1", "hand": "rh", "melody": "std-f",
-      "title": { "ru": "Стандарт: мелодия над басом", "en": "The standard: the tune over the bass" },
+      "title": { "ru": "Стандарт: мелодия над басом", "en": "Standard: the melody over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет бас, ты ведёшь мелодию целиком. Три чистых круга подряд.", "en": "The left hand plays the bass, you carry the whole tune. Three clean choruses in a row." }
     },
     "form-2h-std": {
       "kind": "form", "form": "std-f", "pattern": "s1", "hand": "both", "melody": "std-f",
-      "title": { "ru": "Стандарт в F двумя руками", "en": "A standard in F, both hands" },
+      "title": { "ru": "Стандарт двумя руками", "en": "The standard with both hands" },
+      "does": { "ru": "Левая: корень на «раз» и «три». Правая: мелодия. Только барабаны.", "en": "Left: root on “one” and “three”. Right: the melody. Only drums." },
       "about": { "ru": "Левая: бас стандарта, корни на «1» и «3». Правая: мелодия целиком. Бэнд молчит, играют только барабаны. Три чистых круга подряд.", "en": "Left: the standard bass, roots on 1 and 3. Right: the whole tune. The band is silent, only drums play. Three clean choruses in a row." }
     },
-    "mel-bbb": { "kind": "melody", "melody": "bbb-g", "pattern": "s1" },
+    "mel-bbb": {
+      "kind": "melody", "melody": "bbb-g", "pattern": "s1",
+      "title": { "ru": "Bye Bye Blackbird: мелодия", "en": "Bye Bye Blackbird: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." }
+    },
     "form-mel-bbb": {
       "kind": "form", "form": "bbb-g", "pattern": "s1", "hand": "rh", "melody": "bbb-g",
       "title": { "ru": "Bye Bye Blackbird над басом", "en": "Bye Bye Blackbird over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
     },
-    "mel-sgb": { "kind": "melody", "melody": "sgb-f", "pattern": "s1" },
+    "mel-sgb": {
+      "kind": "melody", "melody": "sgb-f", "pattern": "s1",
+      "title": { "ru": "Sweet Georgia Brown: мелодия", "en": "Sweet Georgia Brown: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." }
+    },
     "form-mel-sgb": {
       "kind": "form", "form": "sgb-f", "pattern": "s1", "hand": "rh", "melody": "sgb-f",
       "title": { "ru": "Sweet Georgia Brown над басом", "en": "Sweet Georgia Brown over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
     },
-    "mel-hsr": { "kind": "melody", "melody": "hsr-f", "pattern": "s1" },
+    "mel-hsr": {
+      "kind": "melody", "melody": "hsr-f", "pattern": "s1",
+      "title": { "ru": "Honeysuckle Rose: мелодия", "en": "Honeysuckle Rose: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Honeysuckle Rose Фэтса Уоллера (1929): 32 такта в F, бридж через F7 и Bb. Учишь её за пианино, по два такта.", "en": "Fats Waller’s Honeysuckle Rose (1929): 32 bars in F, the bridge through F7 and Bb. You learn it after the piano, two bars at a time." }
+    },
     "form-mel-hsr": {
       "kind": "form", "form": "hsr-f", "pattern": "s1", "hand": "rh", "melody": "hsr-f",
       "title": { "ru": "Honeysuckle Rose над басом", "en": "Honeysuckle Rose over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
     },
-    "mel-aim": { "kind": "melody", "melody": "aim-f", "pattern": "s1" },
+    "mel-aim": {
+      "kind": "melody", "melody": "aim-f", "pattern": "s1",
+      "title": { "ru": "Ain't Misbehavin': мелодия", "en": "Ain't Misbehavin': the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Ain't Misbehavin' Фэтса Уоллера (1929): 32 такта в F, бридж уходит в Dm. Учишь её за пианино, по два такта.", "en": "Fats Waller’s Ain't Misbehavin' (1929): 32 bars in F, the bridge goes to Dm. You learn it after the piano, two bars at a time." }
+    },
     "form-mel-aim": {
       "kind": "form", "form": "aim-f", "pattern": "s1", "hand": "rh", "melody": "aim-f",
       "title": { "ru": "Ain't Misbehavin' над басом", "en": "Ain't Misbehavin' over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
     },
-    "mel-tft": { "kind": "melody", "melody": "tft-f", "pattern": "s1" },
+    "mel-tft": {
+      "kind": "melody", "melody": "tft-f", "pattern": "s1",
+      "title": { "ru": "Tea for Two: мелодия", "en": "Tea for Two: the melody" },
+      "does": { "ru": "Правая: повторяешь мелодию за пианино, по два такта.", "en": "Right: you repeat the melody after the piano, two bars at a time." },
+      "about": { "ru": "Tea for Two Винсента Юманса (1924): 32 такта в F, вторые восемь тактов уходят в A. Учишь её за пианино, по два такта.", "en": "Vincent Youmans’ Tea for Two (1924): 32 bars in F, the second eight bars go to A. You learn it after the piano, two bars at a time." }
+    },
     "form-mel-tft": {
       "kind": "form", "form": "tft-f", "pattern": "s1", "hand": "rh", "melody": "tft-f",
       "title": { "ru": "Tea for Two над басом", "en": "Tea for Two over the bass" },
+      "does": { "ru": "Правая ведёт мелодию весь круг. Левую играет пианино.", "en": "The right carries the melody all the way round. The piano plays the left." },
       "about": { "ru": "Левая играет корни, ты ведёшь мелодию. Три чистых круга подряд.", "en": "The left hand plays the roots, you carry the tune. Three clean choruses in a row." }
     },
-    "lick-k1": { "kind": "lick", "lick": "k1", "keys": ["F", "Bb"], "pattern": "s2" },
-    "lick-k2": { "kind": "lick", "lick": "k2", "keys": ["F", "Bb"], "pattern": "s2" },
-    "lick-k3": { "kind": "lick", "lick": "k3", "keys": ["F", "Bb"], "pattern": "s2" },
+    "lick-k1": {
+      "kind": "lick", "lick": "k1", "keys": ["F", "Bb"], "pattern": "s2",
+      "title": { "ru": "II–V–I: вверх и домой", "en": "II–V–I: up and home" },
+      "does": { "ru": "Правая в F: G, Bb, D вверх, потом вниз до E и домой на F.", "en": "Right, in F: G, Bb, D up, then down to E and home to F." }
+    },
+    "lick-k2": {
+      "kind": "lick", "lick": "k2", "keys": ["F", "Bb"], "pattern": "s2",
+      "title": { "ru": "II–V–I: ступеньки вниз", "en": "II–V–I: steps down" },
+      "does": { "ru": "Правая в F: ступеньками вниз от Bb до E, потом наверх и на F.", "en": "Right, in F: step by step down from Bb to E, then up and onto F." },
+      "about": { "ru": "Вниз по соседним клавишам до E, потом обратно наверх и домой на F.", "en": "Down by neighbouring keys to E, then back up and home to F." }
+    },
+    "lick-k3": {
+      "kind": "lick", "lick": "k3", "keys": ["F", "Bb"], "pattern": "s2",
+      "title": { "ru": "II–V–I: вопрос", "en": "II–V–I: the question" },
+      "does": { "ru": "Правая в F: вокруг C и D, и фраза повисает на C.", "en": "Right, in F: around C and D, and the phrase hangs on C." }
+    },
     "form-rh-k1": {
       "kind": "form", "form": "std-f", "pattern": "s2", "hand": "rh", "lickKey": "k1",
-      "title": { "ru": "Стандарт: фраза на каждом II–V–I", "en": "Standard: a phrase on every ii–V–I" },
+      "title": { "ru": "Стандарт: фраза на каждом II–V–I", "en": "Standard: a phrase on every II–V–I" },
+      "does": { "ru": "Правая играет фразу на каждом II–V–I, в других тактах молчит.", "en": "The right plays the phrase on every II–V–I and rests in the other bars." },
       "about": { "ru": "Левая играет шелл, ты играешь фразу на каждом II–V–I: в частях A в F, в бридже в Bb. В остальных тактах отдыхаешь.", "en": "The left hand plays the shell, you play the phrase on every ii–V–I: in F in the A sections, in B-flat in the bridge. Rest in the other bars." }
     },
     "form-rh-qa-std": {
       "kind": "form", "form": "std-f", "pattern": "s2", "hand": "rh", "licksKey": ["k3", "k1"],
       "title": { "ru": "Стандарт: вопрос и ответ", "en": "Standard: question and answer" },
+      "does": { "ru": "Правая: вопрос на одном II–V–I, ответ на следующем.", "en": "Right: a question on one II–V–I, an answer on the next." },
       "about": { "ru": "На первом II–V–I вопрос, на следующем ответ, и так по кругу. Левая играет шелл.", "en": "A question on one ii–V–I, the answer on the next, and so on around the form. The left hand plays the shell." }
     },
-    "end-std": { "kind": "exercise", "ex": "std-end" },
-    "imp-s1": { "kind": "solo", "solo": "std-key" },
-    "imp-s2": { "kind": "solo", "solo": "std-call" },
-    "imp-s3": { "kind": "solo", "solo": "std-chords" },
-    "imp-s4": { "kind": "solo", "solo": "std-solo" },
-    "imp-s1r": { "kind": "solo", "solo": "std-displaced" },
-    "imp-s2m": { "kind": "solo", "solo": "std-answer" },
-    "imp-s2q": { "kind": "solo", "solo": "std-ask" },
-    "imp-s3e": { "kind": "solo", "solo": "std-end-third" },
-    "ear-find-std": {
-      "kind": "ear", "title": { "ru": "Найди ноту", "en": "Find the note" },
-      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." },
-      "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 }
+    "end-std": {
+      "kind": "exercise", "ex": "std-end",
+      "title": { "ru": "Концовка стандарта", "en": "The standard ending" },
+      "does": { "ru": "Обе руки: Gm7, C7 и долгий Fmaj7 в конце.", "en": "Both hands: Gm7, C7 and a long Fmaj7 at the end." }
     },
-    "ear-hl1-std": { "kind": "ear", "game": "hilo", "level": 1, "title": { "ru": "Выше или ниже", "en": "Higher or lower" }, "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-iv1-std": { "kind": "ear", "game": "interval", "level": 1, "title": { "ru": "Интервалы: малая и большая терция", "en": "Intervals: minor or major third" }, "about": { "ru": "Две ноты вверх: малая терция (3 полутона, грустная) или большая (4, светлая)? Назови интервал или сыграй вторую ноту.", "en": "Two notes going up: a minor third (3 semitones, sad) or a major third (4, bright)? Name it or play the second note." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-q1-std": { "kind": "ear", "game": "quality", "level": 1, "title": { "ru": "Аккорд: мажор или минор", "en": "Chord: major or minor" }, "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-q2-std": { "kind": "ear", "game": "quality", "level": 2, "title": { "ru": "Аккорд: maj7, m7 или 7", "en": "Chord: maj7, m7 or 7" }, "about": { "ru": "Четыре ноты. Maj7 светлый и мечтательный, m7 мягкий, доминантный 7 просит разрешения.", "en": "Four notes. Maj7 is bright and dreamy, m7 is mellow, the dominant 7 wants to resolve." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-iv2-std": { "kind": "ear", "game": "interval", "level": 2, "title": { "ru": "Интервалы: кварта и квинта", "en": "Intervals: fourth and fifth" }, "about": { "ru": "К терциям добавились чистая кварта и квинта: твёрдые, «пустые» интервалы.", "en": "The perfect fourth and fifth join the thirds: the firm, hollow intervals." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-hl2-std": { "kind": "ear", "game": "hilo", "level": 2, "title": { "ru": "Выше или ниже: тоньше", "en": "Higher or lower: finer" }, "about": { "ru": "Тот же вопрос, но расстояние сужается до полутона.", "en": "The same question, but the gap narrows down to a semitone." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-pr1-std": { "kind": "ear", "game": "prog", "level": 1, "title": { "ru": "II–V–I: мажор или минор", "en": "ii–V–I: major or minor" }, "about": { "ru": "Звучит II–V–I. Он ведёт в мажор или в минор? В миноре первый аккорд полууменьшенный, а конец темнее.", "en": "A ii–V–I plays. Does it land in a major or a minor key? In minor the first chord is half-diminished and the ending is darker." }, "rounds": 10, "pass": { "acc": 0.75 }},
-    "ear-iv3-std": { "kind": "ear", "game": "interval", "level": 3, "title": { "ru": "Интервалы: септимы и октава", "en": "Intervals: sevenths and the octave" }, "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-hl3-std": { "kind": "ear", "game": "hilo", "level": 3, "title": { "ru": "Выше, ниже или одинаково", "en": "Higher, lower or the same" }, "about": { "ru": "Близкие ноты, иногда одна и та же дважды. Не торопись, переслушай.", "en": "Close notes, sometimes the very same note twice. Take your time, listen again." }, "rounds": 12, "pass": { "acc": 0.8 }},
-    "ear-pr2-std": { "kind": "ear", "game": "prog", "level": 2, "title": { "ru": "Где здесь V?", "en": "Which chord is the V?" }, "about": { "ru": "Три аккорда подряд, один из них V7: доминанта, которая тянет к тонике. Какой по счёту?", "en": "Three chords in a row, one of them is the V7: the dominant that pulls to the tonic. Which one is it?" }, "rounds": 10, "pass": { "acc": 0.7 }},
-    "ear-q3-std": { "kind": "ear", "game": "quality", "level": 3, "title": { "ru": "Аккорд: ещё m7b5", "en": "Chord: and m7b5" }, "about": { "ru": "Добавился полууменьшенный m7b5: напряжённый минорный аккорд, тот самый ii в миноре.", "en": "The half-diminished m7b5 joins in: a tense minor chord, the ii of a minor key." }, "rounds": 12, "pass": { "acc": 0.7 }},
-    "ear-iv4-std": { "kind": "ear", "game": "interval", "level": 4, "title": { "ru": "Интервалы вверх: все", "en": "Intervals going up: all" }, "about": { "ru": "Весь набор от малой секунды до октавы. Тритон и секунды самые резкие.", "en": "The whole set from the minor second to the octave. The tritone and the seconds are the sharpest." }, "rounds": 12, "pass": { "acc": 0.7 }},
-    "ear-iv5-std": { "kind": "ear", "game": "interval", "level": 5, "title": { "ru": "Интервалы вниз", "en": "Intervals going down" }, "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }, "rounds": 12, "pass": { "acc": 0.75 }},
-    "ear-iv6-std": { "kind": "ear", "game": "interval", "level": 6, "title": { "ru": "Интервалы вниз: все", "en": "Intervals going down: all" }, "about": { "ru": "Весь набор от малой секунды до октавы, вниз.", "en": "The whole set from the minor second to the octave, going down." }, "rounds": 12, "pass": { "acc": 0.7 }},
-    "ear-iv7-std": { "kind": "ear", "game": "interval", "level": 7, "title": { "ru": "Интервалы вместе", "en": "Intervals played together" }, "about": { "ru": "Обе ноты звучат сразу, нижняя дана. Слушай, как они сливаются, и назови интервал или сыграй верхнюю ноту.", "en": "Both notes sound at once and the lower one is given. Listen to how they blend, then name the interval or play the upper note." }, "rounds": 12, "pass": { "acc": 0.75 }},
+    "imp-s1": {
+      "kind": "solo", "solo": "std-key",
+      "title": { "ru": "Первое соло в стандарте", "en": "First solo on a standard" },
+      "does": { "ru": "Бэнд играет. Два такта играешь подсвеченные клавиши, два молчишь.", "en": "The band plays. Two bars you play the lit keys, two you rest." },
+      "about": { "ru": "Бэнд играет стандарт, ты играешь своё подсвеченными клавишами: F, а на бридже Bb. Два такта играешь, два молчишь.", "en": "The band plays the standard, you play your own on the lit keys: F, and Bb on the bridge. Two bars you play, two you rest." }
+    },
+    "imp-s2": {
+      "kind": "solo", "solo": "std-call",
+      "title": { "ru": "Соло: ответь бэнду", "en": "Solo: answer the band" },
+      "does": { "ru": "Два такта бэнд спрашивает, два такта ты отвечаешь своей фразой.", "en": "The band asks for two bars, you answer for two with your phrase." },
+      "about": { "ru": "Два такта бэнд спрашивает, два такта ты отвечаешь своей фразой. Подсвеченные клавиши те же: F, на бридже Bb.", "en": "For two bars the band asks, for two you answer with your phrase. The lit keys are the same: F, and Bb on the bridge." }
+    },
+    "imp-s3": {
+      "kind": "solo", "solo": "std-chords",
+      "title": { "ru": "Соло: попади в аккорд", "en": "Solo: hit the chord" },
+      "does": { "ru": "На первом счёте нового аккорда сыграй его ноту. Она подсвечена.", "en": "On the first count of a new chord, play its note. It is lit up." },
+      "about": { "ru": "Целевые ноты на смене аккорда. Подсвеченные клавиши идут за аккордом, а в такте с двумя аккордами меняются на «три».", "en": "Target notes on the chord change. The lit keys follow the chord, and in a bar with two chords they change on “three”." }
+    },
+    "imp-s4": {
+      "kind": "solo", "solo": "std-solo",
+      "title": { "ru": "Соло на весь круг", "en": "A solo through the whole round" },
+      "does": { "ru": "Один круг, 32 такта без остановки: фразы, тишина, ноты аккорда.", "en": "One round, 32 bars without stopping: phrases, silence, chord notes." },
+      "about": { "ru": "Один круг, 32 такта без остановки: подсвеченные клавиши идут за аккордами, на сменах целевые ноты, между фразами тишина. Всё, чему научился, сразу.", "en": "One round, 32 bars without stopping: the lit keys follow the chords, target notes on the changes, silence between phrases. Everything you have learned at once." }
+    },
+    "imp-s1r": {
+      "kind": "solo", "solo": "std-displaced",
+      "title": { "ru": "Соло: вход на «три»", "en": "Solo: come in on “three”" },
+      "does": { "ru": "Простучи ритм: молчишь до «три» и входишь там. Потом нотами.", "en": "Tap the rhythm: silent until “three”, come in there. Then notes." }
+    },
+    "imp-s2m": {
+      "kind": "solo", "solo": "std-answer",
+      "title": { "ru": "Соло: ответ, похожий на вопрос", "en": "Solo: an answer like the question" },
+      "does": { "ru": "Бэнд спрашивает. Ты отвечаешь тем же ритмом или с той же ноты.", "en": "The band asks. You answer with the same rhythm or from the same note." }
+    },
+    "imp-s2q": {
+      "kind": "solo", "solo": "std-ask",
+      "title": { "ru": "Соло: такт спросил, такт ответил", "en": "Solo: one bar asks, one answers" },
+      "does": { "ru": "Простучи ритм: первый такт с «раз», второй с «три». Потом нотами.", "en": "Tap the rhythm: the first bar from “one”, the second from “three”. Then notes." }
+    },
+    "imp-s3e": {
+      "kind": "solo", "solo": "std-end-third",
+      "title": { "ru": "Соло: кончай фразу на терции", "en": "Solo: end the phrase on the third" },
+      "does": { "ru": "Последняя нота каждой фразы на подсвеченной «3» аккорда.", "en": "The last note of every phrase on the chord’s lit “3”." },
+      "about": { "ru": "Играй фразы с тишиной между ними, а последнюю ноту каждой фразы ставь на терцию аккорда, на подсвеченную «3». Терция сразу говорит, какой это аккорд.", "en": "Play phrases with silence between them, and put the last note of each phrase on the chord’s third, the lit “3”. The third tells at once which chord it is." }
+    },
+    "ear-find-std": {
+      "kind": "ear", "rounds": 12, "ranges": [[60, 67], [55, 72], [48, 79]], "pass": { "acc": 0.8 },
+      "title": { "ru": "Найди ноту на слух", "en": "Find the note by ear" },
+      "does": { "ru": "Я играю ноту, ты ищешь её на клавишах.", "en": "I play a note, you look for it on the keys." },
+      "about": { "ru": "Я играю ноту, ты находишь её на клавишах. Зона, где она спрятана, подсвечена: сначала узкая, к концу шире.", "en": "I play a note, you find it on the keys. The zone it hides in is lit up: narrow at first, wider by the end." }
+    },
+    "ear-hl1-std": {
+      "kind": "ear", "game": "hilo", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше или ниже", "en": "Higher or lower" },
+      "does": { "ru": "Звучат две ноты. Скажи, вторая выше или ниже.", "en": "Two notes sound. Say if the second is higher or lower." },
+      "about": { "ru": "Две ноты. Вторая выше или ниже первой? Сначала они далеко друг от друга, к концу всё ближе.", "en": "Two notes. Is the second higher or lower than the first? Far apart at first, closer and closer by the end." }
+    },
+    "ear-iv1-std": {
+      "kind": "ear", "game": "interval", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: терция грустная или светлая", "en": "By ear: a sad or a bright third" },
+      "does": { "ru": "Звучат две ноты. Скажи, какая это терция, или сыграй вторую ноту.", "en": "Two notes sound. Say which third it is, or play the second note." },
+      "about": { "ru": "Две ноты вверх. Терция на три клавиши звучит грустно, на четыре светло. Назови её или сыграй вторую ноту.", "en": "Two notes going up. A third of three keys sounds sad, of four keys bright. Name it or play the second note." }
+    },
+    "ear-q1-std": {
+      "kind": "ear", "game": "quality", "level": 1, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: мажор или минор", "en": "By ear: major or minor" },
+      "does": { "ru": "Звучит аккорд из трёх нот. Скажи, светлый он или грустный.", "en": "A three-note chord sounds. Say if it is bright or sad." },
+      "about": { "ru": "Три ноты вместе: светлый мажор или тёмный минор? Нажми кнопку или сыграй аккорд от данной ноты.", "en": "Three notes together: bright major or dark minor? Tap a button, or play the chord from the given root." }
+    },
+    "ear-q2-std": {
+      "kind": "ear", "game": "quality", "level": 2, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: три цвета аккорда", "en": "By ear: three chord colours" },
+      "does": { "ru": "Звучит аккорд из четырёх нот. Скажи, какой он: maj7, m7 или 7.", "en": "A four-note chord sounds. Say which it is: maj7, m7 or 7." },
+      "about": { "ru": "Четыре ноты вместе. Maj7 светлый и мечтательный, m7 мягкий, 7 напряжённый и просится дальше.", "en": "Four notes together. Maj7 is bright and dreamy, m7 is soft, 7 is tense and wants to move on." }
+    },
+    "ear-iv2-std": {
+      "kind": "ear", "game": "interval", "level": 2, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "На слух: два широких интервала", "en": "By ear: two wider intervals" },
+      "does": { "ru": "К терциям добавились два интервала пошире. Назови или сыграй вторую ноту.", "en": "Two wider intervals join the thirds. Name it or play the second note." },
+      "about": { "ru": "К терциям добавились кварта и квинта. Они звучат крепко и пусто, без настроения.", "en": "The fourth and the fifth join the thirds. They sound firm and bare, without a mood." }
+    },
+    "ear-hl2-std": {
+      "kind": "ear", "game": "hilo", "level": 2, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше или ниже: совсем рядом", "en": "Higher or lower: very close" },
+      "does": { "ru": "Тот же вопрос, но ноты всё ближе, к концу соседние клавиши.", "en": "The same question, but the notes get closer, down to neighbouring keys." },
+      "about": { "ru": "Тот же вопрос, но ноты всё ближе, до соседних клавиш. Чем ближе ноты, тем внимательнее слушай.", "en": "The same question, but the notes get closer, down to neighbouring keys. The closer they are, the more carefully you listen." }
+    },
+    "ear-pr1-std": {
+      "kind": "ear", "game": "prog", "level": 1, "rounds": 10, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: II–V–I, мажор или минор", "en": "By ear: II–V–I, major or minor" },
+      "does": { "ru": "Звучат три аккорда подряд. Скажи, пришли они в мажор или в минор.", "en": "Three chords sound in a row. Say if they land in major or in minor." },
+      "about": { "ru": "Три аккорда ведут домой. Слушай конец: светлый это мажор, тёмный это минор.", "en": "Three chords lead home. Listen to the end: bright is major, dark is minor." }
+    },
+    "ear-iv3-std": {
+      "kind": "ear", "game": "interval", "level": 3, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: септимы и октава", "en": "By ear: sevenths and the octave" },
+      "does": { "ru": "Ещё три широких интервала. Назови или сыграй вторую ноту.", "en": "Three more wide intervals. Name it or play the second note." },
+      "about": { "ru": "Ещё малая и большая септима и октава. Септимы тянут вверх, октава это та же нота ещё раз.", "en": "The minor and major seventh and the octave join in. Sevenths lean upward; the octave is the same note again." }
+    },
+    "ear-hl3-std": {
+      "kind": "ear", "game": "hilo", "level": 3, "rounds": 12, "pass": { "acc": 0.8 },
+      "title": { "ru": "Выше, ниже или та же", "en": "Higher, lower or the same" },
+      "does": { "ru": "Ноты совсем рядом, иногда одна и та же дважды. Скажи, что слышишь.", "en": "The notes are very close, sometimes the same one twice. Say what you hear." },
+      "about": { "ru": "Близкие ноты, иногда одна и та же дважды. Не торопись, переслушай.", "en": "Close notes, sometimes the very same note twice. Take your time, listen again." }
+    },
+    "ear-pr2-std": {
+      "kind": "ear", "game": "prog", "level": 2, "rounds": 10, "pass": { "acc": 0.7 },
+      "title": { "ru": "На слух: где доминанта", "en": "By ear: where is the dominant" },
+      "does": { "ru": "Звучат три аккорда подряд. Скажи, какой из них доминанта.", "en": "Three chords sound in a row. Say which one is the dominant." },
+      "about": { "ru": "Три аккорда подряд, один из них V7: доминанта, которая тянет к тонике. Какой по счёту?", "en": "Three chords in a row, one of them is the V7: the dominant that pulls to the tonic. Which one is it?" }
+    },
+    "ear-q3-std": {
+      "kind": "ear", "game": "quality", "level": 3, "rounds": 12, "pass": { "acc": 0.7 },
+      "title": { "ru": "На слух: четыре цвета аккорда", "en": "By ear: four chord colours" },
+      "does": { "ru": "Тот же вопрос, и добавился четвёртый ответ: m7b5.", "en": "The same question with a fourth answer: m7b5." },
+      "about": { "ru": "Добавился m7b5: тёмный и напряжённый, как минор, который не успокоился.", "en": "m7b5 joins: dark and tense, like a minor chord that has not settled." }
+    },
+    "ear-iv4-std": {
+      "kind": "ear", "game": "interval", "level": 4, "rounds": 12, "pass": { "acc": 0.7 },
+      "title": { "ru": "На слух: все интервалы вверх", "en": "By ear: all intervals up" },
+      "does": { "ru": "Все интервалы, от соседней клавиши до октавы. Назови или сыграй.", "en": "Every interval from the neighbouring key to the octave. Name it or play it." },
+      "about": { "ru": "Теперь все интервалы, от соседней клавиши до октавы. Резкие и тесные учатся дольше всех, это нормально.", "en": "Now every interval, from the neighbouring key to the octave. The harsh, tight ones take longest to learn, that is fine." }
+    },
+    "ear-iv5-std": {
+      "kind": "ear", "game": "interval", "level": 5, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: интервалы вниз", "en": "By ear: intervals down" },
+      "does": { "ru": "Те же интервалы, но вторая нота ниже первой.", "en": "The same intervals, but the second note is lower than the first." },
+      "about": { "ru": "Те же интервалы, но вторая нота ниже первой. Назови интервал или сыграй вторую ноту.", "en": "The same intervals, but the second note is below the first. Name the interval or play the second note." }
+    },
+    "ear-iv6-std": {
+      "kind": "ear", "game": "interval", "level": 6, "rounds": 12, "pass": { "acc": 0.7 },
+      "title": { "ru": "На слух: все интервалы вниз", "en": "By ear: all intervals down" },
+      "does": { "ru": "Все интервалы, вторая нота ниже. Назови или сыграй её.", "en": "Every interval, the second note lower. Name it or play it." },
+      "about": { "ru": "Все интервалы, от соседней клавиши до октавы, теперь вниз.", "en": "Every interval, from the neighbouring key to the octave, now going down." }
+    },
+    "ear-iv7-std": {
+      "kind": "ear", "game": "interval", "level": 7, "rounds": 12, "pass": { "acc": 0.75 },
+      "title": { "ru": "На слух: две ноты сразу", "en": "By ear: two notes at once" },
+      "does": { "ru": "Обе ноты звучат вместе, нижняя дана. Назови или сыграй верхнюю.", "en": "Both notes sound together, the lower one is given. Name it or play the upper." },
+      "about": { "ru": "Обе ноты звучат сразу, нижняя дана. Слушай, как они сливаются, и назови интервал или сыграй верхнюю ноту.", "en": "Both notes sound at once and the lower one is given. Listen to how they blend, then name the interval or play the upper note." }
+    },
     "perf-std": {
       "kind": "perform", "form": "std-f", "pattern": "s2", "licks": ["k1", "k2"], "melody": "std-f", "choruses": 2,
-      "title": { "ru": "Стандарт в F, два круга", "en": "A standard in F, two choruses" },
+      "title": { "ru": "Стандарт в F: два круга", "en": "Standard in F: two rounds" },
+      "does": { "ru": "Обе руки, два круга и концовка. Запись остаётся.", "en": "Both hands, two rounds and the ending. The recording stays." },
       "about": { "ru": "Левая играет шелл, правая мелодию: первый круг как написано, второй можно по-своему. Запись остаётся.", "en": "The left hand plays the shell, the right hand the tune: the first chorus as written, the second your own way. The recording stays." }
     },
     "perf-bbb": {
       "kind": "perform", "form": "bbb-g", "pattern": "s2", "melody": "bbb-g", "licks": [], "choruses": 2,
-      "title": { "ru": "Bye Bye Blackbird, два круга", "en": "Bye Bye Blackbird, two choruses" },
+      "title": { "ru": "Bye Bye Blackbird: два круга", "en": "Bye Bye Blackbird: two rounds" },
+      "does": { "ru": "Левая: шелл. Правая: мелодия, второй круг по-своему. Запись остаётся.", "en": "Left: shell. Right: the melody, the second round your own way. It is recorded." },
       "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     },
     "perf-sgb": {
       "kind": "perform", "form": "sgb-f", "pattern": "s2", "melody": "sgb-f", "licks": [], "choruses": 2,
-      "title": { "ru": "Sweet Georgia Brown, два круга", "en": "Sweet Georgia Brown, two choruses" },
+      "title": { "ru": "Sweet Georgia Brown: два круга", "en": "Sweet Georgia Brown: two rounds" },
+      "does": { "ru": "Левая: шелл. Правая: мелодия, второй круг по-своему. Запись остаётся.", "en": "Left: shell. Right: the melody, the second round your own way. It is recorded." },
       "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     },
     "perf-hsr": {
       "kind": "perform", "form": "hsr-f", "pattern": "s2", "melody": "hsr-f", "licks": [], "choruses": 2,
-      "title": { "ru": "Honeysuckle Rose, два круга", "en": "Honeysuckle Rose, two choruses" },
+      "title": { "ru": "Honeysuckle Rose: два круга", "en": "Honeysuckle Rose: two rounds" },
+      "does": { "ru": "Левая: шелл. Правая: мелодия, второй круг по-своему. Запись остаётся.", "en": "Left: shell. Right: the melody, the second round your own way. It is recorded." },
       "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     },
     "perf-aim": {
       "kind": "perform", "form": "aim-f", "pattern": "s2", "melody": "aim-f", "licks": [], "choruses": 2,
-      "title": { "ru": "Ain't Misbehavin', два круга", "en": "Ain't Misbehavin', two choruses" },
+      "title": { "ru": "Ain't Misbehavin': два круга", "en": "Ain't Misbehavin': two rounds" },
+      "does": { "ru": "Левая: шелл. Правая: мелодия, второй круг по-своему. Запись остаётся.", "en": "Left: shell. Right: the melody, the second round your own way. It is recorded." },
       "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     },
     "perf-tft": {
       "kind": "perform", "form": "tft-f", "pattern": "s2", "melody": "tft-f", "licks": [], "choruses": 2,
-      "title": { "ru": "Tea for Two, два круга", "en": "Tea for Two, two choruses" },
+      "title": { "ru": "Tea for Two: два круга", "en": "Tea for Two: two rounds" },
+      "does": { "ru": "Левая: шелл. Правая: мелодия, второй круг по-своему. Запись остаётся.", "en": "Left: shell. Right: the melody, the second round your own way. It is recorded." },
       "about": { "ru": "Левая шелл с голосоведением, правая мелодия; второй круг можно по-своему.", "en": "The left hand the voice-led shell, the right hand the tune; the second chorus can be your own." }
     }
   }

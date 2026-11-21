@@ -257,6 +257,7 @@ for (let i = 0; i < 20; i++) { // the band's call on the bossa and the standard 
   });
 }
 // track wiring: bossa imp after rh, std imp after tunes
+const tech = ({ title, does, about, ...rest }) => rest; // an item without its texts (title / does / about: tests/words.test.mjs)
 const wire = (trackId, after, ids, sids, form, pattern, hi) => {
   const tr = read(`content/tracks/${trackId}.json`), secs = tr.sections.map((x) => x.id);
   assert.equal(secs[secs.indexOf(after) + 1], 'imp', `${trackId}: imp after ${after}`);
@@ -264,7 +265,7 @@ const wire = (trackId, after, ids, sids, form, pattern, hi) => {
   assert.ok(sec.title.ru === 'Импровизация' && sec.title.en === 'Improvisation');
   assert.deepEqual(sec.items.filter((x) => ids.includes(x)), ids);
   ids.forEach((id, i) => {
-    assert.deepEqual(tr.items[id], { kind: 'solo', solo: sids[i] });
+    assert.deepEqual(tech(tr.items[id]), { kind: 'solo', solo: sids[i] });
     const so = read(`content/solos/${sids[i]}.json`);
     assert.equal(so.$format, 'jazzlab-solo/1'); assert.equal(so.id, sids[i]);
     assert.ok(so.title.ru && so.title.en && so.about.ru && so.about.en, sids[i] + ': title and about in ru and en');
