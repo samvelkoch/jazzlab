@@ -1,7 +1,9 @@
 // Form screen view logic: task mode, bar lists, the «Now» strip, the «Next» summary, the keyboard plan. Run: node tests/formview.test.mjs
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { taskMode, phraseStarts, fmtBars, eventSlots, nextEventG, keyPlan, stripRow, barSummary } from '../app/js/music/formview.js';
+import { taskMode, phraseStarts, fmtBars, eventSlots, nextEventG, keyPlan, stripRow, barSummary, staffBars, walkTarget, eventKeys, nearestKey, walkPress, walkPassed, openStage } from '../app/js/music/formview.js';
+import { normalize } from '../app/js/music/exercise.js';
+import { midiToName } from '../app/js/music/notes.js';
 
 // ---------- task mode ----------
 assert.deepEqual(taskMode({ rh: false }), { mode: 'lh' });
@@ -88,10 +90,53 @@ assert.deepEqual(stripRow([], nm), Array(8).fill(null));
 assert.deepEqual(barSummary([{ t: 4, m: 55 }, { t: 0, m: 48 }, { t: 6, m: 48 }, { t: 2, m: 64 }], nm), ['C', 'E', 'G']);
 assert.deepEqual(barSummary([], nm), []);
 
+// ---------- the staff window ----------
+{ const sp = (hd, bar, e) => midiToName(e.m);
+  const lh = [[{ t: 0, m: 48, d: 4 }, { t: 4, m: 55, d: 4 }], [{ t: 0, m: 53, d: 4 }, { t: 4, m: 60, d: 4 }], [{ t: 0, m: 55, d: 8 }]];
+  const rh = [[{ t: 0, m: 67, d: 1 }, { t: 0, m: 64, d: 2 }, { t: 0, m: 64, d: 2 }, { t: 6, m: 70, d: 4 }], [], [{ t: 7, m: 72, d: 1, stac: true }]];
+  let ex = staffBars({ rh, lh }, 0, sp);
+  assert.equal(ex.bars.length, 2);
+  assert.deepEqual(ex.bars[0].rh, [{ t: 0, d: 2, n: ['E4', 'G4'], f: [], stac: false }, { t: 6, d: 2, n: ['A#4'], f: [], stac: false }]); // chord low → high, cut at the bar line
+  assert.deepEqual(ex.bars[0].lh.map((e) => e.n), [['C3'], ['G3']]);
+  assert.deepEqual(ex.bars[1].rh, []);
+  ex = staffBars({ rh, lh: null }, 2, sp); // the last bar wraps round to bar 1; a hand that is not yours stays empty
+  assert.deepEqual(ex.bars[0].rh, [{ t: 7, d: 1, n: ['C5'], f: [], stac: true }]); assert.deepEqual(ex.bars[0].lh, []);
+  assert.deepEqual(ex.bars[1].rh.map((e) => e.n), [['E4', 'G4'], ['A#4']]);
+  const norm = normalize(ex); // the screen normalizes it for createStaff
+  assert.equal(norm.per, 8); assert.equal(norm.bars[0].rh[0].notes[0], 'C5');
+  assert.equal(staffBars({ rh: [[{ t: 0, m: 60 }]], lh: null }, 0, sp).bars.length, 1); } // a one-bar form: one bar
+
+// ---------- stage «Ноты»: the walk ----------
+{ // two bars of left hand, a rest bar, a bar with a chord in the right hand and the bass together
+  const lh = [[{ t: 0, m: 48, f: 5 }, { t: 4, m: 55, f: 1 }], [], [], [{ t: 0, m: 41, f: 5 }]];
+  const rh = [[], [], [], [{ t: 0, m: 64, f: 2 }, { t: 0, m: 69, f: 4 }, { t: 3, m: 67, f: 3 }]];
+  const hands = { rh, lh };
+  const order = []; let g = -1;
+  for (let p = walkTarget(hands, g); p; p = walkTarget(hands, g)) { order.push([p.bar, p.slot, eventKeys(p.target)]); g = p.g; }
+  assert.deepEqual(order, [[0, 0, [48]], [0, 4, [55]], [3, 0, [41, 64, 69]], [3, 3, [67]]]); // rest bars skipped, the form ends
+  assert.equal(walkTarget(hands, 27), null);
+  assert.equal(walkTarget({ rh: [[], []], lh: null }, -1), null); }
+assert.deepEqual(eventKeys({ rh: [69, 64], lh: [64, 41] }), [41, 64, 69]);
+assert.equal(nearestKey([41, 64, 69], 66), 64); assert.equal(nearestKey([60, 64], 62), 60); assert.equal(nearestKey([], 60), null);
+{ const keys = [41, 64, 69];
+  let r = walkPress(keys, [], 64); assert.equal(r.res, 'hit'); assert.deepEqual(r.missing, [41, 69]);
+  r = walkPress(keys, r.got, 64); assert.equal(r.res, 'again'); assert.deepEqual(r.got, [64]);
+  r = walkPress(keys, [64], 71); assert.equal(r.res, 'wrong'); assert.equal(r.toward, 69); assert.deepEqual(r.got, [64]);
+  r = walkPress(keys, [64, 69], 41); assert.equal(r.res, 'done'); assert.deepEqual(r.missing, []);
+  assert.equal(walkPress([60], [], 60).res, 'done'); }
+assert.equal(walkPassed(0, 1), true); assert.equal(walkPassed(1, 1), true); assert.equal(walkPassed(2, 1), false);
+assert.equal(openStage({ due: true, saved: 'notes', prog: {} }), 'tempo');
+assert.equal(openStage({ due: false, saved: 'notes', prog: { notes: true } }), 'notes');
+assert.equal(openStage({ due: false, saved: null, prog: { notes: true } }), 'tempo');
+assert.equal(openStage({ due: false, saved: 'xx', prog: {} }), 'notes');
+
 // ---------- every new string exists in ru and en ----------
 { const src = readFileSync(new URL('../app/js/i18n.js', import.meta.url), 'utf8');
   const keys = ['fvTask', 'fvLh', 'fvLick', 'fvQa', 'fvKey', 'fvKeyQa', 'fvMel', 'fvBoth', 'fvBothLick', 'fvBothQa', 'fvBothKey', 'fvBothMel', 'fvComp',
-    'fvPass', 'fvChorusW', 'fvPassSlips', 'fvLook', 'fvNow', 'fvFirst', 'fvBar', 'fvNext', 'fvRest', 'fvListenLh', 'fvAnd'];
+    'fvPass', 'fvChorusW', 'fvPassSlips', 'fvLook', 'fvNow', 'fvFirst', 'fvBar', 'fvNext', 'fvRest', 'fvListenLh', 'fvAnd',
+    'fvStaffOn', 'fvStaffOff', 'fvStaffAria',
+    'fvSt_notes', 'fvSt_tempo', 'fvHow', 'fvRule_notes', 'fvHintNotes', 'fvRestart', 'fvListenBar', 'fvBarOf', 'fvSlipsN',
+    'fvNoErr', 'fvErrs', 'fvNotesPassed', 'fvNotesMore', 'fvToTempo', 'fvAgain'];
   for (const k of keys) assert.equal((src.match(new RegExp(`\\b${k}: '`, 'g')) || []).length, 2, 'ru + en for ' + k); }
 
 console.log('formview: ok');

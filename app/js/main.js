@@ -295,4 +295,5 @@ async function routeChords(kind, arg, rerender) {
 }
 
 window.addEventListener('hashchange', route);
+window.addEventListener('jl-names', route); // note names changed in the appearance popover (ui.js): draw the screen again
 route();

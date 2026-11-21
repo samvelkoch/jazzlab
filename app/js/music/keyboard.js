@@ -5,7 +5,7 @@ import { t } from '../i18n.js';
 /**
  * @param el     container element
  * @param range  [lowMidi, highMidi] of the exercise
- * @param opts   {onPress(midi), names: 'en'|'ru'|'off', center: midi shown first on a narrow screen,
+ * @param opts   {onPress(midi), names: 'en'|'ru'|'off' ('both' shows letters), center: midi shown first on a narrow screen,
  *                exact: true = show exactly the range (snapped out to white keys) instead of whole octaves}
  *
  * DOM: el (.kbwrap, the frame) > .kbscroll (scrolls sideways on a phone) > .kb (the keys), plus two
@@ -62,7 +62,7 @@ export function createKeyboard(el, range, opts = {}) {
     row.appendChild(k); keys[m] = k;
   }
   const setNames = (mode) => {
-    for (const m in keys) keys[m].querySelector('.lbl').textContent = mode === 'off' ? '' : noteName(keys[m].dataset.n, mode);
+    for (const m in keys) keys[m].querySelector('.lbl').textContent = mode === 'off' ? '' : noteName(keys[m].dataset.n, mode === 'both' ? 'en' : mode); // «C (До)» does not fit on a key
   };
   setNames(opts.names || 'en');
   const STATE = /\s(on-r|on-l|nx-r|nx-l|sug|acc|muted|pl-r|pl-l|tg-r|tg-l)\b/g;

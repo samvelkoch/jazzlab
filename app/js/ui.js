@@ -2,7 +2,8 @@
 import { t, getLang, setLang } from './i18n.js';
 import { toggleTheme, currentTheme, currentScheme, setScheme, SCHEMES } from './theme.js';
 import { midiState, onMidiState, connect } from './music/midi.js';
-import { session, sessionNext, sessionAdvance, endSession, latencyMs, setLatencyMs } from './store.js';
+import { store, session, sessionNext, sessionAdvance, endSession, latencyMs, setLatencyMs } from './store.js';
+import { storedMode } from './music/names.js';
 import { LATENCY } from './timing.js';
 
 // Item screens register how to link to an item id and which track they belong to (set by main.js once the track is loaded).
@@ -94,9 +95,20 @@ export function themeButton(onChange) {
         h('button', { type: 'button', 'aria-label': t('latMore'), onclick: () => latStep(LATENCY.step) }, '+')),
       h('button.btn.latreset', { type: 'button', onclick: () => { setLatencyMs(0); paintLat(); } }, t('latReset'))),
     h('small.pophint', null, t('latHint')));
-  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), h('div.popsec', null, h('span.pophead', null, t('colors')), schemes), timing));
-  d.addEventListener('toggle', () => { if (d.open) paintLat(); }); // the check-up may have changed it meanwhile
-  paint(); paintLat();
+  // note names (settings.names, music/names.js): a change re-renders the current screen (main.js listens for 'jl-names'),
+  // which stops its playback through the screen's own cleanup
+  const namesSeg = h('div.seg.namesseg', { role: 'group', 'aria-label': t('noteNames') });
+  const paintNames = () => { const v = storedMode(store.get('settings', {})); namesSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v))); };
+  [['en', 'C D E'], ['ru', 'До Ре Ми'], ['both', 'C (До)'], ['off', t('namesOff')]].forEach(([v, label]) => namesSeg.append(h('button', { type: 'button', 'data-v': v,
+    onclick: () => {
+      if (storedMode(store.get('settings', {})) === v) return;
+      store.set('settings', { ...store.get('settings', {}), names: v }); paintNames();
+      window.dispatchEvent(new CustomEvent('jl-names'));
+    } }, label)));
+  const names = h('div.popsec', null, h('span.pophead', null, t('noteNames')), namesSeg);
+  const d = h('details.settings', null, sum, h('div.pop', null, h('div.popsec', null, h('span.pophead', null, t('theme')), mode), h('div.popsec', null, h('span.pophead', null, t('colors')), schemes), names, timing));
+  d.addEventListener('toggle', () => { if (d.open) { paintLat(); paintNames(); } }); // the check-up may have changed it meanwhile
+  paint(); paintLat(); paintNames();
   return d;
 }
 

@@ -6,12 +6,17 @@
 //             pattern (3 clean repeats on the home chord pass the lick and put it on review).
 // Other chords (or keys, for a key-relative lick) are an optional bonus after the echo, and so is the generated
 // exercise with notation and the left hand (#/t/<track>/<item>/fingers/<chord>, its «by heart» also passes the item).
-// No note names anywhere: keys are shown by finger number, black or white, and left or right of the one you pressed.
+// Note names follow settings.names (the user's own switch, 'en' by default): the keyboard labels, the note chips of the
+// notes stage (name + finger), the roll's row labels (desktop) and a wrong key («Нужна ми♭: чёрная, на 2 клавиши левее»)
+// name the note in the lick's own spelling, without the octave. With names 'off' the keys are shown by finger number, black
+// or white, and left or right of the one you pressed.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
-import { t, L, plural } from '../i18n.js';
+import { t, L, plural, getLang } from '../i18n.js';
+import { nameMode, nameInText } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, updateEx, exProgress, markActive, idle, reviews, scheduleReview } from '../store.js';
 import { createKeyboard } from '../music/keyboard.js';
+import { noteName } from '../music/notes.js';
 import { lickNotes, lickSpell, patternBar, barChords, lickKeyNotes, lickOverKey } from '../music/forms.js';
 import { scoreRepeat, keyHint, beatKey, isBlack } from '../music/lickfb.js';
 import * as audio from '../music/audio.js';
@@ -34,6 +39,9 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   const home = chords[0];
   const notesOf = (c) => (keyed ? lickKeyNotes(lick, c) : lickNotes(lick, c));
   const spelled = (e) => e.name || lickSpell(e.m, e.deg);
+  const names = nameMode(settings, 'opt'); // chips and labels: null = no note names, 'both' → letters (narrow)
+  const namesT = nameMode(settings, 'text'); // a sentence: «нужна ми♭», «нужна E♭ (ми♭)»
+  const nm = (e) => (names ? noteName(spelled(e), names) : ''); // «E♭» / «Ми♭», no octave
   // the left hand under the 2 bars of the lick: the pattern over the chord twice, or over the progression in the key
   const lhOf = (c) => { if (!pattern) return [[], []]; if (keyed) return lickOverKey(lick, c, pattern).bars.map((b) => b.lh); const pb = patternBar(pattern, c); return [pb, pb]; };
 
@@ -152,7 +160,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   const lo = Math.min(...allM), hi = Math.max(...allM);
   const lhM = chords.flatMap((c) => lhOf(c).flat().map((e) => e.m));
   audio.preloadPiano(Math.min(lo, ...lhM) - 2, hi + 4);
-  const kb = createKeyboard(kbEl, [lo - 2, hi + 2], { names: 'off', exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo - 2, hi + 2], { names: nameMode(settings, 'key'), exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   function paintKeys() {
     kb.hint({});
     if (st.stage === 'notes') {
@@ -176,11 +184,12 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
     rollNotes = notes.map((e) => h('div.lnote', { style: `left:${pct(e.t)}%;width:calc(${pct(e.d)}% - 6px)`, 'data-slot': e.t }, oneRow() ? null : h('span', null, String(e.f || ''))));
     kids.push(...rollNotes);
     const rr = oneRow() ? [{ f: '', black: false }] : rows;
-    rr.slice().reverse().forEach((r, row) => kids.push(h('div.prow' + (r.black ? '.blk' : ''), { style: `--row:${row}` }, oneRow() ? null : h('b', { title: t(r.black ? 'lqBlack' : 'lqWhite') }, String(r.f || '')))));
+    rr.slice().reverse().forEach((r, row) => kids.push(h('div.prow' + (r.black ? '.blk' : ''), { style: `--row:${row}` }, oneRow() ? null : h('b', { title: t(r.black ? 'lqBlack' : 'lqWhite') }, names ? h('span.pnm', null, noteName(r.spelled, names)) : null, String(r.f || '')))));
     head = h('div.head'); contour = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     contour.setAttribute('class', 'contour'); contour.setAttribute('viewBox', '0 0 100 100'); contour.setAttribute('preserveAspectRatio', 'none');
     const n = rr.length;
     roll.dataset.rows = n;
+    roll.classList.toggle('named', !!names && !oneRow());
     roll.style.setProperty('--rows', n);
     roll.style.setProperty('--row-h', (n >= 6 ? 22 : n === 5 ? 26 : n === 1 ? 40 : 32) + 'px');
     roll.replaceChildren(h('div.rinner', null, ...kids, contour, head));
@@ -340,7 +349,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
       lhBars[k % 2].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
       const evs = notes.filter((e) => e.t === ls);
       if (k < 2) evs.forEach((e) => play1(e.m, time, e.stac ? Math.min(swingOff() * 0.6, 0.2) : swingOff() * e.d * 0.95, 0.55));
-      else evs.forEach((e) => exp.push({ t: time, slot: ls, len: e.d, hit: false, m: e.m, f: e.f }));
+      else evs.forEach((e) => exp.push({ t: time, slot: ls, len: e.d, hit: false, m: e.m, f: e.f, name: spelled(e) }));
       if (k === 3 && slot === PER - 1) enqueue({ t: time + beat * 0.5 + 0.25, youEnd: bar });
       if (slot % 2) beatTime += beat;
       g++;
@@ -404,10 +413,13 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   }
 
   const beatWord = (slot) => (slot >= PER ? t('lqBar2') + ' · ' : '') + t(beatKey(slot));
-  const whereWord = (want, got) => {
+  /** where the wanted key is: «нужна чёрная, на 2 клавиши левее»; with names on «нужна ми♭: чёрная, …» (want = midi, name = its spelling) */
+  const whereWord = (want, got, name) => {
     const k = keyHint(want, got);
-    return t('lqNeed').replace('{c}', t(k.black ? 'lqBlackW' : 'lqWhiteW')).replace('{n}', `${k.keys} ${plural(k.keys, 'lqKeys')}`).replace('{d}', t(k.dir === 'left' ? 'lqLeft' : 'lqRight'));
+    return t(names && name ? 'lqNeedN' : 'lqNeed').replace('{name}', names && name ? inText(name) : '').replace('{c}', t(k.black ? 'lqBlackW' : 'lqWhiteW')).replace('{n}', `${k.keys} ${plural(k.keys, 'lqKeys')}`).replace('{d}', t(k.dir === 'left' ? 'lqLeft' : 'lqRight'));
   };
+  const inText = (name) => nameInText(name, namesT, getLang()); // «ми♭» inside a Russian sentence
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   function finishRepeat() {
     if (!rep) return;
     const pitch = st.stage === 'echo';
@@ -437,14 +449,14 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
     const lines = [];
     r.notes.forEach((n, i) => {
       const e = exp[i], who = pitch ? t('lqNoteF').replace('{i}', i + 1).replace('{f}', e.f) : t('lqNoteN').replace('{i}', i + 1);
-      if (n.res === 'wrong') lines.push(`<b>${who}:</b> ${t('lqWrong')}, ${whereWord(e.m, n.got)}.`);
+      if (n.res === 'wrong') lines.push(`<b>${who}:</b> ${t('lqWrong')}, ${whereWord(e.m, n.got, e.name)}.`);
       else if (n.res === 'early' || n.res === 'late') lines.push(`<b>${who}:</b> ${t('lq_' + n.res)}. ${t('lqItIsOn').replace('{b}', beatWord(e.slot))}.`);
       else if (n.res === 'miss') lines.push(`<b>${who}:</b> ${t('lqMissed')}. ${t('lqItIsOn').replace('{b}', beatWord(e.slot))}.`);
     });
     if (r.extra) lines.push(`<b>${t('lqExtra')}:</b> ${r.extra}. ${t('lqExtraHint')}`);
     const chips = r.notes.map((n, i) => {
       const e = exp[i], cls = n.res === 'ok' ? 'ok' : n.res === 'bitEarly' || n.res === 'bitLate' ? 'okish' : n.res === 'wrong' || n.res === 'miss' ? 'bad' : 'meh';
-      return h('div.lqchip.' + cls, null, h('small', null, t(beatKey(e.slot))), h('b', null, pitch ? String(e.f || '·') : String(i + 1)), h('span', null, t('lqRes_' + n.res)));
+      return h('div.lqchip.' + cls, null, h('small', null, t(beatKey(e.slot))), pitch && names ? h('b.named', null, noteName(e.name, names), e.f ? h('sup', null, String(e.f)) : null) : h('b', null, pitch ? String(e.f || '·') : String(i + 1)), h('span', null, t('lqRes_' + n.res)));
     });
     st.result = { clean: r.clean };
     resBox.className = 'lqres ' + (r.clean ? 'ok' : 'meh');
@@ -465,8 +477,8 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
 
   // ---------- notes stage: key after key, no tempo ----------
   function paintSeq() {
-    seqRow.replaceChildren(...notes.map((e, i) => h('div.lqnote' + (i < st.ni ? '.done' : i === st.ni ? '.cur' : '') + (isBlack(e.m) ? '.blk' : ''), null,
-      h('b', null, String(e.f || '·')),
+    seqRow.replaceChildren(...notes.map((e, i) => h('div.lqnote' + (i < st.ni ? '.done' : i === st.ni ? '.cur' : '') + (isBlack(e.m) ? '.blk' : '') + (names ? '.named' : ''), null,
+      names ? h('b', null, nm(e), e.f ? h('sup', null, String(e.f)) : null) : h('b', null, String(e.f || '·')),
       h('small', null, i < st.ni ? '✓' : i === st.ni ? t('lqNow') : t(isBlack(e.m) ? 'lqBlackW' : 'lqWhiteW')))));
   }
   function noteFb(cls, html, sym) {
@@ -480,7 +492,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
       st.slip = true; st.streak = 0;
       kb.hint({ [m]: 'bad' });
       const k = keyHint(cur.m, m);
-      noteFb('bad', `<b>${t('lqWrongKey')}: ${whereWord(cur.m, m)}</b><br>${t('lqWrongSub')}`, k.dir === 'left' ? '←' : '→');
+      noteFb('bad', `<b>${names ? `${t('lqWrongKey')}. ${cap(whereWord(cur.m, m, spelled(cur)))}` : `${t('lqWrongKey')}: ${whereWord(cur.m, m)}`}</b><br>${t('lqWrongSub')}`, k.dir === 'left' ? '←' : '→');
       paintDots();
       return;
     }
