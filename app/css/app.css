@@ -853,6 +853,14 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .lqnote.done b { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); } .lqnote.done small { color: var(--ok); }
 .lqnote.cur b { width: 66px; height: 66px; border-radius: 18px; background: var(--rh); border-color: var(--rh); color: var(--panel); font-size: 28px; }
 .lqnote.cur small { color: var(--rh); }
+.lickscreen .lqnote.named b { width: auto; min-width: 52px; padding: 0 8px; font-size: 20px; white-space: nowrap; } /* note names on: «E♭³» */
+.lickscreen .lqnote.named.cur b { min-width: 66px; font-size: 26px; }
+.lickscreen .lqnote.named sup { font-size: .55em; margin-left: 2px; opacity: .8; }
+.lickscreen .lqchip b.named { width: auto; min-width: 42px; max-width: 100%; padding: 0 1px; font-size: 13px; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; }
+.lickscreen .lqchip b.named sup { display: none; } /* the chip is narrow: the name only, the finger is in the lines */
+.lickscreen .lickroll.named .rinner { left: 10%; } /* room for «E♭ 3» in the row labels */
+.lickscreen .lickroll.named .prow { left: -11.4%; }
+.lickscreen .lickroll .prow .pnm { margin-right: 5px; font-weight: 700; }
 .lqmsg { display: flex; align-items: center; gap: 14px; border-radius: 16px; padding: 12px 16px; font-size: 15px; line-height: 1.45; min-height: 24px; }
 .lqmsg:empty { display: none; }
 .lqmsg .sym { font: 700 28px var(--display); }
@@ -894,6 +902,8 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
   .lqchip b { width: 34px; height: 34px; font-size: 15px; }
   .lqchip small { display: none; }
   .lqnote b { width: 40px; height: 40px; font-size: 18px; } .lqnote.cur b { width: 50px; height: 50px; }
+  .lickscreen .lqnote.named b { min-width: 40px; padding: 0 5px; font-size: 15px; } .lickscreen .lqnote.named.cur b { min-width: 50px; font-size: 19px; }
+  .lickscreen .lqchip b.named { min-width: 34px; font-size: 11px; }
 }
 .lickscreen .kb { height: clamp(90px, 16dvh, 150px); }
 /* melody: phrase chips carry their clean count */
@@ -909,6 +919,7 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
   .lickroll .rinner { left: 11%; }
   .lickroll .prow { left: -12.4%; }
   .lickroll .prow b { min-width: 26px; height: 22px; padding: 0 4px; font-size: 11px; }
+  .lickscreen .lickroll.named .rinner { left: 11%; } .lickscreen .lickroll.named .prow { left: -12.4%; } .lickscreen .lickroll .prow .pnm { display: none; } /* a phone: fingers only */
   .lickpanel .rhead h2 { font-size: 18px; }
   .lickscreen .cyc { min-width: 0; gap: 6px; padding: 6px 10px; }
   .lickscreen .cyc span { display: none; }

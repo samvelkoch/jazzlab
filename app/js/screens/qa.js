@@ -7,12 +7,14 @@
 //   The phrase's role (lick.role, or item.you) turns it around: a question phrase means YOU ask (bars 1–2, 5–6, 9–10)
 //   and the piano answers. Stage «Вариация» (between them): start like the phrase, change something, end by its role.
 //   item.stages picks the stages (default: ear, answer, vary, own). The piano's phrases are picked at random each time.
+// Note names follow settings.names ('off' = none): the keyboard labels, the result chips and a wrong key («нужна ми♭: …»).
 // Item: { kind: "qa", lick: your phrase, licks: [the piano's phrases (other role) + more for the ear stage], form, pattern,
 //         you?: 'question'|'answer', stages?: [...] }
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
-import { t, L, plural } from '../i18n.js';
+import { t, L, plural, getLang } from '../i18n.js';
 import { store, updateEx, exProgress, markActive, idle, scheduleReview } from '../store.js';
 import { createKeyboard } from '../music/keyboard.js';
+import { noteName } from '../music/notes.js';
 import { lickNotes, lickSpell, patternBar } from '../music/forms.js';
 import { scoreRepeat, keyHint, beatKey, homeCheck, varyCheck } from '../music/lickfb.js';
 import * as audio from '../music/audio.js';
@@ -26,7 +28,9 @@ const BLUES = [0, 3, 5, 6, 7, 10]; // the blues scale from home
 const HOME_KEY = 'C7';
 
 export function renderQA(root, { track, itemId, item, answer, licks, form, pattern, back }) {
-  const settings = { met: true, pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
+  const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
+  const names = settings.names === 'ru' || settings.names === 'en' ? settings.names : null; // null: no note names
+  const inText = (name) => (names === 'ru' && getLang() === 'ru' ? noteName(name, 'ru').toLowerCase() : noteName(name, names)); // «ми♭» inside a Russian sentence
   const Q = (item.you || answer.role) === 'question'; // you ask, the piano answers
   const STAGES = (Array.isArray(item.stages) ? item.stages : ALL_STAGES).filter((s) => ALL_STAGES.includes(s));
   // texts: a question-mode variant (key + 'Q') where there is one
@@ -115,7 +119,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
   const allM = [...aNotes, ...qNotes.flat(), ...earNotes.flat()].map((e) => e.m);
   const lo = Math.min(60, ...allM), hi = Math.max(72, ...allM);
   audio.preloadPiano(36, hi + 4);
-  const kb = createKeyboard(kbEl, [lo - 1, hi + 1], { names: 'off', exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo - 1, hi + 1], { names: settings.names, exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   const homeKeys = () => { const out = []; for (let m = lo - 1; m <= hi + 1; m++) if (m % 12 === 0) out.push(m); return out; };
   function paintKeys(extra) {
     kb.hint({});
@@ -284,7 +288,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
       if (settings.impBeat === 'drums') groove(slot, time, { swing: st.swing, style: form.style, bar }); else if (slot % 2 === 0) audio.click(time, slot === 0);
       lhs[fb].filter((e) => e.t === slot).forEach((e) => play1(e.m, time, e.stac ? Math.min(beat * 0.5, 0.25) : beat * e.d / 2 * 0.9, 0.3));
       if (!you) { if (qNotes.length) qNotes[Math.max(0, pk)].filter((e) => e.t === ls).forEach((e) => play1(e.m, time, e.stac ? Math.min(swingOff() * 0.6, 0.2) : swingOff() * e.d * 0.95, 0.6)); }
-      else if (st.stage === 'answer' || st.stage === 'vary') aNotes.filter((e) => e.t === ls).forEach((e) => exp.push({ t: time, slot: ls, len: e.d, m: e.m, f: e.f }));
+      else if (st.stage === 'answer' || st.stage === 'vary') aNotes.filter((e) => e.t === ls).forEach((e) => exp.push({ t: time, slot: ls, len: e.d, m: e.m, f: e.f, name: e.name }));
       if (you && half === 1 && slot === PER - 1) enqueue({ t: time + beat * 0.5 + 0.25, ansEnd: bar, end: time + beat * 0.5 });
       if (slot % 2) beatTime += beat;
       g++;
@@ -357,7 +361,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
       const lines = [];
       r.notes.forEach((n, i) => {
         const e = exp[i], who = t('lqNoteF').replace('{i}', i + 1).replace('{f}', e.f);
-        if (n.res === 'wrong') { const k = keyHint(e.m, n.got); lines.push(`<b>${who}:</b> ${t('lqWrong')}, ${t('lqNeed').replace('{c}', t(k.black ? 'lqBlackW' : 'lqWhiteW')).replace('{n}', `${k.keys} ${plural(k.keys, 'lqKeys')}`).replace('{d}', t(k.dir === 'left' ? 'lqLeft' : 'lqRight'))}.`); }
+        if (n.res === 'wrong') { const k = keyHint(e.m, n.got); lines.push(`<b>${who}:</b> ${t('lqWrong')}, ${t(names && e.name ? 'lqNeedN' : 'lqNeed').replace('{name}', names && e.name ? inText(e.name) : '').replace('{c}', t(k.black ? 'lqBlackW' : 'lqWhiteW')).replace('{n}', `${k.keys} ${plural(k.keys, 'lqKeys')}`).replace('{d}', t(k.dir === 'left' ? 'lqLeft' : 'lqRight'))}.`); }
         else if (n.res === 'early' || n.res === 'late') lines.push(`<b>${who}:</b> ${t('lq_' + n.res)}. ${t('lqItIsOn').replace('{b}', beatWord(e.slot))}.`);
         else if (n.res === 'miss') lines.push(`<b>${who}:</b> ${t('lqMissed')}. ${t('lqItIsOn').replace('{b}', beatWord(e.slot))}.`);
       });
@@ -365,7 +369,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
       html = lines.slice(0, 3).join('<br>');
       chips = r.notes.map((n, i) => {
         const cls = n.res === 'ok' ? 'ok' : n.res === 'bitEarly' || n.res === 'bitLate' ? 'okish' : n.res === 'wrong' || n.res === 'miss' ? 'bad' : 'meh';
-        return h('div.lqchip.' + cls, null, h('small', null, t(beatKey(exp[i].slot))), h('b', null, String(exp[i].f || '·')), h('span', null, t('lqRes_' + n.res)));
+        return h('div.lqchip.' + cls, null, h('small', null, t(beatKey(exp[i].slot))), names && exp[i].name ? h('b.named', null, noteName(exp[i].name, names), exp[i].f ? h('sup', null, String(exp[i].f)) : null) : h('b', null, String(exp[i].f || '·')), h('span', null, t('lqRes_' + n.res)));
       });
       if (clean) { st.streak++; if (st.streak >= NEED.answer && !prog().answer) { pass('answer'); paintStages(); head += ' ' + T(nextStage('answer') === 'vary' ? 'qaPassed_answer' : 'qaPassed_answerOwn'); } }
       else st.streak = 0;

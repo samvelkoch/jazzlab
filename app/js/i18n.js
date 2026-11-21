@@ -124,7 +124,7 @@ const DICT = {
     lkF_echo: 'Нота должна совпасть точно, в той же октаве. Ритм важнее: сначала поймай его.', lkF_link: 'Упражнение откроется на выбранном аккорде.',
     lkOpen: 'Открыть упражнение на {c}', lkCleanReps: 'чистые повторы', lkEchoGoal: '3 чистых повтора на каждом аккорде', lkEchoDone: 'Эхо пройдено на всех аккордах. Теперь «Пальцы» →',
     lkAllChords: 'Ещё на других аккордах: {c}', lkKey: 'Тональность', lkEchoGoalKey: '3 чистых повтора в каждой тональности', lkEchoDoneKey: 'Эхо пройдено во всех тональностях. Теперь «Пальцы» →', lkAllKeys: 'Теперь в другой тональности: {c}', lkOpenKey: 'Открыть упражнение в {c}', phraseW: 'фраза', lkPassed: 'Лик выучен', lkStartHint: 'Нажми «Старт»: отсчёт 1 такт, потом 2 такта пианино, 2 такта ты',
-    // lick screen: stages Ритм → Ноты → Эхо (no note names)
+    // lick screen: stages Ритм → Ноты → Эхо (note names follow settings.names: lqNeedN names the wanted note)
     lq_rhythm: 'Ритм', lq_notes: 'Ноты', lq_echo: 'Эхо', lqStages: 'Этапы', lqStageOf: 'Этап {n} из 3',
     lqT_rhythm: 'Сначала ритм', lqS_rhythm: 'Пианино играет фразу два такта, ты стучишь тот же ритм в следующих двух. По любой клавише: высота не важна.',
     lqT_notes: 'Клавиша за клавишей', lqS_notes: 'Темпа нет, время не идёт. Жми клавишу с синим кружком (цифра = палец), загорится следующая.',
@@ -147,7 +147,7 @@ const DICT = {
     lqNoteF: 'Нота {i} (палец {f})', lqNoteN: 'Удар {i}', lqWrong: 'не та клавиша', lqMissed: 'пропущена', lq_early: 'рано', lq_late: 'поздно', lqItIsOn: 'Она звучит на «{b}»',
     lqExtra: 'Лишние нажатия', lqExtraHint: 'Между нотами руки молчат.',
     lqRes_ok: '✓', lqRes_bitEarly: '✓ чуть рано', lqRes_bitLate: '✓ чуть поздно', lqRes_early: 'рано', lqRes_late: 'поздно', lqRes_wrong: 'не та', lqRes_miss: 'пропуск',
-    lqNeed: 'нужна {c}, на {n} {d}', lqBlackW: 'чёрная', lqWhiteW: 'белая', lqBlack: 'чёрная клавиша', lqWhite: 'белая клавиша', lqKeys: 'клавишу|клавиши|клавиш', lqLeft: 'левее', lqRight: 'правее',
+    lqNeed: 'нужна {c}, на {n} {d}', lqNeedN: 'нужна {name}: {c}, на {n} {d}', lqBlackW: 'чёрная', lqWhiteW: 'белая', lqBlack: 'чёрная клавиша', lqWhite: 'белая клавиша', lqKeys: 'клавишу|клавиши|клавиш', lqLeft: 'левее', lqRight: 'правее',
     lqWrongKey: 'Не та клавиша', lqWrongSub: 'Нажатая отмечена красным. Начинать заново не надо: продолжай с этой ноты.',
     lqNow: 'сейчас', lqListen: 'Послушать фразу', lqRestart: 'С начала фразы',
     lqRunClean: 'Без ошибки!', lqRunSlip: 'Фраза пройдена, но с промахом.', lqRunSlipSub: 'Ещё раз: нужно 3 раза подряд без ошибки.',
@@ -435,7 +435,7 @@ const DICT = {
     lqNoteF: 'Note {i} (finger {f})', lqNoteN: 'Tap {i}', lqWrong: 'wrong key', lqMissed: 'missed', lq_early: 'early', lq_late: 'late', lqItIsOn: 'It sounds on “{b}”',
     lqExtra: 'Extra presses', lqExtraHint: 'Between the notes the hands are silent.',
     lqRes_ok: '✓', lqRes_bitEarly: '✓ a bit early', lqRes_bitLate: '✓ a bit late', lqRes_early: 'early', lqRes_late: 'late', lqRes_wrong: 'wrong', lqRes_miss: 'missed',
-    lqNeed: 'you need the {c} one, {n} {d}', lqBlackW: 'black', lqWhiteW: 'white', lqBlack: 'black key', lqWhite: 'white key', lqKeys: 'key|keys', lqLeft: 'to the left', lqRight: 'to the right',
+    lqNeed: 'you need the {c} one, {n} {d}', lqNeedN: 'you need {name}: the {c} one, {n} {d}', lqBlackW: 'black', lqWhiteW: 'white', lqBlack: 'black key', lqWhite: 'white key', lqKeys: 'key|keys', lqLeft: 'to the left', lqRight: 'to the right',
     lqWrongKey: 'Wrong key', lqWrongSub: 'The one you pressed is marked red. No need to start over: carry on from this note.',
     lqNow: 'now', lqListen: 'Listen to the phrase', lqRestart: 'From the start',
     lqRunClean: 'No slips!', lqRunSlip: 'Phrase done, with a slip.', lqRunSlipSub: 'Once more: 3 runs in a row with no slip.',
