@@ -14,4 +14,5 @@ assert.deepEqual(tokens('A Day in the Life of a Fool · Dmitri · Cab · Bad · 
 // an English «Am» is taken for A minor: harmless, it only stays in its own case
 assert.deepEqual(tokens('Am I blue'), ['Am']);
 assert.deepEqual(tokens('C7 F7 G7'), []);
+assert.deepEqual(tokens('Go, Do, Eo'), []);
 console.log('caps ok');
