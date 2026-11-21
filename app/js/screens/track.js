@@ -3,7 +3,7 @@
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { diagFmt } from './diag.js';
 import { freshItems, learningOrder, budgetLimits, BUDGETS, DEFAULT_BUDGET } from '../queue.js';
-import { stepsOf, stepProgress, stepDone, currentStepIndex, pathComplete, pathProgress, concertOf, unlockedOf, withUnlocked, firstSentence } from '../path.js';
+import { stepsOf, stepProgress, stepDone, stepLocked, currentStepIndex, pathComplete, pathProgress, concertOf, unlockedOf, withUnlocked, firstSentence } from '../path.js';
 import { t, L, plural } from '../i18n.js';
 import { wikiIndex, factOfDay } from './wiki.js';
 import { markTerms } from '../glossary.js';
@@ -96,7 +96,7 @@ export async function renderTrack(root, { model, index, rerender }) {
 
   // ---- item state (one word) and the details line of the old cards ----
   const status = (id) => {
-    if (id === nowId) return 'now';
+    if (id === nowId || q.diag.includes(id)) return 'now'; // a due check-up is only listed in «Все упражнения»
     if (q.due.includes(id)) return 'review';
     if (done(id)) return 'done';
     return prog[id] || (items[id].kind === 'exercise' && prog[items[id].ex]) ? 'meh' : 'none';
@@ -132,7 +132,7 @@ export async function renderTrack(root, { model, index, rerender }) {
     const word = stateWord(id, s);
     const link = h('a.plink', { href: it.href },
       h('span.pn', { 'aria-hidden': 'true' }, concert ? '★' : String(n)),
-      h('span.pbody', null,
+      h('span.pitembody', null,
         h('span.ptitle', null, concert ? `${t('pConcert')}: ` : null, markTerms(it.title, undefined, 'span')),
         line ? h('span.pline', null, markTerms(line, undefined, 'span')) : null));
     const side = h('div.pside', null, word ? h('span.pstate', null, word) : null);
@@ -158,14 +158,14 @@ export async function renderTrack(root, { model, index, rerender }) {
   // ---- one step: a heading whose button opens / closes it; rows are built on first open ----
   const stepNode = (s, k) => {
     const sd = stepDone(s, done), pr = stepProgress(s, done);
-    const locked = k > curK && !unlocked.has(s.id) && !sd;
+    const locked = !sd && stepLocked(steps, k, done, [...unlocked]);
     const kind = sd ? 'done' : k === curK ? 'cur' : locked ? 'lock' : 'open';
     const bid = `step-${track.id}-${s.id}`;
     const body = h('div.pstepbody', { id: bid });
     const m = sd ? `✓ ${fill(t('pOf'), { k: pr.total, n: pr.total })}` : kind === 'lock' ? `${pr.total} ${plural(pr.total, 'pExW')}` : fill(t('pOf'), { k: pr.done, n: pr.total });
     const btn = h('button.pstephead', { type: 'button', 'aria-controls': bid },
-      h('span.pnum', null, p2(k + 1)), h('span.ptitle2', null, stepTitle(s)), h('span.pmeta2', null, m));
-    const node = h('section.pstep', { 'data-kind': kind, 'aria-labelledby': bid + '-h' }, h('h3', { id: bid + '-h' }, btn), body);
+      h('span.pstepnum', null, p2(k + 1)), h('span.ptitle2', null, stepTitle(s)), h('span.pmeta2', null, m));
+    const node = h('section.pstep', { 'data-kind': kind, 'aria-labelledby': bid + '-h' }, h('h2', { id: bid + '-h' }, btn), body);
     let built = false;
     const build = () => {
       if (built) return; built = true;
@@ -197,7 +197,7 @@ export async function renderTrack(root, { model, index, rerender }) {
 
   // ---- every exercise by section: compact ruled rows, title + state ----
   const allTab = () => h('div.pall', null, ...track.sections.map((sec) => h('section.psec', null,
-    h('h3.psechead', null, h('span', null, L(sec.title)), h('span.pmeta2', null, `${sec.items.filter(done).length}/${sec.items.length}`)),
+    h('h2.psechead', null, h('span', null, L(sec.title)), h('span.pmeta2', null, `${sec.items.filter(done).length}/${sec.items.length}`)),
     h('ul.pcrows', null, ...sec.items.map((id) => {
       const s = status(id), word = stateWord(id, s);
       return h('li', { 'data-status': s }, h('a.pcrow', { href: items[id].href }, h('span.pctitle', null, markTerms(items[id].title, undefined, 'span')), word ? h('span.pstate', null, word) : null));

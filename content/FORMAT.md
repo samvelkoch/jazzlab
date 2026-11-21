@@ -133,7 +133,7 @@ every track): every `path` id exists in `items` and in some section, no duplicat
 `diag` appears in `path` exactly once. Fresh-item rules (`freshItems()`): a `diag` is never a fresh item (the check-up comes
 first on its own when due); at most one `melody`, one form with a `melody` and one `solo` a day; a `perform` item is offered
 only once every path item before it is done, and for the queue it is done once it has a recorded run (`progress[id].runs >= 1`,
-`itemDone()` in `store.js`; its card then says «записано» instead of «пройдено»).
+`itemDone()` in `store.js`; its row then says «записано» instead of «сдано»).
 
 **Steps (`steps`).** The path cut into 6–9-item steps: `{ "id": "s1", "title": {ru, en}, "goal": {ru, en}, "items": […] }`.
 `path` must equal the steps' `items` glued in order (each path id in exactly one step); the last item of a step is its
