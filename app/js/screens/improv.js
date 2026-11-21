@@ -2,6 +2,7 @@
 // Stages: Rhythm (tap the chosen rhythm, bar on / bar off) → Echo (the piano plays a phrase, you repeat it) → Own (your phrase, then a bar of rest).
 import { h, ICON, themeButton, midiChip, trackFootH } from '../ui.js';
 import { t, getLang } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { store, updateEx, exProgress, markActive, idle } from '../store.js';
 import { toMidi, noteName } from '../music/notes.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -17,7 +18,7 @@ const SHAPES = ['up', 'down', 'same', 'arch'];
 export function renderImprov(root, { step, imp, rhythms }) {
   const id = step.id + '-imp';
   const settings = { met: true, names: 'en', pianoSnd: true, syl: 'food', impBeat: 'drums', ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'short'); // the roll's row labels and the idea lines: 'both' → letters
   const pitches = imp.notes.map(toMidi);
   const sorted = pitches.map((m, k) => ({ m, k })).sort((a, b) => a.m - b.m); // low → high
   const st = {
@@ -87,7 +88,7 @@ export function renderImprov(root, { step, imp, rhythms }) {
   // ---------- keyboard: the given notes stay lit, with fingers ----------
   const lo = Math.min(...pitches) - 5, hi = Math.max(...pitches) + 5;
   audio.preloadPiano(Math.min(lo, 40), Math.max(hi, 76));
-  const kb = createKeyboard(kbEl, [lo, hi], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo, hi], { names: nameMode(settings, 'key'), onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   const lit = { notes: imp.notes, f: imp.f || [] };
   kb.show(imp.hand === 'lh' ? { rh: null, lh: lit } : { rh: lit, lh: null }, { rh: null, lh: null }, 'both');
   const midiOn = () => midiState().connected;

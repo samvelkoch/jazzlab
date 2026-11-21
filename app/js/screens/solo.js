@@ -8,6 +8,7 @@
 // the solo; the solo run is scored for `rhythm` too. With solo.call + solo.motif the band plays a one-bar motif to repeat / vary.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { decorateFunctions } from '../fnlabels.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
@@ -29,7 +30,7 @@ const pcm = (m) => ((m % 12) + 12) % 12;
 
 export function renderSolo(root, { track, itemId, item, solo, form, pattern, rhythms, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'short'); // the palette chips and short feedback: 'both' → letters
   const bars = form.bars, NB = bars.length;
   const lhNotes = patternBars(pattern, bars); // the band's left hand, bar by bar
   const hand = { lo: 60, hi: 72, ...(solo.hand || {}) };
@@ -139,7 +140,7 @@ export function renderSolo(root, { track, itemId, item, solo, form, pattern, rhy
   // ---------- keyboard: the palette ----------
   const kLo = hand.lo - 5, kHi = hand.hi + 7;
   audio.preloadPiano(Math.min(kLo, ...lhNotes.flat().map((e) => e.m)) - 1, kHi + 2);
-  const kb = createKeyboard(kbEl, [kLo, kHi], { names: settings.names, center: Math.round((hand.lo + hand.hi) / 2), onPress: (m) => {
+  const kb = createKeyboard(kbEl, [kLo, kHi], { names: nameMode(settings, 'key'), center: Math.round((hand.lo + hand.hi) / 2), onPress: (m) => {
     audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55);
     if (!midiOn()) input(m, audio.toAudioTime(performance.now()), 0.6, TAP_DUR); // with a piano, MIDI is the one source
   } });

@@ -6,6 +6,7 @@
 // the same MIDI notes in the same order. Pickups are ignored: a phrase is exactly its bars.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, updateEx, exProgress, markActive, idle, reviews } from '../store.js';
 import { noteName } from '../music/notes.js';
@@ -20,7 +21,7 @@ const CLEAN_TO_PASS = 3; // clean repeats per phrase
 
 export function renderMelody(root, { track, itemId, item, melody, pattern, form, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'short'); // the roll's row labels: 'both' → letters
   const phrases = melody.phrases;
   const saved = exProgress(itemId);
   const due = !!(reviews()[itemId] && new Date(reviews()[itemId].due) <= new Date());
@@ -111,7 +112,7 @@ export function renderMelody(root, { track, itemId, item, melody, pattern, form,
   const lhAll = lhTune.flat().map((e) => e.m);
   const lo = Math.min(...rhAll, ...lhAll), hi = Math.max(...rhAll, ...lhAll);
   audio.preloadPiano(lo - 2, hi + 4);
-  const kb = createKeyboard(kbEl, [lo, hi], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo, hi], { names: nameMode(settings, 'key'), onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   function paintKeys() { kb.show({ rh: { notes: rows.map((r) => r.spelled), f: rows.map((r) => r.f) }, lh: null }, { rh: null, lh: null }, 'both'); }
 
   // ---------- roll: the phrase's bars, one row per distinct pitch ----------

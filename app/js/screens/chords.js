@@ -8,6 +8,9 @@ import * as audio from '../music/audio.js';
 import { onNote, midiState, sendNote, silence } from '../music/midi.js';
 import { parseChord, checkChord, voicing, explain, chordName, prettySymbol, withRoot, nameInChord, ruName } from '../music/chords.js';
 import { compVoicing } from '../music/chord-ex.js';
+import { nameMode } from '../music/names.js';
+/** Key labels when this screen shows names: the user's choice (settings.names), letters when it is 'off'. */
+const keyNames = () => { const m = nameMode(store.get('settings', {}), 'key'); return m === 'off' ? 'en' : m; };
 
 // ---------- strings ----------
 const TX = {
@@ -282,7 +285,7 @@ export function renderKeys(root) {
   [['white', tr('lvlWhite')], ['sharp', tr('lvlSharp')], ['flat', tr('lvlFlat')]].forEach(([v, label]) => lvls.append(h('button', { type: 'button', 'data-v': v, onclick: () => { st.lvl = v; store.set('chordKeysLvl', v); paintLvls(); next(); } }, label)));
   const paintLvls = () => lvls.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === st.lvl)));
   const scoreEl = h('b');
-  const namesBtn = h('button.btn', { type: 'button', onclick: () => { st.names = !st.names; kb.setNames(st.names ? 'en' : 'off'); namesBtn.textContent = st.names ? tr('hideNames') : tr('showNames'); } }, tr('showNames'));
+  const namesBtn = h('button.btn', { type: 'button', onclick: () => { st.names = !st.names; kb.setNames(st.names ? keyNames() : 'off'); namesBtn.textContent = st.names ? tr('hideNames') : tr('showNames'); } }, tr('showNames'));
   const lm = (a, b) => h('div.panel.lm', null, h('b', null, a), h('p', null, b));
   // phone: the three landmark cards fold into one toggle, so the prompt and the keyboard fit one screen
   const hintsBtn = h('button.btn.khints', { type: 'button', onclick: () => setHints(main.dataset.hints !== '1') }, tr('hints'));
@@ -390,7 +393,7 @@ export function renderLesson(root, { lesson: l }) {
   function paintKb() {
     const v = compVoicing(cur);
     const notes = [...v.lh.map((x) => ({ midi: x.midi, tone: null })), ...v.rh.map((x) => ({ midi: x.midi, tone: x.tone }))];
-    if (!kb) kb = createKeyboard(kbEl, [41, 76], { names: 'en', onPress: (m) => playNotes([m], { dur: 0.8 }) });
+    if (!kb) kb = createKeyboard(kbEl, [41, 76], { names: keyNames(), onPress: (m) => playNotes([m], { dur: 0.8 }) });
     const map = {};
     v.lh.forEach((x) => { map[x.midi] = { cls: cur.bass ? 'bass' : 'base', label: '5' }; });
     v.rh.forEach((x, i) => { map[x.midi] = { cls: x.tone.kind, label: String(v.fingers[i] || '') }; });

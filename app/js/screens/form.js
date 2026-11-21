@@ -19,6 +19,7 @@
 // the keyboard already shows the next bar with notes, while the strip follows the bar that sounds.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
+import { nameMode, nameInText } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews, logDay } from '../store.js';
 import { noteName, midiToName } from '../music/notes.js';
@@ -37,7 +38,8 @@ const SLIP_PER = 40; // one allowed slip per this many notes in a chorus (at lea
 
 export function renderForm(root, { track, itemId, item, form, pattern, lick, licks, keyLicks, melody, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'short'); // the strip, the grid and the wrong-note text name notes even with names 'off'; 'both' → letters (narrow)
+  const namesT = nameMode(settings, 'text');
   const bars = form.bars, NB = bars.length;
   const lhNotes = patternBars(pattern, bars); // [{t, d, m, f}] per bar, built in order (a voice-led pattern follows the previous bar)
   // right hand: one lick, or a question-and-answer pair taking turns (pair k/2 even = question, odd = answer)
@@ -178,7 +180,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const lo = Math.min(...all), hi = Math.max(...all);
   const lhLo = rh ? Math.min(...lhNotes.flat().map((e) => e.m)) : lo;
   audio.preloadPiano(Math.min(lo, lhLo) - 3, hi + 7);
-  const kb = createKeyboard(kbEl, [lo, hi + 5], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo, hi + 5], { names: nameMode(settings, 'key'), onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   // hand position ahead of time: doneG = the last event position that is over (hit or its window passed), -1 = none yet;
   // the target is the first of your events after it, the keyboard shows the target's bar (formview.keyPlan)
   const yours = { rh: rh ? rhNotes : null, lh: !rh || two ? lhNotes : null };
@@ -314,7 +316,7 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
     if (!best) {
       if (!exp.length || T < exp[0].t - win) return; // before the first note: ignore
       const at = chorusBarAt(posAt(T), NB, PER); // a wrong note belongs to the chorus and bar of its position
-      tally.add(at.chorus, at.bar, 'bad'); kb.flash(m, 'bad'); fb(`<span class="bad">${t('wrongNote')}: ${noteName(midiToName(m), names)}</span>`); return;
+      tally.add(at.chorus, at.bar, 'bad'); kb.flash(m, 'bad'); fb(`<span class="bad">${t('wrongNote')}: ${noteName(midiToName(m), namesT)}</span>`); return;
     }
     best.hit = true;
     const dt = T - best.t, cls = Math.abs(dt) <= tight ? 'ok' : 'meh';

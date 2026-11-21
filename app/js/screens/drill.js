@@ -2,6 +2,7 @@
 // "Play C7"), the piano (or the on-screen keyboard) answers, we count accuracy and time per task.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L } from '../i18n.js';
+import { nameMode } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, exProgress, updateEx, markActive, idle, scheduleReview, reviews } from '../store.js';
 import { toMidi, noteName, midiToName } from '../music/notes.js';
@@ -35,7 +36,7 @@ function makeTasks(item) {
 
 export function renderDrill(root, { track, itemId, item, back }) {
   const settings = { names: 'en', pianoSnd: true, ...store.get('settings', {}) };
-  const names = settings.names === 'off' ? 'en' : settings.names;
+  const names = nameMode(settings, 'text'); // prompts and feedback name the note; 'off' → letters
   // names come from the task spec (Bb stays Bb, not A#); chord tones are spelled like the chord (C7 = C E G Bb, A7 = A C# E G)
   const nm = (x) => noteName(x.name + '4', names);
   const st = { tasks: [], k: -1, running: false, t0: 0, errors: 0, log: [], held: new Set(), got: new Set() };
@@ -63,7 +64,7 @@ export function renderDrill(root, { track, itemId, item, back }) {
   const footRO = trackFootH(screen, footer); // phone: the keyboard sticks right above the footer
 
   audio.preloadPiano(LO, HI);
-  const kb = createKeyboard(kbEl, [LO, HI - 2], { names: settings.names, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiState().connected) { input(m, true); } } });
+  const kb = createKeyboard(kbEl, [LO, HI - 2], { names: nameMode(settings, 'key'), onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiState().connected) { input(m, true); } } });
   function play1(m, time, dur, v) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) return; }
     audio.pianoNote(m, time, dur, v);

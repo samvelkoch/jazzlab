@@ -12,6 +12,7 @@
 // or white, and left or right of the one you pressed.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
+import { nameMode, nameInText } from '../music/names.js';
 import { markTerms } from '../glossary.js';
 import { store, updateEx, exProgress, markActive, idle, reviews, scheduleReview } from '../store.js';
 import { createKeyboard } from '../music/keyboard.js';
@@ -38,7 +39,8 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   const home = chords[0];
   const notesOf = (c) => (keyed ? lickKeyNotes(lick, c) : lickNotes(lick, c));
   const spelled = (e) => e.name || lickSpell(e.m, e.deg);
-  const names = settings.names === 'ru' || settings.names === 'en' ? settings.names : null; // null: no note names
+  const names = nameMode(settings, 'opt'); // chips and labels: null = no note names, 'both' → letters (narrow)
+  const namesT = nameMode(settings, 'text'); // a sentence: «нужна ми♭», «нужна E♭ (ми♭)»
   const nm = (e) => (names ? noteName(spelled(e), names) : ''); // «E♭» / «Ми♭», no octave
   // the left hand under the 2 bars of the lick: the pattern over the chord twice, or over the progression in the key
   const lhOf = (c) => { if (!pattern) return [[], []]; if (keyed) return lickOverKey(lick, c, pattern).bars.map((b) => b.lh); const pb = patternBar(pattern, c); return [pb, pb]; };
@@ -158,7 +160,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
   const lo = Math.min(...allM), hi = Math.max(...allM);
   const lhM = chords.flatMap((c) => lhOf(c).flat().map((e) => e.m));
   audio.preloadPiano(Math.min(lo, ...lhM) - 2, hi + 4);
-  const kb = createKeyboard(kbEl, [lo - 2, hi + 2], { names: settings.names, exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo - 2, hi + 2], { names: nameMode(settings, 'key'), exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   function paintKeys() {
     kb.hint({});
     if (st.stage === 'notes') {
@@ -416,7 +418,7 @@ export function renderLick(root, { track, itemId, item, lick, pattern, form: for
     const k = keyHint(want, got);
     return t(names && name ? 'lqNeedN' : 'lqNeed').replace('{name}', names && name ? inText(name) : '').replace('{c}', t(k.black ? 'lqBlackW' : 'lqWhiteW')).replace('{n}', `${k.keys} ${plural(k.keys, 'lqKeys')}`).replace('{d}', t(k.dir === 'left' ? 'lqLeft' : 'lqRight'));
   };
-  const inText = (name) => (names === 'ru' && getLang() === 'ru' ? noteName(name, 'ru').toLowerCase() : noteName(name, names)); // «ми♭» inside a Russian sentence
+  const inText = (name) => nameInText(name, namesT, getLang()); // «ми♭» inside a Russian sentence
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   function finishRepeat() {
     if (!rep) return;

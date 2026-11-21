@@ -12,6 +12,7 @@
 //         you?: 'question'|'answer', stages?: [...] }
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, plural, getLang } from '../i18n.js';
+import { nameMode, nameInText } from '../music/names.js';
 import { store, updateEx, exProgress, markActive, idle, scheduleReview } from '../store.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { noteName } from '../music/notes.js';
@@ -29,8 +30,9 @@ const HOME_KEY = 'C7';
 
 export function renderQA(root, { track, itemId, item, answer, licks, form, pattern, back }) {
   const settings = { met: true, names: 'en', pianoSnd: true, impBeat: 'drums', ...store.get('settings', {}) };
-  const names = settings.names === 'ru' || settings.names === 'en' ? settings.names : null; // null: no note names
-  const inText = (name) => (names === 'ru' && getLang() === 'ru' ? noteName(name, 'ru').toLowerCase() : noteName(name, names)); // «ми♭» inside a Russian sentence
+  const names = nameMode(settings, 'opt'); // chips and labels: null = no note names, 'both' → letters (narrow)
+  const namesT = nameMode(settings, 'text'); // a sentence: «нужна ми♭», «нужна E♭ (ми♭)»
+  const inText = (name) => nameInText(name, namesT, getLang()); // «ми♭» inside a Russian sentence
   const Q = (item.you || answer.role) === 'question'; // you ask, the piano answers
   const STAGES = (Array.isArray(item.stages) ? item.stages : ALL_STAGES).filter((s) => ALL_STAGES.includes(s));
   // texts: a question-mode variant (key + 'Q') where there is one
@@ -119,7 +121,7 @@ export function renderQA(root, { track, itemId, item, answer, licks, form, patte
   const allM = [...aNotes, ...qNotes.flat(), ...earNotes.flat()].map((e) => e.m);
   const lo = Math.min(60, ...allM), hi = Math.max(72, ...allM);
   audio.preloadPiano(36, hi + 4);
-  const kb = createKeyboard(kbEl, [lo - 1, hi + 1], { names: settings.names, exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
+  const kb = createKeyboard(kbEl, [lo - 1, hi + 1], { names: nameMode(settings, 'key'), exact: true, onPress: (m) => { audio.ensureAudio(); play1(m, audio.now() + 0.01, 0.5, 0.55); if (!midiOn()) input(m, performance.now()); } });
   const homeKeys = () => { const out = []; for (let m = lo - 1; m <= hi + 1; m++) if (m % 12 === 0) out.push(m); return out; };
   function paintKeys(extra) {
     kb.hint({});
