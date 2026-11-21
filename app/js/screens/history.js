@@ -34,8 +34,8 @@ export function historyPanel(now = new Date()) {
     const x = i * W, min = r.sec / 60, isToday = r.key === today, d = dateOf(r.key);
     const hgt = r.sec > 0 ? Math.max(2, (min / max) * CH) : 0;
     const tip = `${d.toLocaleDateString(locale(), { weekday: 'short', day: 'numeric', month: 'short' })}: ${Math.round(min)} ${t('min')}`;
-    return `<g><title>${esc(tip)}</title><rect class="hslot" x="${x + 2}" y="${TOP}" width="${W - 4}" height="${CH}" rx="3"/>`
-      + (hgt ? `<rect class="hbar${isToday ? ' today' : ''}" x="${x + 2}" y="${TOP + CH - hgt}" width="${W - 4}" height="${hgt}" rx="3"/>` : '')
+    return `<g><title>${esc(tip)}</title><rect class="hslot" x="${x + 2}" y="${TOP}" width="${W - 4}" height="${CH}"/>`
+      + (hgt ? `<rect class="hbar${isToday ? ' today' : ''}" x="${x + 2}" y="${TOP + CH - hgt}" width="${W - 4}" height="${hgt}"/>` : '')
       + `<text class="hlbl${isToday ? ' today' : ''}" x="${x + W / 2}" y="${TOP + CH + 13}" text-anchor="middle">${esc(d.toLocaleDateString(locale(), { weekday: 'narrow' }))}</text></g>`;
   }).join('');
   const label = fill(t('histAria'), { min: two.min, days: two.active, today: Math.round(rows[N - 1].sec / 60) });

@@ -136,7 +136,7 @@ export function createStaff(svg, ex, opts = {}) {
   // viewBox y, height; staves 'both' given explicitly (form screen, no fingers drawn) drops the finger room above the treble
   const crop = one === 't' ? [14, 164] : one === 'b' ? [178, 146] : opts.staves === 'both' ? [14, 310] : [0, SV.H];
   const yTop = one ? STF[one].top : SV.tTop, yBot = one ? STF[one].top + 48 : SV.bTop + 48; // barline ends
-  let o = `<rect class="band" x="0" y="${crop[0] + 4}" width="26" height="${crop[1] - 8}" rx="6"/>`;
+  let o = `<rect class="band" x="0" y="${crop[0] + 4}" width="26" height="${crop[1] - 8}"/>`;
   shown.forEach((st) => { for (let k = 0; k < 5; k++) { const y = STF[st].top + k * 12; o += `<line class="ln" x1="10" x2="${W - 6}" y1="${y}" y2="${y}"/>`; } });
   o += `<line class="bl" x1="10" x2="10" y1="${yTop}" y2="${yBot}"/>`;
   for (let b = 1; b <= ex.bars.length; b++) {
