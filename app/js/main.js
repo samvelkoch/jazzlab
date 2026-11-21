@@ -11,6 +11,7 @@ import { applyTheme, currentTheme } from './theme.js';
 import { t, L } from './i18n.js';
 import { h, ICON, setItemLinks } from './ui.js';
 import { loadGlossary, closeTermPop } from './glossary.js';
+import { watchCaps } from './caps.js';
 import { autoConnect } from './music/midi.js';
 import { loadExercise, normalize } from './music/exercise.js';
 import { patternExercise, lickExercise, lickExerciseKey, melodyExercise, barChords } from './music/forms.js';
@@ -38,6 +39,7 @@ applyTheme(currentTheme());
 autoConnect();
 
 const root = document.getElementById('app');
+watchCaps(document.body); // chord symbols and roman numerals keep their case inside the capital headings
 const base = new URL('../../content/', import.meta.url);
 let cleanup = null;
 let cache = null;

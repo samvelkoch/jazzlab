@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jazzlab: три направления</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@700;800;900&family=Sofia+Sans:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Onest:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Static mockups, not app code. One data set, three directions (A cover, B page, C console), two screens, two themes. */
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font: 14px/1.4 system-ui, sans-serif; background: #777; }
+a { color: inherit; text-decoration: none; cursor: pointer; }
+p, h1, h2 { margin: 0; }
+.mk { position: sticky; top: 0; z-index: 9; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; padding: 6px 10px; background: #222; color: #ddd; font-size: 12px; }
+.mk b { color: #888; font-weight: 400; margin-right: 2px; }
+.mk button { font: inherit; color: #ddd; background: none; border: 1px solid #555; padding: 3px 8px; cursor: pointer; }
+.mk button[aria-pressed="true"] { background: #eee; color: #111; border-color: #eee; }
+#stage { min-height: calc(100vh - 34px); }
+
+/* keyboard structure (skin per direction) */
+.kb { position: relative; display: flex; width: 100%; height: var(--kb-h, 150px); }
+.kb .w { flex: 1; position: relative; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; padding-bottom: 6px; }
+.kb .b { position: absolute; top: 0; height: 62%; width: calc(100% / var(--n) * .58); transform: translateX(-50%); display: flex; justify-content: center; align-items: flex-end; padding-bottom: 6px; }
+.kb i { font-style: normal; display: grid; place-items: center; width: 24px; height: 24px; font-weight: 700; font-size: 13px; }
+.kb span { font-size: 11px; }
+
+/* ============================ A · «Обложка» ============================ */
+[data-dir="a"] { --paper: #ffffff; --ink: #111111; --hot: #ffd400; --dim: #696969; --soft: #ededed; --lh: #d9361a; --rh: #1b4fd6;
+  font: 16px/1.4 "Sofia Sans", sans-serif; background: var(--paper); color: var(--ink); }
+[data-dir="a"][data-theme="dark"] { --paper: #0e0e0f; --ink: #f3f2ed; --dim: #9d9c97; --soft: #1e1e20; --lh: #ff6a48; --rh: #7ea6ff; }
+.a-d { font-family: "Sofia Sans Extra Condensed", sans-serif; font-weight: 800; text-transform: uppercase; line-height: .92; letter-spacing: .005em; }
+.a-cap { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
+.a-top { display: flex; align-items: center; gap: 22px; padding: 0 24px; height: 52px; border-bottom: 3px solid var(--ink); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .08em; }
+.a-top .a-logo { font-size: 30px; letter-spacing: 0; }
+.a-top nav { display: flex; gap: 18px; height: 100%; }
+.a-top nav a { display: flex; align-items: center; border-bottom: 5px solid transparent; margin-bottom: -3px; color: var(--dim); }
+.a-top nav a.on { color: var(--ink); border-color: var(--ink); }
+.a-top .sp { flex: 1; }
+.a-top .midi::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--ink); margin-right: 6px; }
+.a-home { display: grid; grid-template-columns: minmax(340px, 5fr) 7fr; min-height: calc(100vh - 86px); }
+.a-poster { background: var(--hot); color: #111; padding: 28px 28px 24px; display: flex; flex-direction: column; position: sticky; top: 34px; height: calc(100vh - 86px); min-height: 600px; }
+.a-num { font-size: clamp(150px, 21vw, 270px); font-weight: 900; line-height: .78; margin: 18px 0 0 -6px; letter-spacing: -.02em; }
+.a-num small { font-size: .3em; font-weight: 800; letter-spacing: 0; }
+.a-poster h1 { font-size: clamp(44px, 5.2vw, 72px); margin-top: 14px; }
+.a-goal { font-size: 18px; line-height: 1.35; max-width: 26em; margin-top: 12px; font-weight: 500; }
+.a-segs { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; margin: 22px 0 8px; }
+.a-segs i { height: 12px; border: 2px solid #111; }
+.a-segs i.on { background: #111; }
+.a-segs i.half { background: linear-gradient(90deg, #111 25%, transparent 25%); }
+.a-today { margin-top: auto; border-top: 3px solid #111; padding-top: 14px; }
+.a-mix { display: flex; gap: 22px; margin: 8px 0 14px; font-size: 15px; font-weight: 500; }
+.a-mix b { font: 800 34px/1 "Sofia Sans Extra Condensed"; margin-right: 6px; vertical-align: -3px; }
+.a-go { display: flex; justify-content: space-between; align-items: center; background: #111; color: #fff; font-size: 40px; padding: 16px 20px 14px; }
+.a-go:hover { background: #fff; color: #111; }
+.a-nextline { margin-top: 8px; font-size: 14px; font-weight: 500; }
+.a-list { padding: 0 28px 60px; }
+.a-tabs { display: flex; gap: 24px; padding: 20px 0 0; border-bottom: 1px solid var(--ink); }
+.a-tabs a { font-size: 26px; padding-bottom: 8px; color: var(--dim); border-bottom: 5px solid transparent; }
+.a-tabs a.on { color: var(--ink); border-color: var(--ink); }
+.a-step { border-bottom: 3px solid var(--ink); }
+.a-sh { display: grid; grid-template-columns: 64px 1fr auto; align-items: baseline; padding: 14px 0 10px; }
+.a-sh .n { font-size: 44px; }
+.a-sh .t { font-size: 32px; }
+.a-sh .m { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+.a-step.lock { color: var(--dim); border-bottom: 1px solid var(--dim); }
+.a-step.lock .a-sh { padding: 9px 0 6px; } .a-step.lock .n, .a-step.lock .t { font-size: 26px; }
+.a-open { margin: -2px 0 14px 64px; font-size: 15px; } .a-open a { color: var(--ink); font-weight: 700; border-bottom: 2px solid var(--ink); margin-left: 8px; }
+.a-it { display: grid; grid-template-columns: 64px 1fr auto; align-items: center; padding: 11px 0; border-top: 1px solid var(--ink); }
+.a-it .n { font: 800 22px/1 "Sofia Sans Extra Condensed"; color: var(--dim); }
+.a-it .t { font-weight: 700; font-size: 17px; } .a-it .d { font-size: 15px; color: var(--dim); }
+.a-it .s { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: 4px 8px; }
+.a-it.done .t { font-weight: 500; } .a-it.done .s::before { content: "✓ "; }
+.a-it.rev .s { border: 2px solid var(--ink); }
+.a-it.now { background: var(--hot); color: #111; margin: 0 -28px; padding: 14px 28px; border-top: 0; } .a-it.now .n, .a-it.now .d { color: #111; } .a-it.now .s { background: #111; color: #fff; }
+.a-it.concert .t { font: 800 30px/1 "Sofia Sans Extra Condensed"; text-transform: uppercase; }
+.a-it.word { grid-template-columns: 64px 1fr 190px; background: var(--soft); margin: 0 -28px; padding: 12px 28px; border-top: 0; }
+.a-it.word .t { font: 800 30px/1 "Sofia Sans Extra Condensed"; text-transform: uppercase; } .a-it.word .d { color: var(--ink); }
+.a-chap { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--dim); color: var(--dim); }
+.a-chap .a-d { font-size: 44px; }
+[data-dir="a"] .kb { border: 2px solid var(--ink); border-right-width: 1px; background: var(--ink); }
+[data-dir="a"] .kb .w { background: #fff; color: #555; border-right: 1px solid #111; }
+[data-dir="a"][data-theme="dark"] .kb .w { background: #e9e8e3; }
+[data-dir="a"] .kb .b { background: #111; }
+[data-dir="a"] .kb i { background: #fff; color: #111; }
+[data-dir="a"] .kb .lh.now { background: var(--lh); color: #fff; } [data-dir="a"] .kb .rh.now { background: var(--rh); color: #fff; }
+[data-dir="a"] .kb .lh.next { box-shadow: inset 0 -44px 0 0 color-mix(in srgb, var(--lh) 30%, #fff); } [data-dir="a"] .kb .lh.next i { background: var(--lh); color: #fff; }
+[data-dir="a"] .kb .rh.next { box-shadow: inset 0 -44px 0 0 color-mix(in srgb, var(--rh) 30%, #fff); }
+.a-ex { display: grid; grid-template-columns: minmax(260px, 4fr) 8fr; }
+.a-now { background: var(--hot); color: #111; padding: 24px 28px; display: flex; flex-direction: column; }
+.a-now .ch { font-size: clamp(120px, 17vw, 220px); font-weight: 900; line-height: .8; margin: 10px 0 0 -4px; }
+.a-now .nx { margin-top: auto; border-top: 3px solid #111; padding-top: 10px; display: flex; justify-content: space-between; align-items: flex-end; }
+.a-now .nx b { font: 800 56px/.9 "Sofia Sans Extra Condensed"; }
+.a-task { padding: 24px 28px; }
+.a-task h1 { font-size: clamp(34px, 4.2vw, 56px); max-width: 16em; margin: 8px 0 10px; }
+.a-task .lh { color: var(--lh); }
+.a-beats { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid var(--ink); margin: 18px 0; }
+.a-beats div { padding: 6px 10px 10px; border-right: 1px solid var(--ink); min-height: 74px; } .a-beats div:last-child { border: 0; }
+.a-beats small { font-weight: 700; font-size: 12px; color: var(--dim); } .a-beats b { display: block; font: 800 40px/1 "Sofia Sans Extra Condensed"; color: var(--lh); }
+.a-bars { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--ink); border-left: 2px solid var(--ink); }
+.a-bars div { border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); padding: 4px 8px 6px; font: 800 26px/1 "Sofia Sans Extra Condensed"; display: flex; justify-content: space-between; }
+.a-bars small { font: 700 11px/1 "Sofia Sans"; color: var(--dim); } .a-bars .on { background: var(--hot); color: #111; } .a-bars .on small { color: #111; }
+.a-kbwrap { grid-column: 1 / -1; padding: 0 28px; --kb-h: 170px; }
+.a-foot { grid-column: 1 / -1; display: flex; gap: 12px; align-items: center; padding: 16px 28px 28px; flex-wrap: wrap; }
+.a-btn { font: 800 26px/1 "Sofia Sans Extra Condensed"; text-transform: uppercase; padding: 13px 22px 11px; border: 2px solid var(--ink); }
+.a-btn.pri { background: var(--ink); color: var(--paper); }
+.a-legend { display: flex; gap: 14px; font-size: 13px; font-weight: 700; } .a-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 5px; }
+@media (max-width: 820px) {
+  .a-top { padding: 0 16px; gap: 14px; } .a-top .midi { display: none; }
+  .a-home, .a-ex { grid-template-columns: 1fr; } .a-poster { position: static; height: auto; min-height: 0; padding: 20px 16px; }
+  .a-num { font-size: 132px; } .a-today { margin-top: 22px; } .a-list { padding: 0 16px 40px; }
+  .a-sh, .a-it { grid-template-columns: 40px 1fr auto; } .a-it.now, .a-it.word { margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+  .a-it.word { grid-template-columns: 40px 1fr; } .a-it.word > div:last-child { grid-column: 2; margin-top: 8px; } .a-open { margin-left: 40px; }
+  .a-now { padding: 14px 16px; flex-direction: row; align-items: flex-end; gap: 16px; } .a-now .ch { font-size: 96px; margin: 0; } .a-now .nx { margin: 0 0 0 auto; border: 0; flex-direction: column; align-items: flex-end; }
+  .a-task { padding: 16px; } .a-kbwrap { padding: 0; --kb-h: 150px; } .a-foot { padding: 14px 16px 24px; } .a-btn { font-size: 22px; flex: 1; text-align: center; }
+}
+
+/* ============================ B · «Страница» ============================ */
+[data-dir="b"] { --paper: #fbfbf9; --ink: #161616; --dim: #6c6c69; --rule: #cfcfca; --lh: #b8400e; --rh: #1d4fc4; --tint: #f0f0ec;
+  font: 18px/1.5 "Source Serif 4", Georgia, serif; background: var(--paper); color: var(--ink); font-variant-numeric: oldstyle-nums; }
+[data-dir="b"][data-theme="dark"] { --paper: #131312; --ink: #eceae4; --dim: #9a9892; --rule: #3a3a37; --lh: #f08a55; --rh: #86aaf5; --tint: #1d1d1b; }
+.b-sc { font-variant-caps: all-small-caps; letter-spacing: .09em; font-size: 15px; font-variant-numeric: lining-nums; }
+.b-page { max-width: 700px; margin: 0 auto; padding: 0 24px 80px; }
+.b-top { display: flex; align-items: baseline; gap: 22px; padding: 22px 0 14px; border-bottom: 1px solid var(--ink); }
+.b-top .logo { font-style: italic; font-size: 22px; } .b-top .sp { flex: 1; } .b-top .on { border-bottom: 1px solid var(--ink); } .b-top a { color: var(--dim); } .b-top a.on { color: var(--ink); }
+.b-head { padding: 54px 0 0; }
+.b-head h1 { font-weight: 400; font-size: clamp(38px, 6vw, 54px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 12px; }
+.b-head h1 em { color: var(--dim); font-style: normal; }
+.b-goal { font-style: italic; font-size: 21px; max-width: 28em; }
+.b-prog { margin: 30px 0 0; display: grid; grid-template-columns: repeat(9, 1fr); border-bottom: 1px solid var(--rule); }
+.b-prog i { height: 9px; border-left: 1px solid var(--ink); position: relative; } .b-prog i:last-child { border-right: 1px solid var(--ink); }
+.b-prog i.on::after, .b-prog i.half::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 3px; background: var(--ink); width: 100%; } .b-prog i.half::after { width: 25%; }
+.b-progl { display: flex; justify-content: space-between; color: var(--dim); margin-top: 6px; }
+.b-today { margin: 34px 0 0; padding: 20px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; align-items: center; }
+.b-today p { color: var(--dim); font-size: 17px; } .b-today strong { font-weight: 400; font-size: 24px; color: var(--ink); display: block; line-height: 1.2; margin: 2px 0 4px; }
+.b-btn { display: inline-block; background: var(--ink); color: var(--paper); padding: 13px 30px 14px; font-size: 20px; border: 1px solid var(--ink); border-radius: 2px; }
+.b-btn.sec { background: none; color: var(--ink); }
+.b-tabs { display: flex; gap: 24px; margin: 46px 0 8px; } .b-tabs a { color: var(--dim); } .b-tabs a.on { color: var(--ink); border-bottom: 1px solid var(--ink); }
+.b-row { display: flex; align-items: baseline; gap: 8px; padding: 9px 0; }
+.b-row .n { width: 2.6em; flex: none; } .b-row .dots { flex: 1; border-bottom: 1px dotted var(--dim); transform: translateY(-5px); min-width: 20px; } .b-row .m { color: var(--dim); font-size: 16px; white-space: nowrap; }
+.b-step { font-size: 22px; } .b-step.lock { color: var(--dim); } .b-step.cur { font-weight: 600; }
+.b-open { margin: -4px 0 10px 2.6em; font-size: 16px; font-style: italic; color: var(--dim); } .b-open a { font-style: normal; color: var(--ink); border-bottom: 1px solid var(--ink); }
+.b-items { margin: 2px 0 14px 2.6em; border-top: 1px solid var(--rule); }
+.b-it { display: grid; grid-template-columns: 1.8em 1fr auto; gap: 0 6px; padding: 10px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.b-it .n { color: var(--dim); font-variant-numeric: lining-nums; font-size: 15px; } .b-it .d { grid-column: 2; color: var(--dim); font-size: 16px; line-height: 1.35; } .b-it .s { grid-row: 1; grid-column: 3; }
+.b-it.done .t { color: var(--dim); } .b-it.now .t { font-weight: 600; } .b-it.now .n { color: var(--ink); } .b-it.now .n::before { content: "→"; position: absolute; margin-left: -1.3em; }
+.b-it.concert .t { font-style: italic; font-size: 21px; }
+.b-it.word { background: var(--tint); margin: 0 -14px; padding: 14px; grid-template-columns: 1fr 180px; border-bottom: 0; } .b-it.word > * { grid-column: 1; } .b-it.word .t { font-size: 26px; font-style: italic; line-height: 1.2; } .b-it.word .d { color: var(--ink); } .b-it.word > div:last-child { grid-row: 1 / span 3; grid-column: 2; align-self: center; }
+.b-chap { margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--rule); color: var(--dim); display: flex; justify-content: space-between; align-items: baseline; } .b-chap b { font-weight: 400; font-size: 28px; }
+[data-dir="b"] .kb { --kw: #fbfbf9; border-top: 2px solid #161616; border-left: 1px solid #161616; }
+[data-dir="b"][data-theme="dark"] .kb { --kw: #dddbd4; }
+[data-dir="b"] .kb .w { border-right: 1px solid #161616; border-bottom: 1px solid #161616; color: #6c6c69; background: var(--kw); font-family: "Source Serif 4"; }
+[data-dir="b"] .kb .b { background: #161616; height: 60%; }
+[data-dir="b"] .kb i { border-radius: 50%; background: var(--kw); color: #161616; font-variant-numeric: lining-nums; }
+[data-dir="b"] .kb .lh.now { background: var(--lh); color: #fff; } [data-dir="b"] .kb .rh.now { background: var(--rh); color: #fff; }
+[data-dir="b"] .kb .lh.next i { background: none; border: 2px solid var(--lh); color: var(--lh); } [data-dir="b"] .kb .rh.next i { background: none; border: 2px solid var(--rh); color: var(--rh); }
+.b-ex { max-width: 860px; }
+.b-task { font-size: clamp(24px, 3.4vw, 32px); line-height: 1.25; letter-spacing: -.01em; margin: 6px 0 8px; max-width: 24em; } .b-task b { font-weight: 400; color: var(--lh); }
+.b-rule { color: var(--dim); font-size: 17px; }
+.b-nowrow { display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: end; margin: 30px 0 22px; }
+.b-nowrow .ch { font-size: 84px; line-height: .9; letter-spacing: -.02em; font-variant-numeric: lining-nums; }
+.b-beats { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.b-beats div { border-right: 1px solid var(--rule); padding: 0 8px 6px; height: 64px; display: flex; flex-direction: column; justify-content: space-between; } .b-beats small { color: var(--dim); font-size: 14px; font-variant-numeric: lining-nums; } .b-beats b { font-weight: 600; font-size: 24px; color: var(--lh); }
+.b-nowrow .nx { color: var(--dim); text-align: right; } .b-nowrow .nx b { display: block; font-weight: 400; font-size: 34px; color: var(--ink); line-height: 1; font-variant-numeric: lining-nums; }
+.b-sheet { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--ink); margin-bottom: 26px; font-variant-numeric: lining-nums; }
+.b-sheet div { border-right: 1px solid var(--ink); padding: 8px 10px; font-size: 22px; margin-bottom: 12px; position: relative; } .b-sheet div:nth-child(12) { border-right: 4px double var(--ink); }
+.b-sheet .on { background: var(--tint); box-shadow: inset 0 -3px 0 var(--ink); } .b-sheet small { position: absolute; top: 2px; right: 6px; font-size: 12px; color: var(--dim); }
+.b-kbwrap { --kb-h: 160px; }
+.b-foot { display: flex; gap: 14px; align-items: center; margin-top: 22px; flex-wrap: wrap; } .b-foot .sp { flex: 1; }
+.b-legend { display: flex; gap: 16px; color: var(--dim); font-size: 15px; } .b-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+@media (max-width: 700px) {
+  [data-dir="b"] { font-size: 17px; } .b-page { padding: 0 16px 60px; } .b-top { gap: 14px; } .b-head { padding-top: 30px; }
+  .b-today { grid-template-columns: 1fr; } .b-btn { text-align: center; } .b-items, .b-open { margin-left: 0; }
+  .b-it.word { grid-template-columns: 1fr; margin: 0; } .b-it.word > div:last-child { grid-row: auto; grid-column: 1; margin-top: 10px; }
+  .b-nowrow { grid-template-columns: auto 1fr; gap: 16px; } .b-nowrow .ch { font-size: 60px; } .b-nowrow .nx { grid-column: 1 / -1; text-align: left; } .b-nowrow .nx b { display: inline; font-size: 22px; margin-left: 8px; }
+  .b-kbwrap { margin: 0 -16px; --kb-h: 150px; } .b-foot .b-btn { flex: 1; }
+}
+
+/* ============================ C · «Пульт» ============================ */
+[data-dir="c"] { --bg: #dfe1e4; --pan: #f1f2f3; --ink: #15171a; --dim: #5d626a; --line: #c3c7cd; --sig: #c6f032; --sig-t: #456200; --lh: #c9540a; --rh: #1763cf; --key: #fbfbfb;
+  font: 15px/1.4 "Onest", sans-serif; background: var(--bg); color: var(--ink); }
+[data-dir="c"][data-theme="dark"] { --bg: #0e0f11; --pan: #17191c; --ink: #e7e8ea; --dim: #8a9099; --line: #2a2e34; --sig-t: #c6f032; --lh: #ff9248; --rh: #5fa8ff; --key: #dcdde0; }
+.c-m { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.c-shell { display: grid; grid-template-columns: 300px 1fr; min-height: calc(100vh - 34px); }
+.c-rail { background: var(--pan); border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+.c-brand { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.c-brand b { font: 700 15px "JetBrains Mono"; letter-spacing: .14em; }
+.c-nav { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.c-nav a { padding: 10px 16px; font-weight: 500; color: var(--dim); border-right: 1px solid var(--line); } .c-nav a.on { color: var(--ink); box-shadow: inset 0 -2px 0 var(--sig-t); }
+.c-ch { display: flex; justify-content: space-between; padding: 14px 16px 6px; } .c-ch.dim { border-top: 1px solid var(--line); padding: 12px 16px; }
+.c-st { display: grid; grid-template-columns: 26px 1fr; gap: 2px 8px; padding: 8px 16px; border-left: 3px solid transparent; align-items: center; }
+.c-st .n { font: 500 12px "JetBrains Mono"; color: var(--dim); } .c-st .t { font-weight: 500; font-size: 14px; }
+.c-leds { grid-column: 2; display: flex; gap: 3px; } .c-leds i { width: 14px; height: 4px; background: var(--line); } .c-leds i.on { background: var(--sig-t); } [data-theme="dark"] .c-leds i.on { background: var(--sig); box-shadow: 0 0 6px rgba(198, 240, 50, .5); }
+.c-st.cur { background: var(--bg); border-left-color: var(--sig-t); } .c-st.lock .t { color: var(--dim); font-weight: 400; }
+.c-rfoot { margin-top: auto; padding: 12px 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; }
+.c-rfoot .ok::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--sig-t); margin-right: 6px; }
+.c-main { padding: 20px; display: grid; gap: 14px; align-content: start; max-width: 900px; }
+.c-mod { background: var(--pan); border: 1px solid var(--line); border-radius: 4px; }
+.c-mh { display: flex; justify-content: space-between; align-items: center; padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.c-today { display: grid; grid-template-columns: 1fr 250px; }
+.c-pos { padding: 16px 14px; } .c-pos .big { font: 500 44px/1 "JetBrains Mono"; letter-spacing: -.03em; } .c-pos .big small { font-size: 18px; color: var(--dim); letter-spacing: 0; }
+.c-pos h1 { font-size: 22px; font-weight: 700; margin: 10px 0 4px; } .c-pos p { color: var(--dim); max-width: 34em; }
+.c-go { border-left: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+.c-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--sig); color: #15171a; font: 700 14px "JetBrains Mono"; letter-spacing: .1em; text-transform: uppercase; padding: 16px; border-radius: 4px; border: 1px solid #15171a; }
+.c-btn.sec { background: none; color: var(--ink); border-color: var(--line); }
+.c-mix { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; } .c-mix b { display: block; font: 500 22px "JetBrains Mono"; }
+.c-row { display: grid; grid-template-columns: 34px 1fr auto; gap: 0 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); align-items: center; } .c-row:last-child { border-bottom: 0; }
+.c-row .n { font: 500 12px "JetBrains Mono"; color: var(--dim); } .c-row .t { font-weight: 500; } .c-row .d { grid-column: 2; color: var(--dim); font-size: 14px; }
+.c-row .s { grid-row: 1 / span 2; grid-column: 3; font: 500 11px "JetBrains Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+.c-row .s::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--dim); } .c-row.done .s::before { background: var(--sig-t); border-color: var(--sig-t); } .c-row.rev .s::before { border-color: var(--ink); background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+.c-row.now { box-shadow: inset 3px 0 0 var(--sig-t); background: var(--bg); } .c-row.now .s { color: var(--ink); } .c-row.now .s::before { background: var(--sig); border-color: var(--ink); }
+.c-row.concert .t::before { content: "КОНЦЕРТ "; font: 500 11px "JetBrains Mono"; letter-spacing: .08em; color: var(--sig-t); margin-right: 4px; }
+.c-row.word { grid-template-columns: 34px 1fr 180px; } .c-row.word > div:last-child { grid-row: 1 / span 2; grid-column: 3; }
+.c-nextst { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; color: var(--dim); gap: 12px; } .c-nextst a { color: var(--ink); border-bottom: 1px solid var(--dim); white-space: nowrap; }
+[data-dir="c"] .kb { background: #000; padding: 2px 2px 0; gap: 2px; border-radius: 3px 3px 0 0; }
+[data-dir="c"] .kb .w { background: var(--key); border-radius: 0 0 3px 3px; color: #777; font-family: "JetBrains Mono"; }
+[data-dir="c"] .kb .b { background: #121316; border-radius: 0 0 3px 3px; }
+[data-dir="c"] .kb i { border-radius: 3px; background: #15171a; color: #fff; font-family: "JetBrains Mono"; }
+[data-dir="c"] .kb .lh.now { background: var(--lh); color: #15171a; } [data-dir="c"] .kb .rh.now { background: var(--rh); color: #fff; }
+[data-dir="c"] .kb .lh.next { box-shadow: inset 0 5px 0 var(--lh); } [data-dir="c"] .kb .lh.next i { background: none; color: var(--lh); border: 1px solid var(--lh); } [data-dir="c"] .kb .rh.next { box-shadow: inset 0 5px 0 var(--rh); }
+.c-ex { padding: 0; display: grid; grid-template-rows: auto 1fr auto auto; min-height: calc(100vh - 34px); }
+.c-bar { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--pan); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.c-bar h1 { font-size: 17px; font-weight: 700; } .c-bar .sp { flex: 1; }
+.c-sw { display: flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; } .c-sw a { padding: 7px 12px; font: 500 12px "JetBrains Mono"; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); } .c-sw a.on { background: var(--ink); color: var(--pan); }
+.c-work { padding: 16px; display: grid; grid-template-columns: 300px 1fr; gap: 14px; align-content: start; }
+.c-lcd { padding: 14px; } .c-lcd .ch { font: 500 76px/1 "JetBrains Mono"; letter-spacing: -.04em; margin: 6px 0 12px; }
+.c-pads { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.c-pads div { border: 1px solid var(--line); border-radius: 3px; height: 62px; padding: 5px 7px; display: flex; flex-direction: column; justify-content: space-between; background: var(--bg); } .c-pads small { font: 500 11px "JetBrains Mono"; color: var(--dim); } .c-pads b { font: 700 20px "JetBrains Mono"; color: var(--lh); }
+.c-pads .hit { border-color: var(--lh); }
+.c-nx { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); margin-top: 14px; padding-top: 10px; } .c-nx b { font: 500 22px "JetBrains Mono"; }
+.c-taskm p { padding: 14px; font-size: 19px; line-height: 1.35; } .c-taskm p b { color: var(--lh); font-weight: 700; } .c-taskm .rule { font-size: 14px; color: var(--dim); padding-top: 0; }
+.c-seq { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; padding: 0 14px 14px; }
+.c-seq div { border: 1px solid var(--line); border-radius: 3px; padding: 5px 4px 7px; text-align: center; font: 500 13px "JetBrains Mono"; background: var(--bg); } .c-seq small { display: block; font-size: 10px; color: var(--dim); }
+.c-seq .on { background: var(--sig); color: #15171a; border-color: #15171a; } .c-seq .on small { color: #15171a; } .c-seq div:nth-child(4n) { margin-right: 6px; }
+.c-kbwrap { padding: 0 16px; --kb-h: 170px; }
+.c-foot { display: flex; gap: 10px; align-items: center; padding: 12px 16px 18px; background: var(--pan); border-top: 1px solid var(--line); flex-wrap: wrap; } .c-foot .sp { flex: 1; } .c-foot .c-btn { padding: 13px 22px; }
+.c-legend { display: flex; gap: 14px; } .c-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; }
+@media (max-width: 820px) {
+  .c-shell { grid-template-columns: 1fr; } .c-rail { border-right: 0; border-bottom: 1px solid var(--line); } .c-rfoot, .c-ch.dim { display: none; }
+  .c-steps { display: grid; grid-template-columns: repeat(9, 1fr); padding: 0 12px 12px; gap: 4px; } .c-st { display: block; padding: 6px 0 0; border-left: 0; border-top: 3px solid var(--line); text-align: center; } .c-st .t, .c-st .c-leds { display: none; } .c-st.cur { border-top-color: var(--sig-t); } .c-st.done { border-top-color: var(--dim); }
+  .c-main { padding: 12px; } .c-today { grid-template-columns: 1fr; } .c-go { border-left: 0; border-top: 1px solid var(--line); }
+  .c-row.word { grid-template-columns: 34px 1fr; } .c-row.word > div:last-child { grid-row: auto; grid-column: 2; margin-top: 8px; }
+  .c-work { grid-template-columns: 1fr; padding: 12px; } .c-lcd { display: grid; grid-template-columns: auto 1fr; gap: 0 14px; align-items: center; } .c-lcd .c-m, .c-lcd .c-nx { grid-column: 1 / -1; } .c-lcd .ch { font-size: 48px; margin: 4px 0; }
+  .c-seq { grid-template-columns: repeat(4, 1fr); } .c-seq div:nth-child(4n) { margin-right: 0; } .c-kbwrap { padding: 0; --kb-h: 150px; } .c-foot .c-btn { flex: 1; }
+}
+</style>
+</head>
+<body>
+<div class="mk">
+  <span><b>Направление</b> <button data-k="dir" data-v="a">A · Обложка</button> <button data-k="dir" data-v="b">B · Страница</button> <button data-k="dir" data-v="c">C · Пульт</button></span>
+  <span><b>Экран</b> <button data-k="scr" data-v="home">Путь</button> <button data-k="scr" data-v="ex">Упражнение</button></span>
+  <span><b>Тема</b> <button data-k="theme" data-v="light">светлая</button> <button data-k="theme" data-v="dark">тёмная</button></span>
+</div>
+<div id="stage"></div>
+<script>
+// ---- one data set for every direction ----
+const STEPS = [
+  { t: 'Первые 12 тактов', n: 6, done: 6 },
+  { t: 'Первая фраза', n: 8, done: 2, goal: 'После этой ступени ты правой отвечаешь пианино и играешь первое своё соло.' },
+  { t: 'Две руки вместе', n: 8, done: 0, goal: 'После неё ты играешь блюз двумя руками: левая держит, правая отвечает.' },
+  { t: 'Левая шагает', n: 8, done: 0 }, { t: 'Вопрос и ответ', n: 7, done: 0 }, { t: 'Буги', n: 8, done: 0 },
+  { t: 'St. Louis Blues', n: 8, done: 0 }, { t: 'Красивый конец', n: 8, done: 0 }, { t: 'Выступление', n: 8, done: 0 }
+];
+const CUR = 1, DONE = 8, TOTAL = 69;
+const ITEMS = [
+  { k: 'word', t: 'Дом', d: 'Клавиша C. Закончи фразу на ней, и фраза звучит законченной.' },
+  { t: 'Фраза «Ответ»', d: 'Правая: короткая фраза, последняя нота C.', s: 'done' },
+  { t: 'Разговор с пианино', d: 'Пианино спрашивает, ты отвечаешь этой фразой.', s: 'done' },
+  { t: 'Блюз: ответ правой', d: 'Правая играет «Ответ» через каждые два такта.', s: 'rev' },
+  { t: 'Фраза «Стук и вверх»', d: 'Правая: одна клавиша три раза, потом вверх.', s: 'now' },
+  { t: 'Ты спрашиваешь', d: 'Ты играешь вопрос, пианино отвечает.' },
+  { t: 'Фраза «С G домой»', d: 'Правая: спускаешься с G на C.' },
+  { t: 'Ты отвечаешь', d: 'Пианино спрашивает, ты приходишь домой.' },
+  { k: 'concert', t: 'Первое соло', d: 'Бэнд играет блюз. Ты играешь что хочешь на пяти клавишах.' }
+];
+const S = { done: 'сдано', rev: 'повторить', now: 'сейчас' };
+const BARS = ['C7', 'C7', 'C7', 'C7', 'F7', 'F7', 'C7', 'C7', 'G7', 'F7', 'C7', 'C7'];
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+const p2 = (n) => String(n).padStart(2, '0');
+
+function kb({ oct = 2, marks = {}, labels = true } = {}) {
+  const W = ['C', 'D', 'E', 'F', 'G', 'A', 'B'], n = oct * 7 + 1; let h = `<div class="kb" style="--n:${n}">`;
+  for (let i = 0; i < n; i++) { const id = W[i % 7] + Math.floor(i / 7), m = marks[id]; h += `<div class="w ${m ? m.c : ''}">${m && m.f ? `<i>${m.f}</i>` : ''}${labels ? `<span>${W[i % 7]}</span>` : ''}</div>`; }
+  for (let i = 0; i < n - 1; i++) { if ('CDFGA'.includes(W[i % 7])) { const m = marks[W[i % 7] + '#' + Math.floor(i / 7)]; h += `<div class="b ${m ? m.c : ''}" style="left:calc(${i + 1} * 100% / ${n})"></div>`; } }
+  return h + '</div>';
+}
+const wordKb = () => `<div style="--kb-h:64px">${kb({ oct: 2, labels: false, marks: { C0: { c: 'rh now' }, C1: { c: 'rh now' }, C2: { c: 'rh now' } } })}</div>`;
+const exKb = () => kb({ oct: 2, marks: { C0: { c: 'lh now', f: 5 }, G0: { c: 'lh next', f: 1 } } });
+const segs = () => STEPS.map((s, i) => `<i class="${i < CUR ? 'on' : i === CUR ? 'half' : ''}"></i>`).join('');
+const num = (i) => ITEMS.slice(0, i + 1).filter((x) => x.k !== 'word').length;
+
+// ---------------- A ----------------
+const aTop = (crumb) => `<header class="a-top"><span class="a-logo a-d">Jazzlab</span>${crumb || '<nav><a class="on">Курс</a><a>Играть</a></nav>'}<span class="sp"></span><span class="midi">FP-30X</span><a>Настройки</a></header>`;
+function aHome() {
+  const items = ITEMS.map((it, i) => it.k === 'word'
+    ? `<div class="a-it word"><span class="a-cap">Новое<br>слово</span><div><div class="t">${it.t}</div><div class="d">${it.d} <a style="border-bottom:2px solid;font-weight:700">Послушать</a></div></div>${wordKb()}</div>`
+    : `<a class="a-it ${it.s || ''} ${it.k || ''}"><span class="n">${it.k === 'concert' ? '★' : num(i)}</span><div><div class="t">${it.k === 'concert' ? 'Концерт: ' : ''}${it.t}</div><div class="d">${it.d}</div></div><span class="s">${S[it.s] || ''}</span></a>`).join('');
+  const steps = STEPS.map((s, i) => i < CUR ? `<div class="a-step"><div class="a-sh"><span class="n a-d">${p2(i + 1)}</span><span class="t a-d">${s.t}</span><span class="m">✓ ${s.n} из ${s.n}</span></div></div>`
+    : i === CUR ? `<div class="a-step"><div class="a-sh"><span class="n a-d">${p2(i + 1)}</span><span class="t a-d">${s.t}</span><span class="m">${s.done} из ${s.n}</span></div>${items}</div>`
+    : `<div class="a-step lock"><div class="a-sh"><span class="n a-d">${p2(i + 1)}</span><span class="t a-d">${s.t}</span><span class="m">${s.n} упражнений</span></div>${i === CUR + 1 ? `<div class="a-open">${s.goal} <a>Всё равно открыть</a></div>` : ''}</div>`).join('');
+  return aTop() + `<div class="a-home"><section class="a-poster">
+    <div class="a-cap">Блюз · глава 1 из 3</div>
+    <div class="a-num a-d">${p2(CUR + 1)}<small>/${p2(STEPS.length)}</small></div>
+    <h1 class="a-d">${STEPS[CUR].t}</h1><p class="a-goal">${STEPS[CUR].goal}</p>
+    <div class="a-segs">${segs()}</div><div class="a-cap">Сделано ${DONE} из ${TOTAL}</div>
+    <div class="a-today"><div class="a-cap">Урок на сегодня</div><div class="a-mix"><span><b>2</b>повторить</span><span><b>2</b>новое</span><span><b>20</b>минут</span></div>
+    <a class="a-go a-d"><span>Продолжить</span><span>→</span></a><div class="a-nextline">Сначала повторить: «Блюз левой рукой»</div></div></section>
+    <section class="a-list"><div class="a-tabs"><a class="a-d on">Путь</a><a class="a-d">Все упражнения</a></div>${steps}
+    <div class="a-chap"><span class="a-d">Босса-нова</span><span class="a-cap">откроется после ступени 05</span></div><div class="a-chap"><span class="a-d">Стандарты</span><span class="a-cap">глава 3</span></div></section></div>`;
+}
+function aEx() {
+  return aTop('<a>← Блюз · ступень 01</a>') + `<div class="a-ex"><section class="a-now"><div class="a-cap">Сейчас · такт 1 из 12</div><div class="ch a-d">C7</div>
+    <div class="nx"><span class="a-cap">Дальше<br>через 4 такта</span><b>F7</b></div></section>
+    <section class="a-task"><div class="a-cap">Блюз левой рукой · этап 1 из 2: ноты, без темпа</div>
+    <h1 class="a-d"><span class="lh">Левая:</span> C мизинцем на «раз», G большим на «три»</h1>
+    <p>В каждом такте то же самое, от ноты аккорда. Зачёт: все 12 тактов без ошибок. Экран ждёт тебя.</p>
+    <div class="a-beats"><div><small>1</small><b>C</b></div><div><small>2</small></div><div><small>3</small><b>G</b></div><div><small>4</small></div></div>
+    <div class="a-bars">${BARS.map((b, i) => `<div class="${i ? '' : 'on'}">${b}<small>${i + 1}</small></div>`).join('')}</div></section>
+    <div class="a-kbwrap">${exKb()}</div>
+    <footer class="a-foot"><div class="a-legend"><span><i style="background:var(--lh)"></i>левая</span><span><i style="background:var(--rh)"></i>правая</span></div><span style="flex:1"></span><a class="a-btn">Послушать такт</a><a class="a-btn pri">С начала</a></footer></div>`;
+}
+// ---------------- B ----------------
+const bTop = (crumb) => `<header class="b-top"><span class="logo">Jazzlab</span>${crumb || '<a class="on b-sc">Курс</a><a class="b-sc">Играть</a>'}<span class="sp"></span><span class="b-sc" style="color:var(--dim)">FP-30X подключён</span><a class="b-sc">Настройки</a></header>`;
+function bHome() {
+  const items = ITEMS.map((it, i) => it.k === 'word'
+    ? `<div class="b-it word"><span class="b-sc">Новое слово</span><span class="t">${it.t}</span><span class="d">${it.d} <a style="border-bottom:1px solid">Послушать</a></span>${wordKb()}</div>`
+    : `<a class="b-it ${it.s || ''} ${it.k || ''}"><span class="n">${it.k === 'concert' ? '✻' : num(i)}</span><span class="t">${it.k === 'concert' ? 'Концерт. ' : ''}${it.t}</span><span class="s b-sc">${S[it.s] || ''}</span><span class="d">${it.d}</span></a>`).join('');
+  const steps = STEPS.map((s, i) => `<div class="b-row b-step ${i === CUR ? 'cur' : i > CUR ? 'lock' : ''}"><span class="n">${ROMAN[i]}.</span><span>${s.t}</span><span class="dots"></span><span class="m">${i < CUR ? 'пройдена' : i === CUR ? `${s.done} из ${s.n}` : `${s.n} упражнений`}</span></div>`
+    + (i === CUR ? `<div class="b-items">${items}</div>` : i === CUR + 1 ? `<div class="b-open">${s.goal} <a>Открыть всё равно</a></div>` : '')).join('');
+  return `<div class="b-page">${bTop()}<section class="b-head"><div class="b-sc">Блюз · глава первая из трёх</div>
+    <h1><em>Ступень II из IX.</em><br>${STEPS[CUR].t}</h1><p class="b-goal">${STEPS[CUR].goal}</p>
+    <div class="b-prog">${segs()}</div><div class="b-progl b-sc"><span>сделано ${DONE} из ${TOTAL}</span><span>выступление</span></div></section>
+    <section class="b-today"><div><span class="b-sc">Урок на сегодня</span><strong>Блюз левой рукой</strong><p>Повторить 2, новое 2. Около 20 минут.</p></div><a class="b-btn">Продолжить</a></section>
+    <div class="b-tabs b-sc"><a class="on">Путь</a><a>Все упражнения</a></div>${steps}
+    <div class="b-chap"><b>Босса-нова</b><span class="b-sc">откроется после ступени V</span></div><div class="b-chap"><b>Стандарты</b><span class="b-sc">глава третья</span></div></div>`;
+}
+function bEx() {
+  return `<div class="b-page b-ex">${bTop('<a class="b-sc" style="color:var(--ink)">← Блюз, ступень I</a>')}<section class="b-head" style="padding-top:34px"><div class="b-sc">Блюз левой рукой · этап 1 из 2: ноты, без темпа</div>
+    <p class="b-task"><b>Левая:</b> C мизинцем на «раз», G большим пальцем на «три».</p><p class="b-rule">В каждом такте то же самое, от ноты аккорда. Зачёт: все 12 тактов без ошибок. Экран ждёт тебя.</p></section>
+    <div class="b-nowrow"><div><div class="b-sc">Сейчас · такт 1</div><div class="ch">C7</div></div>
+      <div class="b-beats"><div><small>1</small><b>C</b></div><div><small>2</small></div><div><small>3</small><b>G</b></div><div><small>4</small></div></div>
+      <div class="nx"><span class="b-sc">дальше, через 4 такта</span><b>F7</b></div></div>
+    <div class="b-sheet">${BARS.map((b, i) => `<div class="${i ? '' : 'on'}">${b}<small>${i + 1}</small></div>`).join('')}</div>
+    <div class="b-kbwrap">${exKb()}</div>
+    <footer class="b-foot"><div class="b-legend"><span><i style="background:var(--lh)"></i>левая</span><span><i style="background:var(--rh)"></i>правая</span></div><span class="sp"></span><a class="b-btn sec">Послушать такт</a><a class="b-btn">С начала</a></footer></div>`;
+}
+// ---------------- C ----------------
+function cRail() {
+  return `<aside class="c-rail"><div class="c-brand"><b>JAZZLAB</b><span class="c-m">v2</span></div><nav class="c-nav"><a class="on">Курс</a><a>Играть</a></nav>
+    <div class="c-ch c-m"><span>Глава 1 · Блюз</span><span>${DONE}/${TOTAL}</span></div><div class="c-steps">
+    ${STEPS.map((s, i) => `<a class="c-st ${i < CUR ? 'done' : i === CUR ? 'cur' : 'lock'}"><span class="n">${p2(i + 1)}</span><span class="t">${s.t}</span><span class="c-leds">${Array.from({ length: s.n }, (_, k) => `<i class="${k < s.done ? 'on' : ''}"></i>`).join('')}</span></a>`).join('')}</div>
+    <div class="c-ch dim c-m"><span>Глава 2 · Босса-нова</span><span>после 05</span></div><div class="c-ch dim c-m"><span>Глава 3 · Стандарты</span><span>закрыта</span></div>
+    <div class="c-rfoot c-m"><span class="ok">FP-30X</span><a>Настройки</a></div></aside>`;
+}
+function cHome() {
+  const rows = ITEMS.map((it, i) => it.k === 'word'
+    ? `<div class="c-row word"><span class="n">A/я</span><span class="t"><span class="c-m" style="color:var(--sig-t)">Новое слово</span> ${it.t}</span><span class="d">${it.d} <a style="border-bottom:1px solid">Послушать</a></span>${wordKb()}</div>`
+    : `<a class="c-row ${it.s || ''} ${it.k || ''}"><span class="n">${p2(num(i))}</span><span class="t">${it.t}</span><span class="d">${it.d}</span><span class="s">${S[it.s] || 'впереди'}</span></a>`).join('');
+  return `<div class="c-shell">${cRail()}<main class="c-main">
+    <section class="c-mod"><div class="c-mh c-m"><span>Урок на сегодня</span><span>10 · <b style="color:var(--ink)">20</b> · 40 мин</span></div><div class="c-today">
+      <div class="c-pos"><div class="big">${p2(CUR + 1)}<small> / ${p2(STEPS.length)} ступень</small></div><h1>${STEPS[CUR].t}</h1><p>${STEPS[CUR].goal}</p></div>
+      <div class="c-go"><div class="c-mix c-m"><span><b style="color:var(--ink)">2</b>повторить</span><span><b style="color:var(--ink)">2</b>новое</span><span><b style="color:var(--ink)">20</b>мин</span></div><a class="c-btn">▶ Продолжить</a><span class="c-m">Сначала: Блюз левой рукой</span></div></div></section>
+    <section class="c-mod"><div class="c-mh c-m"><span>Ступень ${p2(CUR + 1)} · ${STEPS[CUR].done} из ${STEPS[CUR].n}</span><span><b style="color:var(--ink)">Путь</b> · Все упражнения</span></div>${rows}</section>
+    <section class="c-mod c-nextst"><span><span class="c-m">Дальше · ступень 03</span><br>${STEPS[2].t}. ${STEPS[2].goal}</span><a>Открыть всё равно</a></section></main></div>`;
+}
+function cEx() {
+  return `<div class="c-ex"><header class="c-bar"><a class="c-m">← Ступень 01</a><h1>Блюз левой рукой</h1><span class="sp"></span><div class="c-sw"><a class="on">1 Ноты</a><a>2 В темпе</a></div><span class="c-m">FP-30X</span></header>
+    <div class="c-work"><section class="c-mod c-lcd"><span class="c-m">Сейчас · такт 01/12</span><div class="ch">C7</div>
+      <div class="c-pads"><div class="hit"><small>1</small><b>C</b></div><div><small>2</small></div><div class="hit"><small>3</small><b>G</b></div><div><small>4</small></div></div>
+      <div class="c-nx"><span class="c-m">Дальше · через 4 такта</span><b>F7</b></div></section>
+    <section class="c-mod c-taskm"><div class="c-mh c-m"><span>Задание</span><span>этап 1 из 2 · без темпа</span></div>
+      <p><b>Левая:</b> C мизинцем на «раз», G большим пальцем на «три».</p><p class="rule">В каждом такте то же самое, от ноты аккорда. Зачёт: все 12 тактов без ошибок. Экран ждёт тебя.</p>
+      <div class="c-seq">${BARS.map((b, i) => `<div class="${i ? '' : 'on'}"><small>${p2(i + 1)}</small>${b}</div>`).join('')}</div></section></div>
+    <div class="c-kbwrap">${exKb()}</div>
+    <footer class="c-foot"><div class="c-legend c-m"><span><i style="background:var(--lh)"></i>левая</span><span><i style="background:var(--rh)"></i>правая</span></div><span class="sp"></span><a class="c-btn sec">Послушать такт</a><a class="c-btn">С начала</a></footer></div>`;
+}
+
+const R = { a: { home: aHome, ex: aEx }, b: { home: bHome, ex: bEx }, c: { home: cHome, ex: cEx } };
+const st = { dir: 'a', scr: 'home', theme: 'light' };
+(location.hash.slice(1).split('-')).forEach((v, i) => { const k = ['dir', 'scr', 'theme'][i]; if (v && k) st[k] = v; });
+function paint() {
+  const stage = document.getElementById('stage');
+  stage.dataset.dir = st.dir; stage.dataset.theme = st.theme; stage.innerHTML = (R[st.dir] || R.a)[st.scr === 'ex' ? 'ex' : 'home']();
+  document.querySelectorAll('.mk button').forEach((b) => b.setAttribute('aria-pressed', String(st[b.dataset.k] === b.dataset.v)));
+  history.replaceState(null, '', `#${st.dir}-${st.scr}-${st.theme}`);
+}
+document.querySelector('.mk').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; st[b.dataset.k] = b.dataset.v; paint(); window.scrollTo(0, 0); });
+paint();
+</script>
+</body>
+</html>

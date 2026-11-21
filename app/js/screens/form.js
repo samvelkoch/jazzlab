@@ -123,8 +123,14 @@ export function renderForm(root, { track, itemId, item, form, pattern, lick, lic
   const slipsTxt = `${maxSlips} ${plural(maxSlips, 'fvPassSlips')}`;
   const ruleText = { notes: fill(t('fvRule_notes'), { s: slipsTxt }), tempo: fill(t('fvPass'), { n: CLEAN_TO_PASS, c: plural(CLEAN_TO_PASS, 'fvChorusW'), s: slipsTxt }) };
   const ruleRows = STAGES.map((sid, k) => h('div.lqrule.fvrule', { 'data-stage': sid }, h('b.n', null, String(k + 1)), h('div', null, h('b', null, t('fvSt_' + sid) + '. '), ruleText[sid])));
+  // a one-hand task: the hand word before the colon in the hand's colour (the text itself is unchanged)
+  const handWord = (txt) => {
+    const hand = tm.mode === 'lh' ? 'lh' : tm.mode === 'both' || tm.mode === 'comp' ? null : 'rh';
+    const i = txt.indexOf(':');
+    return hand && i > 0 && i < 24 ? [h('span.' + hand, null, txt.slice(0, i + 1)), txt.slice(i + 1)] : [txt];
+  };
   const taskEl = h('div.fvtask', null,
-    h('div.fvgoal', null, h('span.fvlabel', null, t('fvTask')), h('h3', null, headline), ...abouts.map((a) => h('p', null, markTerms(a)))),
+    h('div.fvgoal', null, h('span.fvlabel', null, t('fvTask')), h('h3', null, ...handWord(headline)), ...abouts.map((a) => h('p', null, markTerms(a)))),
     h('div.fvrules', null, h('span.fvlabel', null, t('fvHow')), ...ruleRows,
       h('p', null, t('fvLook'))));
 
