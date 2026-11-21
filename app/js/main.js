@@ -94,7 +94,8 @@ async function trackModel(id) {
     const src = it.kind === 'pattern' ? patterns[it.pattern] : it.kind === 'lick' ? licks[it.lick] : it.kind === 'melody' ? melodies[it.melody] : it.kind === 'solo' ? solos[it.solo] : it.kind === 'form' ? forms[it.form] : it.kind === 'exercise' ? exercises[it.ex] : null;
     const title = it.title ? L(it.title) : src ? L(src.title) : iid;
     const about = it.about ? L(it.about) : it.kind === 'form' && it.lick && !it.licks ? L(licks[it.lick].about) : it.kind === 'form' && it.lickKey ? L(licks[it.lickKey].about) : src ? L(src.about) : '';
-    items[iid] = { ...it, id: iid, title, about, href: `#/t/${id}/${iid}`, ...(it.kind === 'pattern' && src && src.comp ? { labelKind: 'comp' } : {}) }; // a comping pattern is not a left-hand item
+    const does = it.does ? L(it.does) : ''; // one line «what the hands do» under the title on the path (optional)
+    items[iid] = { ...it, id: iid, title, about, does, href: `#/t/${id}/${iid}`, ...(it.kind === 'pattern' && src && src.comp ? { labelKind: 'comp' } : {}) }; // a comping pattern is not a left-hand item
   });
   models[id] = { track, forms, patterns, licks, melodies, solos, rhythms, exercises, items };
   return models[id];

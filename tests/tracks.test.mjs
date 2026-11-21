@@ -33,8 +33,9 @@ const blues = read('content/tracks/blues.json');
 const none = () => false;
 assert.deepEqual(freshItems(learningOrder(blues), blues.items, none, 2), ['d-white', 'ear-find']);
 assert.deepEqual(freshItems(learningOrder(blues), blues.items, none, 3), ['d-white', 'ear-find', 'pat-p1']);
-// the first whole form comes within the first four items of the path
-assert.ok(learningOrder(blues).indexOf('form-p1') < 4);
+// the first whole form comes within the first step of the path (week one)
+assert.ok(blues.steps[0].items.includes('form-p1'), 'form-p1 is in the first step');
+assert.ok(learningOrder(blues).indexOf('form-p1') < blues.steps[0].items.length);
 
 // the performance: offered only once every path item before it is done; done once it has a recorded run
 const prog = {};
@@ -47,7 +48,10 @@ assert.equal(itemDone({ kind: 'perform' }, undefined), false);
 assert.equal(itemDone({ kind: 'perform' }, { runs: 0 }), false);
 assert.equal(itemDone({ kind: 'perform' }, { runs: 1, bestPct: 40 }), true, 'one recorded run counts as done');
 prog['perf-blues'] = { runs: 1 };
-assert.equal(freshItems(order, blues.items, doneTo(before), 1)[0], 'imp-b4', 'recorded: the path goes on');
+// the performance is the concert of the last step, so it ends the path: once recorded nothing new is left
+assert.equal(order[order.length - 1], 'perf-blues');
+assert.deepEqual(freshItems(order, blues.items, doneTo(before), 1), [], 'recorded: not offered again, the path is done');
+assert.equal(freshItems(order, blues.items, doneTo(before.filter((id) => id !== 'imp-b4')), 1)[0], 'imp-b4', 'recorded, one item left: the path goes on to it');
 
 // the session budget
 assert.deepEqual(budgetLimits(10), { reviews: 3, fresh: 1 });

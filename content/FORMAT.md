@@ -55,7 +55,8 @@ Check: `node tests/export.test.mjs`.
 ```jsonc
 {
   "$format": "jazzlab-track/1", "id": "blues", "title": {…}, "about": {…},
-  "path": ["d-white", "ear-find", "pat-p1", "form-p1", …],              // optional: the learning order (see below)
+  "path": ["d-white", "ear-find", "pat-p1", "d-black", "ear-hl1", "form-p1", …], // the learning order (see below)
+  "steps": [ { "id": "s1", "title": {…}, "goal": {…}, "items": ["d-white", …, "form-p1"] } ], // the path cut into steps
   "sections": [ { "id": "keys", "title": {…}, "about": {…}, "items": ["d-white", "pat-p1", "form-p1"] } ],
   "items": {
     "d-white": { "kind": "drill", "title": {…}, "about": {…},
@@ -126,18 +127,30 @@ each in learning order; `freshItems()` in `app/js/queue.js`), so many tunes do n
 
 **Learning order (`path`).** Sections are the display grouping only. The optional top-level `"path": [itemId, …]` is the
 order in which fresh items are offered (ear first, the whole form in week one, foundation drills alongside the track, every
-stage ending with the form); without it the flattened sections are the order. On the home screen the cards stay grouped by
-section; only the «сейчас» badge and the «Сегодня» list follow the path. Rules (`node tests/tracks.test.mjs` checks them for
+stage ending with the form); without it the flattened sections are the order. The home screen («Путь») shows the path
+cut into steps (below); the sections are only the «Все упражнения» tab. Rules (`node tests/tracks.test.mjs` checks them for
 every track): every `path` id exists in `items` and in some section, no duplicates, and every section item that is not a
 `diag` appears in `path` exactly once. Fresh-item rules (`freshItems()`): a `diag` is never a fresh item (the check-up comes
 first on its own when due); at most one `melody`, one form with a `melody` and one `solo` a day; a `perform` item is offered
 only once every path item before it is done, and for the queue it is done once it has a recorded run (`progress[id].runs >= 1`,
-`itemDone()` in `store.js`; its card then says «записано» instead of «пройдено»).
+`itemDone()` in `store.js`; its row then says «записано» instead of «сдано»).
 
-**Session budget.** The «Сегодня» card has a 10 · 20 · 40 min switch (`settings.budget`, default 20): 10 → up to 3 reviews +
+**Steps (`steps`).** The path cut into 6–9-item steps: `{ "id": "s1", "title": {ru, en}, "goal": {ru, en}, "items": […] }`.
+`path` must equal the steps' `items` glued in order (each path id in exactly one step); the last item of a step is its
+concert (a `form`, `solo`, `perform` or `exercise`; drawn «★ Концерт: …»); a `diag` is never in a step (the check-up comes
+first in «Урок на сегодня» when due). `goal` is one sentence «после этой ступени ты …». A step is finished when every item
+is done (`itemDone`), in any order: an item passed out of order counts in its own step. The current step is the first
+unfinished one; later steps are shown muted with a soft lock: «Всё равно открыть» adds the step id to
+`settings.unlocked[<trackId>]` (inside `settings`, so a backup carries it); item links always open. A track without
+`steps` is one step over its learning order. Helpers: `app/js/path.js`; checks: `node tests/path.test.mjs`.
+
+**Item line (`does`).** Optional `"does": {ru, en}` on an item: one line under its title on the path, «what the hands
+do». Without it the first sentence of `about` is shown; the full `about` opens under «Зачем».
+
+**Session budget.** The «Урок на сегодня» block (the yellow poster of «Путь») has a 10 · 20 · 40 min switch (`settings.budget`, default 20): 10 → up to 3 reviews +
 1 new item, 20 → up to 4 reviews + 2 new, 40 → up to 6 reviews + 3 new (`BUDGETS` in `queue.js`; `todayQueue(model, limits)`
-in `track.js`). Changing it re-renders the list; a running one-tap session keeps its queue until it ends. Under the list,
-one line per other ready track with reviews due today («Ещё к повтору: Босса-нова · 2 →», linking to that track's home); the
+in `track.js`). The block shows the queue as three numbers (повторить · новое · минут), one «Продолжить» button and a line
+naming the next item; a running one-tap session keeps its queue until it ends. Under it, one line per other ready track with reviews due today («Ещё к повтору: Босса-нова · 2 →», linking to that track's home); the
 other tracks' raw JSON is fetched for their item ids, and the line stays hidden if a fetch fails.
 
 # Forms (`jazzlab-form/1`) and left-hand patterns (`jazzlab-pattern/1`)

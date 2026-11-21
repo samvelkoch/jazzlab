@@ -308,6 +308,13 @@ const DICT = {
     jamHint: 'Выбери стиль и нажми «Старт». Играй правой рукой что хочешь: подсвечены ноты, которые звучат сейчас.',
     jamHintPlay: 'Здесь нет ошибок. «Дом» звучит как конец фразы, «висит» просит продолжения.',
     jamCardAbout: 'Лёгкий фон: бас, аккорды, барабаны. Ты играешь правой рукой что хочешь, без задания и оценки.', jamCardGo: 'Играть с фоном'
+    // the home screen «Путь» (track.js): the poster and the steps
+    , pTab_path: 'Путь', pTab_all: 'Все упражнения', pTab_prog: 'Прогресс', pTabsAria: 'Главный экран',
+    pToday: 'Урок на сегодня', pMixReview: 'повторить', pMixNew: 'новое', pMinW: 'минута|минуты|минут',
+    pStart: 'Начать', pContinue: 'Продолжить', pNext: 'Дальше: «{t}»', pFirstReview: 'Сначала повторить: «{t}»', pFirstDiag: 'Сначала замер: «{t}»',
+    pDoneOf: 'Сделано {x} из {y}', pAllDone: 'путь пройден', pStepAria: 'Ступень {k} из {n}', pOf: '{k} из {n}',
+    pExW: 'упражнение|упражнения|упражнений', pOpenAnyway: 'Всё равно открыть', pWhy: 'Зачем', pConcert: 'Концерт',
+    pPassed: 'сдано', pReview: 'повторить', pJam: 'Играть для удовольствия: аккомпанемент'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -609,6 +616,13 @@ const DICT = {
     jamHint: 'Pick a style and press Start. Play anything with your right hand: the lit keys are the notes that sound now.',
     jamHintPlay: 'There are no mistakes here. «Home» sounds like the end of a phrase, «hangs» asks for more.',
     jamCardAbout: 'A light band: bass, chords, drums. You play anything with your right hand, no task and no score.', jamCardGo: 'Play with the band'
+    // the home screen «Path» (track.js): the poster and the steps
+    , pTab_path: 'Path', pTab_all: 'All exercises', pTab_prog: 'Progress', pTabsAria: 'Home screen',
+    pToday: 'Today\'s lesson', pMixReview: 'to review', pMixNew: 'new', pMinW: 'minute|minutes',
+    pStart: 'Start', pContinue: 'Continue', pNext: 'Next: «{t}»', pFirstReview: 'First a review: «{t}»', pFirstDiag: 'First a check-up: «{t}»',
+    pDoneOf: 'Done {x} of {y}', pAllDone: 'path complete', pStepAria: 'Step {k} of {n}', pOf: '{k} of {n}',
+    pExW: 'exercise|exercises', pOpenAnyway: 'Open anyway', pWhy: 'Why', pConcert: 'Concert',
+    pPassed: 'passed', pReview: 'review', pJam: 'Play for fun: accompaniment'
   }
 };
 

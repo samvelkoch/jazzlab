@@ -4,14 +4,56 @@
   "title": { "ru": "Босса-нова", "en": "Bossa nova" },
   "about": { "ru": "Цель дорожки: Blue Bossa целиком, левая держит ячейку боссы, правая ведёт мелодию. Ровные восьмые, не спеша.", "en": "Goal: the whole of Blue Bossa, the left hand holding the bossa cell, the right hand carrying the melody. Even eighths, no hurry." },
   "path": [
-    "d-chords-cm", "ear-find-bossa", "ear-hl1-bossa", "pat-b1", "form-b1", "ear-iv1-bossa", "d-chords-db", "pat-c1",
-    "form-c1", "mel-bossa", "form-mel", "ear-q1-bossa", "lick-bl1", "ear-q2-bossa", "form-rh-bl1", "imp-bo1", "ear-iv2-bossa",
-    "pat-b2", "form-b2", "ear-hl2-bossa", "imp-bo1r", "pat-c2", "form-c2", "pat-c3", "form-c3", "form-2h-bossa", "lick-bl2",
-    "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "imp-bo2a", "ear-pr1-bossa", "form-rh-qa-bossa", "imp-bo3", "ear-q3-bossa", "imp-bo2e",
-    "end-bossa", "ear-iv5-bossa", "perf-bossa", "ear-pr2-bossa", "imp-bo3v", "imp-bo4",
-    "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa",
-    "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor",
-    "d-chords-wave", "form-wave", "form-wave-c3", "imp-wave"
+    "d-chords-cm", "ear-find-bossa", "ear-hl1-bossa", "pat-b1", "ear-iv1-bossa", "form-b1", "d-chords-db", "pat-c1",
+    "form-c1", "mel-bossa", "ear-q1-bossa", "form-mel", "lick-bl1", "ear-q2-bossa", "form-rh-bl1", "ear-iv2-bossa",
+    "pat-b2", "form-b2", "imp-bo1", "ear-hl2-bossa", "imp-bo1r", "pat-c2", "form-c2", "pat-c3", "form-c3", "lick-bl2",
+    "form-2h-bossa", "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "imp-bo2a", "ear-pr1-bossa",
+    "form-rh-qa-bossa", "imp-bo3", "imp-bo2e", "end-bossa", "ear-q3-bossa", "imp-bo3v", "imp-bo4", "perf-bossa",
+    "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa", "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor",
+    "ear-iv5-bossa", "d-chords-wave", "form-wave", "ear-pr2-bossa", "form-wave-c3", "imp-wave"
+  ],
+  "steps": [
+    { "id": "s1", "title": { "ru": "Бас боссы", "en": "The bossa bass" },
+      "goal": { "ru": "После этой ступени левая играет бас Blue Bossa от начала до конца.", "en": "After this step your left hand plays the Blue Bossa bass from start to finish." },
+      "items": [
+        "d-chords-cm", "ear-find-bossa", "ear-hl1-bossa", "pat-b1", "ear-iv1-bossa", "form-b1"
+      ] },
+    { "id": "s2", "title": { "ru": "Аккорды и мелодия", "en": "Chords and the melody" },
+      "goal": { "ru": "После этой ступени ты ведёшь мелодию Blue Bossa правой над басом левой.", "en": "After this step your right hand carries the Blue Bossa melody over the left-hand bass." },
+      "items": [
+        "d-chords-db", "pat-c1", "form-c1", "mel-bossa", "ear-q1-bossa", "form-mel"
+      ] },
+    { "id": "s3", "title": { "ru": "Первая фраза и соло", "en": "The first phrase and a solo" },
+      "goal": { "ru": "После этой ступени ты играешь свою первую фразу в боссе и короткое соло.", "en": "After this step you play your first bossa phrase and a short solo." },
+      "items": [
+        "lick-bl1", "ear-q2-bossa", "form-rh-bl1", "ear-iv2-bossa", "pat-b2", "form-b2", "imp-bo1"
+      ] },
+    { "id": "s4", "title": { "ru": "Две руки", "en": "Both hands" },
+      "goal": { "ru": "После этой ступени ты играешь Blue Bossa двумя руками: бас и мелодия вместе.", "en": "After this step you play Blue Bossa with both hands: the bass and the melody together." },
+      "items": [
+        "ear-hl2-bossa", "imp-bo1r", "pat-c2", "form-c2", "pat-c3", "form-c3", "lick-bl2", "form-2h-bossa"
+      ] },
+    { "id": "s5", "title": { "ru": "Разговор", "en": "The conversation" },
+      "goal": { "ru": "После этой ступени твои фразы спрашивают и отвечают, а соло попадает в аккорды.", "en": "After this step your phrases ask and answer, and your solo lands on the chords." },
+      "items": [
+        "ear-iv3-bossa", "imp-bo2", "ear-hl3-bossa", "lick-bl3", "imp-bo2a", "ear-pr1-bossa", "form-rh-qa-bossa",
+        "imp-bo3"
+      ] },
+    { "id": "s6", "title": { "ru": "Выступление", "en": "The performance" },
+      "goal": { "ru": "После этой ступени ты играешь Blue Bossa целиком, с концовкой, и записываешь её.", "en": "After this step you play the whole of Blue Bossa, with an ending, and record it." },
+      "items": [
+        "imp-bo2e", "end-bossa", "ear-q3-bossa", "imp-bo3v", "imp-bo4", "perf-bossa"
+      ] },
+    { "id": "s7", "title": { "ru": "Ipanema и Corcovado", "en": "Ipanema and Corcovado" },
+      "goal": { "ru": "После этой ступени ты аккомпанируешь двум пьесам Жобима и играешь над ними своё.", "en": "After this step you accompany two Jobim tunes and play your own lines over them." },
+      "items": [
+        "d-chords-ipa", "form-ipa", "form-ipa-c1", "imp-ipa", "d-chords-cor", "form-cor", "form-cor-c2", "imp-cor"
+      ] },
+    { "id": "s8", "title": { "ru": "Wave", "en": "Wave" },
+      "goal": { "ru": "После этой ступени ты аккомпанируешь Wave и играешь над ней своё.", "en": "After this step you accompany Wave and play your own lines over it." },
+      "items": [
+        "ear-iv5-bossa", "d-chords-wave", "form-wave", "ear-pr2-bossa", "form-wave-c3", "imp-wave"
+      ] }
   ],
   "sections": [
     {

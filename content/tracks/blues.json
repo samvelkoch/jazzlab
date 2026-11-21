@@ -4,13 +4,60 @@
   "title": { "ru": "Блюз", "en": "Blues" },
   "about": { "ru": "Цель дорожки: 12-тактовый блюз в C целиком, три круга, левая держит грув, правая играет фразы. Медленно это нормально.", "en": "Goal: a full 12-bar blues in C, three choruses, left hand grooving, right hand phrasing. Slow is fine." },
   "path": [
-    "d-white", "ear-find", "pat-p1", "form-p1", "d-black", "ear-hl1", "lick-l1", "qa-l1", "form-rh-l1", "imp-b1", "lick-l8",
-    "qa-l8", "lick-l9", "qa-l9", "d-fifths", "ear-iv1", "lick-l2", "qa-l2", "lick-l3", "qa-l3", "form-rh-l3", "form-2h-l1",
-    "imp-b1r", "d-chords", "ear-hl2", "pat-p1q", "form-p1q", "lick-l4", "qa-l4", "ear-iv2", "form-rh-l4", "lick-l5", "qa-l5",
-    "form-rh-qa", "imp-b2", "d-all", "imp-b2e", "lick-l10", "qa-l10", "lick-l11", "qa-l11", "ear-q1", "pat-p2", "form-p2",
-    "imp-b2r", "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "qa-l6", "form-rh-l6", "form-2h-qa", "imp-b3", "d-chords-ta",
-    "ear-q2", "pat-ta", "form-ta", "imp-b3r", "pat-p3", "form-p3", "end-blues", "ear-iv5", "imp-b3v", "lick-l7", "qa-l7",
-    "perf-blues", "imp-b4", "mel-tinroof", "form-mel-tinroof"
+    "d-white", "ear-find", "pat-p1", "d-black", "ear-hl1", "form-p1", "lick-l1", "qa-l1", "form-rh-l1", "lick-l8",
+    "qa-l8", "lick-l9", "qa-l9", "imp-b1", "d-fifths", "ear-iv1", "lick-l2", "qa-l2", "lick-l3", "qa-l3", "form-rh-l3",
+    "form-2h-l1", "imp-b1r", "d-chords", "ear-hl2", "pat-p1q", "lick-l4", "qa-l4", "form-rh-l4", "form-p1q", "ear-iv2",
+    "lick-l5", "qa-l5", "form-rh-qa", "d-all", "imp-b2e", "imp-b2", "lick-l10", "qa-l10", "lick-l11", "qa-l11",
+    "ear-q1", "pat-p2", "imp-b2r", "form-p2", "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "qa-l6", "form-rh-l6",
+    "imp-b3", "form-2h-qa", "d-chords-ta", "ear-q2", "pat-ta", "form-ta", "imp-b3r", "pat-p3", "form-p3", "end-blues",
+    "ear-iv5", "imp-b3v", "lick-l7", "qa-l7", "imp-b4", "mel-tinroof", "form-mel-tinroof", "perf-blues"
+  ],
+  "steps": [
+    { "id": "s1", "title": { "ru": "Первые 12 тактов", "en": "The first 12 bars" },
+      "goal": { "ru": "После этой ступени ты играешь весь блюз левой рукой под барабаны.", "en": "After this step you play the whole blues with your left hand over drums." },
+      "items": [
+        "d-white", "ear-find", "pat-p1", "d-black", "ear-hl1", "form-p1"
+      ] },
+    { "id": "s2", "title": { "ru": "Первая фраза", "en": "The first phrase" },
+      "goal": { "ru": "После этой ступени ты правой отвечаешь пианино и играешь первое своё соло.", "en": "After this step your right hand answers the piano and you play your first solo." },
+      "items": [
+        "lick-l1", "qa-l1", "form-rh-l1", "lick-l8", "qa-l8", "lick-l9", "qa-l9", "imp-b1"
+      ] },
+    { "id": "s3", "title": { "ru": "Две руки вместе", "en": "Both hands together" },
+      "goal": { "ru": "После этой ступени ты играешь блюз двумя руками: левая держит, правая отвечает.", "en": "After this step you play the blues with both hands: the left holds, the right answers." },
+      "items": [
+        "d-fifths", "ear-iv1", "lick-l2", "qa-l2", "lick-l3", "qa-l3", "form-rh-l3", "form-2h-l1"
+      ] },
+    { "id": "s4", "title": { "ru": "Левая шагает", "en": "The left hand walks" },
+      "goal": { "ru": "После этой ступени левая играет на каждый счёт, а правая знает ещё одну фразу.", "en": "After this step your left hand plays on every count and your right hand knows one more phrase." },
+      "items": [
+        "imp-b1r", "d-chords", "ear-hl2", "pat-p1q", "lick-l4", "qa-l4", "form-rh-l4", "form-p1q"
+      ] },
+    { "id": "s5", "title": { "ru": "Вопрос и ответ", "en": "Question and answer" },
+      "goal": { "ru": "После этой ступени ты сам ведёшь разговор: одна фраза спрашивает, другая отвечает.", "en": "After this step you lead the conversation yourself: one phrase asks, the next one answers." },
+      "items": [
+        "ear-iv2", "lick-l5", "qa-l5", "form-rh-qa", "d-all", "imp-b2e", "imp-b2"
+      ] },
+    { "id": "s6", "title": { "ru": "Буги", "en": "Boogie" },
+      "goal": { "ru": "После этой ступени левая играет буги, а правая начинает фразу не с первого счёта.", "en": "After this step your left hand plays boogie and your right hand starts a phrase off the first count." },
+      "items": [
+        "lick-l10", "qa-l10", "lick-l11", "qa-l11", "ear-q1", "pat-p2", "imp-b2r", "form-p2"
+      ] },
+    { "id": "s7", "title": { "ru": "St. Louis Blues", "en": "St. Louis Blues" },
+      "goal": { "ru": "После этой ступени ты играешь настоящий блюз 1914 года и разговор двумя руками.", "en": "After this step you play a real blues from 1914 and a conversation with both hands." },
+      "items": [
+        "mel-stl", "ear-iv3", "form-mel-stl", "lick-l6", "qa-l6", "form-rh-l6", "imp-b3", "form-2h-qa"
+      ] },
+    { "id": "s8", "title": { "ru": "Красивый конец", "en": "A proper ending" },
+      "goal": { "ru": "После этой ступени блюз не обрывается: последние такты ведут на новый круг, а в конце стоит точка.", "en": "After this step the blues does not just stop: the last bars lead into a new round, and the end has a full stop." },
+      "items": [
+        "d-chords-ta", "ear-q2", "pat-ta", "form-ta", "imp-b3r", "pat-p3", "form-p3", "end-blues"
+      ] },
+    { "id": "s9", "title": { "ru": "Выступление", "en": "The performance" },
+      "goal": { "ru": "После этой ступени ты играешь три круга блюза для семьи и записываешь их.", "en": "After this step you play three rounds of the blues for your family and record them." },
+      "items": [
+        "ear-iv5", "imp-b3v", "lick-l7", "qa-l7", "imp-b4", "mel-tinroof", "form-mel-tinroof", "perf-blues"
+      ] }
   ],
   "sections": [
     {
