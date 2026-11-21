@@ -5,12 +5,54 @@
   "about": { "ru": "Цель дорожки: 32-тактовый стандарт целиком. Левая ведёт аккорды голосоведением, правая мелодию, потом свои фразы по II–V–I.", "en": "Goal: a whole 32-bar standard. The left hand leads the chords with voice leading, the right hand carries the tune, then your own phrases over II–V–I." },
   "path": [
     "d-chords-f", "ear-find-std", "ear-hl1-std", "pat-s1", "form-s1", "ear-iv1-std", "mel-std", "form-mel-std",
-    "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "lick-k1", "form-rh-k1", "imp-s1r", "ear-iv2-std", "pat-s2", "form-s2",
-    "ear-hl2-std", "form-2h-std", "imp-s2", "ear-pr1-std", "imp-s2m", "lick-k2", "lick-k3", "ear-iv3-std", "form-rh-qa-std", "imp-s2q",
-    "pat-s2-form", "ear-hl3-std", "imp-s3", "end-std", "imp-s3e", "ear-pr2-std", "perf-std", "ear-q3-std", "imp-s4",
-    "ear-iv4-std", "mel-bbb", "form-mel-bbb", "perf-bbb", "ear-iv5-std", "mel-sgb", "form-mel-sgb", "perf-sgb",
-    "ear-iv6-std", "mel-hsr", "form-mel-hsr", "perf-hsr", "mel-aim", "form-mel-aim", "perf-aim", "ear-iv7-std",
-    "mel-tft", "form-mel-tft", "perf-tft"
+    "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "pat-s2", "form-s2", "lick-k1", "form-rh-k1", "imp-s1r",
+    "ear-iv2-std", "imp-s2", "ear-hl2-std", "imp-s2m", "ear-pr1-std", "form-2h-std", "lick-k2", "lick-k3",
+    "ear-iv3-std", "form-rh-qa-std", "imp-s2q", "pat-s2-form", "imp-s3", "ear-hl3-std", "end-std", "imp-s3e",
+    "ear-pr2-std", "imp-s4", "perf-std", "ear-iv4-std", "mel-bbb", "form-mel-bbb", "perf-bbb", "mel-sgb",
+    "form-mel-sgb", "perf-sgb", "ear-iv5-std", "mel-hsr", "form-mel-hsr", "perf-hsr", "mel-aim", "form-mel-aim",
+    "perf-aim", "ear-q3-std", "mel-tft", "ear-iv6-std", "form-mel-tft", "ear-iv7-std", "perf-tft"
+  ],
+  "steps": [
+    { "id": "s1", "title": { "ru": "Бас и мелодия", "en": "The bass and the melody" },
+      "goal": { "ru": "После этой ступени ты ведёшь мелодию стандарта правой над басом левой.", "en": "After this step your right hand carries the melody of a standard over the left-hand bass." },
+      "items": [
+        "d-chords-f", "ear-find-std", "ear-hl1-std", "pat-s1", "form-s1", "ear-iv1-std", "mel-std", "form-mel-std"
+      ] },
+    { "id": "s2", "title": { "ru": "Аккорды в левой и первая фраза", "en": "Left-hand chords and the first phrase" },
+      "goal": { "ru": "После этой ступени левая играет аккорды из двух нот, а правая вставляет фразу в нужных местах.", "en": "After this step your left hand plays two-note chords and your right hand drops a phrase in the right places." },
+      "items": [
+        "ear-q1-std", "d-chords-f2", "imp-s1", "ear-q2-std", "pat-s2", "form-s2", "lick-k1", "form-rh-k1"
+      ] },
+    { "id": "s3", "title": { "ru": "Две руки", "en": "Both hands" },
+      "goal": { "ru": "После этой ступени ты играешь стандарт двумя руками: бас и мелодия вместе.", "en": "After this step you play the standard with both hands: the bass and the melody together." },
+      "items": [
+        "imp-s1r", "ear-iv2-std", "imp-s2", "ear-hl2-std", "imp-s2m", "ear-pr1-std", "form-2h-std"
+      ] },
+    { "id": "s4", "title": { "ru": "Разговор", "en": "The conversation" },
+      "goal": { "ru": "После этой ступени твои фразы спрашивают и отвечают, а соло попадает в аккорды.", "en": "After this step your phrases ask and answer, and your solo lands on the chords." },
+      "items": [
+        "lick-k2", "lick-k3", "ear-iv3-std", "form-rh-qa-std", "imp-s2q", "pat-s2-form", "imp-s3"
+      ] },
+    { "id": "s5", "title": { "ru": "Выступление", "en": "The performance" },
+      "goal": { "ru": "После этой ступени ты играешь стандарт два круга, с концовкой, и записываешь его.", "en": "After this step you play the standard for two rounds, with an ending, and record it." },
+      "items": [
+        "ear-hl3-std", "end-std", "imp-s3e", "ear-pr2-std", "imp-s4", "perf-std"
+      ] },
+    { "id": "s6", "title": { "ru": "Bye Bye Blackbird и Sweet Georgia Brown", "en": "Bye Bye Blackbird and Sweet Georgia Brown" },
+      "goal": { "ru": "После этой ступени в твоём репертуаре ещё две пьесы.", "en": "After this step you have two more tunes in your repertoire." },
+      "items": [
+        "ear-iv4-std", "mel-bbb", "form-mel-bbb", "perf-bbb", "mel-sgb", "form-mel-sgb", "perf-sgb"
+      ] },
+    { "id": "s7", "title": { "ru": "Honeysuckle Rose и Ain't Misbehavin'", "en": "Honeysuckle Rose and Ain't Misbehavin'" },
+      "goal": { "ru": "После этой ступени ты играешь две пьесы Фэтса Уоллера.", "en": "After this step you play two Fats Waller tunes." },
+      "items": [
+        "ear-iv5-std", "mel-hsr", "form-mel-hsr", "perf-hsr", "mel-aim", "form-mel-aim", "perf-aim"
+      ] },
+    { "id": "s8", "title": { "ru": "Tea for Two", "en": "Tea for Two" },
+      "goal": { "ru": "После этой ступени ты играешь Tea for Two и слышишь интервалы в аккорде.", "en": "After this step you play Tea for Two and hear intervals inside a chord." },
+      "items": [
+        "ear-q3-std", "mel-tft", "ear-iv6-std", "form-mel-tft", "ear-iv7-std", "perf-tft"
+      ] }
   ],
   "sections": [
     {
