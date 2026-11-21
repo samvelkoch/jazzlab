@@ -27,6 +27,7 @@ import { renderQA } from './screens/qa.js';
 import { renderMelody } from './screens/melody.js';
 import { renderPerform } from './screens/perform.js';
 import { renderSolo } from './screens/solo.js';
+import { renderJam } from './screens/jam.js';
 import { renderDiag } from './screens/diag.js';
 import { renderChordsHub, renderDecoder, renderKeys, renderLesson, renderPractice } from './screens/chords.js';
 import { compExercise } from './music/chord-ex.js';
@@ -254,6 +255,13 @@ async function route() {
         }));
         cleanup = renderExercise(root, { ex, rerender });
       } else message(t('notFound'));
+    } else if (/^\/jam(?:\/[a-z0-9-]+)?$/.test(hash)) {
+      // accompaniment: free play over a light band (content/jam.json), every form of the menu, the patterns its styles name
+      const jam = await get('jam.json'), formId = hash.split('/')[2] || null;
+      const forms = {}, patterns = {}, patIds = new Set(jam.styles.flatMap((s) => (s.bass || []).map((c) => c.pattern).filter(Boolean)));
+      await Promise.all([...jam.forms.map(async (f) => { forms[f] = await get(`forms/${f}.json`); }), ...[...patIds].map(async (p) => { patterns[p] = await get(`patterns/${p}.json`); })]);
+      document.title = `${t('jamTitle')} · Jazzlab`;
+      cleanup = renderJam(root, { jam, forms, patterns, formId });
     } else {
       const id = mt ? mt[1] : 'blues';
       const [{ index }, model] = await Promise.all([content(), trackModel(id)]);

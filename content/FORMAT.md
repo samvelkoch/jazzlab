@@ -497,3 +497,35 @@ The std track's `imp` (after `tunes`): `imp-s1` `std-key` (scales: F major on ba
 `imp-bo2a` `bossa-anticipation`, `imp-bo2e` `bossa-echo`, `imp-bo3v` `bossa-vary`; std `imp-s1r` `std-displaced`, `imp-s2m`
 `std-answer` (motif 0.5), `imp-s2q` `std-ask` (two-bar cell), `imp-s3e` `std-end-third`. Glossary: `improvisation`, `palette`, `target-note`;
 reference article `content/wiki/improvisation.json`.
+
+## Jam (accompaniment): `content/jam.json` (`jazzlab-jam/1`)
+
+Free play: a light band (bass, shell chords, drums) loops over a form until Stop, the learner improvises with the right
+hand. Nothing is judged, recorded or written to progress. Route `#/jam` and `#/jam/<formId>`; screen `app/js/screens/jam.js`;
+generator `app/js/music/jam.js` (pure); spec `docs/specs/2026-11-21-accompaniment-design.md`.
+
+```
+{ "forms": [ids of content/forms, in menu order],
+  "simple": { "<formId>": { "palette": <as solo.palette> } },          // «одна гамма»; a form without one has only «по аккордам»
+  "styles": [ { "id", "title": {ru,en}, "tempo", "swing", "drums": "swing" | "straight" | "bossa", "drumGain", "walk",
+                "bass": [ { "id", "level": 1..3, "pattern": "<content/patterns id>" } | { "id", "level", "events": [{ "t", "d", "deg", "stac"? }] } ],
+                "comp": [ { "id", "level", "bars"?: 2, "events": [{ "t", "d", "bar"?: 0 | 1, "note"?: 0 | 1 }] } ] } ] }
+```
+
+- `forms` must list every file of `content/forms` (checked by `tests/jam.test.mjs`). `simple` palettes are the solos'
+  palettes: the blues scale in C (the three blues forms), `bossa-minor` (Blue Bossa), `std-key` (the standard in F).
+- A bass cell is one bar: `t` 0..7 (eighths), `d` in eighths, `t + d <= 8` (no ties), `deg` = semitones above the chord root,
+  fitted by `fitDeg`, root at MIDI `36 + pc` (C2..B2). Every bass cell has `deg: 0` at `t: 0`. A `pattern` cell takes the
+  pattern's single-degree events (chords of a pattern are dropped). `walk: true` = no bass cells: a generated walking bass
+  (four quarters, root on 1, steps / thirds, an approach on 4 into the next root; within MIDI 33..52, leaps of 7 or less).
+- A comp cell says when the shell (3rd + 7th; a 6th chord: 3rd + 6th) sounds, voice-led with `leadPair` in C3..B3.
+  `events: []` = a silent bar. `bars: 2` + `bar` per event = a two-bar rhythm (bossa c3). `note: 0 | 1` = only the lower /
+  upper note of the shell (the ballad's slow arpeggio).
+- Two-chord bars: an event that crosses beat 3 is cut there and restarts on the second chord; the first bass note from
+  beat 3 on is the second chord's root.
+- Cells are chosen per block of 4 bars (variety «мало»: always the first cell of each layer) or 2 bars (variety «много»:
+  random among the cells with `level <= 1 + chorus`, capped at 3, never the same cell twice in a row). A drum fill on the
+  last bar of each chorus (and, with «много», now and then on the last bar of a 4-bar block).
+- Styles: `slow-blues`, `swing` (walking bass), `boogie`, `bossa`, `ballad`. Default style of a form: `bossa` for a bossa
+  form, `slow-blues` for a 12-bar form, else `swing`. Choices persist in the store under `jam`
+  (`{ style, form, vol, variety, mode, bpm: { [style]: n } }`). Check: `node tests/jam.test.mjs`.
