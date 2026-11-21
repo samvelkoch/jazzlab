@@ -632,7 +632,7 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .fvscreen .formpanel { gap: 8px; }
 @media (min-width: 641px) { .fvscreen .formpanel { overflow-y: auto; } } /* stopped on a short desktop pane the task block may push the grid: the panel scrolls */
 .fvtask { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 8px 24px; }
-.fvscreen.playing .fvtask { display: none; }
+.fvscreen.playing .fvtask, .fvscreen.walking .fvtask { display: none; }
 .fvlabel { font-size: 13px; font-weight: 700; color: var(--muted); }
 .fvgoal { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .fvgoal h3 { margin: 0; font: 700 19px/1.25 var(--display); }
@@ -675,18 +675,42 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .fvstaff .nt { cursor: default; }
 .fvstaff svg.nocur .band { display: none; }
 @media (min-width: 641px) {
-  .fvscreen .formpanel.fvstaffon { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto 1fr;
-    grid-template-areas: "head head" "task task" "strip strip" "staff grid"; align-content: start; }
+  .fvscreen .formpanel.fvstaffon { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto auto 1fr;
+    grid-template-areas: "head head" "task task" "strip strip" "msg msg" "staff grid"; align-content: start; }
+  .fvscreen .formpanel.fvstaffon .fvmsg { grid-area: msg; } /* inside .fvlive (display: contents) */
   .fvscreen .formpanel.fvstaffon > .staffhead { grid-area: head; } .fvscreen .formpanel.fvstaffon > .fvtask { grid-area: task; }
   .fvscreen .formpanel.fvstaffon .fvstrip { grid-area: strip; } .fvscreen .formpanel.fvstaffon .fvstaff { grid-area: staff; align-self: start; max-width: min(56vw, 640px); }
   .fvscreen .formpanel.fvstaffon > .fgrid { grid-area: grid; }
-  .fvscreen.playing .formpanel.fvstaffon { grid-template-rows: auto 0 auto minmax(0, 1fr); }
-  .fvscreen.playing .formpanel.fvstaffon .fvstaff { align-self: stretch; min-height: 0; } /* a short pane: the staff shrinks to its row */
-  .fvscreen.playing .formpanel.fvstaffon .fvstaff svg.staff { max-height: 100%; }
+  .fvscreen.playing .formpanel.fvstaffon, .fvscreen.walking .formpanel.fvstaffon { grid-template-rows: auto 0 auto auto minmax(0, 1fr); }
+  .fvscreen.playing .formpanel.fvstaffon .fvstaff, .fvscreen.walking .formpanel.fvstaffon .fvstaff { align-self: stretch; min-height: 0; } /* a short pane: the staff shrinks to its row */
+  .fvscreen.playing .formpanel.fvstaffon .fvstaff svg.staff, .fvscreen.walking .formpanel.fvstaffon .fvstaff svg.staff { max-height: 100%; }
   /* the grid is narrower beside the staff: the ii · V · I labels get their own line above the chord */
   .fvscreen .formpanel.fvstaffon .fgrid .fcell.fcell[data-fn-on] { padding-top: 24px; }
-  .fvscreen.playing .formpanel.fvstaffon .fgrid { grid-auto-rows: minmax(46px, auto); }
-  .fvscreen.playing .formpanel.fvstaffon .fgrid .fcell[data-fn-on] { min-height: 58px; } /* a cell keeps its label line; the grid scrolls inside */
+  .fvscreen.playing .formpanel.fvstaffon .fgrid, .fvscreen.walking .formpanel.fvstaffon .fgrid { grid-auto-rows: minmax(46px, auto); }
+  .fvscreen.playing .formpanel.fvstaffon .fgrid .fcell[data-fn-on], .fvscreen.walking .formpanel.fvstaffon .fgrid .fcell[data-fn-on] { min-height: 58px; } /* a cell keeps its label line; the grid scrolls inside */
+}
+/* stage «Ноты» (form.js): two stages in the header, the rules as two numbered rows, the wrong-key hint and the result */
+.fvrules .fvrule { padding: 4px 6px; font-size: 14px; }
+.fvrules .fvrule.cur { background: var(--panel); }
+.fvmsg { display: flex; align-items: center; gap: 14px; border-radius: 14px; padding: 8px 14px; font-size: 14px; line-height: 1.4; }
+.fvmsg:empty { display: none; }
+.fvmsg .sym { font: 700 26px var(--display); }
+.fvmsg.bad { background: var(--bad-soft); } .fvmsg.bad b, .fvmsg.bad .sym { color: var(--bad); }
+.fvmsg.ok { background: var(--ok-soft); } .fvmsg.ok b { color: var(--ok); }
+.fvmsg.meh { background: var(--meh-soft); } .fvmsg.meh b { color: var(--meh); }
+.fvmsgtext { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.fvmsgtext b { font: 700 18px var(--display); }
+.fvmsgbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.fvmsgbtns:empty { display: none; }
+.fvscreen[data-fstage="notes"] .fvcount { display: none; }
+/* a short pane between phone and desktop (800×600): the stages stay in the header row, so the staff and the grid keep the room */
+@media (min-width: 641px) and (max-width: 900px) and (max-height: 760px) {
+  .fvscreen header.top { flex-wrap: nowrap; }
+  .fvscreen header.top > .titles { min-width: 0; }
+  .fvscreen header.top .title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fvscreen .stages { order: 0; width: auto; flex: none; }
+  .fvscreen header.top .chip { padding: 0; width: 44px; justify-content: center; }
+  .fvscreen header.top .chip span { display: none; }
 }
 /* keyboard plan (keyboard.js plan): the bar's keys soft with a small finger badge, the keys to press next strong */
 .key.pl-r { background: var(--rh-soft); } .key.pl-l { background: var(--lh-soft); }
@@ -702,27 +726,28 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 @media (max-width: 900px) { .fvtask { grid-template-columns: minmax(0, 1fr); } }
 /* desktop while playing: the grid may scroll inside (16 bars with both hands on a short pane), the current bar kept in view */
 @media (min-width: 641px) {
-  .fvscreen.playing .fgrid { position: relative; overflow-y: auto; }
-  .fvscreen.playing .fgrid:not(.long) { flex: 1 1 0; min-height: 0; }
+  .fvscreen.playing .fgrid, .fvscreen.walking .fgrid { position: relative; overflow-y: auto; }
+  .fvscreen.playing .fgrid:not(.long), .fvscreen.walking .fgrid:not(.long) { flex: 1 1 0; min-height: 0; }
 }
 /* desktop while playing: the strip shows the notes, so the grid cells lose their notes line and get shorter (stopped, the grid
    keeps it as the map of the form) */
 @media (min-width: 641px) {
-  .fvscreen.playing .fgrid .fnotes { display: none; }
-  .fvscreen.playing .fgrid { grid-auto-rows: minmax(max(46px, calc(29px + 2.6dvh)), 1fr); gap: 5px; }
-  .fvscreen.playing .fcell { padding-top: 4px; padding-bottom: 12px; justify-content: flex-start; }
-  .fvscreen.playing .fcell[data-fn-on] { padding-top: 14px; }
-  .fvscreen.playing .fchord { font-size: clamp(16px, 2.6dvh, 30px); line-height: 1; }
-  .fvscreen.playing .fbeats { bottom: 4px; }
-  .fvscreen.playing .fgrid.long { grid-auto-rows: minmax(44px, 1fr); }
-  .fvscreen.playing .fgrid.long .fcell[data-fn-on] { padding-top: 12px; }
-  .fvscreen.playing .fgrid.long .fchord { font-size: 15px; }
+  .fvscreen.playing .fgrid .fnotes, .fvscreen.walking .fgrid .fnotes { display: none; }
+  .fvscreen.playing .fgrid, .fvscreen.walking .fgrid { grid-auto-rows: minmax(max(46px, calc(29px + 2.6dvh)), 1fr); gap: 5px; }
+  .fvscreen.playing .fcell, .fvscreen.walking .fcell { padding-top: 4px; padding-bottom: 12px; justify-content: flex-start; }
+  .fvscreen.playing .fcell[data-fn-on], .fvscreen.walking .fcell[data-fn-on] { padding-top: 14px; }
+  .fvscreen.playing .fchord, .fvscreen.walking .fchord { font-size: clamp(16px, 2.6dvh, 30px); line-height: 1; }
+  .fvscreen.playing .fbeats, .fvscreen.walking .fbeats { bottom: 4px; }
+  .fvscreen.playing .fgrid.long, .fvscreen.walking .fgrid.long { grid-auto-rows: minmax(44px, 1fr); }
+  .fvscreen.playing .fgrid.long .fcell[data-fn-on], .fvscreen.walking .fgrid.long .fcell[data-fn-on] { padding-top: 12px; }
+  .fvscreen.playing .fgrid.long .fchord, .fvscreen.walking .fgrid.long .fchord { font-size: 15px; }
 }
 /* a short desktop pane (800×600): smaller keyboard; while playing the footer keeps the tempo and Stop on one line */
 @media (max-height: 700px) and (min-width: 641px) {
   .fvscreen .kb { height: clamp(90px, 17dvh, 190px); }
   .fvscreen .kbpanel { padding-top: 8px; padding-bottom: 8px; }
   .fvscreen.playing .footsegs, .fvscreen.playing .foothint { display: none; }
+  .fvscreen.walking .foothint, .fvscreen .fvmsgsub { display: none; } /* stage «Ноты» on a short pane: one footer line, a one-line hint */
   .fvscreen.playing footer.actions { padding-top: 8px; padding-bottom: 8px; }
   .fvscreen .staffhead { min-height: 28px; }
   .fvnow, .fvnext { padding-top: 5px; padding-bottom: 5px; }
@@ -732,7 +757,9 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 @media (max-width: 640px) {
   .fvstrip { flex-direction: column; gap: 6px; }
   .fvscreen .fvlive { display: flex; flex-direction: column; gap: 6px; }
-  .fvscreen.playing .fvlive { position: sticky; top: 0; z-index: 3; background: var(--panel); }
+  .fvscreen .fvmsgsub { display: none; } .fvscreen .fvmsg { padding: 6px 10px; gap: 10px; }
+  .fvscreen .fvlisten span { display: inline-flex; } /* the phone rule hides button labels: this one needs its own */
+  .fvscreen.playing .fvlive, .fvscreen.walking .fvlive { position: sticky; top: 0; z-index: 3; background: var(--panel); }
   .fvscreen .fvstaff svg.staff { min-width: 0; width: 100%; height: auto; max-height: 30dvh; }
   .fvnow { flex-direction: column; align-items: stretch; gap: 6px; padding: 6px 8px; }
   .fvhead { min-width: 0; max-width: none; grid-template-columns: auto auto 1fr; grid-template-areas: "label chord count"; align-items: baseline; gap: 10px; }

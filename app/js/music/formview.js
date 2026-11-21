@@ -126,3 +126,49 @@ export function staffBars(hands, k, spellOf, n = 2) {
   }
   return { $format: 'jazzlab-exercise/1', id: 'form-staff', time: [4, 4], dyn: [], bars };
 }
+
+// ---------- stage «Ноты»: the form walked event by event, no tempo ----------
+// An event = all your notes at one eighth slot of one bar (both hands together). The walk follows keyPlan from doneG (the
+// last event done, -1 before the first) and ends after the last event of the form: positions of the next chorus do not count.
+
+/** The event to press after doneG, as keyPlan returns it ({ g, bar, slot, target, tint }), or null at the end of the form. */
+export function walkTarget(hands, doneG) {
+  const NB = (hands.rh || hands.lh || []).length;
+  const p = keyPlan(hands, doneG);
+  return p && p.g < NB * PER ? p : null;
+}
+
+/** The keys of an event (target = { rh: [m], lh: [m] }), low to high, a pitch once. */
+export const eventKeys = (target) => [...new Set([...(target.rh || []), ...(target.lh || [])])].sort((a, b) => a - b);
+
+/** The key nearest to m among keys (a tie goes to the lower one); null for none. */
+export function nearestKey(keys, m) {
+  let best = null;
+  keys.forEach((k) => { if (best === null || Math.abs(k - m) < Math.abs(best - m)) best = k; });
+  return best;
+}
+
+/**
+ * One key pressed in the walk: keys = the event's keys, got = the ones already pressed (in any order), m = the key.
+ * → { res: 'hit' (one more of a chord) | 'done' (the event is complete) | 'again' (already pressed: ignored) | 'wrong',
+ *     got: the pressed keys after it, missing: the keys still to press, toward: for 'wrong', the missing key nearest to m }
+ */
+export function walkPress(keys, got, m) {
+  if (!keys.includes(m)) {
+    const missing = keys.filter((k) => !got.includes(k));
+    return { res: 'wrong', got: got.slice(), missing, toward: nearestKey(missing, m) };
+  }
+  if (got.includes(m)) return { res: 'again', got: got.slice(), missing: keys.filter((k) => !got.includes(k)), toward: null };
+  const g2 = [...got, m], missing = keys.filter((k) => !g2.includes(k));
+  return { res: missing.length ? 'hit' : 'done', got: g2, missing, toward: null };
+}
+
+/** The stage is passed when one whole form is walked with at most maxSlips wrong keys (the allowance of a clean chorus). */
+export const walkPassed = (slips, maxSlips) => slips <= maxSlips;
+
+/** The stage to open: a due review → 'tempo'; else the last one chosen for the item; else the first not passed. */
+export function openStage({ due, saved, prog }) {
+  if (due) return 'tempo';
+  if (saved === 'notes' || saved === 'tempo') return saved;
+  return prog.notes ? 'tempo' : 'notes';
+}
