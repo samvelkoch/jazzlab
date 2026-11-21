@@ -7,6 +7,7 @@ import { h, ICON, themeButton, midiChip, trackFootH } from '../ui.js';
 import { t, L, plural } from '../i18n.js';
 import { store, markActive, idle } from '../store.js';
 import { noteName } from '../music/notes.js';
+import { nameMode } from '../music/names.js';
 import { createKeyboard } from '../music/keyboard.js';
 import { parseChord, patSpell } from '../music/forms.js';
 import { paletteAt } from '../music/solo.js';
@@ -25,9 +26,8 @@ const pcm = (m) => ((m % 12) + 12) % 12;
 export function renderJam(root, { jam, forms, patterns, formId }) {
   const styles = jam.styles.map((s) => resolveStyle(s, patterns));
   const settings = { pianoSnd: true, ...store.get('settings', {}) };
-  const nm = settings.names || 'en';
-  const kbNames = nm === 'both' ? 'en' : nm; // keys: letters for 'both', 'off' stays off
-  const txtNames = nm === 'ru' ? 'ru' : 'en'; // text: 'off' and 'both' → letters
+  const kbNames = nameMode(settings, 'key'); // keys: letters for 'both', 'off' stays off
+  const txtNames = nameMode(settings, 'short'); // the strip and the palette line: 'off' and 'both' → letters
   const saved = store.get('jam', {});
   const firstForm = jam.forms.find((id) => forms[id]);
   const fid = formId && forms[formId] ? formId : saved.form && forms[saved.form] ? saved.form : firstForm;
