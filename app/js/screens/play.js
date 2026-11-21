@@ -18,7 +18,7 @@ export function renderPlay(root, { course, jamForm, rerender }) {
   const nRiffs = ((course && course.available) || []).filter((id) => /-e\d+$/.test(id)).length;
   const row = (href, title, line, onclick) => h('li', null,
     h('a.playrow', { href, onclick },
-      h('span.playbody', null, h('h2.playt', null, title), h('span.playline', null, line)),
+      h('div.playbody', null, h('h2.playt', null, title), h('span.playline', null, line)),
       h('span.playgo', { 'aria-hidden': 'true' }, '→')));
 
   root.replaceChildren(header,
