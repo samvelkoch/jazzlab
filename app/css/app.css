@@ -6,13 +6,13 @@
 :root {
   --bg: #ffffff; --panel: #ffffff; --sub: #ededed; --fg: #111111; --muted: #5f5f5f; --line: #111111; --hair: #cfcfcf;
   --accent: #111111; --accent-fg: #ffffff; --hot: #ffd400; --hot-fg: #111111; --hero: #ffd400; --hero-fg: #111111; --cta: #111111; --cta-fg: #ffffff;
-  --rh: #1b4fd6; --rh-soft: #dbe4fb; --lh: #cf3215; --lh-soft: #fbdcd3;
+  --rh: #5b2fd6; --rh-soft: #e4dcfb; --lh: #cf3215; --lh-soft: #fbdcd3;
   --ok: #0f6b33; --ok-soft: #dcefe2; --meh: #8a5200; --meh-soft: #f7e6c4; --bad: #b3123a; --bad-soft: #fadde4; --none: #dcdcdc;
-  --paper: #ffffff; --staff: #777777; --band: rgba(27, 79, 214, .12);
+  --paper: #ffffff; --staff: #777777; --band: rgba(91, 47, 214, .12);
   --ivory: #ffffff; --ivory-edge: #111111; --ebony: #111111; --ebony-top: #111111; --lbl: #5f5f5f;
-  --rh-key: #1b4fd6; --lh-key: #cf3215; --key-ink: #111111; --key-paper: #ffffff;
+  --rh-key: #5b2fd6; --lh-key: #cf3215; --key-ink: #111111; --key-paper: #ffffff;
   --on: #ffffff; /* text on solid ok / bad / hand-colour fills */
-  --k3: #1b4fd6; --k7: #cf3215; /* chord-tone roles (third, seventh): still the hand hues, kept as their own tokens */
+  --k3: #5b2fd6; --k7: #cf3215; /* chord-tone roles (third, seventh): still the hand hues, kept as their own tokens */
   --rule: 3px;
   --display: "Sofia Sans Extra Condensed", "Arial Narrow", system-ui, sans-serif;
   --body: "Sofia Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -25,13 +25,13 @@
 :root[data-theme="dark"] {
   --bg: #0e0e0f; --panel: #0e0e0f; --sub: #1e1e20; --fg: #f3f2ed; --muted: #a3a29c; --line: #f3f2ed; --hair: #3a3a3d;
   --accent: #f3f2ed; --accent-fg: #0e0e0f; --hot: #ffd400; --hot-fg: #111111; --hero: #ffd400; --hero-fg: #111111; --cta: #111111; --cta-fg: #ffffff;
-  --rh: #7ea6ff; --rh-soft: #1c2c52; --lh: #ff6a48; --lh-soft: #4f2014;
+  --rh: #b79bff; --rh-soft: #2c2052; --lh: #ff6a48; --lh-soft: #4f2014;
   --ok: #5fd08a; --ok-soft: #14301f; --meh: #e9b43a; --meh-soft: #3d3116; --bad: #ff6b82; --bad-soft: #481a25; --none: #303033;
-  --paper: #131314; --staff: #8d8c87; --band: rgba(126, 166, 255, .16);
+  --paper: #131314; --staff: #8d8c87; --band: rgba(183, 155, 255, .16);
   --ivory: #e9e8e3; --ivory-edge: #111111; --ebony: #0a0a0a; --ebony-top: #0a0a0a; --lbl: #5f5f5f;
-  --rh-key: #1b4fd6; --lh-key: #cf3215; --key-ink: #111111; --key-paper: #ffffff;
+  --rh-key: #5b2fd6; --lh-key: #cf3215; --key-ink: #111111; --key-paper: #ffffff;
   --on: #0e0e0f;
-  --k3: #7ea6ff; --k7: #ff6a48;
+  --k3: #b79bff; --k7: #ff6a48;
   color-scheme: dark;
 }
 /* a yellow block (the primary block, the «now» strip, the current cell / row): ink on yellow in both themes, so the
@@ -39,7 +39,7 @@
 .hot, .hero, .pitem[data-status="now"], .stepcard[data-kind="now"], .cprow.now, .fvnow, .fcell.cur, .drillpanel .dcard, .cyc.on, .lqcell.on, .qapair.on {
   --fg: #111111; --muted: #3d3a2a; --line: #111111; --hair: #111111; --bg: #ffffff; --panel: var(--hot); --sub: rgba(17, 17, 17, .1); --none: rgba(17, 17, 17, .18);
   --paper: #ffffff; --staff: #777777;
-  --accent: #111111; --accent-fg: #ffffff; --on: #ffffff; --rh: #1b4fd6; --lh: #b02a10; --rh-soft: #dbe4fb; --lh-soft: #fbdcd3;
+  --accent: #111111; --accent-fg: #ffffff; --on: #ffffff; --rh: #5b2fd6; --lh: #b02a10; --rh-soft: #e4dcfb; --lh-soft: #fbdcd3;
   --ok: #0f6b33; --meh: #6b4000; --bad: #a3102f; --ok-soft: #dcefe2; --meh-soft: #f7e6c4; --bad-soft: #fadde4;
   background: var(--hot); color: #111111; }
 
