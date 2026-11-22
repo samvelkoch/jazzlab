@@ -323,7 +323,11 @@ const DICT = {
     navPlay: 'Играть', playCap: 'Играть для удовольствия', playLead: 'Здесь нет зачёта и порядка. Играй что хочешь.',
     playJam: 'Аккомпанемент', playJamLine: 'Лёгкий бэнд играет форму, ты играешь правой что хочешь.',
     playRiffsLine: '{n} {w}: простучи и сыграй.', playRhythmW: 'короткий ритм|коротких ритма|коротких ритмов',
-    playChordsLine: 'Что значит C7 или Dm7b5 и как взять его рукой.', playWikiLine: 'Короткие заметки о блюзе, боссе и пьесах.'
+    playChordsLine: 'Что значит C7 или Dm7b5 и как взять его рукой.', playWikiLine: 'Короткие заметки о блюзе, боссе и пьесах.',
+    playCircle: 'Круг', playCircleLine: 'Аккорды наших пьес на одной картинке. Нажми и послушай.',
+    // «Круг» (circle.js): the circle of fifths
+    circleTitle: 'Круг', circleFree: 'Свободно', circleMajor: 'мажор', circleMinor: 'минор', circleTabsAria: 'Пьесы на круге',
+    circleSee: 'Посмотреть на круге'
   },
   en: {
     courses: 'Courses', soon: 'soon', step: 'Step', stepUpper: 'STEP', exercise: 'exercise', exerciseUpper: 'EXERCISE',
@@ -640,7 +644,11 @@ const DICT = {
     navPlay: 'Play', playCap: 'Play for fun', playLead: 'No tests and no order here. Play what you like.',
     playJam: 'Accompaniment', playJamLine: 'A light band plays the form, you play anything with your right hand.',
     playRiffsLine: '{n} {w}: tap them, then play.', playRhythmW: 'short rhythm|short rhythms',
-    playChordsLine: 'What C7 or Dm7b5 means and how your hand takes it.', playWikiLine: 'Short notes on blues, bossa and tunes.'
+    playChordsLine: 'What C7 or Dm7b5 means and how your hand takes it.', playWikiLine: 'Short notes on blues, bossa and tunes.',
+    playCircle: 'Circle', playCircleLine: 'The chords of our tunes in one picture. Tap and listen.',
+    // «Circle» (circle.js): the circle of fifths
+    circleTitle: 'Circle', circleFree: 'Free', circleMajor: 'major', circleMinor: 'minor', circleTabsAria: 'Tunes on the circle',
+    circleSee: 'See it on the circle'
   }
 };
 

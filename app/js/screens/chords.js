@@ -99,7 +99,7 @@ export function lessonStatus(l) {
   return { found: !!p.found, rhythm, all12: !!p.all12, done: !!p.found && rhythm };
 }
 
-// ---------- sound ----------
+// ---------- sound (playNotes / hushAll are also used by the circle screen) ----------
 const settings = () => ({ pianoSnd: true, ...store.get('settings', {}) });
 function play1(m, time, dur, v) {
   if (settings().pianoSnd && midiState().canPlay) {
@@ -108,7 +108,7 @@ function play1(m, time, dur, v) {
   }
   audio.pianoNote(m, time, dur, v);
 }
-function playNotes(midis, { arp = false, dur = 1.6, vel = 0.5, at = 0 } = {}) {
+export function playNotes(midis, { arp = false, dur = 1.6, vel = 0.5, at = 0 } = {}) {
   if (!midis.length) return;
   audio.ensureAudio();
   audio.preloadPiano(Math.min(...midis), Math.max(...midis));
@@ -116,7 +116,7 @@ function playNotes(midis, { arp = false, dur = 1.6, vel = 0.5, at = 0 } = {}) {
   midis.forEach((m, i) => play1(m, t0 + (arp ? i * 0.34 : i * 0.012), arp ? Math.max(0.9, dur - i * 0.2) : dur, vel));
   markActive();
 }
-const hushAll = () => { audio.hush(); silence(); idle(); };
+export const hushAll = () => { audio.hush(); silence(); idle(); };
 
 // ---------- shared pieces ----------
 function header({ back = '#/chords', kicker, title, mid = null, rerender }) {
