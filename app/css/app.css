@@ -1046,7 +1046,10 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .key[class*=" mk-"] .lbl { color: inherit; }
 /* jam and question / answer: «home» (where a phrase lands) = the ok green, «hangs» = a framed key (not the left-hand colour) */
 /* jam: the palette of the moment (the pale --hot tint, shared with the solo screen: .mk-pal below); home and hangs stay as they are */
-.jamscreen .key.mk-base, .qascreen .key.mk-base { background: var(--ok-key); color: #ffffff; box-shadow: none; }
+/* home is the solid --hot (yellow means «now» and home; green stays for «passed»), ink label and an ink badge */
+.jamscreen .key.mk-base, .qascreen .key.mk-base { background: var(--hot); color: #111111; box-shadow: none; }
+.jamscreen .key.mk-base .badge:not(:empty), .qascreen .key.mk-base .badge:not(:empty) { background: #111111; color: #ffffff; }
+.jamscreen .key.mk-base .lbl, .qascreen .key.mk-base .lbl { color: #111111; }
 .jamscreen .key.white.mk-seventh { background: var(--ivory); color: #111111; box-shadow: inset 0 0 0 4px #111111; }
 .jamscreen .key.black.mk-seventh { background: var(--ebony); color: #ffffff; box-shadow: inset 0 0 0 3px var(--ivory); }
 .jamscreen .key.white.mk-seventh .badge:not(:empty) { background: rgba(0, 0, 0, .1); }
@@ -1532,7 +1535,7 @@ main.wikimain { flex: 1; display: flex; flex-direction: column; gap: 22px; paddi
 .jamnowbody { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .jamends { font-size: 16px; font-weight: 600; color: var(--muted); }
 .jamends b { font-weight: 800; color: var(--fg); }
-.jamhome b { color: var(--ok); } .jamhang b { box-shadow: inset 0 0 0 2px var(--fg); padding: 0 4px; } /* as on the keys: home green, hangs framed */
+.jamhome b { background: var(--hot-fg); color: var(--hot); padding: 0 4px; } .jamhang b { box-shadow: inset 0 0 0 2px var(--fg); padding: 0 4px; } /* as on the keys: home an ink chip with yellow letters, hangs framed */
 .jampal { font-size: 14px; line-height: 1.4; }
 .jamscreen .jamgrid:not(.long) { flex: 1 0 auto; }
 .jamscreen .jamgrid.long { min-height: 140px; }
