@@ -3,7 +3,7 @@
 // Rounds are graded ok (first try, no replay) / meh (a slip or a replay) / miss, like "Find the note" (ear.js); the
 // result goes into the same item progress (done on pass, best accuracy, spaced review).
 // The card says the task in plain words (no note names, no "m3"): intervals are counted in steps (keys, black ones
-// too) with a mood word. A wrong answer is said big on the card; after the answer the keys show it (given note blue,
+// too) with a mood word. A wrong answer is said big on the card; after the answer the keys show it (given note violet,
 // steps numbered, answer green) and the next question comes after a visible countdown, or after a reveal on Next.
 import { h, ICON, themeButton, midiChip, sessionChip, trackFootH } from '../ui.js';
 import { t, L, getLang } from '../i18n.js';
