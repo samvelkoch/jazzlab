@@ -172,8 +172,8 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) { sentMidi = true; return; } }
     audio.pianoNote(m, time, dur, v);
   }
-  // the bass line: the double bass from the speakers; with the band on the MIDI piano it stays there, in time with the chords
-  function bass1(m, time, dur, v) { if (settings.pianoSnd && midiState().canPlay) play1(m, time, dur, v); else audio.bassNote(m, time, dur, v); }
+  // the bass line is always the double bass, from the speakers like the drums, also when the chords go to a connected MIDI piano
+  function bass1(m, time, dur, v) { audio.bassNote(m, time, dur, v); }
   function partnerNote(m, time, dur, v) {
     if (run.partner === 'sax') audio.saxNote(m, time, dur, v); else if (run.partner === 'clarinet') audio.clarinetNote(m, time, dur, v); else play1(m, time, dur, v);
     queue.push({ t: time, kon: m }, { t: time + dur, koff: m });

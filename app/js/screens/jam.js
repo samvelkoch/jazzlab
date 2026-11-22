@@ -203,8 +203,8 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) { sentMidi = true; return; } }
     audio.pianoNote(m, time, dur, v);
   }
-  // the bass line: the double bass from the speakers; with the band on the MIDI piano it stays there, in time with the chords
-  function bass1(m, time, dur, v) { if (settings.pianoSnd && midiState().canPlay) play1(m, time, dur, v); else audio.bassNote(m, time, dur, v); }
+  // the bass line is always the double bass, from the speakers like the drums, also when the chords go to a connected MIDI piano
+  function bass1(m, time, dur, v) { audio.bassNote(m, time, dur, v); }
   const fb = (html) => { fbEl.innerHTML = html; };
   function paintBpm() { bpmOut.innerHTML = `♩ ${bpmOf()}`; }
   function setBpm(v) { if (run) return; st.bpm[st.style.id] = Math.max(40, Math.min(200, Math.round(v))); save(); paintBpm(); }
