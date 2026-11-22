@@ -35,6 +35,7 @@ export function ensureAudio() {
     newBus();
     const sb = ac.createBufferSource(); sb.buffer = ac.createBuffer(1, 1, 22050); sb.connect(ac.destination); sb.start(0);
     if (wanted) preloadPiano(wanted[0], wanted[1]);
+    if (saxWanted) preloadSax(saxWanted[0], saxWanted[1]);
   }
   if (ac.state !== 'running') { const p = ac.resume(); if (p && p.catch) p.catch(() => {}); }
   return true;
@@ -111,6 +112,66 @@ export function pianoNote(m, t, dur, vel) {
     o.connect(og); og.connect(lp); o.start(t); o.stop(t + dur + 0.4);
   });
   lp.connect(g); g.connect(bus);
+}
+
+// ---------- sampled tenor saxophone (MTG Solo Saxophones, tenor, f layer; CC BY 4.0, see app/samples/sax/CREDITS.md) ----------
+// One sample per key, MIDI 44..76 (3 s, mono); map.json gives each key's tuning (cents) and level (dB). A note outside the
+// range is moved by octaves into it. Until its sample (and the map) has loaded, a note falls back to the piano: never a synth sax.
+export const SAX_LO = 44, SAX_HI = 76;
+const SAX_DIR = new URL('../../samples/sax/', import.meta.url);
+const saxBufs = new Map(); // midi -> AudioBuffer
+const saxLoading = new Map(); // midi -> Promise
+let saxMap = null, saxMapLoading = null, saxWanted = null;
+const saxKey = (m) => { let x = Math.round(m); while (x < SAX_LO) x += 12; while (x > SAX_HI) x -= 12; return x; };
+function loadSaxMap() {
+  if (saxMap || saxMapLoading || !ac) return saxMapLoading;
+  saxMapLoading = fetch(new URL('map.json', SAX_DIR))
+    .then((r) => { if (!r.ok) throw new Error('sax map: HTTP ' + r.status); return r.json(); })
+    .then((j) => { saxMap = j.keys || {}; })
+    .catch((err) => { console.warn('sax map', err); })
+    .finally(() => { saxMapLoading = null; });
+  return saxMapLoading;
+}
+function loadSax(k) {
+  if (saxBufs.has(k) || saxLoading.has(k) || !ac) return saxLoading.get(k);
+  const pr = fetch(new URL(k + '.mp3', SAX_DIR))
+    .then((r) => { if (!r.ok) throw new Error(k + ': HTTP ' + r.status); return r.arrayBuffer(); })
+    .then((ab) => new Promise((res, rej) => ac.decodeAudioData(ab, res, rej)))
+    .then((buf) => { saxBufs.set(k, buf); })
+    .catch((err) => { console.warn('sax sample', err); })
+    .finally(() => saxLoading.delete(k));
+  saxLoading.set(k, pr);
+  return pr;
+}
+/** Load the sax samples for a pitch range (MIDI numbers, moved into 44..76). Safe to call before audio is unlocked. */
+export function preloadSax(lo = SAX_LO, hi = SAX_HI) {
+  saxWanted = [lo, hi];
+  if (!ac) return Promise.resolve();
+  const jobs = [loadSaxMap()];
+  const ks = new Set();
+  for (let m = lo; m <= hi; m++) ks.add(saxKey(m));
+  ks.forEach((k) => jobs.push(loadSax(k)));
+  return Promise.all(jobs);
+}
+/** The sample for this pitch and the tuning map have arrived. */
+export const saxReady = (m) => !!saxMap && saxBufs.has(saxKey(m));
+/** A tenor sax note: vel 0..1, a 25 ms attack and an 80 ms release at t + dur; falls back to pianoNote until loaded. */
+export function saxNote(m, t, dur, vel) {
+  if (!ac) return;
+  const k = saxKey(m);
+  if (!saxReady(k)) { loadSaxMap(); loadSax(k); pianoNote(m, t, dur, vel); return; }
+  const info = saxMap[String(k)] || {};
+  const src = ac.createBufferSource(), g = ac.createGain();
+  src.buffer = saxBufs.get(k);
+  src.detune.value = info.tune || 0;
+  const peak = Math.min(1.5, vel * Math.pow(10, (info.vol || 0) / 20));
+  const end = t + Math.max(0.05, dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(peak, t + 0.025);
+  g.gain.setValueAtTime(peak, end);
+  g.gain.linearRampToValueAtTime(0.0001, end + 0.08);
+  src.connect(g); g.connect(bus);
+  src.start(t); src.stop(end + 0.1);
 }
 
 export function click(t, strong) {

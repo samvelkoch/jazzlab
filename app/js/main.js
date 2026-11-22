@@ -1,6 +1,7 @@
 // Boot + hash router.
 //   #/              the current chapter (settings.chapter, else blues)   #/track/<id>   a chapter (only a chapter row on «Путь» sets settings.chapter)
-//   #/play          free play: accompaniment, riffs, chords, the circle, reference
+//   #/play          free play: jam session, accompaniment, riffs, chords, the circle, reference
+//   #/session, #/session/<formId>  the jam session: the band, a partner (sax or a second pianist) and you take turns
 //   #/circle, #/circle/<blues|bossa|std|free>  the circle of fifths with the chords of a tune (content/circle.json)
 //   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | melody | solo | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
@@ -35,6 +36,8 @@ import { renderMelody } from './screens/melody.js';
 import { renderPerform } from './screens/perform.js';
 import { renderSolo } from './screens/solo.js';
 import { renderJam } from './screens/jam.js';
+import { renderSession } from './screens/session.js';
+import { PARTNER_LICKS } from './music/session.js';
 import { renderDiag } from './screens/diag.js';
 import { renderChordsHub, renderDecoder, renderKeys, renderLesson, renderPractice } from './screens/chords.js';
 import { compExercise } from './music/chord-ex.js';
@@ -160,7 +163,7 @@ async function route() {
       cleanup = renderExercise(root, { ex, rerender });
     } else if (hash === '/play') {
       const { index, course } = await content();
-      // the accompaniment row opens the first form of the learner's current chapter
+      // the jam and accompaniment rows open the first form of the learner's current chapter
       const model = await trackModel(homeChapter(store.get('settings', {}), chaptersOf(index))).catch(() => null);
       document.title = `${t('navPlay')} · Jazzlab`;
       renderPlay(root, { course, jamForm: model ? jamFormOf(model) : null, rerender });
@@ -285,6 +288,19 @@ async function route() {
       await Promise.all([...jam.forms.map(async (f) => { forms[f] = await get(`forms/${f}.json`); }), ...[...patIds].map(async (p) => { patterns[p] = await get(`patterns/${p}.json`); })]);
       document.title = `${t('jamTitle')} · Jazzlab`;
       cleanup = renderJam(root, { jam, forms, patterns, formId });
+    } else if (/^\/session(?:\/[a-z0-9-]+)?$/.test(hash)) {
+      // the jam session: jam.json's forms and styles, the partner's licks, the form's tune (jam.melodies) and its ending exercise
+      const jam = await get('jam.json'), formId = hash.split('/')[2] || null;
+      const forms = {}, patterns = {}, patIds = new Set(jam.styles.flatMap((s) => (s.bass || []).map((c) => c.pattern).filter(Boolean)));
+      const licks = [];
+      await Promise.all([...jam.forms.map(async (f) => { forms[f] = await get(`forms/${f}.json`); }), ...[...patIds].map(async (p) => { patterns[p] = await get(`patterns/${p}.json`); }),
+        ...PARTNER_LICKS.map(async (l, i) => { licks[i] = await get(`licks/${l}.json`); })]);
+      const saved = store.get('session', {});
+      const fid = formId && forms[formId] ? formId : saved.form && forms[saved.form] ? saved.form : jam.forms.find((id) => forms[id]);
+      const melId = jam.melodies && jam.melodies[fid];
+      const [melody, ending] = await Promise.all([melId ? get(`melodies/${melId}.json`) : null, forms[fid].ending ? loadExercise(forms[fid].ending) : null]);
+      document.title = `${t('sessTitle')} · Jazzlab`;
+      cleanup = renderSession(root, { jam, forms, patterns, fid, melody, ending, licks });
     } else {
       const { index } = await content();
       const chapters = chaptersOf(index);

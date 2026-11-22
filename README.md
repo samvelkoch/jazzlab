@@ -82,6 +82,8 @@ guide/                    the original one-page keyboard guide
 - Blue Bossa and "A standard in F" are original pieces written in the style; the Reference tells which is which.
 - Reference articles cite their sources and link outward (Wikipedia, IMSLP, Commons images with licences).
 - Piano sound: Salamander Grand Piano V2 by Alexander Holm (CC-BY 3.0), see `app/samples/piano/CREDITS.md`.
+- Tenor saxophone (the jam partner): MTG Solo Saxophones, tenor, f layer, by the Music Technology Group, Universitat Pompeu Fabra;
+  SFZ by kinwie; CC BY 4.0, https://github.com/sfzinstruments/MTG.SoloSax (cut to 3 s, converted to mono MP3), see `app/samples/sax/CREDITS.md`.
 
 ## Run and test locally
 

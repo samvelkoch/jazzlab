@@ -308,6 +308,16 @@ const DICT = {
     jamHint: 'Выбери стиль и нажми «Старт». Играй правой рукой что хочешь: подсвечены ноты, которые звучат сейчас.',
     jamHintPlay: 'Здесь нет ошибок. «Дом» звучит как конец фразы, «висит» просит продолжения.',
     jamCardAbout: 'Лёгкий фон: бас, аккорды, барабаны. Ты играешь правой рукой что хочешь, без задания и оценки.', jamCardGo: 'Играть с фоном'
+    // jam session (session.js): the band, a partner and you take turns
+    , sessTitle: 'Джем', sessKicker: 'ИГРАЕМ ПО ОЧЕРЕДИ', sessBand: 'Бэнд', sessBandLine: 'бас · аккорды · барабаны', sessBandDrums: 'барабаны',
+    sessPartner: 'Партнёр', sessSax: 'Саксофон', sessPiano: 'Пианист', sessYou: 'Ты', sessFormat: 'Формат',
+    sessFmt_qa: 'Вопрос — ответ', sessFmt_fours: 'Четвёрки', sessFmt_session: 'Сессия',
+    sessPlays_sax: 'Играет саксофон', sessPlays_piano: 'Играет пианист', sessPlays_drums: 'Играют барабаны', sessYourTurn: 'Твоя очередь', sessReady: 'Готовься',
+    sessDone: 'Сессия сыграна. Ещё раз?', sessRound: 'круг {n} из {m}',
+    sessSec_head: 'Тема', sessSec_soloSax: 'Соло саксофона', sessSec_soloPiano: 'Соло пианиста', sessSec_yourSolo: 'Твоё соло', sessSec_fours: 'Четвёрки', sessSec_headOut: 'Тема и конец',
+    sessHint: 'Нажми «Старт». Партнёр сыграет фразу, потом твоя очередь: ответь ему чем хочешь.',
+    sessHintFours: 'По четыре такта: партнёр, ты, барабаны, ты.',
+    sessHintSession: 'Целая сессия: тема, соло партнёра, твоё соло, четвёрки и конец. Около {n} минут.'
     // the home screen «Путь» (track.js): the poster and the steps
     , pTab_path: 'Путь', pTab_all: 'Все упражнения', pTab_prog: 'Прогресс', pTabsAria: 'Главный экран',
     pToday: 'Урок на сегодня', pMixReview: 'повторить', pMixNew: 'новое', pMinW: 'минута|минуты|минут',
@@ -321,7 +331,8 @@ const DICT = {
     pGen_blues: 'блюза', pGen_bossa: 'боссы', pGen_std: 'стандартов',
     // «Играть» (play.js): free play, no passing and no order
     navPlay: 'Играть', playCap: 'Играть для удовольствия', playLead: 'Здесь нет зачёта и порядка. Играй что хочешь.',
-    playJam: 'Аккомпанемент', playJamLine: 'Лёгкий бэнд играет форму, ты играешь правой что хочешь.',
+    playJam: 'Аккомпанемент', playJamLine: 'Только бэнд: играй один, сколько хочешь.',
+    playSession: 'Джем', playSessionLine: 'Бэнд и партнёр: саксофон или второй пианист. Играете по очереди.',
     playRiffsLine: '{n} {w}: простучи и сыграй.', playRhythmW: 'короткий ритм|коротких ритма|коротких ритмов',
     playChordsLine: 'Что значит C7 или Dm7b5 и как взять его рукой.', playWikiLine: 'Короткие заметки о блюзе, боссе и пьесах.',
     playCircle: 'Круг', playCircleLine: 'Аккорды наших пьес на одной картинке. Нажми и послушай.',
@@ -629,6 +640,16 @@ const DICT = {
     jamHint: 'Pick a style and press Start. Play anything with your right hand: the lit keys are the notes that sound now.',
     jamHintPlay: 'There are no mistakes here. «Home» sounds like the end of a phrase, «hangs» asks for more.',
     jamCardAbout: 'A light band: bass, chords, drums. You play anything with your right hand, no task and no score.', jamCardGo: 'Play with the band'
+    // jam session (session.js): the band, a partner and you take turns
+    , sessTitle: 'Jam', sessKicker: 'TAKING TURNS', sessBand: 'Band', sessBandLine: 'bass · chords · drums', sessBandDrums: 'drums',
+    sessPartner: 'Partner', sessSax: 'Saxophone', sessPiano: 'Pianist', sessYou: 'You', sessFormat: 'Format',
+    sessFmt_qa: 'Question — answer', sessFmt_fours: 'Fours', sessFmt_session: 'Session',
+    sessPlays_sax: 'Sax plays', sessPlays_piano: 'Pianist plays', sessPlays_drums: 'Drums play', sessYourTurn: 'Your turn', sessReady: 'Get ready',
+    sessDone: 'Session played. Again?', sessRound: 'chorus {n} of {m}',
+    sessSec_head: 'Head', sessSec_soloSax: 'Sax solo', sessSec_soloPiano: 'Piano solo', sessSec_yourSolo: 'Your solo', sessSec_fours: 'Fours', sessSec_headOut: 'Head and ending',
+    sessHint: 'Press Start. The partner plays a phrase, then it is your turn: answer with anything you like.',
+    sessHintFours: 'Four bars each: partner, you, drums, you.',
+    sessHintSession: 'A whole session: the head, the partner\'s solo, your solo, fours and the ending. About {n} minutes.'
     // the home screen «Path» (track.js): the poster and the steps
     , pTab_path: 'Path', pTab_all: 'All exercises', pTab_prog: 'Progress', pTabsAria: 'Home screen',
     pToday: 'Today\'s lesson', pMixReview: 'to review', pMixNew: 'new', pMinW: 'minute|minutes',
@@ -642,7 +663,8 @@ const DICT = {
     pGen_blues: 'Blues', pGen_bossa: 'Bossa nova', pGen_std: 'Standards',
     // «Play» (play.js): free play, no passing and no order
     navPlay: 'Play', playCap: 'Play for fun', playLead: 'No tests and no order here. Play what you like.',
-    playJam: 'Accompaniment', playJamLine: 'A light band plays the form, you play anything with your right hand.',
+    playJam: 'Accompaniment', playJamLine: 'Just the band: play alone as long as you like.',
+    playSession: 'Jam', playSessionLine: 'The band and a partner: a sax or a second pianist. You take turns.',
     playRiffsLine: '{n} {w}: tap them, then play.', playRhythmW: 'short rhythm|short rhythms',
     playChordsLine: 'What C7 or Dm7b5 means and how your hand takes it.', playWikiLine: 'Short notes on blues, bossa and tunes.',
     playCircle: 'Circle', playCircleLine: 'The chords of our tunes in one picture. Tap and listen.',

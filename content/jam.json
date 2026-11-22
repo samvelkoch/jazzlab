@@ -1,6 +1,8 @@
 {
   "$format": "jazzlab-jam/1",
   "forms": ["blues-c", "blues-c-ta", "tinroof-c", "blue-bossa", "corcovado-c", "ipanema-f", "wave-d", "std-f", "aim-f", "bbb-g", "hsr-f", "sgb-f", "tft-f"],
+  "melodies": { "blues-c": "stl-c", "tinroof-c": "tinroof-c", "blue-bossa": "bossa-cm", "std-f": "std-f", "aim-f": "aim-f",
+    "bbb-g": "bbb-g", "hsr-f": "hsr-f", "sgb-f": "sgb-f", "tft-f": "tft-f" },
   "simple": {
     "blues-c": { "palette": { "mode": "scale", "scale": "blues", "root": "C" } },
     "blues-c-ta": { "palette": { "mode": "scale", "scale": "blues", "root": "C" } },

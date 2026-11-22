@@ -552,6 +552,7 @@ generator `app/js/music/jam.js` (pure); spec `docs/specs/2026-11-21-accompanimen
 
 ```
 { "forms": [ids of content/forms, in menu order],
+  "melodies": { "<formId>": "<content/melodies id>" },                  // optional: the tune of a form, the jam session's head
   "simple": { "<formId>": { "palette": <as solo.palette> } },          // «одна гамма»; a form without one has only «по аккордам»
   "styles": [ { "id", "title": {ru,en}, "tempo", "swing", "drums": "swing" | "straight" | "bossa", "drumGain", "walk",
                 "bass": [ { "id", "level": 1..3, "pattern": "<content/patterns id>" } | { "id", "level", "events": [{ "t", "d", "deg", "stac"? }] } ],
@@ -574,7 +575,29 @@ generator `app/js/music/jam.js` (pure); spec `docs/specs/2026-11-21-accompanimen
   last bar of each chorus (and, with «много», now and then on the last bar of a 4-bar block).
 - Styles: `slow-blues`, `swing` (walking bass), `boogie`, `bossa`, `ballad`. Default style of a form: `bossa` for a bossa
   form, `slow-blues` for a 12-bar form, else `swing`. Choices persist in the store under `jam`
-  (`{ style, form, vol, variety, mode, bpm: { [style]: n } }`). Check: `node tests/jam.test.mjs`.
+  (`{ style, form, vol, variety, mode, bpm: { [style]: n }, open }`; `open` = «Настройки» unfolded). Check: `node tests/jam.test.mjs`.
+
+### Джем (jam session): `#/session`
+
+The band of the accompaniment (same `jam.json` forms and styles) plus a partner, taking turns with the learner; nothing is
+judged or recorded. Route `#/session` and `#/session/<formId>`; screen `app/js/screens/session.js`; schedule and partner
+notes `app/js/music/session.js` (pure, `tests/session.test.mjs`); spec `docs/specs/2026-11-22-jam-session-design.md`.
+
+- Formats: «Вопрос — ответ» (`qa`: 2 bars partner, 2 bars you), «Четвёрки» (`fours`: 4 bars each — partner, you, drums,
+  you; the cycle runs on across choruses), «Сессия» (`session`: one chorus each of head, partner solo, your solo, fours,
+  head out, then the ending; it stops by itself).
+- Partner: tenor sax (samples `app/samples/sax`, MIDI 44–76; its notes sit in 50..74) or a second pianist (72..96, above the
+  learner's C4..C6). Phrases are moved by whole octaves into the range.
+- Where the partner's notes come from (nothing is written out by hand): the phrase generators `makeCall` / `makeMotif`
+  (`music/solo.js`) over the bar's chord scale; the course licks of `PARTNER_LICKS` (chord-relative only, through
+  `lickNotes` over the bar's chord: the blues licks over a dominant chord of a blues form, the dorian ones over a minor
+  chord); the head = the tune named in `jam.json` `melodies` (its `form` must be that form, one bar per form bar), else a
+  partner solo; the ending = the form's `ending` exercise (the band plays it, the partner its top voice), else one bar on
+  the first chord (bass root, shell, the partner on its root). A solo is a chain of phrases, each followed by at least
+  half a bar of rest.
+- Drum turn: the band's bass and chords rest; the style's groove goes on with fills from `fillHits` (the last bar a fill
+  over the whole bar). During your turn the band keeps playing.
+- Choices persist in the store under `session` (`{ form, style, vol, format, partner, bpm: { [style]: n }, open }`).
 
 ## Circle of fifths: `content/circle.json` (`jazzlab-circle/1`)
 

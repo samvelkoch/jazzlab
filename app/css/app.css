@@ -1559,6 +1559,54 @@ main.wikimain { flex: 1; display: flex; flex-direction: column; gap: 22px; paddi
   .jamscreen .fgrid.long { min-height: 0; overflow: visible; }
 }
 
+/* «Настройки» under a disclosure (jam.js, session.js): a caption row with a +/− at the left, the controls under it */
+.jamset { flex: none; min-width: 0; border-top: 1px solid var(--fg); }
+.jamset > summary { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; list-style: none;
+  font: 700 var(--t-cap)/1.3 var(--body); text-transform: uppercase; letter-spacing: .12em; color: var(--fg); }
+.jamset > summary::-webkit-details-marker { display: none; }
+.jamset > summary::before { content: "+"; width: 14px; font: 800 var(--t-d1)/1 var(--display); }
+.jamset[open] > summary::before { content: "−"; }
+.jamset > .jamrow { padding: 2px 0 12px; }
+
+/* ---------- jam session (session.js) ----------
+   The stage: three ruled blocks (band, partner, you), the one who plays now is the yellow .hot block; the format tabs
+   (the path's text tabs); the yellow turn strip: the big word, a square per bar of the turn, the chord, the section. */
+.sesspanel { gap: 12px; }
+.sstage { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 2px solid var(--fg); }
+.sblock { min-width: 0; display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; }
+.sblock + .sblock { border-left: 2px solid var(--fg); }
+.sname { font: 800 var(--t-d2)/.92 var(--display); text-transform: uppercase; }
+.sline { font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--muted); }
+.stoggle { display: flex; flex-wrap: wrap; align-items: center; }
+.stoggle > button { min-height: 32px; padding: 2px 0 0; border: 0; background: transparent; color: var(--muted); cursor: pointer;
+  font: 700 14px/1 var(--body); text-transform: uppercase; letter-spacing: .06em; }
+.stoggle > button + button::before { content: "|"; display: inline-block; margin: 0 8px; color: var(--muted); text-decoration: none; }
+.stoggle > button[aria-pressed="true"] { color: var(--fg); text-decoration: underline 3px; text-underline-offset: 5px; }
+.stoggle > button:hover { color: var(--fg); }
+.seg.big.sfmt { flex: none; }
+.sstrip { flex: none; align-items: center; gap: 18px; padding: 10px 14px; }
+.sturn { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.sword { font: 900 clamp(34px, 5.5dvh, 60px)/.9 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
+.ssquares { display: flex; flex-wrap: wrap; gap: 4px; min-height: 12px; }
+.ssquares i { width: 12px; height: 12px; border: 2px solid var(--fg); }
+.ssquares i.on { background: var(--fg); }
+.sside { flex: none; max-width: 45%; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; }
+.ssec { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.ssec:empty { display: none; }
+@media (max-width: 640px) {
+  .sesspanel { gap: 10px; }
+  .sblock { padding: 6px 8px; gap: 2px; }
+  .sname { font-size: 20px; }
+  .sline { font-size: 11px; }
+  .stoggle > button { min-height: 28px; font-size: 11px; letter-spacing: .02em; }
+  .stoggle > button + button::before { margin: 0 4px; }
+  .sessionscreen .sstrip { flex-direction: row; align-items: center; gap: 10px; padding: 8px 10px; }
+  .sword { font-size: 30px; }
+  .ssquares i { width: 11px; height: 11px; }
+  .sessionscreen .schord { font-size: 30px; }
+  .ssec { font-size: 12px; }
+}
+
 /* ---------- home «Путь» (track.js) ----------
    Desktop: a sticky yellow poster on the left (where you are + today's lesson, the screen's one primary block), the
    list on the right (course tabs, text tabs Путь / Все упражнения / Прогресс). Phone (<=820px): poster on top. */
