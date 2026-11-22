@@ -21,6 +21,19 @@ const VOL = [0.25, 0.45, 0.65, 0.85, 1]; // background volume, 5 steps
 const KB_LO = 60, KB_HI = 84; // C4..C6
 const pcm = (m) => ((m % 12) + 12) % 12;
 
+/** The keyboard marks of a palette (shared with the jam session screen): home keys (yellow), hanging keys (framed),
+ *  the rest of the palette (an ink chip), for the keys lo..hi. ek = endKeys(...), pal = paletteAt(...). */
+export function paletteMarks(ek, pal, lo, hi) {
+  const map = {};
+  for (let m = lo; m <= hi; m++) {
+    const pc = pcm(m);
+    if (ek.home.has(pc)) map[m] = { cls: 'base', label: t('qaHomeKey') };
+    else if (ek.hang.has(pc)) map[m] = { cls: 'seventh', label: t('qaHangKey') };
+    else if (pal.pcs.has(pc)) map[m] = { cls: 'pal' };
+  }
+  return map;
+}
+
 /** jam = content/jam.json, forms = { id: form } (every id of jam.forms), patterns = { id: pattern } (those the styles name),
  *  formId = the form asked for in the route (or null). Returns the cleanup function. */
 export function renderJam(root, { jam, forms, patterns, formId }) {
@@ -41,10 +54,11 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
     vol: Math.max(1, Math.min(5, saved.vol || 3)),
     variety: saved.variety === 'high' ? 'high' : 'low',
     mode: saved.mode === 'simple' && simple ? 'simple' : 'chords',
-    bpm: { ...(saved.bpm || {}) }
+    bpm: { ...(saved.bpm || {}) },
+    open: !!saved.open // «Настройки» open or closed
   };
   const bpmOf = () => st.bpm[st.style.id] || st.style.tempo;
-  const save = () => store.set('jam', { style: st.style.id, form: fid, vol: st.vol, variety: st.variety, mode: !simple && saved.mode === 'simple' ? 'simple' : st.mode, bpm: st.bpm }); // a form without a simple palette keeps the choice for the others
+  const save = () => store.set('jam', { style: st.style.id, form: fid, vol: st.vol, variety: st.variety, mode: !simple && saved.mode === 'simple' ? 'simple' : st.mode, bpm: st.bpm, open: st.open }); // a form without a simple palette keeps the choice for the others
   const back = (() => { try { return sessionStorage.getItem('jamBack') || '#/play'; } catch (e) { return '#/play'; } })(); // free play: back to «Играть» unless a screen set jamBack
 
   // ---------- layout ----------
@@ -86,10 +100,12 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
   const varSeg = seg([['low', t('jamVarLow')], ['high', t('jamVarHigh')]], st.variety, (v) => { st.variety = v; save(); }, t('jamVariety'), true);
   const modeSeg = seg([['chords', t('jamModeChords')], ['simple', t('jamModeSimple'), simple ? null : t('jamNoSimple')]], st.mode, (v) => { st.mode = v; save(); palKey = ''; paintAt(curBar, curSlot); }, t('jamMode'), false);
   const lab = (text, el) => h('div.jamctl', null, h('span.fvlabel', null, text), el);
-  const controls = h('div.jamcontrols', null,
-    styleSeg,
+  // the settings live under «Настройки» (closed by default, remembered): the style, the strip, the keys and Start stay in view
+  const setBox = h('details.jamset', { open: st.open, ontoggle: () => { st.open = setBox.open; save(); } },
+    h('summary', null, t('settings')),
     h('div.jamrow', null, lab(t('jamForm'), formSel), lab(t('jamTempo'), tempoBox), lab(t('jamVol'), volBox),
       lab(t('jamVariety'), varSeg), lab(t('jamMode'), modeSeg)));
+  const controls = h('div.jamcontrols', null, styleSeg, setBox);
 
   // the «Now / Next» strip
   const nowChord = h('b.fvchord'), endLine = h('div.jamends'), palLine = h('div.solopal.jampal');
@@ -132,6 +148,7 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
 
   // ---------- keyboard: palette, home and hanging keys ----------
   audio.preloadPiano(33, KB_HI + 2); // the band's bass from A1, the keys up to C6
+  audio.preloadVoice('bass'); // the band's bass: a double bass (the piano until it has loaded)
   const kb = createKeyboard(kbEl, [KB_LO, KB_HI], { names: kbNames, exact: true, center: 72, onPress: (m) => {
     audio.ensureAudio(); audio.pianoNote(m, audio.now() + 0.01, 0.5, 0.55); lastKey = performance.now(); markActive();
   } });
@@ -161,14 +178,7 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
     if (key === palKey) return;
     palKey = key;
     const ek = endKeys(st.mode, pal);
-    const map = {};
-    for (let m = KB_LO; m <= KB_HI; m++) {
-      const pc = pcm(m);
-      if (ek.home.has(pc)) map[m] = { cls: 'base', label: t('qaHomeKey') };
-      else if (ek.hang.has(pc)) map[m] = { cls: 'seventh', label: t('qaHangKey') };
-      else if (pal.pcs.has(pc)) map[m] = { cls: 'pal' };
-    }
-    kb.mark(map, { reveal: false });
+    kb.mark(paletteMarks(ek, pal, KB_LO, KB_HI), { reveal: false });
     // now: the chord, home / hang, the palette line
     nowChord.textContent = pal.chord;
     const from = st.mode === 'simple' ? pal.root : parseChord(pal.chord).pc;
@@ -193,6 +203,8 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) { sentMidi = true; return; } }
     audio.pianoNote(m, time, dur, v);
   }
+  // the bass line: the double bass from the speakers; with the band on the MIDI piano it stays there, in time with the chords
+  function bass1(m, time, dur, v) { if (settings.pianoSnd && midiState().canPlay) play1(m, time, dur, v); else audio.bassNote(m, time, dur, v); }
   const fb = (html) => { fbEl.innerHTML = html; };
   function paintBpm() { bpmOut.innerHTML = `♩ ${bpmOf()}`; }
   function setBpm(v) { if (run) return; st.bpm[st.style.id] = Math.max(40, Math.min(200, Math.round(v))); save(); paintBpm(); }
@@ -233,7 +245,7 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
         const vg = VOL[st.vol - 1], dg = vg * (r.style.drumGain == null ? 1 : r.style.drumGain);
         groove(slot, time, { swing: r.style.drums === 'swing', style: r.style.drums === 'bossa' ? 'bossa' : null, bar: barG, gain: dg });
         if (cb.fill) fillHits(r.style, slot).forEach((x) => audio.drum(x.kind, time, x.v * dg));
-        cb.notes.forEach((n) => { if (n.t === slot) play1(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : n.d * r.beat / 2 * 0.92, n.v * vg); });
+        cb.notes.forEach((n) => { if (n.t === slot) (n.part === 'bass' ? bass1 : play1)(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : n.d * r.beat / 2 * 0.92, n.v * vg); });
         if (slot === 0) queue.push({ t: time, barStart: bar, chorus });
         queue.push({ t: time, g });
       }

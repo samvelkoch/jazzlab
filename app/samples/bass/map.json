@@ -1,0 +1,61 @@
+{
+"$note": "Double bass, pizzicato, a sample every minor third (MIDI number = sounding pitch); other notes are pitch-shifted from the nearest one. tune = cents to add at playback (measured), vol = dB to add so every note has the same mean level. From Meatbass (Karoryfer Samples; played by Drogomir Smolken, recorded by Ludwik Zamenhof), CC0 1.0: https://github.com/sfzinstruments/karoryfer.meatbass",
+"keys": {
+"21": {
+"tune": -10,
+"vol": -0.6
+},
+"24": {
+"tune": 32,
+"vol": -3.5
+},
+"27": {
+"tune": 15,
+"vol": 0.1
+},
+"30": {
+"tune": -3,
+"vol": 3.1
+},
+"33": {
+"tune": 0,
+"vol": -0.2
+},
+"36": {
+"tune": 4,
+"vol": -3.2
+},
+"39": {
+"tune": -3,
+"vol": -0.7
+},
+"42": {
+"tune": -3,
+"vol": 5.3
+},
+"45": {
+"tune": 22,
+"vol": 2.6
+},
+"48": {
+"tune": 4,
+"vol": 6.2
+},
+"51": {
+"tune": 15,
+"vol": 3.6
+},
+"54": {
+"tune": -47,
+"vol": 5.9
+},
+"57": {
+"tune": -4,
+"vol": 4.0
+},
+"60": {
+"tune": 15,
+"vol": 4.9
+}
+}
+}

@@ -35,6 +35,8 @@ export function ensureAudio() {
     newBus();
     const sb = ac.createBufferSource(); sb.buffer = ac.createBuffer(1, 1, 22050); sb.connect(ac.destination); sb.start(0);
     if (wanted) preloadPiano(wanted[0], wanted[1]);
+    if (saxWanted) preloadSax(saxWanted[0], saxWanted[1]);
+    voiceWanted.forEach((name) => preloadVoice(name));
   }
   if (ac.state !== 'running') { const p = ac.resume(); if (p && p.catch) p.catch(() => {}); }
   return true;
@@ -112,6 +114,123 @@ export function pianoNote(m, t, dur, vel) {
   });
   lp.connect(g); g.connect(bus);
 }
+
+// ---------- sampled tenor saxophone (MTG Solo Saxophones, tenor, f layer; CC BY 4.0, see app/samples/sax/CREDITS.md) ----------
+// One sample per key, MIDI 44..76 (3 s, mono); map.json gives each key's tuning (cents) and level (dB). A note outside the
+// range is moved by octaves into it. Until its sample (and the map) has loaded, a note falls back to the piano: never a synth sax.
+export const SAX_LO = 44, SAX_HI = 76;
+const SAX_DIR = new URL('../../samples/sax/', import.meta.url);
+const saxBufs = new Map(); // midi -> AudioBuffer
+const saxLoading = new Map(); // midi -> Promise
+let saxMap = null, saxMapLoading = null, saxWanted = null;
+const saxKey = (m) => { let x = Math.round(m); while (x < SAX_LO) x += 12; while (x > SAX_HI) x -= 12; return x; };
+function loadSaxMap() {
+  if (saxMap || saxMapLoading || !ac) return saxMapLoading;
+  saxMapLoading = fetch(new URL('map.json', SAX_DIR))
+    .then((r) => { if (!r.ok) throw new Error('sax map: HTTP ' + r.status); return r.json(); })
+    .then((j) => { saxMap = j.keys || {}; })
+    .catch((err) => { console.warn('sax map', err); })
+    .finally(() => { saxMapLoading = null; });
+  return saxMapLoading;
+}
+function loadSax(k) {
+  if (saxBufs.has(k) || saxLoading.has(k) || !ac) return saxLoading.get(k);
+  const pr = fetch(new URL(k + '.mp3', SAX_DIR))
+    .then((r) => { if (!r.ok) throw new Error(k + ': HTTP ' + r.status); return r.arrayBuffer(); })
+    .then((ab) => new Promise((res, rej) => ac.decodeAudioData(ab, res, rej)))
+    .then((buf) => { saxBufs.set(k, buf); })
+    .catch((err) => { console.warn('sax sample', err); })
+    .finally(() => saxLoading.delete(k));
+  saxLoading.set(k, pr);
+  return pr;
+}
+/** Load the sax samples for a pitch range (MIDI numbers, moved into 44..76). Safe to call before audio is unlocked. */
+export function preloadSax(lo = SAX_LO, hi = SAX_HI) {
+  saxWanted = [lo, hi];
+  if (!ac) return Promise.resolve();
+  const jobs = [loadSaxMap()];
+  const ks = new Set();
+  for (let m = lo; m <= hi; m++) ks.add(saxKey(m));
+  ks.forEach((k) => jobs.push(loadSax(k)));
+  return Promise.all(jobs);
+}
+/** The sample for this pitch and the tuning map have arrived. */
+export const saxReady = (m) => !!saxMap && saxBufs.has(saxKey(m));
+/** A tenor sax note: vel 0..1, a 25 ms attack and an 80 ms release at t + dur; falls back to pianoNote until loaded. */
+export function saxNote(m, t, dur, vel) {
+  if (!ac) return;
+  const k = saxKey(m);
+  if (!saxReady(k)) { loadSaxMap(); loadSax(k); pianoNote(m, t, dur, vel); return; }
+  const info = saxMap[String(k)] || {};
+  const src = ac.createBufferSource(), g = ac.createGain();
+  src.buffer = saxBufs.get(k);
+  src.detune.value = info.tune || 0;
+  const peak = Math.min(1.5, vel * Math.pow(10, (info.vol || 0) / 20));
+  const end = t + Math.max(0.05, dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(peak, t + 0.025);
+  g.gain.setValueAtTime(peak, end);
+  g.gain.linearRampToValueAtTime(0.0001, end + 0.08);
+  src.connect(g); g.connect(bus);
+  src.start(t); src.stop(end + 0.1);
+}
+
+// ---------- sparse sampled voices: double bass and clarinet ----------
+// Double bass, pizzicato: Meatbass (Karoryfer Samples), CC0, a sample every minor third. Clarinet: VSCO 2 Community Edition
+// (Versilian Studios), CC0, ten notes. A note takes the nearest sampled key, pitch-shifted; map.json gives each key its
+// tuning (cents) and level (dB). Until the map and the samples have loaded a note falls back to the piano: never a synth.
+const VOICES = {
+  bass: { dir: 'bass', attack: 0.004, release: 0.12, gain: 1.5 },
+  clarinet: { dir: 'clarinet', attack: 0.03, release: 0.09, gain: 1 }
+};
+const voiceState = {}; // name -> { map, keys: [midi], bufs: Map, loading: Promise | null }
+const voiceWanted = new Set();
+/** Load a voice (its map and every sample: there are few). Safe to call before audio is unlocked. */
+export function preloadVoice(name) {
+  const def = VOICES[name];
+  if (!def) return Promise.resolve();
+  voiceWanted.add(name);
+  if (!ac) return Promise.resolve();
+  const vs = voiceState[name] || (voiceState[name] = { map: null, keys: [], bufs: new Map(), loading: null });
+  if (vs.map || vs.loading) return vs.loading || Promise.resolve();
+  const dir = new URL(`../../samples/${def.dir}/`, import.meta.url);
+  vs.loading = fetch(new URL('map.json', dir))
+    .then((r) => { if (!r.ok) throw new Error(name + ' map: HTTP ' + r.status); return r.json(); })
+    .then((j) => {
+      const keys = Object.keys(j.keys || {}).map(Number).sort((x, y) => x - y);
+      return Promise.all(keys.map((k) => fetch(new URL(k + '.mp3', dir))
+        .then((r) => { if (!r.ok) throw new Error(name + ' ' + k + ': HTTP ' + r.status); return r.arrayBuffer(); })
+        .then((ab) => new Promise((res, rej) => ac.decodeAudioData(ab, res, rej)))
+        .then((buf) => { vs.bufs.set(k, buf); })))
+        .then(() => { vs.keys = keys; vs.map = j.keys; });
+    })
+    .catch((err) => { console.warn(name + ' samples', err); })
+    .finally(() => { vs.loading = null; });
+  return vs.loading;
+}
+export const voiceReady = (name) => !!(voiceState[name] && voiceState[name].map);
+/** A note of a sampled voice: vel 0..1; falls back to pianoNote until the voice has loaded. */
+export function voiceNote(name, m, t, dur, vel) {
+  if (!ac) return;
+  const def = VOICES[name], vs = voiceState[name];
+  if (!def || !vs || !vs.map) { preloadVoice(name); pianoNote(m, t, dur, vel); return; }
+  const k = vs.keys.reduce((best, x) => (Math.abs(x - m) < Math.abs(best - m) ? x : best), vs.keys[0]);
+  const info = vs.map[String(k)] || {};
+  const src = ac.createBufferSource(), g = ac.createGain();
+  src.buffer = vs.bufs.get(k);
+  src.playbackRate.value = Math.pow(2, (m - k) / 12);
+  src.detune.value = info.tune || 0;
+  const peak = Math.min(4, vel * def.gain * Math.pow(10, (info.vol || 0) / 20)); // quiet samples take up to +12 dB
+  const end = t + Math.max(0.05, dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(peak, t + def.attack);
+  g.gain.setValueAtTime(peak, end);
+  g.gain.linearRampToValueAtTime(0.0001, end + def.release);
+  src.connect(g); g.connect(bus);
+  src.start(t); src.stop(end + def.release + 0.05);
+}
+export const bassNote = (m, t, dur, vel) => voiceNote('bass', m, t, dur, vel);
+export const clarinetNote = (m, t, dur, vel) => voiceNote('clarinet', m, t, dur, vel);
 
 export function click(t, strong) {
   if (!ac) return;
