@@ -1,5 +1,5 @@
 // Jam session screen (#/session, #/session/<formId>; spec docs/specs/2026-11-22-jam-session-design.md): the band of the
-// accompaniment screen (music/jam.js) holds the form, a partner (tenor sax, clarinet or a second pianist) and the learner take turns.
+// accompaniment screen (music/jam.js) holds the form, a partner (tenor sax, clarinet, a second pianist, the double bass or the drummer) and the learner take turns.
 // Formats: «Вопрос — ответ» (2 + 2 bars), «Четвёрки» (partner, you, drums, you), «Сессия» (head, partner solo, your solo,
 // fours, head and ending; it stops by itself). Whose turn and what the partner plays: music/session.js (pure).
 // Nothing is judged or recorded. Scheduling as jam.js: a look-ahead loop (25 ms timer, 150 ms ahead) on the audio clock.
@@ -63,7 +63,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   }
   // the stage: band, partner, you; the one who plays now is yellow
   const bandLine = h('span.sline', null, t('sessBandLine'));
-  const partnerSeg = choice('div.stoggle', [['sax', t('sessSax')], ['clarinet', t('sessClarinet')], ['piano', t('sessPiano')]], st.partner, (v) => { st.partner = v; save(); paintIdle(); paintHint(); }, t('sessPartner'));
+  const partnerSeg = choice('div.stoggle', [['sax', t('sessSax')], ['clarinet', t('sessClarinet')], ['piano', t('sessPiano')], ['bass', t('sessBass')], ['drums', t('sessDrums')]], st.partner, (v) => { st.partner = v; save(); paintIdle(); paintHint(); }, t('sessPartner'));
   const blocks = {
     drums: h('div.sblock', { 'data-who': 'band' }, h('b.sname', null, t('sessBand')), bandLine),
     partner: h('div.sblock', { 'data-who': 'partner' }, h('b.sname', null, t('sessPartner')), partnerSeg),
@@ -135,7 +135,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   // ---------- the strip and the stage ----------
   const partnerWord = () => t('sessPlays_' + st.partner);
   function secLabel(sec) {
-    if (sec === 'partnerSolo' || (!melody && sec === 'head')) return t('sessSec_solo_' + st.partner);
+    if (sec === 'partnerSolo' || ((!melody || st.partner === 'drums') && (sec === 'head' || sec === 'headOut'))) return t('sessSec_solo_' + st.partner);
     return t('sessSec_' + sec);
   }
   /** Paint the turn of absolute bar absBar (ending = the bar is one of the ending bars of a session). */
@@ -175,7 +175,9 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   // the bass line is always the double bass, from the speakers like the drums, also when the chords go to a connected MIDI piano
   function bass1(m, time, dur, v) { audio.bassNote(m, time, dur, v); }
   function partnerNote(m, time, dur, v) {
-    if (run.partner === 'sax') audio.saxNote(m, time, dur, v); else if (run.partner === 'clarinet') audio.clarinetNote(m, time, dur, v); else play1(m, time, dur, v);
+    if (run.partner === 'drums') return; // the drummer has no notes: his turns are drum fills
+    if (run.partner === 'sax') audio.saxNote(m, time, dur, v); else if (run.partner === 'clarinet') audio.clarinetNote(m, time, dur, v);
+    else if (run.partner === 'bass') audio.bassNote(m, time, dur, v); else play1(m, time, dur, v);
     queue.push({ t: time, kon: m }, { t: time + dur, koff: m });
   }
 
@@ -203,8 +205,9 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
     if (run.made.has(a)) return;
     run.made.add(a);
     const tn = turnAt(run.format, NB, a);
-    if (tn.who === 'partner') partnerTurn(run.ctx, run.format, a, Math.random).forEach((e) => { (run.pn[e.bar] = run.pn[e.bar] || []).push(e); });
-    if (tn.who === 'drums') run.dt[a] = drumTurn(run.style, tn.turnLen, Math.random);
+    const drummer = tn.who === 'drums' || (tn.who === 'partner' && run.partner === 'drums');
+    if (tn.who === 'partner' && !drummer) partnerTurn(run.ctx, run.format, a, Math.random).forEach((e) => { (run.pn[e.bar] = run.pn[e.bar] || []).push(e); });
+    if (drummer) run.dt[a] = drumTurn(run.style, tn.turnLen, Math.random);
   }
   function schedule() {
     if (!run) return;
@@ -235,12 +238,15 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
         if (time >= now - 0.03) {
           const cb = r.ch[chorus].bars[bar];
           gr(slot, time, absBar);
-          if (tn.who === 'drums') { // the drummer alone: the band's bass and chords rest
+          if (tn.who === 'drums' || (tn.who === 'partner' && r.partner === 'drums')) { // the drummer: the chords rest
             const dt = r.dt[tn.turnStart];
-            if (dt) dt[absBar - tn.turnStart].hits.forEach((x) => { if (x.t === slot) audio.drum(x.kind, time, x.v * dg); });
+            if (dt && dt[absBar - tn.turnStart]) dt[absBar - tn.turnStart].hits.forEach((x) => { if (x.t === slot) audio.drum(x.kind, time, x.v * dg); });
+            // a short turn is the drummer alone; over a whole chorus the bass keeps walking, so the form stays audible
+            if (tn.turnLen > 4) cb.notes.forEach((n) => { if (n.part === 'bass' && n.t === slot) bass1(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : noteDur(n.d), n.v * vg); });
           } else {
             if (cb.fill) fillHits(r.style, slot).forEach((x) => audio.drum(x.kind, time, x.v * dg));
-            cb.notes.forEach((n) => { if (n.t === slot) (n.part === 'bass' ? bass1 : play1)(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : noteDur(n.d), n.v * vg); });
+            const bassSolo = tn.who === 'partner' && r.partner === 'bass'; // the band's bass line rests while the bass has the turn
+            cb.notes.forEach((n) => { if (n.t === slot && !(bassSolo && n.part === 'bass')) (n.part === 'bass' ? bass1 : play1)(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : noteDur(n.d), n.v * vg); });
           }
           (r.pn[absBar] || []).forEach((n) => { if (n.t === slot) partnerNote(n.m, time, noteDur(n.d) * (r.partner === 'piano' ? 1 : 1.04), n.v); });
           if (slot === 0) queue.push({ t: time, bar: absBar });

@@ -19,7 +19,11 @@ export const FORMATS = ['qa', 'fours', 'session'];
 export const PARTNERS = {
   sax: { lo: 50, hi: 74, hand: [57, 69], v: 0.8, up: false },
   clarinet: { lo: 55, hi: 82, hand: [62, 74], v: 0.8, up: false },
-  piano: { lo: 72, hi: 96, hand: [76, 88], v: 0.55, up: true }
+  piano: { lo: 72, hi: 96, hand: [76, 88], v: 0.55, up: true },
+  // the double bass takes its phrases low (the band's own bass line rests while it plays); the drummer has no pitches:
+  // the screen gives him drum fills (drumTurn) instead of phrases, the range below only keeps the shared code total
+  bass: { lo: 31, hi: 55, hand: [36, 48], v: 0.95, up: false },
+  drums: { lo: 60, hi: 72, hand: [60, 72], v: 0, up: false, drums: true }
 };
 /** Course licks the partner may quote: chord-relative ones only (a key-relative `prog` lick needs its own progression). */
 export const PARTNER_LICKS = ['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9', 'l10', 'l11', 'bl1', 'bl2', 'bl3'];
