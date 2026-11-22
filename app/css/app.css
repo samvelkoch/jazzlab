@@ -1045,7 +1045,7 @@ svg.rnote { width: 100%; height: auto; max-height: 104px; display: block; }
 .black.mk-miss { outline-color: #eab308; }
 .key[class*=" mk-"] .lbl { color: inherit; }
 /* jam and question / answer: «home» (where a phrase lands) = the ok green, «hangs» = a framed key (not the left-hand colour) */
-/* jam: the palette of the moment (the pale --hot tint, shared with the solo screen: .mk-pal below); home and hangs stay as they are */
+/* jam: the palette of the moment (an ink bar at the key's front edge, shared with the solo screen: .mk-pal below) */
 /* home is the solid --hot (yellow means «now» and home; green stays for «passed»), ink label and an ink badge */
 .jamscreen .key.mk-base, .qascreen .key.mk-base { background: var(--hot); color: #111111; box-shadow: none; }
 .jamscreen .key.mk-base .badge:not(:empty), .qascreen .key.mk-base .badge:not(:empty) { background: #111111; color: #ffffff; }
@@ -1233,9 +1233,10 @@ main.chub { flex: 1; display: grid; grid-template-columns: minmax(340px, 460px) 
 .solostats .dstat { min-width: 96px; text-align: center; }
 /* the palette = the notes you may play now (jam, solo; on the solo screen the scale notes, the chord tones keep their
    colours): a pale --hot tint on the key, dark labels */
-.key.white.mk-pal { background: color-mix(in srgb, var(--hot) 45%, var(--ivory)); }
-.key.black.mk-pal { background: color-mix(in srgb, var(--hot) 45%, var(--ebony)); }
-.key.white.mk-pal .lbl { color: #2a2a2a; } /* AA on the tint in both themes */
+/* the palette keys carry a bar at their front edge, not a second yellow: the keyboard keeps one yellow, and it means home */
+.key.white.mk-pal { background: var(--ivory); box-shadow: inset 0 -30px 0 var(--key-ink); }
+.key.black.mk-pal { background: var(--ebony); box-shadow: inset 0 -10px 0 var(--ivory); }
+.key.white.mk-pal .lbl { color: #ffffff; } /* the note name sits on the ink bar */
 .soloscreen .key.far[class*=" mk-"] { opacity: .55; }
 @media (max-width: 640px) {
   .solopanel { overflow: visible; }
