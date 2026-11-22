@@ -597,7 +597,7 @@ notes `app/js/music/session.js` (pure, `tests/session.test.mjs`); spec `docs/spe
   half a bar of rest.
 - Drum turn: the band's bass and chords rest; the style's groove goes on with fills from `fillHits` (the last bar a fill
   over the whole bar). During your turn the band keeps playing.
-- Choices persist in the store under `session` (`{ form, style, vol, format, partner, bpm: { [style]: n }, open }`).
+- Choices persist in the store under `jamSession` (`{ form, style, vol, format, partner, bpm: { [style]: n }, open }`; the key `session` is the one-tap practice session).
 
 ## Circle of fifths: `content/circle.json` (`jazzlab-circle/1`)
 

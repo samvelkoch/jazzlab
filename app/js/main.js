@@ -295,7 +295,7 @@ async function route() {
       const licks = [];
       await Promise.all([...jam.forms.map(async (f) => { forms[f] = await get(`forms/${f}.json`); }), ...[...patIds].map(async (p) => { patterns[p] = await get(`patterns/${p}.json`); }),
         ...PARTNER_LICKS.map(async (l, i) => { licks[i] = await get(`licks/${l}.json`); })]);
-      const saved = store.get('session', {});
+      const saved = store.get('jamSession', {});
       const fid = formId && forms[formId] ? formId : saved.form && forms[saved.form] ? saved.form : jam.forms.find((id) => forms[id]);
       const melId = jam.melodies && jam.melodies[fid];
       const [melody, ending] = await Promise.all([melId ? get(`melodies/${melId}.json`) : null, forms[fid].ending ? loadExercise(forms[fid].ending) : null]);

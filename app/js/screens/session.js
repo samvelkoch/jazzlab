@@ -28,7 +28,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   const styles = jam.styles.map((s) => resolveStyle(s, patterns));
   const settings = { pianoSnd: true, ...store.get('settings', {}) };
   const form = forms[fid], bars = form.bars, NB = bars.length;
-  const saved = store.get('session', {});
+  const saved = store.get('jamSession', {});
   const styleOk = (id) => styles.some((s) => s.id === id);
   const styleId = saved.form === fid && styleOk(saved.style) ? saved.style : defaultStyle(form);
   const st = {
@@ -41,7 +41,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   };
   const blues = !!(jam.simple && jam.simple[fid] && jam.simple[fid].palette && jam.simple[fid].palette.scale === 'blues');
   const bpmOf = () => st.bpm[st.style.id] || st.style.tempo;
-  const save = () => store.set('session', { form: fid, style: st.style.id, vol: st.vol, format: st.format, partner: st.partner, bpm: st.bpm, open: st.open });
+  const save = () => store.set('jamSession', { form: fid, style: st.style.id, vol: st.vol, format: st.format, partner: st.partner, bpm: st.bpm, open: st.open });
   const endBars = () => endingOf(bars, ending, PARTNERS[st.partner]).bars;
 
   // ---------- layout ----------
@@ -83,7 +83,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   const formSel = h('select.jamform', { 'aria-label': t('jamForm'), onchange: () => {
     if (run) halt();
     const nf = formSel.value;
-    store.set('session', { ...store.get('session', {}), form: nf, style: defaultStyle(forms[nf]) });
+    store.set('jamSession', { ...store.get('jamSession', {}), form: nf, style: defaultStyle(forms[nf]) });
     location.replace(`#/session/${nf}`); // the route renders the new form (no new history entry)
   } }, ...jam.forms.filter((id) => forms[id]).map((id) => h('option', { value: id, selected: id === fid }, L(forms[id].title))));
   const styleSeg = choice('div.seg.jamstyles', styles.map((s) => [s.id, L(s.title)]), st.style.id, (v) => { st.style = styles.find((s) => s.id === v); save(); paintBpm(); paintHint(); }, t('jamStyle'));
