@@ -68,5 +68,8 @@ for (const sc of Object.keys(SCHEMES)) {
 // the pre-paint script must not hard-code the list of schemes; the old schemes and the vignette are gone
 assert.ok(!/sc === 'studio'/.test(html), 'index.html: no scheme whitelist');
 assert.ok(!/data-scheme="/.test(css) && !/--vignette/.test(css), 'app.css: no per-scheme blocks, no vignette');
-assert.ok(/Sofia\+Sans\+Extra\+Condensed/.test(html) && !/Unbounded|Manrope/.test(html), 'index.html: the cover fonts');
+assert.ok(/Sofia\+Sans\+Extra\+Condensed/.test(html) && !/Manrope/.test(html), 'index.html: the cover fonts');
+// Unbounded stays for the logo only: its own request, cut down to the letters of «jazzlab»
+assert.deepEqual(html.match(/family=[^"]*Unbounded[^"]*/g), ['family=Unbounded:wght@700&text=jazlb&display=swap'], 'index.html: Unbounded for the logo letters only');
+assert.ok(/\.brandname \.key \{[^}]*background: #e5383b/.test(css), 'app.css: the red key of the logo');
 console.log('theme ok');
