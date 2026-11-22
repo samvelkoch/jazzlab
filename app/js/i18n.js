@@ -307,9 +307,9 @@ const DICT = {
     jamNoChange: 'аккорд не меняется', jamThisBar: 'в этом такте', jamInBars: 'через {n} {w}', jamBarsW: 'такт|такта|тактов',
     jamHint: 'Выбери стиль и нажми «Старт». Играй правой рукой что хочешь: подсвечены ноты, которые звучат сейчас.',
     jamHintPlay: 'Здесь нет ошибок. «Дом» звучит как конец фразы, «висит» просит продолжения.',
-    jamCardAbout: 'Лёгкий фон: бас, аккорды, барабаны. Ты играешь правой рукой что хочешь, без задания и оценки.', jamCardGo: 'Играть с фоном'
+    jamCardAbout: 'Лёгкий фон: контрабас, аккорды, барабаны. Ты играешь правой рукой что хочешь, без задания и оценки.', jamCardGo: 'Играть с фоном'
     // jam session (session.js): the band, a partner and you take turns
-    , sessTitle: 'Джем', sessKicker: 'ИГРАЕМ ПО ОЧЕРЕДИ', sessBand: 'Бэнд', sessBandLine: 'бас · аккорды · барабаны', sessBandDrums: 'барабаны',
+    , sessTitle: 'Джем', sessKicker: 'ИГРАЕМ ПО ОЧЕРЕДИ', sessBand: 'Бэнд', sessBandLine: 'контрабас · аккорды · барабаны', sessBandDrums: 'барабаны',
     sessPartner: 'Партнёр', sessSax: 'Саксофон', sessClarinet: 'Кларнет', sessPiano: 'Пианист', sessYou: 'Ты', sessFormat: 'Формат',
     sessFmt_qa: 'Вопрос — ответ', sessFmt_fours: 'Четвёрки', sessFmt_session: 'Сессия',
     sessPlays_sax: 'Играет саксофон', sessPlays_clarinet: 'Играет кларнет', sessPlays_piano: 'Играет пианист', sessPlays_drums: 'Играют барабаны', sessYourTurn: 'Твоя очередь', sessReady: 'Готовься',
@@ -639,9 +639,9 @@ const DICT = {
     jamNoChange: 'the chord stays', jamThisBar: 'in this bar', jamInBars: 'in {n} {w}', jamBarsW: 'bar|bars',
     jamHint: 'Pick a style and press Start. Play anything with your right hand: the lit keys are the notes that sound now.',
     jamHintPlay: 'There are no mistakes here. «Home» sounds like the end of a phrase, «hangs» asks for more.',
-    jamCardAbout: 'A light band: bass, chords, drums. You play anything with your right hand, no task and no score.', jamCardGo: 'Play with the band'
+    jamCardAbout: 'A light band: double bass, chords, drums. You play anything with your right hand, no task and no score.', jamCardGo: 'Play with the band'
     // jam session (session.js): the band, a partner and you take turns
-    , sessTitle: 'Jam', sessKicker: 'TAKING TURNS', sessBand: 'Band', sessBandLine: 'bass · chords · drums', sessBandDrums: 'drums',
+    , sessTitle: 'Jam', sessKicker: 'TAKING TURNS', sessBand: 'Band', sessBandLine: 'double bass · chords · drums', sessBandDrums: 'drums',
     sessPartner: 'Partner', sessSax: 'Saxophone', sessClarinet: 'Clarinet', sessPiano: 'Pianist', sessYou: 'You', sessFormat: 'Format',
     sessFmt_qa: 'Question — answer', sessFmt_fours: 'Fours', sessFmt_session: 'Session',
     sessPlays_sax: 'Sax plays', sessPlays_clarinet: 'Clarinet plays', sessPlays_piano: 'Pianist plays', sessPlays_drums: 'Drums play', sessYourTurn: 'Your turn', sessReady: 'Get ready',
