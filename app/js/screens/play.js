@@ -1,6 +1,6 @@
-// «Играть» (#/play): free play, apart from the course. No passing, no order: four large ruled rows, each a link —
-// accompaniment (#/jam), riffs (#/riffs), chords (#/chords), reference (#/wiki). Their screens show «Играть» in the nav
-// and their top-level back returns here.
+// «Играть» (#/play): free play, apart from the course. No passing, no order: five large ruled rows, each a link —
+// accompaniment (#/jam), riffs (#/riffs), chords (#/chords), the circle of fifths (#/circle), reference (#/wiki). Their
+// screens show «Играть» in the nav and their top-level back returns here.
 import { h, ICON, themeButton, langSwitch, midiChip, navTabs } from '../ui.js';
 import { t, plural } from '../i18n.js';
 
@@ -30,5 +30,6 @@ export function renderPlay(root, { course, jamForm, rerender }) {
           () => { try { sessionStorage.setItem('jamBack', '#/play'); } catch (e) { /* no storage: jam's back defaults to #/play */ } }),
         row('#/riffs', t('riffs'), fill(t('playRiffsLine'), { n: nRiffs, w: plural(nRiffs, 'playRhythmW') })),
         row('#/chords', t('navChords'), t('playChordsLine')),
+        row('#/circle', t('playCircle'), t('playCircleLine')),
         row('#/wiki', t('wikiTab'), t('playWikiLine')))));
 }

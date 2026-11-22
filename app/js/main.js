@@ -1,6 +1,7 @@
 // Boot + hash router.
 //   #/              the current chapter (settings.chapter, else blues)   #/track/<id>   a chapter (only a chapter row on «Путь» sets settings.chapter)
-//   #/play          free play: accompaniment, riffs, chords, reference
+//   #/play          free play: accompaniment, riffs, chords, the circle, reference
+//   #/circle, #/circle/<blues|bossa|std|free>  the circle of fifths with the chords of a tune (content/circle.json)
 //   #/t/<track>/<item>  a track item: drill | pattern (as an exercise) | exercise | form | lick | melody | solo | perform | diag
 //   #/t/<track>/<item>/fingers/<chord>  a lick over one chord as an exercise (RH lick + LH pattern)
 //   #/t/<track>/<item>/fingers/<key>    a key-relative lick (item.keys) in one key (RH lick + LH pattern over lick.prog)
@@ -21,6 +22,7 @@ import { renderExercise } from './screens/exercise.js';
 import { renderImprov } from './screens/improv.js';
 import { renderTrack, jamFormOf } from './screens/track.js';
 import { renderPlay } from './screens/play.js';
+import { renderCircle } from './screens/circle.js';
 import { store } from './store.js';
 import { chaptersOf, homeChapter } from './path.js';
 import { renderDrill } from './screens/drill.js';
@@ -162,6 +164,14 @@ async function route() {
       const model = await trackModel(homeChapter(store.get('settings', {}), chaptersOf(index))).catch(() => null);
       document.title = `${t('navPlay')} · Jazzlab`;
       renderPlay(root, { course, jamForm: model ? jamFormOf(model) : null, rerender });
+    } else if (/^\/circle(?:\/[a-z]+)?$/.test(hash)) {
+      // the circle of fifths: content/circle.json and the forms of its tunes; the tab comes from the hash (default: the first tune)
+      const circle = await get('circle.json'), tab = hash.split('/')[2] || null;
+      if (tab && tab !== 'free' && !circle.tunes.some((tn) => tn.id === tab)) { message(t('notFound')); return; }
+      const forms = {};
+      await Promise.all(circle.tunes.map(async (tn) => { forms[tn.form] = await get(`forms/${tn.form}.json`); }));
+      document.title = `${t('circleTitle')} · Jazzlab`;
+      cleanup = renderCircle(root, { circle, forms, tab, rerender });
     } else if (hash === '/riffs') {
       const { index, course } = await content();
       document.title = `${t('riffs')} · Jazzlab`;

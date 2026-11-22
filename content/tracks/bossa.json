@@ -50,7 +50,7 @@
         "imp-bo3"
       ],
       "words": [
-        { "term": "ii-v-i", "before": "ear-pr1-bossa", "word": { "ru": "II–V–I", "en": "II–V–I" }, "text": { "ru": "Три аккорда подряд, которые ведут домой. В C это Dm7, G7 и Cmaj7.", "en": "Three chords in a row that lead home. In C they are Dm7, G7 and Cmaj7." }, "keys": [["D3", "F3", "A3", "C4"], ["G3", "B3", "D4", "F4"], ["C3", "E3", "G3", "B3"]] }
+        { "term": "ii-v-i", "before": "ear-pr1-bossa", "word": { "ru": "II–V–I", "en": "II–V–I" }, "text": { "ru": "Три аккорда подряд, которые ведут домой. В C это Dm7, G7 и Cmaj7.", "en": "Three chords in a row that lead home. In C they are Dm7, G7 and Cmaj7." }, "keys": [["D3", "F3", "A3", "C4"], ["G3", "B3", "D4", "F4"], ["C3", "E3", "G3", "B3"]], "circle": "bossa" }
       ] },
     { "id": "s6", "title": { "ru": "Выступление", "en": "The performance" },
       "goal": { "ru": "После этой ступени ты играешь Blue Bossa целиком, с концовкой, и записываешь её.", "en": "After this step you play the whole of Blue Bossa, with an ending, and record it." },

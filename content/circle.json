@@ -1,0 +1,39 @@
+{
+  "$format": "jazzlab-circle/1",
+  "free": {
+    "lead": { "ru": "Нажми на любое место: оно станет домом, а клин покажет его семью аккордов.", "en": "Tap any place: it becomes home, and the wedge shows its family of chords." }
+  },
+  "tunes": [
+    { "id": "blues", "tab": { "ru": "Блюз", "en": "Blues" }, "form": "blues-c",
+      "home": { "root": "C", "mode": "major", "chord": "C7" },
+      "lead": { "ru": "Весь блюз — это дом и два соседа по кругу: слева F7, справа G7.", "en": "The whole blues is home and two neighbours on the circle: F7 on the left, G7 on the right." },
+      "moves": [
+        { "title": { "ru": "В гости и обратно", "en": "A visit and back" }, "chords": ["C7", "F7", "C7"],
+          "text": { "ru": "Шаг влево по кругу и назад. Такты 4–7.", "en": "One step left on the circle and back. Bars 4–7." } },
+        { "title": { "ru": "Дорога домой", "en": "The way home" }, "chords": ["G7", "F7", "C7"],
+          "text": { "ru": "С правого соседа через левого домой. Такты 9–11.", "en": "From the right neighbour through the left one, home. Bars 9–11." } }
+      ] },
+    { "id": "bossa", "tab": { "ru": "Blue Bossa", "en": "Blue Bossa" }, "form": "blue-bossa",
+      "home": { "root": "C", "mode": "minor", "chord": "Cm7" },
+      "lead": { "ru": "Дом здесь минорный: Cm7. Пьеса дважды идёт домой и один раз уходит в гости, в D♭.", "en": "Home is minor here: Cm7. The tune goes home twice and once goes visiting, to D♭." },
+      "moves": [
+        { "title": { "ru": "Сосед слева", "en": "The left neighbour" }, "chords": ["Cm7", "Fm7"],
+          "text": { "ru": "Как в блюзе: шаг влево по кругу. Такты 2–3.", "en": "As in the blues: one step left on the circle. Bars 2–3." } },
+        { "title": { "ru": "Ход домой", "en": "The move home" }, "chords": ["Dm7b5", "G7", "Cm7"],
+          "text": { "ru": "Три аккорда ведут домой. G7 стоит вне клина: чужой аккорд тянет домой сильнее. Такты 5–7.", "en": "Three chords lead home. G7 is outside the wedge: a foreign chord pulls home harder. Bars 5–7." } },
+        { "title": { "ru": "Ход в гости", "en": "The move to a visit" }, "chords": ["Ebm7", "Ab7", "Dbmaj7"],
+          "text": { "ru": "Такой же ход из трёх аккордов, только дом другой и мажорный: D♭. Такты 9–11.", "en": "The same three-chord move, but to another home, a major one: D♭. Bars 9–11." } }
+      ] },
+    { "id": "std", "tab": { "ru": "Стандарт", "en": "Standard" }, "form": "std-f",
+      "home": { "root": "F", "mode": "major", "chord": "Fmaj7" },
+      "lead": { "ru": "Почти вся пьеса — один и тот же ход домой из трёх аккордов.", "en": "Almost the whole tune is one and the same three-chord move home." },
+      "moves": [
+        { "title": { "ru": "Ход домой", "en": "The move home" }, "chords": ["Gm7", "C7", "Fmaj7"],
+          "text": { "ru": "Все три аккорда лежат в клине. Это и есть II–V–I. Такты 2–3.", "en": "All three chords lie in the wedge. This is the II–V–I. Bars 2–3." } },
+        { "title": { "ru": "Ход в гости", "en": "The move to a visit" }, "chords": ["Cm7", "F7", "Bbmaj7"],
+          "text": { "ru": "Тот же ход, сдвинутый на шаг влево: дом на время — B♭. Такты 17–18.", "en": "The same move, shifted one step left: for a while home is B♭. Bars 17–18." } },
+        { "title": { "ru": "Цепочка", "en": "The chain" }, "chords": ["Am7", "D7", "Gm7", "C7"],
+          "text": { "ru": "Нижние ноты аккордов идут по кругу влево шаг за шагом: A, D, G, C — и домой в F. Такты 7–8.", "en": "The chords' bottom notes walk left around the circle step by step: A, D, G, C, and home to F. Bars 7–8." } }
+      ] }
+  ]
+}

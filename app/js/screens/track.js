@@ -196,7 +196,9 @@ export async function renderTrack(root, { model, index, rerender }) {
       h('div.pwbody', null,
         h('span.pwword', null, L(w.word)),
         h('span.pwtext', null, markTerms(L(w.text), undefined, 'button', [w.term, ...(w.covers || [])]),
-          keys.length ? [' ', h('button.pwlisten', { type: 'button', onclick: () => listen(keys) }, t('pListen'))] : null)),
+          keys.length ? [' ', h('button.pwlisten', { type: 'button', onclick: () => listen(keys) }, t('pListen'))] : null),
+        // optional `circle`: a tune of content/circle.json where the word can be seen on the circle of fifths
+        w.circle ? h('a.pwcircle', { href: `#/circle/${w.circle}` }, t('circleSee')) : null),
       keys.length ? h('div.pwkb', { html: miniSvg(keys.flat()) }) : null);
   };
 

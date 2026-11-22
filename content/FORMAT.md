@@ -170,7 +170,9 @@ what to listen for); it wins over the source file's.
     "text": { "ru": "Несколько клавиш вместе. …", "en": "…" },  // one line
     "keys": [["C3", "E3", "G3", "Bb3"]],               // groups of notes: each group sounds together, groups in sequence;
                                                        // [] = text only, no mini keyboard and no «Послушать»
-    "covers": ["seventh-chord"] }                      // optional: other glossary ids this card also introduces
+    "covers": ["seventh-chord"],                       // optional: other glossary ids this card also introduces
+    "circle": "bossa" }                                // optional: a tune id of content/circle.json; the card shows
+                                                       // a link «Посмотреть на круге» to #/circle/<id>
 ]
 ```
 
@@ -573,3 +575,23 @@ generator `app/js/music/jam.js` (pure); spec `docs/specs/2026-11-21-accompanimen
 - Styles: `slow-blues`, `swing` (walking bass), `boogie`, `bossa`, `ballad`. Default style of a form: `bossa` for a bossa
   form, `slow-blues` for a 12-bar form, else `swing`. Choices persist in the store under `jam`
   (`{ style, form, vol, variety, mode, bpm: { [style]: n } }`). Check: `node tests/jam.test.mjs`.
+
+## Circle of fifths: `content/circle.json` (`jazzlab-circle/1`)
+
+«Круг» (`#/circle`, `#/circle/<tuneId|free>`; screen `app/js/screens/circle.js`, pure helpers `app/js/music/circle.js`):
+three rings of 12 cells, C at the top, clockwise by fifths — majors outside, their relative minors in the middle, the
+vii° chords inside. A tune's tab lights every distinct chord of its form (its real symbols; two symbols on one cell →
+the first in the form) and tints its home key's wedge with roman numerals; «Свободно» (`free`) has no tune: a tap on
+an outer / middle cell makes it home.
+
+```
+{ "free": { "lead": {ru,en} },
+  "tunes": [ { "id", "tab": {ru,en}, "form": "<content/forms id>",
+               "home": { "root": "C", "mode": "major" | "minor", "chord": "<a chord of the form>" },
+               "lead": {ru,en},                                   // one line under the tabs
+               "moves": [ { "title": {ru,en}, "chords": ["Dm7b5", "G7", "Cm7"], "text": {ru,en} } ] } ] }
+```
+
+Chord → cell by the root's pitch class: m7b5 / dim / dim7 → inner, m / m7 / m6 → middle, everything else → outer. A
+move's `chords` must be a contiguous run of the form's chords (consecutive repeats collapsed, the form read as a
+loop). Check: `node tests/circle.test.mjs`.
