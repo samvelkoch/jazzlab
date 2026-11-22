@@ -18,6 +18,7 @@ export const FORMATS = ['qa', 'fours', 'session'];
  *  the velocity. The second pianist sits above the learner's C4..C6 centre. */
 export const PARTNERS = {
   sax: { lo: 50, hi: 74, hand: [57, 69], v: 0.8, up: false },
+  clarinet: { lo: 55, hi: 82, hand: [62, 74], v: 0.8, up: false },
   piano: { lo: 72, hi: 96, hand: [76, 88], v: 0.55, up: true }
 };
 /** Course licks the partner may quote: chord-relative ones only (a key-relative `prog` lick needs its own progression). */

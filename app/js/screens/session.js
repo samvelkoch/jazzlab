@@ -1,5 +1,5 @@
 // Jam session screen (#/session, #/session/<formId>; spec docs/specs/2026-11-22-jam-session-design.md): the band of the
-// accompaniment screen (music/jam.js) holds the form, a partner (tenor sax or a second pianist) and the learner take turns.
+// accompaniment screen (music/jam.js) holds the form, a partner (tenor sax, clarinet or a second pianist) and the learner take turns.
 // Formats: «Вопрос — ответ» (2 + 2 bars), «Четвёрки» (partner, you, drums, you), «Сессия» (head, partner solo, your solo,
 // fours, head and ending; it stops by itself). Whose turn and what the partner plays: music/session.js (pure).
 // Nothing is judged or recorded. Scheduling as jam.js: a look-ahead loop (25 ms timer, 150 ms ahead) on the audio clock.
@@ -35,7 +35,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
     style: styles.find((s) => s.id === styleId) || styles[0],
     vol: Math.max(1, Math.min(5, saved.vol || 3)),
     format: FORMATS.includes(saved.format) ? saved.format : 'qa',
-    partner: saved.partner === 'piano' ? 'piano' : 'sax',
+    partner: PARTNERS[saved.partner] ? saved.partner : 'sax',
     bpm: { ...(saved.bpm || {}) },
     open: !!saved.open
   };
@@ -63,7 +63,7 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   }
   // the stage: band, partner, you; the one who plays now is yellow
   const bandLine = h('span.sline', null, t('sessBandLine'));
-  const partnerSeg = choice('div.stoggle', [['sax', t('sessSax')], ['piano', t('sessPiano')]], st.partner, (v) => { st.partner = v; save(); paintIdle(); paintHint(); }, t('sessPartner'));
+  const partnerSeg = choice('div.stoggle', [['sax', t('sessSax')], ['clarinet', t('sessClarinet')], ['piano', t('sessPiano')]], st.partner, (v) => { st.partner = v; save(); paintIdle(); paintHint(); }, t('sessPartner'));
   const blocks = {
     drums: h('div.sblock', { 'data-who': 'band' }, h('b.sname', null, t('sessBand')), bandLine),
     partner: h('div.sblock', { 'data-who': 'partner' }, h('b.sname', null, t('sessPartner')), partnerSeg),
@@ -111,7 +111,8 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   const footRO = trackFootH(screen, footer);
 
   // ---------- keyboard: the palette of the moment + the partner's sounding keys ----------
-  audio.preloadPiano(33, 98); // the band's bass from A1, the second pianist up to C7
+  audio.preloadPiano(33, 98); // the band's chords, the second pianist up to C7
+  audio.preloadVoice('bass'); audio.preloadVoice('clarinet');
   audio.preloadSax(PARTNERS.sax.lo, PARTNERS.sax.hi);
   const kb = createKeyboard(kbEl, [KB_LO, KB_HI], { names: nameMode(settings, 'key'), exact: true, center: 72, onPress: (m) => {
     audio.ensureAudio(); audio.pianoNote(m, audio.now() + 0.01, 0.5, 0.55); lastKey = performance.now(); markActive();
@@ -132,9 +133,9 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
   }
 
   // ---------- the strip and the stage ----------
-  const partnerWord = () => t(st.partner === 'piano' ? 'sessPlays_piano' : 'sessPlays_sax');
+  const partnerWord = () => t('sessPlays_' + st.partner);
   function secLabel(sec) {
-    if (sec === 'partnerSolo' || (!melody && sec === 'head')) return t(st.partner === 'piano' ? 'sessSec_soloPiano' : 'sessSec_soloSax');
+    if (sec === 'partnerSolo' || (!melody && sec === 'head')) return t('sessSec_solo_' + st.partner);
     return t('sessSec_' + sec);
   }
   /** Paint the turn of absolute bar absBar (ending = the bar is one of the ending bars of a session). */
@@ -171,8 +172,10 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) { sentMidi = true; return; } }
     audio.pianoNote(m, time, dur, v);
   }
+  // the bass line: the double bass from the speakers; with the band on the MIDI piano it stays there, in time with the chords
+  function bass1(m, time, dur, v) { if (settings.pianoSnd && midiState().canPlay) play1(m, time, dur, v); else audio.bassNote(m, time, dur, v); }
   function partnerNote(m, time, dur, v) {
-    if (run.partner === 'sax') audio.saxNote(m, time, dur, v); else play1(m, time, dur, v);
+    if (run.partner === 'sax') audio.saxNote(m, time, dur, v); else if (run.partner === 'clarinet') audio.clarinetNote(m, time, dur, v); else play1(m, time, dur, v);
     queue.push({ t: time, kon: m }, { t: time + dur, koff: m });
   }
 
@@ -237,9 +240,9 @@ export function renderSession(root, { jam, forms, patterns, fid, melody, ending,
             if (dt) dt[absBar - tn.turnStart].hits.forEach((x) => { if (x.t === slot) audio.drum(x.kind, time, x.v * dg); });
           } else {
             if (cb.fill) fillHits(r.style, slot).forEach((x) => audio.drum(x.kind, time, x.v * dg));
-            cb.notes.forEach((n) => { if (n.t === slot) play1(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : noteDur(n.d), n.v * vg); });
+            cb.notes.forEach((n) => { if (n.t === slot) (n.part === 'bass' ? bass1 : play1)(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : noteDur(n.d), n.v * vg); });
           }
-          (r.pn[absBar] || []).forEach((n) => { if (n.t === slot) partnerNote(n.m, time, noteDur(n.d) * (r.partner === 'sax' ? 1.04 : 1), n.v); });
+          (r.pn[absBar] || []).forEach((n) => { if (n.t === slot) partnerNote(n.m, time, noteDur(n.d) * (r.partner === 'piano' ? 1 : 1.04), n.v); });
           if (slot === 0) queue.push({ t: time, bar: absBar });
           if (slot === 0 || slot === 4) queue.push({ t: time, pal: [bar, slot] });
           if (slot % 2 === 0) queue.push({ t: time, beat: true });

@@ -148,6 +148,7 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
 
   // ---------- keyboard: palette, home and hanging keys ----------
   audio.preloadPiano(33, KB_HI + 2); // the band's bass from A1, the keys up to C6
+  audio.preloadVoice('bass'); // the band's bass: a double bass (the piano until it has loaded)
   const kb = createKeyboard(kbEl, [KB_LO, KB_HI], { names: kbNames, exact: true, center: 72, onPress: (m) => {
     audio.ensureAudio(); audio.pianoNote(m, audio.now() + 0.01, 0.5, 0.55); lastKey = performance.now(); markActive();
   } });
@@ -202,6 +203,8 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
     if (settings.pianoSnd && midiState().canPlay) { const onMs = performance.now() + (time - audio.now()) * 1000; if (sendNote(m, 25 + 130 * v, onMs, onMs + dur * 1000)) { sentMidi = true; return; } }
     audio.pianoNote(m, time, dur, v);
   }
+  // the bass line: the double bass from the speakers; with the band on the MIDI piano it stays there, in time with the chords
+  function bass1(m, time, dur, v) { if (settings.pianoSnd && midiState().canPlay) play1(m, time, dur, v); else audio.bassNote(m, time, dur, v); }
   const fb = (html) => { fbEl.innerHTML = html; };
   function paintBpm() { bpmOut.innerHTML = `♩ ${bpmOf()}`; }
   function setBpm(v) { if (run) return; st.bpm[st.style.id] = Math.max(40, Math.min(200, Math.round(v))); save(); paintBpm(); }
@@ -242,7 +245,7 @@ export function renderJam(root, { jam, forms, patterns, formId }) {
         const vg = VOL[st.vol - 1], dg = vg * (r.style.drumGain == null ? 1 : r.style.drumGain);
         groove(slot, time, { swing: r.style.drums === 'swing', style: r.style.drums === 'bossa' ? 'bossa' : null, bar: barG, gain: dg });
         if (cb.fill) fillHits(r.style, slot).forEach((x) => audio.drum(x.kind, time, x.v * dg));
-        cb.notes.forEach((n) => { if (n.t === slot) play1(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : n.d * r.beat / 2 * 0.92, n.v * vg); });
+        cb.notes.forEach((n) => { if (n.t === slot) (n.part === 'bass' ? bass1 : play1)(n.m, time, n.stac ? Math.min(r.beat * 0.5, 0.25) : n.d * r.beat / 2 * 0.92, n.v * vg); });
         if (slot === 0) queue.push({ t: time, barStart: bar, chorus });
         queue.push({ t: time, g });
       }

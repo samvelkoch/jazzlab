@@ -113,7 +113,7 @@ function runPartner(format, fid, inst, rng, nBars) {
 }
 let sawLick = 0, sawMelody = 0, sawCall = 0, sawMotif = 0;
 for (const fid of jam.forms) {
-  for (const inst of ['sax', 'piano']) {
+  for (const inst of ['sax', 'clarinet', 'piano']) {
     for (const format of ['qa', 'fours', 'session']) {
       const rng = mulberry32(fid.length * 101 + format.length * 7 + (inst === 'sax' ? 1 : 2));
       const NB = forms[fid].bars.length;
@@ -189,7 +189,7 @@ for (const st of jam.styles.map((s) => resolveStyle(s, patterns))) {
 // ---------- the ending ----------
 for (const fid of jam.forms) {
   const form = forms[fid];
-  for (const inst of ['sax', 'piano']) {
+  for (const inst of ['sax', 'clarinet', 'piano']) {
     const P = PARTNERS[inst];
     const ex = form.ending ? normalize(read(`content/exercises/${form.ending}.json`)) : null;
     const e = endingOf(form.bars, ex, P);

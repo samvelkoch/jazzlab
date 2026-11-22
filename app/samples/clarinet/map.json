@@ -1,0 +1,45 @@
+{
+"$note": "Clarinet, sustained, mezzo layer, ten sampled notes (MIDI number = sounding pitch); other notes are pitch-shifted from the nearest one. tune = cents to add at playback (measured), vol = dB to add so every note has the same mean level. From VSCO 2 Community Edition (Versilian Studios / Sam Gossner), CC0 1.0: https://github.com/sgossner/VSCO-2-CE",
+"keys": {
+"50": {
+"tune": -2,
+"vol": 10.9
+},
+"53": {
+"tune": -4,
+"vol": 9.6
+},
+"58": {
+"tune": 7,
+"vol": 10.3
+},
+"62": {
+"tune": -2,
+"vol": 3.9
+},
+"65": {
+"tune": -4,
+"vol": 4.5
+},
+"70": {
+"tune": -11,
+"vol": 0.7
+},
+"74": {
+"tune": -25,
+"vol": 3.4
+},
+"77": {
+"tune": -32,
+"vol": 9.0
+},
+"82": {
+"tune": 25,
+"vol": 7.7
+},
+"86": {
+"tune": 21,
+"vol": -3.7
+}
+}
+}
