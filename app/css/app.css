@@ -1783,7 +1783,9 @@ main.circlemain { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; displ
 @media (max-width: 640px) {
   .seg.big.ctabs { gap: 4px 18px; }
   .seg.big.ctabs > button { font-size: 22px; }
+  .cc .cl { font-size: 25px; } /* the long outer names (B♭maj7) stay inside the cell */
   .cc-m .cl { font-size: 21px; }
   .cc-i .cl { font-size: 17px; }
+  .cc .cn, .cc-i .cn { font-size: 18px; } /* the numerals: 11px and up on a 343px wheel */
   .clead { font-size: 16px; }
 }
